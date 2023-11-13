@@ -1,10 +1,11 @@
 import styled from "styled-components";
+import Category from "../Category/Category";
 
 const MainContent = () => {
   return (
     <MainContentWrapper>
-      <div style={{display: "flex", marginTop: "8px"}}>
-
+      <div style={{display: "flex", marginTop: "8px", paddingBottom: "16px"}}>
+        <Category></Category>
       </div>
     </MainContentWrapper>
   );

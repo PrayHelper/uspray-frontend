@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import MainContent from '../components/Main/json/MainContent';
+import MainContent from '../components/Main/MainContent';
 
 const Main = () => {
   return (
     <MainWrapper>
-      <div style={{display: "flex", flexDirection: "column"}}>
+      <div style={{display: "flex", flexDirection: "column",boxSizing: "border-box", padding: "16px", gap: "16px"}}>
         <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
           <div style={{display: "flex", flexDirection: "row", fontSize: "24px", gap: "16px"}}>
             <div style={{color: "#FFFFFF", borderBottom: "1px solid #FFFFFF"}}>내가 쓴</div>
@@ -30,6 +30,4 @@ const MainWrapper = styled.div`
   width: 100%;
   position: relative;
   background-color: var(--color-dark-green);
-  padding: 16px;
-  box-sizing: border-box;
 `;

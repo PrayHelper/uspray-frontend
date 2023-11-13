@@ -7,7 +7,7 @@ export const BaseButtonStyle = styled.button`
   height: ${props => (props.buttonSize == ButtonSize.NORMAL) ? "33px" : ""};
   display: flex;
   flex-direction: row;
-  justify-content: ${props => (props.buttonSize == ButtonSize.NORMAL) ? "center": "space-between"};
+  justify-content: ${props => ((props.buttonSize == ButtonSize.NORMAL) || (props.isArrow === false)) ? "center": "space-between"};
   align-items: center;
   padding: ${props => (props.buttonSize == ButtonSize.NORMAL) ? "0px": "20px 24px 20px 16px"};
   font-size: ${props => (props.buttonSize == ButtonSize.NORMAL) ? "12px": "16px"};
