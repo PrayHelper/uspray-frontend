@@ -97,6 +97,7 @@ const Input = styled.input`
 
 
 const CategorySetting = styled.div`
+  z-index: 100;
   position: fixed;
   top: 0;
   left: 0;

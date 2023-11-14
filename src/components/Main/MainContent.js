@@ -9,10 +9,10 @@ const MainContent = ({categories, setCategories, setShowCategorySetting}) => {
 
   return (
     <MainContentWrapper>
-      <div style={{display: "flex", paddingBottom: "16px", position: "sticky", top: "0", width: "100%", backgroundColor: "#FFFFFF"}}>
+      <div style={{display: "flex", padding: "24px 16px 16px 16px", position: "sticky", top: "0", backgroundColor: "rgba(255, 255, 255, 0.85)", borderRadius: "24px 24px 0 0", zIndex: "50", backdropFilter: "blur(12px)"}}>
         <CategoryTag categories={categories} setCategories={setCategories} selectedCategoryIndex={selectedCategoryIndex} setSelectedCategoryIndex={setSelectedCategoryIndex} setShowCategorySetting={setShowCategorySetting} />
       </div>
-      <div style={{display: "flex", flexDirection: "column", gap: "24px"}}>
+      <div style={{display: "flex", flexDirection: "column", gap: "24px", padding: "8px 16px 60px 16px"}}>
         <Category title="테스트" color="#75BD62" />
         <Category title="테스트2" color="#AEDBA5" />
       </div>
@@ -30,8 +30,6 @@ const MainContentWrapper = styled.div`
   position: relative;
   background-color: var(--color-white);
   border-radius: 32px 32px 0px 0px;
-  padding: 16px;
-  padding-bottom: 64px;
   box-sizing: border-box;
   overflow-y: auto;
 
