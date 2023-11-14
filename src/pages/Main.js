@@ -5,11 +5,17 @@ import { useState } from 'react';
 
 
 const Main = () => {
+  const [tab, setTab] = useState('내가 쓴');
+  const [bgColor, setBgColor] = useState('#7BAB6E');
   const [inputValue, setInputValue] = useState('');
   const [showCategorySetting, setShowCategorySetting] = useState(false);
   const [selectedColor, setSelectedColor] = useState('#D0E8CB');
   const [categories, setCategories] = useState([]);
 
+  const handleTabChange = (newTab) => {
+    setTab(newTab);
+    setBgColor(newTab === '내가 쓴' ? '#7BAB6E' : '#D0E8CB');
+  };
 
   const addCategory = () => {
     if(inputValue !== '') {
@@ -32,17 +38,30 @@ const Main = () => {
 
 
   return (
-    <MainWrapper>
+    <MainWrapper style={{ backgroundColor: bgColor }}>
       <div style={{display: "flex", flexDirection: "column",boxSizing: "border-box", padding: "16px", gap: "16px"}}>
         <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-          <div style={{display: "flex", flexDirection: "row", fontSize: "24px", gap: "16px"}}>
-            <div style={{color: "#FFFFFF", borderBottom: "1px solid #FFFFFF"}}>내가 쓴</div>
-            <div style={{color: "#FFFFFF80"}}>공유 받은</div>
+          <div style={{display: "flex", flexDirection: "row", gap: "16px"}}>
+            <Tab 
+              active={tab === '내가 쓴'}
+              onClick={() => handleTabChange('내가 쓴')}
+              >
+              내가 쓴
+            </Tab>
+            <Tab 
+              active={tab === '공유 받은'}
+              onClick={() => handleTabChange('공유 받은')}
+              >
+              공유 받은
+            </Tab>
           </div>
-          <img src="images/ic_alarm.svg" alt="alarm_icon" />
+          <img src={tab === '공유 받은' ? "images/ic_alarm_green.svg" : "images/ic_alarm.svg"} alt="alarm_icon" />
         </div>
         <div style={{display: "flex"}}>
-          <Input type="text" placeholder="기도제목을 입력해주세요." style={{width: "100%"}} />
+        {tab === '내가 쓴' ? 
+          <Input type="text" placeholder="기도제목을 입력해주세요." style={{width: "100%"}} /> : 
+          <div style={{width: "100%", padding: "14px 16px", backgroundColor: "#7BAB6E", color: "#FFFFFF", borderRadius: "16px"}}>보관함에 3개의 기도제목이 있어요</div>
+        }
         </div>
       </div>
       <MainContent categories={categories} setCategories={setCategories} setShowCategorySetting={setShowCategorySetting}/>
@@ -77,12 +96,19 @@ const MainWrapper = styled.div`
   height: 100vh;
   width: 100%;
   position: relative;
-  background-color: var(--color-dark-green);
+  background-color: #7BAB6E;
+`;
+
+const Tab = styled.div`
+  font-size: 24px;
+  color: ${props => props.active ? (props.children === '내가 쓴' ? '#FFFFFF' : '#606060') : '#60606080'};
+  cursor: pointer;
+  border-bottom: ${props => props.active ? (props.children === '내가 쓴' ? '2px solid #FFFFFF' : '2px solid #606060') : 'none'};
 `;
 
 const Input = styled.input`
   width: calc(100%-16px);
-  height: 55px;
+  height: 51px;
   border-radius: 16px;
   padding: 0px 16px;
   ::placeholder {
@@ -93,6 +119,7 @@ const Input = styled.input`
   border: 0;
   color: var(--color-green);
   font-weight: 500;
+  font-size: 16px;
 `;
 
 
