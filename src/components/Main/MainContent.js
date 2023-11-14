@@ -1,11 +1,19 @@
+import { useState } from "react";
 import styled from "styled-components";
-import Category from "../Category/Category";
+import CategoryTag from "../CategoryTag/CategoryTag";
 
 const MainContent = () => {
+  const [categories, setCategories] = useState([]);
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(null);
+
   return (
     <MainContentWrapper>
       <div style={{display: "flex", marginTop: "8px", paddingBottom: "16px"}}>
-        <Category></Category>
+        <CategoryTag categories={categories} setCategories={setCategories} selectedCategoryIndex={selectedCategoryIndex} setSelectedCategoryIndex={setSelectedCategoryIndex} />
+      </div>
+      <div>
+        카테고리에 따른 기도제목 목록
+        {categories[selectedCategoryIndex].name}
       </div>
     </MainContentWrapper>
   );

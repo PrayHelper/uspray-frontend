@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import MainContent from '../components/Main/MainContent';
 
 const Main = () => {
+
+
   return (
     <MainWrapper>
       <div style={{display: "flex", flexDirection: "column",boxSizing: "border-box", padding: "16px", gap: "16px"}}>
