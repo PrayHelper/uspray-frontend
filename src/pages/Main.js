@@ -30,60 +30,51 @@ const Main = () => {
     setInputValue(e.target.value);
   };
   
-
-
   const handleInnerClick = (e) => {
     e.stopPropagation();
   };
 
+  const TabList = ['내가 쓴', '공유 받은'];
+  const ColorList = ["#D0E8CB", "#AEDBA5", "#9BD88A", "#75BD62", "#649D55", "#58834D", "#507247"];
 
   return (
     <MainWrapper style={{ backgroundColor: bgColor }}>
-      <div style={{display: "flex", flexDirection: "column",boxSizing: "border-box", padding: "16px", gap: "16px"}}>
-        <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-          <div style={{display: "flex", flexDirection: "row", gap: "16px"}}>
+      <TopContainer>
+        <TopBox>
+          <TabContainer>
+          {TabList.map((tabItem) => (
             <Tab 
-              active={tab === '내가 쓴'}
-              onClick={() => handleTabChange('내가 쓴')}
-              >
-              내가 쓴
-            </Tab>
-            <Tab 
-              active={tab === '공유 받은'}
-              onClick={() => handleTabChange('공유 받은')}
-              >
-              공유 받은
-            </Tab>
-          </div>
-          <img src={tab === '공유 받은' ? "images/ic_alarm_green.svg" : "images/ic_alarm.svg"} alt="alarm_icon" />
-        </div>
-        <div style={{display: "flex"}}>
+              active={tab === tabItem}
+              onClick={() => handleTabChange(tabItem)}
+              key={tabItem}
+            >
+              {tabItem}
+          </Tab>
+          ))}
+          </TabContainer>
+          <AlarmIcon src={tab === '공유 받은' ? "images/ic_alarm_green.svg" : "images/ic_alarm.svg"} alt="alarm_icon" />
+        </TopBox>
+        <FlexContainer>
         {tab === '내가 쓴' ? 
           <Input type="text" placeholder="기도제목을 입력해주세요." style={{width: "100%"}} /> : 
-          <div style={{width: "100%", padding: "14px 16px", backgroundColor: "#7BAB6E", color: "#FFFFFF", borderRadius: "16px"}}>보관함에 3개의 기도제목이 있어요</div>
+          <MoveToLockerButton>보관함에 3개의 기도제목이 있어요</MoveToLockerButton>
         }
-        </div>
-      </div>
+        </FlexContainer>
+      </TopContainer>
       <MainContent categories={categories} setCategories={setCategories} setShowCategorySetting={setShowCategorySetting}/>
-
       {showCategorySetting && (
         <CategorySetting  onClick={() => setShowCategorySetting(false)}>
           <Input type="text" value={inputValue} placeholder="카테고리를 입력해주세요" onChange={handleInputChange} onClick={handleInnerClick}/>
-          <div style={{position: "fixed", bottom: "64px", width: "calc(100% - 32px)"}} onClick={handleInnerClick}>
+          <FixedButtonContainer onClick={handleInnerClick}>
             <Button buttonSize={ButtonSize.LARGE} handler={addCategory}>카테고리 추가</Button>
-          </div>
-          <div style={{display: "flex", justifyContent: "space-between", padding: "16px", marginTop: "8px"}}>
-            <ColorDrop color={"#D0E8CB"} selectedColor={selectedColor} onClick={(event) => {setSelectedColor("#D0E8CB"); event.stopPropagation();}}/>
-            <ColorDrop color={"#AEDBA5"} selectedColor={selectedColor} onClick={(event) => {setSelectedColor("#AEDBA5"); event.stopPropagation();}}/>
-            <ColorDrop color={"#9BD88A"} selectedColor={selectedColor} onClick={(event) => {setSelectedColor("#9BD88A"); event.stopPropagation();}}/>
-            <ColorDrop color={"#75BD62"} selectedColor={selectedColor} onClick={(event) => {setSelectedColor("#75BD62"); event.stopPropagation();}}/>
-            <ColorDrop color={"#649D55"} selectedColor={selectedColor} onClick={(event) => {setSelectedColor("#649D55"); event.stopPropagation();}}/>
-            <ColorDrop color={"#58834D"} selectedColor={selectedColor} onClick={(event) => {setSelectedColor("#58834D"); event.stopPropagation();}}/>
-            <ColorDrop color={"#507247"} selectedColor={selectedColor} onClick={(event) => {setSelectedColor("#507247"); event.stopPropagation();}}/>
-          </div>
+          </FixedButtonContainer>
+          <ColorPalette>
+          {ColorList.map((color) => (
+            <ColorDrop color={color} selectedColor={selectedColor} onClick={(event) => {setSelectedColor(color); event.stopPropagation();}} key={color}/>
+          ))}
+          </ColorPalette>
         </CategorySetting>
       )}
-
     </MainWrapper>
   );
 };
@@ -97,6 +88,32 @@ const MainWrapper = styled.div`
   width: 100%;
   position: relative;
   background-color: #7BAB6E;
+`;
+
+const TopContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 16px;
+  gap: 16px;
+`;
+
+const TopBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const FlexContainer = styled.div`
+  display: flex;
+`;
+
+const AlarmIcon = styled.img``;
+
+const TabContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
 `;
 
 const Tab = styled.div`
@@ -122,6 +139,13 @@ const Input = styled.input`
   font-size: 16px;
 `;
 
+const MoveToLockerButton = styled.div`
+  width: 100%;
+  padding: 14px 16px;
+  background-color: #7BAB6E;
+  color: #FFFFFF;
+  border-radius: 16px;
+`;
 
 const CategorySetting = styled.div`
   z-index: 100;
@@ -135,6 +159,20 @@ const CategorySetting = styled.div`
   flex-direction: column;
   padding: 16px;
   box-sizing: border-box;
+`;
+
+const ColorPalette = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  margin-top: 8px;
+`;
+
+const FixedButtonContainer = styled.div`
+  position: fixed;
+  bottom: 64px;
+  width: calc(100% - 32px);
+  cursor: pointer;
 `;
 
 const ColorDrop = styled.div`
