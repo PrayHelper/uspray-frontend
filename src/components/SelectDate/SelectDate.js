@@ -20,7 +20,7 @@ const SelectDate = (props) => {
       setSelectedBtn();
     } else {
       setSelectedBtn("calendar");
-      props.setShowDatePicker(!props.showDatePicker);
+      setShowDatePicker(!showDatePicker);
     }
   };
 
