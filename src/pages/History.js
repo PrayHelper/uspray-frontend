@@ -23,7 +23,7 @@ const History = () => {
   const [selectedDate, setSelectedDate] = useState(null); // 선택한 날짜
   const [updateDate, setUpdateDate] = useState(null); // yyyy.mm.dd (api 호출용)
   const [showDatePicker, setShowDatePicker] = useState(false);
-
+  const [isRequesting, setIsRequesting] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [ref, inView] = useInView({});
 
@@ -87,6 +87,9 @@ const History = () => {
   const { mutate: mutateHistoryModify } = useHistoryModify();
 
   const onClickModify = () => {
+    if (isRequesting) return;
+    setIsRequesting(true);
+
     mutateHistoryModify(
       {
         pray_id: currentId,
@@ -102,6 +105,9 @@ const History = () => {
           setSelectedDate(null);
           setShowDatePicker(false);
           refetchHistory();
+        },
+        onSettled: () => {
+          setIsRequesting(false);
         },
       }
     );
