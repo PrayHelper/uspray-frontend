@@ -17,10 +17,9 @@ import PrayerSortToggle from "./PrayerSortToggle";
 const Background = styled.div`
   width: 100%;
   background-color: #d0e8cb;
-  height: calc(100vh - 150px);
-  overflow-y : scroll;
-  min-height: 812px;
-  border-radius : 32px 32px 0px 0px;
+  height: auto;
+  min-height: 100vh;
+  //   margin-top: 24px;
 `;
 
 const TopContent = styled.div`
@@ -298,8 +297,7 @@ function PrayerList({
         onClick={changeCheck}></BackgroundBright>
       <Background style={{ paddingBottom: padding }}>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
-          <div
-            style={{ flex: 1, flexGrow: 1, flexBasis: "500px" }}>
+          <div style={{ flex: 1, flexGrow: 1, flexBasis: "500px" }}>
             <TopContent>
               <TodayPrayer>기도할게요</TodayPrayer>
               <PrayerSortToggle
@@ -337,8 +335,7 @@ function PrayerList({
               )}
             </PrayerContentStyle>
           </div>
-          <div
-            style={{ flex: 1, flexGrow: 1, flexBasis: "500px" }}>
+          <div style={{ flex: 1, flexGrow: 1, flexBasis: "500px" }}>
             <TopContent>
               <TodayPrayer style={{ marginTop: "46px" }}>
                 기도했어요
