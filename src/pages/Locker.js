@@ -156,18 +156,16 @@ const Locker = () => {
 
   useEffect(() => {
     if (Array.isArray(shareData) && shareData.length !== 0) {
-      if (isNewSocial) {
-        mutateUseShareSocialNew(
-          {
-            pray_id_list: shareData
+      mutateUseShareSocialNew(
+        {
+          pray_id_list: shareData
+        },
+        {
+          onSuccess: () => {
+            refetchSharedListData();
           },
-          {
-            onSuccess: () => {
-              setIsNewSocial(false);
-            },
-          }
-        );
-      }
+        }
+      );
     }
   }, [shareData.length]);
 
