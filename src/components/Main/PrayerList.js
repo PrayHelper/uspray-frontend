@@ -18,7 +18,7 @@ const Background = styled.div`
   width: 100%;
   background-color: #d0e8cb;
   height: auto;
-  min-height: 812px;
+  min-height: 100vh;
   //   margin-top: 24px;
 `;
 
@@ -297,8 +297,7 @@ function PrayerList({
         onClick={changeCheck}></BackgroundBright>
       <Background style={{ paddingBottom: padding }}>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
-          <div
-            style={{ flex: 1, flexGrow: 1, flexBasis: "500px" }}>
+          <div style={{ flex: 1, flexGrow: 1, flexBasis: "500px" }}>
             <TopContent>
               <TodayPrayer>기도할게요</TodayPrayer>
               <PrayerSortToggle
@@ -336,8 +335,7 @@ function PrayerList({
               )}
             </PrayerContentStyle>
           </div>
-          <div
-            style={{ flex: 1, flexGrow: 1, flexBasis: "500px" }}>
+          <div style={{ flex: 1, flexGrow: 1, flexBasis: "500px" }}>
             <TopContent>
               <TodayPrayer style={{ marginTop: "46px" }}>
                 기도했어요

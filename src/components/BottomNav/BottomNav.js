@@ -14,7 +14,7 @@ const BottomNav = () => {
       case "/main":
         setActiveNav(1);
         break;
-      case "/locker":
+      case "/group":
         setActiveNav(2);
         break;
       case "/history":
@@ -38,7 +38,7 @@ const BottomNav = () => {
             <img src="images/ic_main.svg" alt="main_icon" />
           )}
         </Link>
-        <Link to="/locker" onClick={() => setActiveNav(2)}>
+        <Link to="/group" onClick={() => setActiveNav(2)}>
           {activeNav === 2 ? (
             <img src="images/ic_group_filled.svg" alt="filled_group_icon" />
           ) : (

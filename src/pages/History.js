@@ -1,7 +1,7 @@
 import Header from "../components/Header/Header";
 import styled from "styled-components";
 import HisContent from "../components/History/HisContent";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import { useFetchHistory } from "../hooks/useFetchHistory";
@@ -9,7 +9,7 @@ import { useHistoryModify } from "../hooks/useHistoryModify";
 import Lottie from "react-lottie";
 import LottieData from "../components/Main/json/uspray.json";
 import useToast from "../hooks/useToast";
-import SelectDateInput from "../components/SelectDateInput/selectDateInput";
+import SelectDateInput from "../components/SelectDateInput/SelectDateInput";
 
 const History = () => {
   const [loading, setLoading] = useState(true);
@@ -170,9 +170,6 @@ const History = () => {
     }
   }, [hasMore, inView]);
 
-  const onClickFunc = () => {
-    console.log("gg");
-  };
   return (
     <HistoryWrapper>
       <Header sortBy={sortBy} onClickToggle={onClickToggle}>
@@ -220,8 +217,7 @@ const History = () => {
               <ModalButtonWrapper>
                 <ModalButton1
                   showSubModal={showSubModal}
-                  onClick={onClickSubModal}
-                >
+                  onClick={onClickSubModal}>
                   또 기도하기
                 </ModalButton1>
                 <ModalButton2 onClick={onClickExitModal}>닫기</ModalButton2>
@@ -234,7 +230,6 @@ const History = () => {
             setUpdateDate,
             setShowSubModal,
             showSubModal,
-            onClickFunc,
           }}
           onClickFunc={() => onClickModify(sortBy)}
         />
@@ -246,8 +241,7 @@ const History = () => {
             <div
               onClick={(e) => onClickHistoryItem(e, sortBy)}
               key={el.id}
-              id={el.id}
-            >
+              id={el.id}>
               <HisContent
                 name={el.target}
                 content={el.title}
@@ -265,8 +259,7 @@ const History = () => {
             <div
               onClick={(e) => onClickHistoryItem(e, sortBy)}
               key={el.id}
-              id={el.id}
-            >
+              id={el.id}>
               <HisContent
                 name={el.target}
                 content={el.title}
@@ -326,11 +319,14 @@ const NoDataContent = styled.div`
 
 const ModalWrapper = styled.div`
   position: fixed;
-  /* top: ${(props) => (props.showSubModal ? `40%` : `50%`)}; */
-  top: 50%;
+  top: ${(props) => (props.showSubModal ? `40%` : `50%`)};
+  /* top: ${(props) => (props.showSubModal ? `68%` : `75%`)}; */
+  /* bottom: ${(props) => (props.showSubModal ? `32%` : `25%`)}; */
+  /* top: 40%; */
   left: 50%;
   transform: translate(-50%, -50%);
-  width: calc(100vw - 48px);
+
+  width: calc(100vw - 64px);
   display: flex;
   flex-direction: column;
   justify-content: center;
