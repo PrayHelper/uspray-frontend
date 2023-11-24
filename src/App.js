@@ -16,6 +16,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Main from "./pages/Main";
 import Locker from "./pages/Locker";
+import Group from "./pages/Group";
 import LoginPage from "./components/Login/LoginPage";
 import Settings from "./pages/Settings";
 import History from "./pages/History";
@@ -41,10 +42,16 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import useAuthorized from "./hooks/useAuthorized";
 import GlobalStyle from "./styles/GlobalStyle";
 import useToast from "./hooks/useToast";
+import HistorySearch from "./pages/HistorySearch";
+import GroupDetail from "./pages/GroupDetail";
+import GroupSettings from "./pages/GroupSettings";
+import ChangeGroupName from "./pages/ChangeGroupName";
+import AssignGroupLeader from "./pages/AssignGroupLeader";
+import RemoveMember from "./pages/RemoveMember";
 import DeleteUser from "./pages/DeleteUser";
 
 const ContainerWrapper = styled.div`
-  max-width: 430px;
+  /* max-width: 430px; */
   margin: 0 auto;
 `;
 
@@ -98,12 +105,21 @@ function App() {
                 <Route element={<BottomNav />}>
                   <Route path="/main" element={<Main />} />
                   <Route path="/history" element={<History />} />
-                  <Route path="/locker" element={<Locker />} />
+                  <Route path="/group" element={<Group />} />
                   <Route path="/settings" element={<Settings />} />
                 </Route>
+                <Route path="/locker" element={<Locker />} />
+                <Route path="/groupSettings" element={<GroupSettings />} />
+                <Route path="/changeGroupName" element={<ChangeGroupName />} />
+                <Route
+                  path="/assignGroupLeader"
+                  element={<AssignGroupLeader />}
+                />
+                <Route path="/removeMember" element={<RemoveMember />} />
                 <Route path="/checkInfo" element={<CheckInfo />} />
                 <Route path="/changeInfo" element={<ChangeInfo />} />
                 <Route path="/changePw" element={<ChangePw />} />
+                <Route path="/groupDetail" element={<GroupDetail />} />
                 <Route
                   path="/changePhoneNumber"
                   element={<ChangePhoneNumber />}
@@ -130,6 +146,7 @@ function App() {
                   path="/privacyProcessAgreement"
                   element={<PrivacyProcessAgreement />}
                 />
+                <Route path="/historySearch" element={<HistorySearch />} />
               </Route>
             </Route>
           </Routes>

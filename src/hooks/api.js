@@ -1,3 +1,4 @@
+//사용하지 않음 혹시 몰라서 삭제 안함
 import serverapi from "../api/serverapi";
 
 // get 방식의 axios 호출

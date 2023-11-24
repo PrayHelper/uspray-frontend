@@ -1,0 +1,10 @@
+services:
+  api:
+    container_name: prayhelper-client-hotfix
+    build:
+      context: ../
+      dockerfile: ./deploy/Dockerfile
+    image: prayhelper-client-hotfix
+    ports:
+      - "4007:3000"
+    command: ["serve", "-s", "build"]

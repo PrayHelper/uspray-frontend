@@ -1,25 +1,12 @@
-import { postFetcher } from "./api";
 import { useMutation } from "react-query";
-import useAuthToken from "./useAuthToken";
-import useRefresh from "./useRefresh";
+import useApi from './useApi';
 
-const postShareItem = async (getAccessToken, data) => {
-    return await postFetcher('/share', data, {
-      Authorization: getAccessToken(),
-    });
-  };
-  
-
-export const useShare = () =>{
-  const { getAccessToken } = useAuthToken();
-  const { refresh } = useRefresh();
+export const useShare = () => {
+  const { postFetcher } = useApi();
   return useMutation(
-    (data) => {
-    return postShareItem(getAccessToken, data)}, {
-    onError: async (e) => {
-      if (e.status === 500) {
-        await refresh();
-      }
+    async (data) => {
+    return await postFetcher('/share', data)}, {
+    onError: (e) => {
       console.log(e);
     },
     onSuccess: (res) => {

@@ -1,27 +1,15 @@
-import { getFetcher } from "./api";
 import { useQuery } from "react-query";
-import useAuthToken from "./useAuthToken";
-import useRefresh from "./useRefresh";
-
-const getSharedList = async (getAccessToken) => {
-  return await getFetcher("/share", {
-    Authorization: getAccessToken(),
-  });
-};
+import useApi from './useApi';
 
 export const useFetchSharedList = () => {
-  const { getAccessToken } = useAuthToken();
-  const { refresh } = useRefresh();
+  const { getFetcher } = useApi();
   return useQuery(
     ["SharedList"],
-    () => {
-      return getSharedList(getAccessToken);
+    async () => {
+      return await getFetcher("/share");
     },
     {
-      onError: async (e) => {
-        if (e.status === 403) {
-          await refresh();
-        }
+      onError: (e) => {
         console.log(e);
       },
       onSuccess: (res) => {

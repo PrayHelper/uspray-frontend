@@ -7,7 +7,7 @@ export const ToastStyle = styled.div`
   right: 0;
   margin: 0 16px;
   bottom: 60px;
-  max-width: 344px;
+  max-width: 100%;
   display: flex;
   align-items: center;
   background-color: var(

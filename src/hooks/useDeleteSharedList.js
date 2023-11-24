@@ -1,26 +1,14 @@
-import { deleteDataFetcher } from "./api";
 import { useMutation } from "react-query";
-import useAuthToken from "./useAuthToken";
-import useRefresh from "./useRefresh";
-
-const deleteSharedList = async (getAccessToken, data) => {
-  return await deleteDataFetcher("/share", data, {
-    Authorization: getAccessToken(),
-  });
-};
+import useApi from './useApi';
 
 export const useDeleteSharedList = () => {
-  const { getAccessToken } = useAuthToken();
-  const { refresh } = useRefresh();
+  const {deleteDataFetcher} = useApi();
   return useMutation(
-    (data) => {
-      return deleteSharedList(getAccessToken, data);
+    async (data) => {
+      return await deleteDataFetcher("/share", data);
     },
     {
-      onError: async (e) => {
-        if (e.status === 403) {
-          await refresh();
-        }
+      onError: (e) => {
         console.log(e);
       },
       onSuccess: (res) => {

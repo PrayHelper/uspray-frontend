@@ -11,21 +11,21 @@ const Find = () => {
       <BtnWrapper>
         <Link to="/findID" style={{ textDecoration: "none" }}>
           <LoginButton
-            background={"#ffffff"}
+            background={"#7BAB6E"}
             context={"아이디 찾기"}
-            color={"#7bab6e"}
-            borderColor={"#7bab6e"}
-            arrowColor={"#7bab6e"}
+            color={"#FFF"}
+            // borderColor={"#7bab6e"}
+            arrowColor={"#FFF"}
             margin={"54px 24px 24px 24px"}
           />
         </Link>
         <Link to="/findPW" style={{ textDecoration: "none" }}>
           <LoginButton
-            background={"#ffffff"}
+            background={"#7BAB6E"}
             context={"비밀번호 찾기"}
-            color={"#7bab6e"}
-            borderColor={"#7bab6e"}
-            arrowColor={"#7bab6e"}
+            color={"#FFF"}
+            // borderColor={"#7bab6e"}
+            arrowColor={"#FFF"}
             margin={"0px 24px 12px 24px"}
           />
         </Link>

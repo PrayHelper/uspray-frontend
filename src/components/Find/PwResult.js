@@ -4,7 +4,7 @@ import Input from "../Input/Input";
 import UserHeader from "../UserHeader";
 import styled, { keyframes } from 'styled-components';
 import BlackScreen from "../BlackScreen/BlackScreen";
-import serverapi from "../../api/serverapi";
+import publicapi from "../../api/publicapi";
 import { useNavigate } from "react-router-dom";
 
 const ModalContent = styled.div`
@@ -117,7 +117,7 @@ const PwResult = ({pwToken}) => {
       password: pw,
     };
     try {
-      const res = await serverapi.put(api, data);
+      const res = await publicapi.put(api, data);
       if (res.status === 200) {
         setShowModal(true);
         console.log(res.data);

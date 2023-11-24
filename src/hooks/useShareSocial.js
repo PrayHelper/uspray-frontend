@@ -1,25 +1,17 @@
 import { useQuery } from 'react-query';
-import { getFetcher } from "./api";
-import useAuthToken from "./useAuthToken";
-import useRefresh from "./useRefresh";
+import useApi from './useApi';
 
-const getShareSocial = async (getAccessToken, data) => {
-    const dataJoin = data.join("%2C")
-  return await getFetcher(`/share/social?pray_list=${dataJoin}`, {
-    Authorization: getAccessToken(), 
-  });
-
+const getShareSocial = async (getFetcher, data) => {
+  const dataJoin = data.join("%2C")
+  return await getFetcher(`/share/social?pray_list=${dataJoin}`);
 }
 
 export const useShareSocial = (data) => {
-  const { getAccessToken } = useAuthToken();
-  const { refresh } = useRefresh();
+  const { getFetcher } = useApi();
   return useQuery(["pray_list", data], () => 
-  {return getShareSocial(getAccessToken, data)} ,  {
-    onError: async (e) => {
-      if (e.status === 403) {
-       await refresh();
-      }
+  {return getShareSocial(getFetcher, data)}, {
+    onError: (e) => {
+      console.log(e);
     },
     onSuccess: (res) => {
     //   console.log(res);

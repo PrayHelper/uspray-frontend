@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
-import serverapi from "../api/serverapi";
+import publicapi from "../api/publicapi";
 import Button, { ButtonSize, ButtonTheme } from "../components/Button/Button";
 import Input from "../components/Input/Input";
 import UserHeader from "../components/UserHeader";
 import styled from 'styled-components';
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import { useResetPhoneNumber } from "../hooks/useResetPhoneNumber";
+import useToast from "../hooks/useToast";
+import { ToastTheme } from "../components/Toast/Toast";
+import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
+import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
+
+
 
 const ModalContent = styled.div`
   position: fixed;
@@ -29,11 +35,11 @@ const ModalContent = styled.div`
 const ModalButton1 = styled.button`
   flex-grow: 1;
   flex-basis: 0;
-  background-color: #7BAB6E;
+  background-color: #7bab6e;
   border-style: none;
   border-radius: 16px;
   padding: 16px 0;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 18px;
 `;
 
@@ -45,9 +51,9 @@ const ChangePhoneNumber = () => {
   const [isCertificateButtonClicked, setIsCertificateButtonClicked] =
     useState(false);
   const [time, setTime] = useState("");
-  const [toastMessage, setToastMessage] = useState("");
-  const [showToast, setShowToast] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  const { showToast } = useToast({});
 
   const phoneNumberRegEx = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
   const certificateNumberRegEx = /^[0-9]{6}$/;
@@ -81,7 +87,6 @@ const ChangePhoneNumber = () => {
 
     setPhoneNumber(formattedValue);
   };
-  
 
   const certificateNumberChangeHandler = (e) => {
     setCertificateNumber(e.target.value);
@@ -107,9 +112,9 @@ const ChangePhoneNumber = () => {
     return result;
   };
 
-  const handleCloseModal = () =>{
+  const handleCloseModal = () => {
     setShowModal(false);
-    window.location.href = '/settings';
+    window.location.href = "/settings";
   };
 
   useEffect(() => {
@@ -124,35 +129,32 @@ const ChangePhoneNumber = () => {
     return () => clearInterval(id);
   }, [time]);
 
-  useEffect(() => {
-    if (showToast) {
-      const timer = setTimeout(() => {
-        setShowToast(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [showToast]);
-
   const phoneNumVerfication = async (phoneNumber) => {
     const api = "/admin/sms";
     const data = {
       phone: phoneNumber,
     };
     try {
-      const res = await serverapi.post(api, data);
+      const res = await publicapi.post(api, data);
       if (res.status === 200) {
-        alert("인증번호가 전송되었습니다.");
+        showToast({
+          message: "인증번호가 전송되었습니다.",
+          theme: ToastTheme.SUCCESS,
+        });
         console.log(res.data.code);
         setVerficationNumber(res.data.code);
         setTime("180");
       }
     } catch (e) {
-      alert("error occured");
+      showToast({
+        message: "error occured",
+        theme: ToastTheme.ERROR,        
+      })
     }
   };
 
-  const {mutate} = useResetPhoneNumber({
-    phone: phoneNumber.replace(/-/g, "")
+  const { mutate } = useResetPhoneNumber({
+    phone: phoneNumber.replace(/-/g, ""),
   });
 
   const resetPhoneNumber = () => {
@@ -163,9 +165,9 @@ const ChangePhoneNumber = () => {
       },
       onError: (e) => {
         console.log(e);
-      }
+      },
     });
-  }
+  };
 
   return (
     <div
@@ -176,55 +178,58 @@ const ChangePhoneNumber = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-      }}
-    >
-            {showModal && (
+      }}>
+      {showModal && (
         <>
           <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
           <ModalContent onClick={(e) => e.stopPropagation()}>
-            <img src="images/ic_phone.svg" alt="phone_icon" style={{marginTop: "8px"}}/>
+            <img
+              src="images/ic_phone.svg"
+              alt="phone_icon"
+              style={{ marginTop: "8px" }}
+            />
             <div
               style={{
                 fontSize: "20px",
                 color: "#7BAB6E",
                 fontWeight: "700",
                 paddingBottom: "2px",
-              }}
-            >
+              }}>
               전화번호가 재설정 되었습니다.
             </div>
             <div
               style={{
                 marginTop: "2px",
                 marginBottom: "28px",
-              }}
-            >
+              }}>
               바뀐 전화번호를 기억해둘게요!
             </div>
-            <div style={{display: "flex", flexDirection: "row", width: "100%", gap: "8px"}}>
-              <ModalButton1 onClick={handleCloseModal}>
-                확인
-              </ModalButton1>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                gap: "8px",
+              }}>
+              <ModalButton1 onClick={handleCloseModal}>확인</ModalButton1>
             </div>
           </ModalContent>
         </>
-        )}
+      )}
       <UserHeader>전화번호 변경</UserHeader>
       <div
         style={{
           width: "100%",
           gap: "24px",
           marginTop: "64px",
-        }}
-      >
+        }}>
         <div
           style={{
             padding: "0 16px",
             display: "flex",
             flexDirection: "column",
             gap: "24px",
-          }}
-        >
+          }}>
           <Input
             label="전화번호"
             value={phoneNumber}
@@ -243,8 +248,7 @@ const ChangePhoneNumber = () => {
                   setIsCertificated(false);
                   setIsCertificateButtonClicked(false);
                   setCertificateNumber("");
-                }}
-              >
+                }}>
                 {time ? "진행 중" : "전송"}
               </Button>
             }
@@ -263,7 +267,8 @@ const ChangePhoneNumber = () => {
               (!isCetrificated && isCertificateButtonClicked) || time === 0
             }
             description={
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 {time !== "" && <span>{changeTimeFormat(time)}</span>}
                 <Button
                   buttonSize={ButtonSize.NORMAL}
@@ -284,15 +289,20 @@ const ChangePhoneNumber = () => {
                   handler={() => {
                     setIsCertificateButtonClicked(true);
                     if (isCertificationNumberValid(certificateNumber)) {
-                      alert("인증에 성공하였습니다.");
+                      showToast({
+                        message: "인증에 성공하였습니다.",
+                        theme: ToastTheme.SUCCESS,
+                      });
                     } else {
-                      setToastMessage("인증번호가 일치하지 않습니다.");
-                      setShowToast(true);
-                      alert("인증에 실패하였습니다.");
+                      showToast({
+                        message: "인증에 실패하였습니다.",
+                        theme: ToastTheme.ERROR,
+                      });
                     }
-                  }}
-                >
-                  {isCetrificated || isCertificateButtonClicked ? "완료" : "확인"}
+                  }}>
+                  {isCetrificated || isCertificateButtonClicked
+                    ? "완료"
+                    : "확인"}
                 </Button>
               </div>
             }
@@ -304,15 +314,16 @@ const ChangePhoneNumber = () => {
               width: "calc(100% - 32px)",
               display: "flex",
               flexDirection: "column",
-            }}
-          >
+            }}>
             <Button
               disabled={!isAllValid}
               buttonSize={ButtonSize.LARGE}
               buttonTheme={isAllValid ? ButtonTheme.GREEN : ButtonTheme.GRAY}
-              handler={() => {resetPhoneNumber();}}
-            >
+              handler={() => {
+                resetPhoneNumber();
+              }}>
               재설정하기
+              {isAllValid ? <NextArrowWhite/> : <NextArrowGray/>}
             </Button>
           </div>
         </div>

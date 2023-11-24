@@ -1,27 +1,15 @@
-import { getFetcher } from "./api";
 import { useQuery } from "react-query";
-import useAuthToken from "./useAuthToken";
-import useRefresh from "./useRefresh";
-
-const getNotifyInfo = async (getAccessToken) => {
-  return await getFetcher("/user/notifications", {
-    Authorization: getAccessToken(),
-  });
-};
+import useApi from './useApi';
 
 export const useFetchNotifications = () => {
-  const { getAccessToken } = useAuthToken();
-  const { refresh } = useRefresh();
+  const { getFetcher } = useApi();
   return useQuery(
     ["FetchNotifications"],
-    () => {
-      return getNotifyInfo(getAccessToken);
+    async () => {
+      return await getFetcher("/user/notifications");
     },
     {
-      onError: async (e) => {
-        if (e.status === 403) {
-          await refresh();
-        }
+      onError: (e) => {
         console.log(e);
       },
       onSuccess: (res) => {

@@ -1,57 +1,22 @@
 import ToggleButton from "../components/ToggleButton";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect,  useState } from "react";
 import UserHeader from "../components/UserHeader";
 import InputBirth from "../components/InputBirth";
 import Button, { ButtonSize, ButtonTheme } from "../components/Button/Button";
 import Input from "../components/Input/Input";
 import styled from "styled-components";
-import Toast, { ToastTheme } from "../components/Toast/Toast";
+import { ToastTheme } from "../components/Toast/Toast";
 import Checkbox from "../components/Checkbox/Checkbox";
-import serverapi from "../api/serverapi";
+import publicapi from "../api/publicapi";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import { useNavigate } from "react-router-dom";
 import Modal from "../components/Modal/Modal";
+import useToast from "../hooks/useToast";
+import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
+import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
+
 
 let init = 0;
-
-const ModalContent = styled.div`
-  transition: all 0.3s ease-in-out;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: ${(props) =>
-    props.isModalOn ? "translate(-50%, -50%)" : "translate(-50%, -40%)"};
-  width: calc(100vw - 64px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  border-radius: 16px;
-  padding: 16px;
-  color: #7bab6e;
-  z-index: 500;
-
-  opacity: ${(props) => (props.isModalOn ? "1" : "0")};
-  pointer-events: ${(props) => (props.isModalOn ? "auto" : "none")};
-`;
-
-const ModalButton = styled.button`
-  transition: 0.2s all ease-in-out;
-  width: 100%;
-  background-color: #7bab6e;
-  border-style: none;
-  border-radius: 16px;
-  padding: 20px 0;
-  color: #ffffff;
-  font-size: 18px;
-
-  &:active {
-    transition: 0.2s all ease-in-out;
-    transform: scale(0.98);
-    filter: brightness(0.9);
-  }
-`;
 
 const Signup = () => {
   const [userInfo, setUserInfo] = useState({
@@ -72,8 +37,6 @@ const Signup = () => {
   const [showModal, setShowModal] = useState(false);
   const [verficationNumber, setVerficationNumber] = useState("");
   const [time, setTime] = useState("");
-  const [showToast, setShowToast] = useState(false);
-  const [toastTheme, setToastTheme] = useState(ToastTheme.SUCCESS);
   const [isCetrificated, setIsCertificated] = useState(false);
   const [isCertificateButtonClicked, setIsCertificateButtonClicked] =
     useState(false);
@@ -81,13 +44,19 @@ const Signup = () => {
     isPhoneNumVerficationButtonClicked,
     setIsPhoneNumVerficationButtonClickClick,
   ] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
   const [tos1Checked, setTos1Checked] = useState(false);
   const [tos2Checked, setTos2Checked] = useState(false);
   const [tos3Checked, setTos3Checked] = useState(false);
-  const checkEmptyUserInfoValue = Object.values(userInfo).some(
+  const userInfoForCheck = { ...userInfo };
+  delete userInfoForCheck.year;
+  delete userInfoForCheck.month;
+  delete userInfoForCheck.day;
+
+  const checkEmptyUserInfoValue = Object.values(userInfoForCheck).some(
     (data) => data === ""
   );
+
+  const { showToast } = useToast({});
 
   const navigate = useNavigate();
 
@@ -100,7 +69,6 @@ const Signup = () => {
     tos1Checked &&
     tos2Checked &&
     tos3Checked &&
-    gender &&
     !checkEmptyUserInfoValue;
 
   const idRegEx = /^[a-z0-9]{6,15}$/;
@@ -131,7 +99,7 @@ const Signup = () => {
   const isIdDuplicated = async (uid) => {
     const api = `/user/dup_check/${uid}`;
     try {
-      const res = await serverapi.get(api);
+      const res = await publicapi.get(api);
       if (res.status === 200) {
         return res.data.dup;
       }
@@ -146,19 +114,21 @@ const Signup = () => {
       phone: phoneNumber,
     };
     try {
-      const res = await serverapi.post(api, data);
+      const res = await publicapi.post(api, data);
       if (res.status === 200) {
-        setToastMessage("인증번호가 전송되었습니다.");
-        setToastTheme(ToastTheme.SUCCESS);
-        setShowToast(true);
+        showToast({
+          message: "인증번호가 전송되었습니다.",
+          theme: ToastTheme.SUCCESS,
+        });
         console.log(res.data.code);
         setVerficationNumber(res.data.code);
         setTime("180");
       }
     } catch (e) {
-      setToastMessage("error occured");
-      setToastTheme(ToastTheme.ERROR);
-      setShowToast(true);
+      showToast({
+        message: "error occured",
+        theme: ToastTheme.ERROR,
+      });
     }
   };
 
@@ -168,26 +138,31 @@ const Signup = () => {
       id: userInfo.id,
       password: userInfo.pwd,
       name: userInfo.name,
-      gender: gender,
-      birth: userInfo.year + "-" + userInfo.month + "-" + userInfo.day,
       phone: userInfo.phoneNumber.replace(/-/g, ""),
     };
+
+    if (gender)
+      data.gender = gender;
+    if (userInfo.year && userInfo.month && userInfo.day)
+      data.birth = userInfo.year + "-" + userInfo.month + "-" + userInfo.day;
+
+
     try {
-      const res = await serverapi.post(api, data);
+      const res = await publicapi.post(api, data);
       if (res.status === 200) {
-        setToastTheme(ToastTheme.SUCCESS);
-        setToastMessage("회원가입이 성공적으로 완료되었습니다.");
-        setShowToast(true);
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
+        showToast({
+          message: "회원가입이 성공적으로 완료되었습니다.",
+          theme: ToastTheme.SUCCESS,
+        });
+        navigate("/");
       }
     } catch (e) {
       console.log(e);
-      if (e.response.data.dev_message === "SignUpFail error") {
-        setToastMessage(e.response.data.message);
-        setToastTheme(ToastTheme.ERROR);
-        setShowToast(true);
+      if (e.response.data.message) {
+        showToast({
+          message: e.response.data.message,
+          theme: ToastTheme.ERROR,
+        });
       }
     }
   };
@@ -309,15 +284,6 @@ const Signup = () => {
     return () => clearInterval(id);
   }, [time]);
 
-  useEffect(() => {
-    if (showToast) {
-      const timer = setTimeout(() => {
-        setShowToast(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [showToast]);
-
   function handleTos1Change(event) {
     setTos1Checked(event.target.checked);
   }
@@ -351,15 +317,14 @@ const Signup = () => {
           padding: "20px 27px",
         }}>
         <Input
-          label="아이디"
-          btnContent2={"asd"}
+          label="아이디*"
           onChangeHandler={idChangeHandler}
           value={userInfo.id}
           isError={!!invalidIdInfo}
           description={invalidIdInfo}
         />
         <Input
-          label="비밀번호"
+          label="비밀번호*"
           type="password"
           onChangeHandler={pwdChangeHandler}
           value={userInfo.pwd}
@@ -367,7 +332,7 @@ const Signup = () => {
           description={invalidPwdInfo}
         />
         <Input
-          label="비밀번호 확인"
+          label="비밀번호 확인*"
           type="password"
           onChangeHandler={matchingPwdChangeHandler}
           value={userInfo.matchingPwd}
@@ -375,7 +340,7 @@ const Signup = () => {
           description={invalidMatchingPwdInfo}
         />
         <Input
-          label="이름"
+          label="이름*"
           onChangeHandler={nameChangeHandler}
           value={userInfo.name}
           isError={false}
@@ -389,7 +354,7 @@ const Signup = () => {
               color: "#7BAB6E",
               paddingLeft: "16px",
               position: "absolute",
-              top: "-14px",
+              top: "-18px",
             }}>
             성별
           </div>
@@ -411,7 +376,7 @@ const Signup = () => {
           dayChangeHandler={dayChangeHandler}
         />
         <Input
-          label="전화번호"
+          label="전화번호*"
           onChangeHandler={phoneNumberChangeHandler}
           value={userInfo.phoneNumber}
           isError={false}
@@ -436,7 +401,7 @@ const Signup = () => {
           }
         />
         <Input
-          label="인증번호"
+          label="인증번호*"
           onChangeHandler={certificateNumberChangeHandler}
           value={
             isCetrificated && isCertificateButtonClicked
@@ -474,13 +439,15 @@ const Signup = () => {
                   console.log(time === 0);
                   setIsCertificateButtonClicked(true);
                   if (isCertificationNumberValid(userInfo.certificateNumber)) {
-                    setToastMessage("인증에 성공하였습니다.");
-                    setToastTheme(ToastTheme.SUCCESS);
-                    setShowToast(true);
+                    showToast({
+                      message: "인증에 성공하였습니다.",
+                      theme: ToastTheme.SUCCESS,
+                    });
                   } else {
-                    setToastMessage("인증번호가 일치하지 않습니다.");
-                    setToastTheme(ToastTheme.ERROR);
-                    setShowToast(true);
+                    showToast({
+                      message: "인증번호가 일치하지 않습니다.",
+                      theme: ToastTheme.ERROR,
+                    });
                   }
                 }}>
                 {isCetrificated || isCertificateButtonClicked ? "완료" : "확인"}
@@ -513,17 +480,15 @@ const Signup = () => {
           />
         </div>
         <Button
-          disabled={!isAllValid}
+          // disabled={!isAllValid}
           buttonSize={ButtonSize.LARGE}
           buttonTheme={isAllValid ? ButtonTheme.GREEN : ButtonTheme.GRAY}
           handler={() => {
             signup();
           }}>
           회원가입
+          {isAllValid ? <NextArrowWhite/> : <NextArrowGray/>}
         </Button>
-
-        {showToast && <Toast toastTheme={toastTheme}>{toastMessage}</Toast>}
-        {showToast && <Toast toastTheme={toastTheme}>{toastMessage}</Toast>}
       </div>
     </SignupPageWrapper>
   );

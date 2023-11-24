@@ -1,24 +1,12 @@
-import { putFetcher } from "./api";
 import { useMutation } from "react-query";
-import useAuthToken from "./useAuthToken";
-import useRefresh from "./useRefresh";
-
-const putResetPw = async (data, getAccessToken) => {
-  return await putFetcher('/user/reset/password', data, {
-    Authorization: getAccessToken()
-  });
-};
+import useApi from './useApi';
 
 export const useResetPw = (data) => {
-  const { getAccessToken } = useAuthToken();
-  const { refresh } = useRefresh();
-  return useMutation(() => {
-    return putResetPw(data, getAccessToken)
+  const { putFetcher } = useApi();
+  return useMutation(async () => {
+    return await putFetcher('/user/reset/password', data)
   }, {
-    onError: async (e) => {
-      if (e.status === 403) {
-        await refresh();
-      }
+    onError: (e) => {
       console.log(e);
     },
     onSuccess: (res) => {

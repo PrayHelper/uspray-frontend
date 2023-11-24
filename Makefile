@@ -9,3 +9,7 @@ build-prod:
 build-intg:
 	docker compose -p frontend-intg -f ./deploy/docker-compose.intg.yml down
 	docker compose -p frontend-intg -f ./deploy/docker-compose.intg.yml up --build -d
+
+build-hotfix:
+	docker compose -p frontend-hotfix -f ./deploy/docker-compose.hotfix.yml down
+	docker compose -p frontend-hotfix -f ./deploy/docker-compose.hotfix.yml up --build -d

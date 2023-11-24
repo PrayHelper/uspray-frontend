@@ -4,7 +4,7 @@ services:
     build:
       context: ../
       dockerfile: ./deploy/Dockerfile
-    image: prayhelper-client-prod
+    image: prayhelper-client-intg
     ports:
       - "4005:3000"
     command: ["serve", "-s", "build"]

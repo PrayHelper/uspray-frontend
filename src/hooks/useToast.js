@@ -14,14 +14,10 @@ const useToast = ({ initialMessage, initialTheme }) => {
   const [toastTheme, setToastTheme] = useRecoilState(toastThemeState);
   const [toastVisible, setToastVisible] = useRecoilState(toastVisibleState);
 
-  // 초기화
+  // 초기화: null / undefined일 경우 기존 값 그대로
   useEffect(() => {
-    if (!!initialMessage) {
-      setToastMessage(initialMessage);
-    }
-    if (!!initialTheme) {
-      setToastTheme(initialTheme);
-    }
+    setToastMessage(initialMessage ?? toastMessage);
+    setToastTheme(initialTheme ?? toastTheme);
   }, []);
 
   useEffect(() => {
@@ -33,9 +29,10 @@ const useToast = ({ initialMessage, initialTheme }) => {
   }, [toastVisible]);
 
   return {
+    // null / undefined일 경우 기존 값 그대로
     showToast: ({ message, theme }) => {
-      if (!!message) setToastMessage(message);
-      if (!!theme) setToastTheme(theme);
+      setToastMessage(message ?? toastMessage);
+      setToastTheme(theme ?? toastTheme);
       setToastVisible(true);
     },
     renderToast: () =>

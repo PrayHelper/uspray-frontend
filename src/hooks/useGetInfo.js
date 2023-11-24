@@ -1,23 +1,11 @@
 import { useQuery } from 'react-query';
-import { getFetcher } from "./api";
-import useAuthToken from "./useAuthToken";
-import useRefresh from "./useRefresh";
-
-const getInfo = async (getAccessToken) => {
-  return await getFetcher(`/user/info`, {
-    Authorization: getAccessToken(),
-  });
-
-}
+import useApi from './useApi';
 
 export const useGetInfo = () => {
-  const { getAccessToken } = useAuthToken();
-  const { refresh } = useRefresh();
-  return useQuery([], () => {return getInfo(getAccessToken)} ,  {
-    onError: async (e) => {
-      if (e.status === 403) {
-       await refresh();
-      }
+  const { getFetcher } = useApi();
+  return useQuery([], async () => {return await getFetcher(`/user/info`)}, {
+    onError: (e) => {
+      console.log(e);
     },
     onSuccess: (res) => {
     //   console.log(res);

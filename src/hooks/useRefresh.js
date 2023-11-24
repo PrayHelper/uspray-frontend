@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import serverapi from "../api/serverapi";
+import publicapi from "../api/publicapi";
 import useAuthToken from "./useAuthToken";
 import useAuthorized from "./useAuthorized";
 
@@ -13,7 +13,7 @@ const useRefresh = () => {
     console.log("Refresh는 실행이 되나?")
   try {
     const refreshToken = await getRefreshToken();
-    const res = await serverapi.get('/user/token', {
+    const res = await publicapi.get('/user/token', {
       headers: {
         Authorization: `${refreshToken}`,
       }

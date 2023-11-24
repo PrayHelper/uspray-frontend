@@ -3,7 +3,7 @@ import Button, { ButtonSize, ButtonTheme } from "../Button/Button";
 import styled, { keyframes } from "styled-components";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import serverapi from "../../api/serverapi";
+import publicapi from "../../api/publicapi";
 
 const StyledHeader = styled.div`
   display: flex;
@@ -105,7 +105,7 @@ const IdResult = ( {userData} ) => {
       phone: userData.phoneNumber.replace(/-/g, ""),
     };
     try {
-      const res = await serverapi.post(api, data);
+      const res = await publicapi.post(api, data);
       if (res.status === 200) {
         setText(res.data.message);
         setText1(userData.name);

@@ -4,7 +4,7 @@ import styled, { keyframes } from "styled-components";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import serverapi from "../../api/serverapi";
+import publicapi from "../../api/publicapi";
 
 const StyledHeader = styled.div`
   display: flex;
@@ -106,7 +106,7 @@ const PwError = () => {
       phone: result.state.userInfo.phoneNumber.replace(/-/g, ""),
     };
     try {
-      const res = await serverapi.post(api, data);
+      const res = await publicapi.post(api, data);
       if (res.status === 200) {
         setText(res.data.message);
         setText1(data.name);

@@ -1,28 +1,14 @@
-import { useRecoilState } from "recoil";
-import { tokenState } from "../recoil/auth";
-import { postFetcher, refresh } from "./api";
 import { useMutation } from "react-query";
-import useAuthToken from "./useAuthToken";
-import useRefresh from "./useRefresh";
-
-const updateSharedList = async (getAccessToken, data) => {
-  return await postFetcher("/share/save", data, {
-    Authorization: getAccessToken(),
-  });
-};
+import useApi from './useApi';
 
 export const useUpdateSharedList = () => {
-  const { getAccessToken } = useAuthToken();
-  const { refresh } = useRefresh();
+  const { postFetcher } = useApi();
   return useMutation(
-    (data) => {
-      return updateSharedList(getAccessToken, data);
+    async (data) => {
+      return await postFetcher("/share/save", data);
     },
     {
-      onError: async (e) => {
-        if (e.status === 403) {
-          await refresh();
-        }
+      onError: (e) => {
         console.log(e);
       },
       onSuccess: (res) => {

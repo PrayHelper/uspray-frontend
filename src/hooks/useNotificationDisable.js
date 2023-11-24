@@ -1,27 +1,14 @@
-import { putFetcher } from "./api";
 import { useMutation } from "react-query";
-import useAuthToken from "./useAuthToken";
-import useRefresh from "./useRefresh";
-
-const putNotifyDisable = async (data, getAccessToken) => {
-  return await putFetcher("/user/notification/" + data + "/disable", data, {
-    Authorization: getAccessToken(),
-  });
-};
+import useApi from './useApi';
 
 export const useNotificationDisable = (data) => {
-  const { getAccessToken } = useAuthToken();
-  const { refresh } = useRefresh();
-
+  const { putFetcher } = useApi();
   return useMutation(
-    (data) => {
-      return putNotifyDisable(data.id, getAccessToken);
+    async (data) => {
+      return await putFetcher("/user/notification/" + data.id + "/disable", data.id);
     },
     {
-      onError: async (e) => {
-        if (e.status === 403) {
-          await refresh();
-        }
+      onError: (e) => {
         console.log(e);
       },
       onSuccess: (res) => {

@@ -6,6 +6,9 @@ import styled from "styled-components";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import { useResetPw } from "../hooks/useResetPw";
 import Modal from "../components/Modal/Modal";
+import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
+import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
+
 
 const ModalContent = styled.div`
   position: fixed;
@@ -174,6 +177,7 @@ const ChangePw = () => {
               }}
             >
               재설정하기
+              {isAllValid ? <NextArrowWhite/> : <NextArrowGray/>}
             </Button>
           </div>
         </div>

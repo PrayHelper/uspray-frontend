@@ -1,26 +1,14 @@
-import { putFetcher } from "./api";
 import { useMutation } from "react-query";
-import useAuthToken from "./useAuthToken";
-import useRefresh from "./useRefresh";
-
-const putHistory = async (getAccessToken, data) => {
-  return await putFetcher("/history/modify", data, {
-    Authorization: getAccessToken(),
-  });
-};
+import useApi from './useApi';
 
 export const useHistoryModify = () => {
-  const { getAccessToken } = useAuthToken();
-  const { refresh } = useRefresh();
+  const { putFetcher } = useApi();
   return useMutation(
-    (data) => {
-      return putHistory(getAccessToken, data);
+    async (data) => {
+      return await putFetcher("/history/modify", data);
     },
     {
-      onError: async (e) => {
-        if (e.status === 403) {
-          await refresh();
-        }
+      onError: (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
