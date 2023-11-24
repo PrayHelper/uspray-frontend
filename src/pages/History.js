@@ -7,7 +7,7 @@ import BlackScreen from "../components/BlackScreen/BlackScreen";
 import { useFetchHistory } from "../hooks/useFetchHistory";
 import { useHistoryModify } from "../hooks/useHistoryModify";
 import Lottie from "react-lottie";
-import LottieData from "../components/Main/json/uspray.json";
+import LottieData from "../json/lottie.json";
 import useToast from "../hooks/useToast";
 import SelectDateInput from "../components/SelectDateInput/SelectDateInput";
 
