@@ -45,11 +45,11 @@ import useToast from "./hooks/useToast";
 import HistorySearch from "./pages/HistorySearch";
 import GroupDetail from "./pages/GroupDetail";
 import GroupSettings from "./pages/GroupSettings";
-import ChangeGroupName from './pages/ChangeGroupName';
-import AssignGroupLeader from './pages/AssignGroupLeader';
-import RemoveMember from './pages/RemoveMember';
-import DeleteGroup from './pages/DeleteGroup';
-import LeaveGroup from './pages/LeaveGroup';
+import ChangeGroupName from "./pages/ChangeGroupName";
+import AssignGroupLeader from "./pages/AssignGroupLeader";
+import RemoveMember from "./pages/RemoveMember";
+import DeleteGroup from "./pages/DeleteGroup";
+import LeaveGroup from "./pages/LeaveGroup";
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -114,7 +114,10 @@ function App() {
                 <Route path="/leaveGroup" element={<LeaveGroup />} />
                 <Route path="/groupSettings" element={<GroupSettings />} />
                 <Route path="/changeGroupName" element={<ChangeGroupName />} />
-                <Route path="/assignGroupLeader" element={<AssignGroupLeader />} /> 
+                <Route
+                  path="/assignGroupLeader"
+                  element={<AssignGroupLeader />}
+                />
                 <Route path="/removeMember" element={<RemoveMember />} />
                 <Route path="/checkInfo" element={<CheckInfo />} />
                 <Route path="/changeInfo" element={<ChangeInfo />} />

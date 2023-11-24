@@ -14,7 +14,7 @@ const Main = () => {
 
   const handleTabChange = (newTab) => {
     setTab(newTab);
-    setBgColor(newTab === '내가 쓴' ? '#7BAB6E' : '#D0E8CB');
+    setBgColor(newTab === '내가 쓴' ? '#7BAB6E' : '#3D5537');
   };
 
   const addCategory = () => {
@@ -34,25 +34,16 @@ const Main = () => {
     e.stopPropagation();
   };
 
-  const TabList = ['내가 쓴', '공유 받은'];
   const ColorList = ["#D0E8CB", "#AEDBA5", "#9BD88A", "#75BD62", "#649D55", "#58834D", "#507247"];
 
   return (
     <MainWrapper style={{ backgroundColor: bgColor }}>
       <TopContainer>
         <TopBox>
-          <TabContainer>
-          {TabList.map((tabItem) => (
-            <Tab 
-              active={tab === tabItem}
-              onClick={() => handleTabChange(tabItem)}
-              key={tabItem}
-            >
-              {tabItem}
-          </Tab>
-          ))}
+        <TabContainer>
+            <Tab active={tab === '내가 쓴'} onClick={() => handleTabChange('내가 쓴')}>내가 쓴</Tab>
+            <Tab active={tab === '공유 받은'} onClick={() => handleTabChange('공유 받은')}>공유 받은</Tab>
           </TabContainer>
-          <AlarmIcon src={tab === '공유 받은' ? "images/ic_alarm_green.svg" : "images/ic_alarm.svg"} alt="alarm_icon" />
         </TopBox>
         <FlexContainer>
         {tab === '내가 쓴' ? 
@@ -108,7 +99,6 @@ const FlexContainer = styled.div`
   display: flex;
 `;
 
-const AlarmIcon = styled.img``;
 
 const TabContainer = styled.div`
   display: flex;
@@ -118,9 +108,9 @@ const TabContainer = styled.div`
 
 const Tab = styled.div`
   font-size: 24px;
-  color: ${props => props.active ? (props.children === '내가 쓴' ? '#FFFFFF' : '#606060') : '#60606080'};
+  color: ${props => props.active ? '#FFFFFF' : '#FFFFFF80'};
   cursor: pointer;
-  border-bottom: ${props => props.active ? (props.children === '내가 쓴' ? '2px solid #FFFFFF' : '2px solid #606060') : 'none'};
+  border-bottom: ${props => props.active ? '2px solid #FFFFFF' : 'none'};
 `;
 
 const Input = styled.input`
@@ -142,9 +132,22 @@ const Input = styled.input`
 const MoveToLockerButton = styled.div`
   width: 100%;
   padding: 14px 16px;
-  background-color: #7BAB6E;
+  background-color: #FFFFFF40;
   color: #FFFFFF;
   border-radius: 16px;
+  position: relative;
+
+  ::after {
+    content: "";
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background-image: url('/images/ic_right_arrow.svg');
+    background-size: contain;
+  }
 `;
 
 const CategorySetting = styled.div`
