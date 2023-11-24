@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import MainContent from '../components/Main/MainContent';
-import Button, { ButtonSize } from "../components/Button/Button";
 import { useState } from 'react';
+import ButtonV2, { ButtonTheme } from '../components/ButtonV2/ButtonV2';
 
 
 const Main = () => {
@@ -57,7 +57,7 @@ const Main = () => {
         <CategorySetting  onClick={() => setShowCategorySetting(false)}>
           <Input type="text" value={inputValue} placeholder="카테고리를 입력해주세요" onChange={handleInputChange} onClick={handleInnerClick}/>
           <FixedButtonContainer onClick={handleInnerClick}>
-            <Button buttonSize={ButtonSize.LARGE} handler={addCategory}>카테고리 추가</Button>
+            <ButtonV2 buttonTheme={ButtonTheme.FILLED} handler={addCategory}>카테고리 추가</ButtonV2>
           </FixedButtonContainer>
           <ColorPalette>
           {ColorList.map((color) => (
