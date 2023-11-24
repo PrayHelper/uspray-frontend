@@ -54,7 +54,7 @@ const DateDiv = styled.div`
   font-size: 12px;
   border-radius: 10px;
   width: fit-content;
-  background-color: var(--color-dark-green);
+  background-color: var(--color-green);
 `
 
 export default GroupPrayList;

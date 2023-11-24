@@ -7,10 +7,14 @@ const GroupInfo = ({isData}) => {
       {
         isData ?
           <GroupInfoText>
-            <div>오늘 하루동안</div>
             <div>
-              <span style={{color: "var(--color-green)"}}>289명</span>
-              <span>이 기도했어요!</span>
+              <span style={{color: "var(--color-green)"}}>북동1팀 </span>
+              <span>모임에서는</span>
+            </div>
+            <div>
+              <span>기도가 </span>
+              <span style={{color: "var(--color-green)"}}>289번 </span>
+              <span>쌓였어요!</span>
             </div>
           </GroupInfoText>
           : 
