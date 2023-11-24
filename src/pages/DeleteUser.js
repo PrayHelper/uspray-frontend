@@ -3,17 +3,20 @@ import UserHeader from "../components/UserHeader";
 import Checkbox from "../components/Checkbox/Checkbox";
 import { useState } from "react";
 import DeleteReasonOptionList from "../components/WithdrawalReason/DeleteReasonOptionList";
+import { useDeleteUser } from "../hooks/useDeleteUser";
+import Modal from "../components/Modal/Modal";
+import BlackScreen from "../components/BlackScreen/BlackScreen";
 
 const initialDeleteReasonOptionList = [
-  { id: "NOT-IN-USE", text: "쓰지 않는 서비스에요.", checked: false },
-  { id: "LACK-OF-FUNCTION", text: "원하는 기능이 없어요.", checked: false },
+  { id: 1, text: "쓰지 않는 서비스에요.", checked: false },
+  { id: 2, text: "원하는 기능이 없어요.", checked: false },
   {
-    id: "TOO-MANY-ERROS",
+    id: 3,
     text: "오류가 많아서 쓸 수가 없어요.",
     checked: false,
   },
-  { id: "INCONVENIENCE", text: "사용하기에 불편함이 있어요.", checked: false },
-  { id: "ETC", text: "기타", checked: false },
+  { id: 4, text: "사용하기에 불편함이 있어요.", checked: false },
+  { id: 5, text: "기타", checked: false },
 ];
 
 const DeleteUser = () => {
@@ -22,12 +25,22 @@ const DeleteUser = () => {
   );
   const [isAgreementsChecked, setIsAgreementsChecked] = useState(false);
   const [etcReasonInput, setEtcReasonInput] = useState("");
+  const [isModalOn, setIsModalOn] = useState(false);
 
-  // 조건이 정해짐에 따라 수정 필요!
-  const isContinueBtnEnabled = isAgreementsChecked;
+  const openModal = () => {
+    setIsModalOn(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOn(false);
+  };
+
+  // 약관동의 + 사유 중 하나 이상 체크
+  const isContinueBtnEnabled =
+    isAgreementsChecked && deleteReasonOptionList.some((item) => item.checked);
 
   const isEtcChecked = deleteReasonOptionList.find(
-    (item) => item.id == "ETC"
+    (item) => item.id === 5
   ).checked;
 
   const toggleOptionById = (id) => {
@@ -39,12 +52,19 @@ const DeleteUser = () => {
   };
 
   const toggleAgreementsChecked = () => {
-    setIsAgreementsChecked(!isAgreementsChecked);
+    setIsAgreementsChecked((prev) => !prev);
   };
 
   const onChangeEtcReasonInput = (e) => {
     setEtcReasonInput(e.target.value);
   };
+
+  const reason_id = deleteReasonOptionList // 사유 state를 데이터로 전환 ex) [1, 2, 5]
+    .filter((item) => item.checked)
+    .map((item) => item.id);
+  const reqData = { reason_id, etc: etcReasonInput };
+
+  const { mutate: mutateDeleteUser } = useDeleteUser(reqData);
 
   return (
     <S.Root>
@@ -84,18 +104,33 @@ const DeleteUser = () => {
               복구할 수 없습니다.
             </S.CautionInformation>
           </S.Caution>
-          <S.Agreement>
+          <S.AgreementContainer onClick={toggleAgreementsChecked}>
             <Checkbox
               checked={isAgreementsChecked}
-              handler={toggleAgreementsChecked}
+              // 텍스트 영역 클릭시에도 toggle을 실행시키기 위해 보다 상위 컴포넌트에 onClick 지정
+              handler={() => {}}
               label={"주의사항을 모두 확인하였으며, 이에 동의합니다."}
               id={"agreement"}
             />
-          </S.Agreement>
+          </S.AgreementContainer>
         </S.DeleteCautionAndAgreement>
       </S.Content>
-      {/* TODO: onPress로 모달 띄우거나 API 붙이기 */}
-      <S.ContinueBtn isEnabled={isContinueBtnEnabled}>계속하기</S.ContinueBtn>
+      <S.ContinueBtn isEnabled={isContinueBtnEnabled} onClick={openModal}>
+        계속하기
+      </S.ContinueBtn>
+      <BlackScreen isModalOn={isModalOn} />
+      <Modal
+        isModalOn={isModalOn}
+        iconSrc={"images/ic_withdrawal.svg"}
+        iconAlt={"icon_withdrawal"}
+        mainContent={"회원탈퇴 하시겠습니까?"}
+        subContent={"신중하게 결정해주세요!"}
+        btnContent={"회원탈퇴"}
+        btnContent2={"취소"}
+        onClickBtn={mutateDeleteUser}
+        onClickBtn2={closeModal}
+        modalTheme={2}
+      />
     </S.Root>
   );
 };
@@ -171,7 +206,7 @@ const S = {
     background: var(--Light_Grey, #eee);
     margin: 12px 0px;
   `,
-  Agreement: styled.div`
+  AgreementContainer: styled.div`
     display: flex;
 
     flex-direction: row;

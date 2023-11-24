@@ -42,5 +42,6 @@ const S = {
     `}
 
     padding: 12px;
+    transition: all 0.3s ease-in-out;
   `,
 };
