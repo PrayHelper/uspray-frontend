@@ -9,7 +9,7 @@ import { useHistoryModify } from "../hooks/useHistoryModify";
 import Lottie from "react-lottie";
 import LottieData from "../components/Main/json/uspray.json";
 import useToast from "../hooks/useToast";
-import SelectDateInput from "../components/SelectDateInput/selectDateInput";
+import SelectDateInput from "../components/SelectDateInput/SelectDateInput";
 
 const History = () => {
   const [loading, setLoading] = useState(true);
@@ -247,7 +247,6 @@ const History = () => {
             setShowDatePicker,
             setUpdateDate,
             showSubModal,
-            onClickFunc,
           }}
           onClickFunc={() => onClickModify(sortBy)}
           inputPlaceHolder={"기도제목을 입력해주세요"}
@@ -262,8 +261,7 @@ const History = () => {
             <div
               onClick={(e) => onClickHistoryItem(e, sortBy)}
               key={el.id}
-              id={el.id}
-            >
+              id={el.id}>
               <HisContent
                 name={el.target}
                 content={el.title}
@@ -281,8 +279,7 @@ const History = () => {
             <div
               onClick={(e) => onClickHistoryItem(e, sortBy)}
               key={el.id}
-              id={el.id}
-            >
+              id={el.id}>
               <HisContent
                 name={el.target}
                 content={el.title}
