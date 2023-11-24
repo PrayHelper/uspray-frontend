@@ -8,7 +8,7 @@ import styled from "styled-components";
   1. maxlen : 최대 길이, maxrow : 최대 줄바꿈, inputPlaceHolder
   2. selectedBtn, setSelectedBtn 변수 (각 날짜 버튼 클릭 유무)
   3. setUpdateDate 변수 (api 호출용 날짜 데이터 저장)
-  4. isShowSubModal setisShowSubModal 변수 (현재 컴포넌트 창 켜져있는지)
+  4. showSubModal setShowSubModal 변수 (현재 컴포넌트 창 켜져있는지)
   5. onClickFunc 기도 추가 이벤트 함수
   ------ Calender 관련 ------
   1. selectedDate, setSelectedDate 변수 (현재 선택된 날짜)
