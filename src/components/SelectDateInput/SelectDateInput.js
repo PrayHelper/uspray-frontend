@@ -11,6 +11,8 @@ import BlackScreen from "../BlackScreen/BlackScreen";
   3. setUpdateValue 변수 (api 호출용 input 내용 데이터 저장)
   4. showSubModal setShowSubModal 변수 (현재 컴포넌트 창 켜져있는지)
   5. onClickFunc 기도 추가 이벤트 함수
+  6. isDefault 변수 (디폴트 값 존재하는지)
+  7. isShowWordCount 변수 (글자수 유무)
 */
 
 const SelectDateInput = (props) => {
@@ -22,7 +24,7 @@ const SelectDateInput = (props) => {
     if (e.target.value.length > e.maxLength)
       setInputCount(e.value.slice(0, e.maxLength));
     setInputCount(e.target.value.length);
-    props.setUpdateValue(e.target.value);
+    if (props.setUpdateValue) props.setUpdateValue(e.target.value);
   };
 
   return (
@@ -44,12 +46,16 @@ const SelectDateInput = (props) => {
               cacheMeasurements
               maxLength={props.maxlen}
               onChange={onInputHandler}
+              disabled={props.isDefault ? true : false}
+              value={props.isDefault ? "기도제목을 입력하였습니다." : undefined}
             />
-            <Countwords>
-              <p>
-                {inputCount}자 / {props.maxlen}자
-              </p>
-            </Countwords>
+            {props.isShowWordCount && (
+              <Countwords>
+                <p>
+                  {inputCount}자 / {props.maxlen}자
+                </p>
+              </Countwords>
+            )}
           </ModalInputWrapper>
           <SelectDate
             setUpdateDate={props.setUpdateDate}
@@ -68,7 +74,8 @@ SelectDateInput.defaultProps = {
   inputPlaceHolder: "기도제목을 입력해주세요",
   maxlen: 75,
   maxrow: 3,
-  setUpdateValue: "",
+  isShowWordCount: true,
+  isDefault: false,
 };
 
 export default SelectDateInput;
@@ -115,6 +122,10 @@ const ModalInput = styled(TextareaAutosize)`
     border-bottom: 1px solid var(--color-dark-green);
   }
   font-weight: 400;
+  :disabled {
+    background-color: var(--color-white);
+    color: var(--color-dark-grey-30);
+  }
 `;
 
 const Countwords = styled.span`

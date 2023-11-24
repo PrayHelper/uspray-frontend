@@ -170,9 +170,10 @@ const History = () => {
     }
   }, [hasMore, inView]);
 
-  const onClickFunc = () => {
-    console.log("gg");
-  };
+  // const onClickFunc = () => {
+  //   console.log("gg");
+  // };
+
   return (
     <HistoryWrapper>
       <Header sortBy={sortBy} onClickToggle={onClickToggle}>
@@ -230,12 +231,11 @@ const History = () => {
           </>
         )}
         <SelectDateInput
-          {...{
-            setUpdateDate,
-            setShowSubModal,
-            showSubModal,
-            onClickFunc,
-          }}
+          setUpdateDate={setUpdateDate}
+          setShowSubModal={setShowSubModal}
+          showSubModal={showSubModal}
+          isDefault={true}
+          isShowWordCount={false}
           onClickFunc={() => onClickModify(sortBy)}
         />
       </div>
