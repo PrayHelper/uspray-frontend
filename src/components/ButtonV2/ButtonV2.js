@@ -7,9 +7,9 @@ export const ButtonTheme = {
 
 Object.freeze(ButtonTheme);
 
-const ButtonV2 = ({buttonTheme = ButtonTheme.FILLED, disabled, children}) => {
+const ButtonV2 = ({buttonTheme = ButtonTheme.FILLED, disabled, handler, children}) => {
   return (
-    <ButtonStyle buttonTheme={buttonTheme} disabled={disabled}>
+    <ButtonStyle buttonTheme={buttonTheme} disabled={disabled} onClick={handler}>
       {children}
     </ButtonStyle>
   );
