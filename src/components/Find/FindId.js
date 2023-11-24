@@ -246,7 +246,7 @@ const FindId = () => {
             </SubLink>
           </div>
           <Button
-            // disabled={!isAllValid}
+            disabled={!isAllValid}
             buttonSize={ButtonSize.LARGE}
             buttonTheme={isAllValid ? ButtonTheme.GREEN : ButtonTheme.GRAY}
             handler={() => {

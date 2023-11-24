@@ -99,7 +99,7 @@ const IdResult = ( {userData} ) => {
 
   const showId = async () => {
     console.log(userData);
-    const api = "/user/find/id";
+    const api = "/auth/find-id";
     const data = {
       name: userData.name,
       phone: userData.phoneNumber.replace(/-/g, ""),
@@ -149,13 +149,16 @@ const IdResult = ( {userData} ) => {
           alignSelf: "center",
         }}
       >
-        <Link to="/findPW" style={{ textDecoration: "none" }}>
-          <Button buttonSize={ButtonSize.LARGE} buttonTheme={ButtonTheme.WHITE}>
-            비밀번호 찾기
-          </Button>
-        </Link>
+        {
+          isValid &&
+          <Link to="/findPW" style={{ textDecoration: "none" }}>
+            <Button buttonSize={ButtonSize.LARGE} buttonTheme={ButtonTheme.WHITE} isArrow={true}>
+              비밀번호 찾기
+            </Button>
+          </Link>
+        }
         <Link to="/" style={{ textDecoration: "none" }}>
-          <Button buttonSize={ButtonSize.LARGE} buttonTheme={ButtonTheme.GREEN}>
+          <Button buttonSize={ButtonSize.LARGE} buttonTheme={ButtonTheme.GREEN} isArrow={true}>
             메인화면으로 이동
           </Button>
         </Link>
