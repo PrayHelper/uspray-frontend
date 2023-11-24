@@ -3,15 +3,32 @@ import styled from "styled-components";
 import GroupItem from '../components/Group/GroupItem';
 
 const Group = () => {
-  const isData = true;
+  const groupList = [
+    {
+      id: 0,
+      name: "string",
+      lastPrayContent: "string",
+      memberCount: 0,
+      prayCount: 0,
+      updatedAt: "2023-11-24T10:06:06.136Z"
+    }
+  ];
   return (
     <GroupWrapper>
       <Header>모임</Header>
       {
-        isData ?
+        groupList.length !== 0 ?
           <GroupItemWrapper>
-            <GroupItem />
-            <GroupItem />
+            {
+              groupList.map((group) => {
+                return (
+                  <GroupItem
+                    key={group.id}
+                    group={group}
+                  />
+                );
+              })
+            }
           </GroupItemWrapper>
           :
           <NoGroupWrapper>
@@ -49,4 +66,3 @@ const GroupItemWrapper = styled.div`
 `;
 
 export default Group;
-
