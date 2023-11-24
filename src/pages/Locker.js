@@ -7,7 +7,7 @@ import { useDeleteSharedList } from "../hooks/useDeleteSharedList";
 import { useFetchSharedList } from "../hooks/useFetchSharedList";
 import { useUpdateSharedList } from "../hooks/useUpdateSharedList";
 import Lottie from "react-lottie";
-import LottieData from "../components/Main/json/uspray.json";
+import LottieData from "../json/lottie.json";
 import useToast from "../hooks/useToast";
 
 const Locker = () => {
