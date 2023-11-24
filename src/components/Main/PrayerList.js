@@ -88,6 +88,10 @@ const ToastWrapper = styled.div`
   align-items: center;
 `;
 
+const fontComponent = styled.div`
+  font-size : 12px;
+`
+
 function PrayerList({
   prayerContent,
   setPrayerContent,
@@ -279,9 +283,10 @@ function PrayerList({
         style={{
           zIndex: "103",
           opacity: isModify ? "1" : "0",
-          pointerEvents: isModify ? "auto" : "none",
+          pointerEvents: isModify ? "auto" : "none"
         }}
-        onClick={onModify}></BackgroundBright>
+        onClick={onModify}>
+      </BackgroundBright>
       <BackgroundBright
         style={{
           zIndex: "103",

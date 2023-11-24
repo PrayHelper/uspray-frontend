@@ -96,6 +96,15 @@ const DatePickerHeaderDate = styled.div`
   font-weight: 700;
 `;
 
+const TextWrapper = styled.div`
+  width : 100%;
+  display: flex;
+  justify-content : center;
+  position : fixed;
+  bottom : 110%;
+  font-size: 12px;
+  color: #75BD62; 
+`
 
 const ModifyBar = ({ id, valueChange, onModify, clickData, isModify, updateDate, setUpdateDate, dayToggle, setDayToggle,
   clickIsShare }) => {
@@ -144,6 +153,7 @@ const ModifyBar = ({ id, valueChange, onModify, clickData, isModify, updateDate,
   }
   return (
     <ModifyStyle style={{ opacity: isModify ? "1" : "0", transform: isModify ? "translateY(0%)" : "translateY(100%)" }}>
+      <TextWrapper>공유된 기도제목의 내용은 수정할 수 없습니다.</TextWrapper>
       {showDatePicker ?
         <DatePickerContainer>
           <DatePicker
