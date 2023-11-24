@@ -76,8 +76,8 @@ const StyleName = styled.input`
 
 const DatePickerContainer = styled.div`
   position: absolute;
-  top: calc(-32% - 4px);
-  left: calc(27% - 8px);
+  top: calc(-32%-4px);
+  left: calc(27%-8px);
   z-index: 400;
 `;
 
@@ -101,9 +101,10 @@ const TextWrapper = styled.div`
   display: flex;
   justify-content : center;
   position : fixed;
-  bottom : 110%;
+  bottom : ${(props) => props.isModify ? "110%" : "0%"};
   font-size: 12px;
-  color: #75BD62; 
+  color: #75BD62;
+
 `
 
 const ModifyBar = ({ id, valueChange, onModify, clickData, isModify, updateDate, setUpdateDate, dayToggle, setDayToggle,
@@ -142,7 +143,7 @@ const ModifyBar = ({ id, valueChange, onModify, clickData, isModify, updateDate,
     const yyyy = date.getFullYear();
     const mm = String(date.getMonth() + 1).padStart(2, "0");
     const dd = String(date.getDate()).padStart(2, "0");
-    const formattedDate = `${yyyy}-${mm}-${dd}`; // 포맷된 날짜 생성
+    const formattedDate = `${yyyy} -${mm} -${dd} `; // 포맷된 날짜 생성
     setUpdateDate(formattedDate);
   }
 
@@ -153,7 +154,7 @@ const ModifyBar = ({ id, valueChange, onModify, clickData, isModify, updateDate,
   }
   return (
     <ModifyStyle style={{ opacity: isModify ? "1" : "0", transform: isModify ? "translateY(0%)" : "translateY(100%)" }}>
-      <TextWrapper>공유된 기도제목의 내용은 수정할 수 없습니다.</TextWrapper>
+      <TextWrapper isModify={isModify}>공유된 기도제목의 내용은 수정할 수 없습니다.</TextWrapper>
       {showDatePicker ?
         <DatePickerContainer>
           <DatePicker

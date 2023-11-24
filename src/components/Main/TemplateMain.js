@@ -7,7 +7,14 @@ import DisableImage from "../../images/ic_disable_image.svg";
 import noClickImage from "../../images/no_click_image.svg";
 import { useGetInfo } from "../../hooks/useGetInfo";
 import SelectDate from "../SelectDate/selectDate";
+import SelectDateInput from "../SelectDateInput/selectDateInput";
 
+const BackgroundWrapper = styled.div`
+    width: 100%; 
+    background-color: #7BAB6E;
+    overflow-y : hidden;
+
+`
 
 const BackgroundInput = styled.div`
     display: flex;
@@ -167,12 +174,16 @@ const TemplateMain = ({
 
     const widthChange = () => {
         setVisible(!visible);
-        setShowSubModal(!showSubModal);
+        console.log(showSubModal);
         if (shareToggle) {
             setshareToggle(!shareToggle);
             setIsShare(!isShare);
         }
     };
+
+    const widthChangeInput = () => {
+        setShowSubModal(!showSubModal);
+    }
     const dayInfo = (e) => {
         setDay(e);
     };
@@ -204,7 +215,6 @@ const TemplateMain = ({
         setVisible(!visible);
         setValue("");
         var dday = dDayCalculate(updateDate);
-        console.log(dday);
         onInsert(name, dday, value);
         // setDayToggle(false);
         setShowSubModal(!showSubModal);
@@ -254,43 +264,46 @@ const TemplateMain = ({
     // }, [modalToggle]);
 
     return (
-        <div style={{ width: "100%", backgroundColor: "#7BAB6E" }}>
-            <MainComponent visible={visible}>
-                {visible ? "" :
+        <BackgroundWrapper>
+            <MainComponent>
+                {showSubModal ? "" :
                     <LogoTitle>
                         Uspray
                     </LogoTitle>}
-                <BackgroundInput visible={visible}>
-                    <StyleInput placeholder="기도제목을 입력해주세요" type="text" value={value} onChange={onChange}
-                        onClick={(!visible) ? () => widthChange() : onSubmit()} />
+                <BackgroundInput>
+                    {showSubModal ? (<SelectDateInput
+                        {...{
+                            setShowSubModal,
+                            selectedBtn,
+                            setSelectedBtn,
+                            selectedDate,
+                            setSelectedDate,
+                            showDatePicker,
+                            setShowDatePicker,
+                            setUpdateDate,
+                            showSubModal,
+                            setValue
+                        }}
+                        onClickFunc={submit}
+                        inputPlaceHolder={"기도제목을 입력해주세요"}
+                        maxlen={75}
+                        maxrow={3}
+                    />) : <StyleInput placeholder="기도제목을 입력해주세요" type="text" value={value} onChange={onChange}
+                        onClick={widthChangeInput} />}
                 </BackgroundInput>
-                {visible ?
-                    <InnerComponent>
-                        <SelectDate
-                            {...{
-                                selectedBtn,
-                                setSelectedBtn,
-                                selectedDate,
-                                setSelectedDate,
-                                showDatePicker,
-                                setShowDatePicker,
-                                setUpdateDate,
-                                showSubModal,
-                            }} />
-                    </InnerComponent> : ""}
             </MainComponent >
-            <BackgroundBright
+            {/* <BackgroundBright
                 onClick={changeCheckTop}
                 style={{
                     opacity: visible ? "1" : "0",
                     pointerEvents: visible ? "auto" : "none",
                 }}
-            />
-            <BtnWrapper visible={visible}>
+            /> */}
+            {/* <BtnWrapper visible={visible}>
                 <BtnComponent visible={visible} value={value} onClick={() => submit()}>기도제목 작성</BtnComponent>
-            </BtnWrapper>
+            </BtnWrapper> */}
             {children}
-        </div >
+        </BackgroundWrapper >
     );
 }
 
