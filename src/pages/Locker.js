@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import LockerContent from "../components/Locker/LockerContent";
 import LockerHeader from "../components/Locker/L_Header";
@@ -9,8 +9,8 @@ import { useUpdateSharedList } from "../hooks/useUpdateSharedList";
 import Lottie from "react-lottie";
 import LottieData from "../components/Main/json/uspray.json";
 import useToast from "../hooks/useToast";
-import { useShareSocial } from "../hooks/useShareSocial";
 import { useLocation } from "react-router";
+import { useShareSocialNew } from "../hooks/useShareSocialNew";
 
 
 const Locker = () => {
@@ -20,10 +20,10 @@ const Locker = () => {
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
   const query = new URLSearchParams(location.search);
+  // const shareData = useMemo(() => query.getAll('share'), [query]);
   const shareData = query.getAll('share');
-  const { data: shareSocialList, refetch: refetchShareSocialList }
-    = useShareSocial(shareData);
-
+  const { mutate: mutateUseShareSocialNew } = useShareSocialNew();
+  const [isNewSocial, setIsNewSocial] = useState(true);
   const { showToast } = useToast({});
 
   const defaultOptions = {
@@ -153,6 +153,25 @@ const Locker = () => {
     );
   };
 
+
+  useEffect(() => {
+    if (Array.isArray(shareData) && shareData.length !== 0) {
+      if (isNewSocial) {
+        mutateUseShareSocialNew(
+          {
+            pray_id_list: shareData
+          },
+          {
+            onSuccess: () => {
+              setIsNewSocial(false);
+            },
+          }
+        );
+      }
+    }
+  }, [shareData.length]);
+
+
   useEffect(() => {
     setIsLoading(true);
     if (sharedListData) {
@@ -166,11 +185,6 @@ const Locker = () => {
   //   }
   // }, [sharedListData]);
 
-  useEffect(() => {
-    if (Array.isArray(shareData) && shareData.length !== 0) {
-      refetchShareSocialList();
-    }
-  }, [shareData]);
   return (
     <LockerWrapper>
       <LockerHeader

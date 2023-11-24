@@ -409,6 +409,7 @@ function PrayerList({
           setUpdateDate={setUpdateDate}
           dayToggle={dayToggle}
           setDayToggle={setDayToggle}
+          clickIsShare={clickIsShare}
         />
         <DeleteBar
           deleteBtnClick={deleteBtnClick}
