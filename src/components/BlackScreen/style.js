@@ -11,7 +11,7 @@ export const BlackScreenStyle = styled.div`
   justify-content: center;
   align-items: center;
   position: fixed;
-  z-index: 200;
+  z-index: ${(props) => props.zindex};
   opacity: ${(props) => (props.isModalOn ? "1" : "0")};
   pointer-events: ${(props) => (props.isModalOn ? "auto" : "none")};
   backdrop-filter: blur(8px);

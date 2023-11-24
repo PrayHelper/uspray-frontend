@@ -17,8 +17,12 @@ const SelectDate = (props) => {
   const [designedDate, setDesignedDate] = useState(null); // yyyy-mm-dd (요일) 형태
 
   const onClickCalendar = () => {
-    props.setSelectedBtn("calendar");
-    props.setShowDatePicker(!props.showDatePicker);
+    if (props.selectedBtn === "calendar") {
+      props.setSelectedBtn();
+    } else {
+      props.setSelectedBtn("calendar");
+      props.setShowDatePicker(!props.showDatePicker);
+    }
   };
 
   const onChangeDate = (date) => {
@@ -43,7 +47,7 @@ const SelectDate = (props) => {
     const mm = String(date.getMonth() + 1).padStart(2, "0");
     const dd = String(date.getDate()).padStart(2, "0");
     const formattedDate = `${yyyy}-${mm}-${dd}`; // 포맷된 날짜
-    setDesignedDate(`${yyyy}-${mm}-${dd} (${formattedDayOfWeek})`);
+    setDesignedDate(`${yyyy}-${mm}-${dd} ${formattedDayOfWeek}`);
     props.setUpdateDate(formattedDate);
   };
 
@@ -52,7 +56,7 @@ const SelectDate = (props) => {
   }, [props.showSubModal]);
 
   return (
-    <>
+    <SelectDateWrapper>
       {dateOptions.map((option) => (
         <SubModalBtn
           key={option}
@@ -84,20 +88,30 @@ const SelectDate = (props) => {
       {designedDate && (
         <SubModalDate>~{designedDate.replace(/-/g, ".")}</SubModalDate>
       )}
-    </>
+    </SelectDateWrapper>
   );
 };
 
 export default SelectDate;
 
+const SelectDateWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+`;
+
 const SubModalBtn = styled.div`
   border: 1px solid var(--color-green);
   border-radius: 8px;
-  padding: 4px 8px;
+  padding: 4px 0px;
+  width: 48px;
   word-break: keep-all;
+  text-align: center;
   font-size: 12px;
-  line-height: 17px;
   color: var(--color-green);
+  transition: all 0.2s ease-in-out;
+
   cursor: pointer;
   ${(props) =>
     props.isSelected &&
@@ -106,10 +120,10 @@ const SubModalBtn = styled.div`
       color: var(--color-white);
     `}
   &:active {
-    transition: all 0.2s ease-in-out;
     filter: ${(props) =>
       props.disabled ? "brightness(1)" : "brightness(0.9)"};
     scale: ${(props) => (props.disabled ? "1" : "0.90")};
+    transition: all 0.1s ease-in-out;
   }
 `;
 
@@ -117,12 +131,14 @@ const SubModalDate = styled.div`
   font-size: 12px;
   color: var(--color-green);
   transform: translateX(-4px);
+  margin-left: 4px;
+  white-space: nowrap;
 `;
 
 const DatePickerContainer = styled.div`
-  position: fixed;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: absolute;
+  right: 0;
+  top: calc(100% + 16px);
   z-index: 400;
 `;
 
@@ -131,5 +147,6 @@ const CalenderIcon = styled.img`
   :active {
     filter: brightness(0.9);
     transform: scale(0.9);
+    transition: all 0.1s ease-in-out;
   }
 `;
