@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import GroupPrayItem from './GroupPrayItem';
 
-const GroupPrayList = ({isData}) => {
+const GroupPrayList = ({groupPrayList, isData}) => {
   return (
     <Wrapper>
       {
