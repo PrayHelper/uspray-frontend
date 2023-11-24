@@ -40,6 +40,7 @@ const GroupSettings = () => {
             buttonSize={ButtonSize.LARGE}
             buttonTheme={ButtonTheme.WHITE}
             isArrow={true}
+            handler={() => navigate('/deleteGroup')}
           >
             모임 삭제하기
           </Button>
