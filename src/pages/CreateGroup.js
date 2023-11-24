@@ -41,7 +41,7 @@ const CreateGroup = () => {
               buttonSize={ButtonSize.LARGE}
               buttonTheme={(groupName && !invalidGroupName) ? ButtonTheme.GREEN : ButtonTheme.GRAY}
               isArrow={true}
-              handler={() => console.log("hi")}
+              handler={() => {}}
             >
               모임 생성하기
             </Button>

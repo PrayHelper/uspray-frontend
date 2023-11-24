@@ -21,7 +21,7 @@ const Group = () => {
             <div style={{color: "var(--color-secondary-green)", fontSize: "20px"}}>모임에 참여해서 기도제목을 공유해보세요!</div>
           </NoGroupWrapper>
       }
-      <CreateBtn src="images/ic_group_create.svg" alt="group_create" onClick={() => navigate('/createGroup')} />
+      <CreateBtn src="images/ic_group_create.svg" alt="group_create_icon" onClick={() => navigate('/createGroup')} />
     </GroupWrapper>
   );
 };
