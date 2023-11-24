@@ -177,11 +177,12 @@ const PwResult = ({pwToken}) => {
               disabled={!isAllValid}
               buttonSize={ButtonSize.LARGE}
               buttonTheme={isAllValid ? ButtonTheme.GREEN : ButtonTheme.GRAY}
+              isArrow={true}
               handler={() => {
                 resetFindPw();
               }}
             >
-              재설정하기
+              비밀번호 변경하기
             </Button>
           </div>
         </div>

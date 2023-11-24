@@ -153,7 +153,7 @@ const PwError = () => {
         }}
       >
         <Link to="/" style={{ textDecoration: "none" }}>
-          <Button buttonSize={ButtonSize.LARGE} buttonTheme={ButtonTheme.GREEN}>
+          <Button buttonSize={ButtonSize.LARGE} buttonTheme={ButtonTheme.GREEN} isArrow={true}>
             메인화면으로 이동
           </Button>
         </Link>
