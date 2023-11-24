@@ -48,6 +48,7 @@ import GroupSettings from "./pages/GroupSettings";
 import ChangeGroupName from './pages/ChangeGroupName';
 import AssignGroupLeader from './pages/AssignGroupLeader';
 import RemoveMember from './pages/RemoveMember';
+import CreateGroup from './pages/CreateGroup';
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -110,6 +111,7 @@ function App() {
                 <Route path="/locker" element={<Locker />} />
                 <Route path="/groupSettings" element={<GroupSettings />} />
                 <Route path="/changeGroupName" element={<ChangeGroupName />} />
+                <Route path="/createGroup" element={<CreateGroup />} />
                 <Route path="/assignGroupLeader" element={<AssignGroupLeader />} /> 
                 <Route path="/removeMember" element={<RemoveMember />} />
                 <Route path="/checkInfo" element={<CheckInfo />} />
