@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import SelectDateInput from "./selectDateInput";
+import SelectDateInput from "./SelectDateInput";
 /*
   props 넘겨받을 목록
     1. onClickFunc (기도제목 작성 클릭 함수)

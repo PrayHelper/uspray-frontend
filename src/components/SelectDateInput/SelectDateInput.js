@@ -2,6 +2,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import SelectDate from "../SelectDate/SelectDate";
 import { useRef, useState } from "react";
 import styled from "styled-components";
+import BlackScreen from "../BlackScreen/BlackScreen";
 
 /*
   props 넘겨받을 목록 (History.js 파일 참고하기)
@@ -26,7 +27,14 @@ const SelectDateInput = (props) => {
 
   return (
     <>
-      <SubModalWrapper showSubModal={props.showSubModal} ref={outside}>
+      <BlackScreen isModalOn={props.showSubModal} zindex={400} />
+      <SubModalWrapper
+        showSubModal={props.showSubModal}
+        ref={outside}
+        onClick={(e) => {
+          if (e.target === outside.current) props.setShowSubModal(false);
+        }}
+      >
         <SubModalTop>
           <ModalInputWrapper>
             <ModalInput
@@ -67,17 +75,15 @@ export default SelectDateInput;
 
 const SubModalWrapper = styled.div`
   position: fixed;
+  justify-content: space-between;
   left: 50%;
-  top: calc(40% + 220px);
+  top: 50%;
+  height: calc(100vh - 32px);
   transform: translate(-50%, -50%);
-
-  width: calc(100vw - 64px);
+  width: calc(100vw - 32px);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  background-color: white;
-  border-radius: 16px;
-  z-index: 400;
+  z-index: 500;
   opacity: ${(props) => (props.showSubModal ? "1" : "0")};
   transition: all 0.3s ease-in-out;
   visibility: ${(props) => (props.showSubModal ? "visible" : "hidden")};
