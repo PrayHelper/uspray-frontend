@@ -66,22 +66,6 @@ const SelectDateInput = (props) => {
 
 export default SelectDateInput;
 
-// const SubModalWrapper = styled.div`
-//   position: fixed;
-//   justify-content: space-between;
-//   left: 50%;
-//   top: 50%;
-//   height: calc(100vh - 32px);
-//   transform: translate(-50%, -50%);
-//   width: calc(100vw - 32px);
-//   display: flex;
-//   flex-direction: column;
-//   z-index: 500;
-//   opacity: ${(props) => (isShowSubModal ? "1" : "0")};
-//   transition: all 0.3s ease-in-out;
-//   visibility: ${(props) => (isShowSubModal ? "visible" : "hidden")};
-// `;
-
 const SubModalWrapper = styled.div`
   position: fixed;
   left: 50%;

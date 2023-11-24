@@ -1,7 +1,7 @@
 import Header from "../components/Header/Header";
 import styled from "styled-components";
 import HisContent from "../components/History/HisContent";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import { useFetchHistory } from "../hooks/useFetchHistory";
@@ -178,9 +178,6 @@ const History = () => {
     }
   }, [hasMore, inView]);
 
-  const onClickFunc = () => {
-    console.log("gg");
-  };
   return (
     <HistoryWrapper>
       <Header sortBy={sortBy} onClickToggle={onClickToggle}>
@@ -437,48 +434,5 @@ const ModalButton2 = styled.button`
     filter: ${(props) =>
       props.disabled ? "brightness(1)" : "brightness(0.9)"};
     scale: ${(props) => (props.disabled ? "1" : "0.98")};
-  }
-`;
-
-const ModalRootContainer = styled.div``;
-
-const SubModalWrapper = styled.div`
-  position: fixed;
-  left: 50%;
-  top: calc(40% + 200px);
-  transform: translate(-50%, -50%);
-
-  width: calc(100vw - 64px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background-color: var(--color-white);
-  border-radius: 16px;
-  z-index: 300;
-  opacity: ${(props) => (props.showSubModal ? "1" : "0")};
-  transition: all 0.3s ease-in-out;
-  visibility: ${(props) => (props.showSubModal ? "visible" : "hidden")};
-`;
-
-const SubModalTop = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  padding: 24px 16px;
-  align-items: center;
-  gap: 8px;
-`;
-
-const SubModalBottom = styled.div`
-  background: var(--color-dark-green);
-  border-radius: 0px 0px 16px 16px;
-  font-weight: 500;
-  font-size: 16px;
-  text-align: center;
-  color: var(--color-white);
-  padding: 20px 0px;
-  &:active {
-    transition: all 0.2s ease-in-out;
-    filter: ${(props) =>
-      props.disabled ? "brightness(1)" : "brightness(0.9)"};
   }
 `;
