@@ -42,6 +42,7 @@ import useAuthorized from "./hooks/useAuthorized";
 import GlobalStyle from "./styles/GlobalStyle";
 import useToast from "./hooks/useToast";
 import HistorySearch from "./pages/HistorySearch";
+import Test from "./pages/Test";
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -100,6 +101,7 @@ function App() {
                   <Route path="/history" element={<History />} />
                   <Route path="/locker" element={<Locker />} />
                   <Route path="/settings" element={<Settings />} />
+                  <Route path="/test" element={<Test />} />
                 </Route>
                 <Route path="/checkInfo" element={<CheckInfo />} />
                 <Route path="/changeInfo" element={<ChangeInfo />} />
