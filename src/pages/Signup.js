@@ -438,30 +438,6 @@ const Signup = () => {
             </div>
           }
         />
-        {/* <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-          <Checkbox
-            id="tos1"
-            label={"만 14세 이상입니다."}
-            checked={tos1Checked}
-            handler={handleTos1Change}
-          />
-          <Checkbox
-            link={"/tos"}
-            id="tos2"
-            label={"에 동의합니다."}
-            linklabel={"서비스 이용약관"}
-            checked={tos2Checked}
-            handler={handleTos2Change}
-          />
-          <Checkbox
-            link={"/privacyProcessAgreement"}
-            id="tos3"
-            label={"에 동의합니다."}
-            linklabel={"개인정보 수집 및 이용"}
-            checked={tos3Checked}
-            handler={handleTos3Change}
-          />
-        </div> */}
         <SignupTos {...{ isAgreed, toggleHandler, toggleAll, isAgreedAll }} />
         <Button
           // disabled={!isAllValid}
