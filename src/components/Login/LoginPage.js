@@ -14,9 +14,7 @@ import LogoSVG from "../../images/logo_image.svg";
 import useToast from "../../hooks/useToast";
 import { ReactComponent as NextArrowGray } from "../../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../../images/ic_next_arrow_white.svg";
-import useApi from '../../hooks/useApi';
-
-
+import useApi from "../../hooks/useApi";
 
 const useSendDeviceToken = () => {
   const { postFetcher } = useApi();
@@ -116,13 +114,60 @@ const LoginPage = () => {
   };
 
   return (
-    <LoginWrapper>
-      <LogoWrapper>
-        <LogoImg src={LogoSVG} alt="logo" />
-        <LogoTitle>Uspray</LogoTitle>
-        <LogoSubTitle>너에게 기도를, 유스프레이</LogoSubTitle>
-      </LogoWrapper>
-      <BottomBtnWrapper>
+    <S.Root>
+      <S.TopArea>
+        <S.Logo src={LogoSVG} alt="logo" />
+      </S.TopArea>
+      <S.BottomArea>
+        <S.LoginForm>
+          <Input label="아이디" value={idValue} onChangeHandler={onChangeId} />
+          <Input
+            label="비밀번호"
+            value={pwdValue}
+            type="password"
+            onChangeHandler={onChangePwd}
+            onKeyPress={onPressEnter}
+          />
+          <Button
+            buttonSize={ButtonSize.LARGE}
+            buttonTheme={
+              idValue.length > 0 && pwdValue.length > 0
+                ? ButtonTheme.GREEN
+                : ButtonTheme.GRAY
+            }
+            disabled={idValue.length > 0 && pwdValue.length > 0 ? false : true}
+            handler={() => {
+              login();
+            }}>
+            로그인
+            {idValue.length > 0 && pwdValue.length > 0 ? (
+              <NextArrowWhite />
+            ) : (
+              <NextArrowGray />
+            )}
+          </Button>
+        </S.LoginForm>
+        <S.FindLink to="/findAccount">
+          아이디 또는 비밀번호를 잊으셨나요?
+        </S.FindLink>
+        <S.SocialAndSignup>
+          <S.SocialDividerContainer>
+            <S.SocialDividerLine />
+            <S.SocialDividerText>소셜 로그인</S.SocialDividerText>
+            <S.SocialDividerLine />
+          </S.SocialDividerContainer>
+          <S.SocialButtons>
+            <div>카카오</div>
+            <div>네이버</div>
+            <div>애플</div>
+          </S.SocialButtons>
+          <S.SignupTextsContainer>
+            <S.SignupText>아직 계정이 없으신가요?</S.SignupText>
+            <S.SignupLink to="/signup">회원가입하기</S.SignupLink>
+          </S.SignupTextsContainer>
+        </S.SocialAndSignup>
+      </S.BottomArea>
+      {/* <BottomBtnWrapper>
         <div style={{ textAlign: "center" }}>
           <div style={{ margin: "0px 24px 12px 24px" }}>
             <Input
@@ -144,15 +189,23 @@ const LoginPage = () => {
           <div style={{ margin: "0px 24px 12px 24px" }}>
             <Button
               buttonSize={ButtonSize.LARGE}
-              buttonTheme={idValue.length > 0 && pwdValue.length > 0 ? ButtonTheme.GREEN : ButtonTheme.GRAY}
+              buttonTheme={
+                idValue.length > 0 && pwdValue.length > 0
+                  ? ButtonTheme.GREEN
+                  : ButtonTheme.GRAY
+              }
               disabled={
                 idValue.length > 0 && pwdValue.length > 0 ? false : true
-                }
+              }
               handler={() => {
                 login();
               }}>
               로그인
-              {idValue.length > 0 && pwdValue.length > 0 ? <NextArrowWhite/> : <NextArrowGray/>}
+              {idValue.length > 0 && pwdValue.length > 0 ? (
+                <NextArrowWhite />
+              ) : (
+                <NextArrowGray />
+              )}
             </Button>
           </div>
           <div style={{ marginTop: "16px", marginBottom: "45px" }}>
@@ -161,57 +214,106 @@ const LoginPage = () => {
             </SubLink>
           </div>
         </div>
-      </BottomBtnWrapper>
-    </LoginWrapper>
+      </BottomBtnWrapper> */}
+    </S.Root>
   );
 };
 
 export default LoginPage;
 
-const SubLink = styled(Link)`
-  color: #7bab6e;
-  font-size: 12px;
-  text-decoration: underline;
-  cursor: pointer;
-`;
+const S = {
+  Root: styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100vh;
+    width: 100%;
+  `,
+  TopArea: styled.div`
+    margin-top: 80px;
+  `,
+  Logo: styled.img`
+    width: 192px;
+  `,
+  BottomArea: styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
 
-const LoginWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  height: 100vh;
-  width: 100%;
-`;
+    margin-bottom: 40px;
+    width: calc(100% - 48px);
+  `,
+  LoginForm: styled.form`
+    width: 100%;
 
-const LogoWrapper = styled.div`
-  transition: all 0.5s;
-  margin-top: 60px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  `,
+  FindLink: styled(Link)`
+    color: #7bab6e;
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+  `,
+  SocialAndSignup: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 
-const LogoImg = styled.img`
-  transition: all 0.5s;
-  width: 204px;
-`;
+    width: 100%;
+  `,
+  SocialDividerContainer: styled.div`
+    display: flex;
+    align-items: center;
+  `,
+  SocialDividerLine: styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-const LogoTitle = styled.div`
-  transition: all 0.5s;
-  color: #75bd62;
-  font-size: 40px;
-  font-weight: 700;
-  margin-bottom: 8px;
-`;
-
-const LogoSubTitle = styled.div`
-  transition: all 0.5s;
-  color: #75bd62;
-  font-size: 24px;
-`;
-
-const BottomBtnWrapper = styled.div`
-  width: 100%;
-  padding: 20px 0px;
-`;
+    width: 100%;
+    height: 1px;
+    border-radius: 1px;
+    background: #75bd62;
+  `,
+  SocialDividerText: styled.div`
+    background-color: white;
+    padding: 4px;
+    white-space: nowrap;
+    color: #75bd62;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+  `,
+  SocialButtons: styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  `,
+  SignupTextsContainer: styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+  `,
+  SignupText: styled.div`
+    color: var(--Dark_Green, #7bab6e);
+    text-align: center;
+    font-family: Noto Sans KR;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  `,
+  SignupLink: styled(Link)`
+    color: var(--Dark_Green, #7bab6e);
+    font-family: Noto Sans KR;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-decoration-line: underline;
+  `,
+};
