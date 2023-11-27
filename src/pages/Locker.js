@@ -181,11 +181,6 @@ const Locker = () => {
       setIsLoading(false);
     }
   }, [sharedListData]);
-  // useEffect(() => {
-  //   if (sharedListData) {
-  //     fetchSharedList();
-  //   }
-  // }, [sharedListData]);
 
   return (
     <LockerWrapper>

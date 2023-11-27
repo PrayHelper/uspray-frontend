@@ -38,40 +38,6 @@ const TodayPrayer = styled.div`
   margin: 44px 0px 13px 34px;
   color: #7bab6e;
 `;
-const BtnSet = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 8px;
-  margin-top: 40px;
-  margin-right: 32px;
-  background-color: #7bab6e;
-  border: none;
-  border-radius: 4px;
-  padding: 4px;
-`;
-
-const BtnElementDay = styled.button`
-  font-size: 10px;
-  padding: 2px 6px;
-  border: none;
-  border-radius: 2px;
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-`;
-
-const BtnElementPrayer = styled.button`
-  font-size: 10px;
-  padding: 2px 6px;
-  border: none;
-  border-radius: 2px;
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-`;
 
 const PrayerContentStyle = styled.div`
   background-color: #ffffff;
@@ -88,9 +54,6 @@ const ToastWrapper = styled.div`
   align-items: center;
 `;
 
-const fontComponent = styled.div`
-  font-size : 12px;
-`
 
 function PrayerList({
   prayerContent,

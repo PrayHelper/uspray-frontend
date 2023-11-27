@@ -9,7 +9,7 @@ import { useHistoryModify } from "../hooks/useHistoryModify";
 import Lottie from "react-lottie";
 import LottieData from "../components/Main/json/uspray.json";
 import useToast from "../hooks/useToast";
-import SelectDate from "../components/SelectDate/selectDate";
+import SelectDate from "../components/SelectDate/SelectDate";
 
 const History = () => {
   const [loading, setLoading] = useState(true);
@@ -342,7 +342,7 @@ const ModalButton1 = styled.button`
   width: 100%;
   background-color: var(
     ${(props) =>
-      props.showSubModal ? "--color-light-green" : "--color-dark-green"}
+    props.showSubModal ? "--color-light-green" : "--color-dark-green"}
   );
   border: none;
   border-radius: 16px;
@@ -368,7 +368,7 @@ const ModalButton2 = styled.button`
   &:active {
     transition: all 0.2s ease-in-out;
     filter: ${(props) =>
-      props.disabled ? "brightness(1)" : "brightness(0.9)"};
+    props.disabled ? "brightness(1)" : "brightness(0.9)"};
     scale: ${(props) => (props.disabled ? "1" : "0.98")};
   }
 `;
@@ -409,6 +409,6 @@ const SubModalBottom = styled.div`
   &:active {
     transition: all 0.2s ease-in-out;
     filter: ${(props) =>
-      props.disabled ? "brightness(1)" : "brightness(0.9)"};
+    props.disabled ? "brightness(1)" : "brightness(0.9)"};
   }
 `;

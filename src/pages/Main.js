@@ -7,8 +7,6 @@ import { useCompletePrayList } from "../hooks/useCompletePrayList";
 import { usePrayDelete } from "../hooks/usePrayDelete";
 import { useChangeValue } from "../hooks/useChangeValue";
 import { useSendPrayItem } from "../hooks/useSendPrayItem";
-import { useLocation } from "react-router";
-import { useShareSocial } from "../hooks/useShareSocial";
 
 const Main = () => {
   const { data: prayList, refetch: refetchPrayList } = usePrayList("date");
@@ -37,14 +35,6 @@ const Main = () => {
   const [Sharelist, setShareList] = useState([]);
   const [updateDate, setUpdateDate] = useState(null);
   const [dayToggle, setDayToggle] = useState(false);
-
-
-  const location = useLocation();
-  const query = new URLSearchParams(location.search);
-  const shareData = query.getAll('share');
-
-  const { data: shareSocialList, refetch: refetch_shareSocialList }
-    = useShareSocial(shareData);
 
   const renderingData = async (result, sticker) => {
     setisloading(true);
@@ -116,13 +106,6 @@ const Main = () => {
     }
     renderingData(pray_List, false);
   }, [pray_List]);
-
-
-  // useEffect(() =>{
-  //   if(Array.isArray(shareData) && shareData.length !== 0){
-  //       refetch_shareSocialList();
-  //   }
-  // }, [shareData]);
 
   // 모달 메세지 띄우는 거 하는 useEffect
   useEffect(() => {
@@ -410,10 +393,6 @@ const Main = () => {
   return (
     <TemplateMain
       onInsert={onInsert}
-      setshareToggle={setshareToggle}
-      shareToggle={shareToggle}
-      isShare={isShare}
-      setIsShare={setIsShare}
     >
       <PrayerList
         prayerContent={uncompletedList}
