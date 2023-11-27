@@ -1,12 +1,11 @@
 import ToggleButton from "../components/ToggleButton";
-import React, { useEffect,  useState } from "react";
+import React, { useEffect, useState } from "react";
 import UserHeader from "../components/UserHeader";
 import InputBirth from "../components/InputBirth";
 import Button, { ButtonSize, ButtonTheme } from "../components/Button/Button";
 import Input from "../components/Input/Input";
 import styled from "styled-components";
 import { ToastTheme } from "../components/Toast/Toast";
-import Checkbox from "../components/Checkbox/Checkbox";
 import publicapi from "../api/publicapi";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +13,8 @@ import Modal from "../components/Modal/Modal";
 import useToast from "../hooks/useToast";
 import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
-
+import useSignupTos from "../hooks/useSignupTos";
+import SignupTos from "../components/SignupTos/SignupTos";
 
 let init = 0;
 
@@ -44,9 +44,6 @@ const Signup = () => {
     isPhoneNumVerficationButtonClicked,
     setIsPhoneNumVerficationButtonClickClick,
   ] = useState(false);
-  const [tos1Checked, setTos1Checked] = useState(false);
-  const [tos2Checked, setTos2Checked] = useState(false);
-  const [tos3Checked, setTos3Checked] = useState(false);
   const userInfoForCheck = { ...userInfo };
   delete userInfoForCheck.year;
   delete userInfoForCheck.month;
@@ -55,6 +52,8 @@ const Signup = () => {
   const checkEmptyUserInfoValue = Object.values(userInfoForCheck).some(
     (data) => data === ""
   );
+
+  const { isAgreed, toggleAll, toggleHandler, isAgreedAll } = useSignupTos();
 
   const { showToast } = useToast({});
 
@@ -66,9 +65,7 @@ const Signup = () => {
     !invalidMatchingPwdInfo &&
     isCetrificated &&
     isCertificateButtonClicked &&
-    tos1Checked &&
-    tos2Checked &&
-    tos3Checked &&
+    isAgreedAll &&
     !checkEmptyUserInfoValue;
 
   const idRegEx = /^[a-z0-9]{6,15}$/;
@@ -141,11 +138,9 @@ const Signup = () => {
       phone: userInfo.phoneNumber.replace(/-/g, ""),
     };
 
-    if (gender)
-      data.gender = gender;
+    if (gender) data.gender = gender;
     if (userInfo.year && userInfo.month && userInfo.day)
       data.birth = userInfo.year + "-" + userInfo.month + "-" + userInfo.day;
-
 
     try {
       const res = await publicapi.post(api, data);
@@ -283,18 +278,6 @@ const Signup = () => {
     }, 1000);
     return () => clearInterval(id);
   }, [time]);
-
-  function handleTos1Change(event) {
-    setTos1Checked(event.target.checked);
-  }
-
-  function handleTos2Change(event) {
-    setTos2Checked(event.target.checked);
-  }
-
-  function handleTos3Change(event) {
-    setTos3Checked(event.target.checked);
-  }
 
   return (
     <SignupPageWrapper>
@@ -455,7 +438,7 @@ const Signup = () => {
             </div>
           }
         />
-        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+        {/* <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
           <Checkbox
             id="tos1"
             label={"만 14세 이상입니다."}
@@ -478,7 +461,8 @@ const Signup = () => {
             checked={tos3Checked}
             handler={handleTos3Change}
           />
-        </div>
+        </div> */}
+        <SignupTos {...{ isAgreed, toggleHandler, toggleAll, isAgreedAll }} />
         <Button
           // disabled={!isAllValid}
           buttonSize={ButtonSize.LARGE}
@@ -487,7 +471,7 @@ const Signup = () => {
             signup();
           }}>
           회원가입
-          {isAllValid ? <NextArrowWhite/> : <NextArrowGray/>}
+          {isAllValid ? <NextArrowWhite /> : <NextArrowGray />}
         </Button>
       </div>
     </SignupPageWrapper>
