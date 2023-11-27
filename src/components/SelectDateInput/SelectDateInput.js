@@ -1,5 +1,5 @@
 import TextareaAutosize from "react-textarea-autosize";
-import SelectDate from "../SelectDate/selectDate";
+import SelectDate from "../SelectDate/SelectDate";
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import BlackScreen from "../BlackScreen/BlackScreen";
