@@ -11,6 +11,7 @@ import LottieData from "../components/Main/json/uspray.json";
 import useToast from "../hooks/useToast";
 import { useLocation } from "react-router";
 import { useShareSocialNew } from "../hooks/useShareSocialNew";
+import { useRef } from "react";
 
 
 const Locker = () => {
@@ -20,11 +21,10 @@ const Locker = () => {
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
   const query = new URLSearchParams(location.search);
-  // const shareData = useMemo(() => query.getAll('share'), [query]);
   const shareData = query.getAll('share');
-  const { mutate: mutateUseShareSocialNew } = useShareSocialNew();
   const [isNewSocial, setIsNewSocial] = useState(true);
   const { showToast } = useToast({});
+  const prevShareValues = useRef([]);
 
   const defaultOptions = {
     //예제1
@@ -86,6 +86,7 @@ const Locker = () => {
   const { data: sharedListData, refetch: refetchSharedListData } =
     useFetchSharedList();
 
+  const { mutate: mutateUseShareSocialNew } = useShareSocialNew(refetchSharedListData);
   const fetchSharedList = () => {
     setData(sharedListData.data);
     setIsClicked(new Array(sharedListData.data.length).fill(false));
@@ -156,16 +157,19 @@ const Locker = () => {
 
   useEffect(() => {
     if (Array.isArray(shareData) && shareData.length !== 0) {
-      mutateUseShareSocialNew(
-        {
-          pray_id_list: shareData
-        },
-        {
-          onSuccess: () => {
-            refetchSharedListData();
+      var queryString = "share=" + atob(shareData);
+      var params = new URLSearchParams(queryString);
+      var shareValues = params.getAll('share');
+      if (shareValues.toString() !== prevShareValues.current.toString()) {
+        // shareValues가 이전과 다를 때만 mutateUseShareSocialNew를 호출합니다.
+        mutateUseShareSocialNew(
+          {
+            pray_id_list: shareValues
           },
-        }
-      );
+        );
+      }
+      // 현재 shareValues를 prevShareValues에 저장합니다.
+      prevShareValues.current = shareValues;
     }
   }, [shareData.length]);
 

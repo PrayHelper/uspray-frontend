@@ -225,11 +225,12 @@ function PrayerList({
       setshareToggle(!shareToggle);
       setIsShare(!isShare);
       const listJoin = Sharelist.join("&share=");
+      var encodeList = btoa(listJoin);
       if (isMobile()) {
         if (/android/i.test(navigator.userAgent)) {
           shareLink({
             title: "Web_share",
-            url: `${WEB_ORIGIN}/locker?share=` + listJoin,
+            url: `${WEB_ORIGIN}/locker?share=` + encodeList,
           });
         } else if (
           /iPad|iPhone|iPod/.test(navigator.userAgent) ||
@@ -237,14 +238,14 @@ function PrayerList({
         ) {
           navigator.share({
             title: "Web_share",
-            url: `${WEB_ORIGIN}/locker?share=` + listJoin,
+            url: `${WEB_ORIGIN}/locker?share=` + encodeList,
           });
         } else {
           alert("공유하기가 지원되지 않는 환경 입니다.");
         }
       }
 
-      console.log(`${WEB_ORIGIN}/locker?share=` + listJoin);
+      console.log(`${WEB_ORIGIN}/locker?share=` + encodeList);
       setShareList([]);
       setPrayerContent((prayerContent) =>
         prayerContent.map((prayerContent) => ({

@@ -1,7 +1,7 @@
 import { useMutation } from "react-query";
 import useApi from './useApi';
 
-export const useShareSocialNew = () => {
+export const useShareSocialNew = (refetchSharedListData) => {
     const { postFetcher } = useApi();
     return useMutation(
         async (data) => {
@@ -13,9 +13,10 @@ export const useShareSocialNew = () => {
             },
             onSuccess: (res) => {
                 console.log(res);
+                refetchSharedListData();
             },
             retry: (cnt) => {
-                return cnt < 3;
+                return cnt < 2;
             },
             retryDelay: 300,
             refetchOnWindowFocus: false,
