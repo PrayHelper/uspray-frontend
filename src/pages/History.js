@@ -9,7 +9,7 @@ import { useHistoryModify } from "../hooks/useHistoryModify";
 import Lottie from "react-lottie";
 import LottieData from "../components/Main/json/uspray.json";
 import useToast from "../hooks/useToast";
-import SelectDate from "../components/SelectDate/selectDate";
+import SelectDate from "../components/SelectDate/SelectDate";
 
 const History = () => {
   const [loading, setLoading] = useState(true);
