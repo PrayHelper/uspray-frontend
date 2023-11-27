@@ -40,11 +40,7 @@ const iconSrc = {
 // theme: "kakao" | "naver" | "apple"
 const SocialLoginLongButton = ({ theme, onClick }) => {
   return (
-    <S.Root
-      onClick={onClick}
-      bgColor={styleOptions[theme].bgColor}
-      color={styleOptions[theme].color}
-      outline={styleOptions[theme].outline}>
+    <S.Root onClick={onClick} {...styleOptions[theme]}>
       {text[theme]}
       <S.Icon src={iconSrc[theme]} />
     </S.Root>

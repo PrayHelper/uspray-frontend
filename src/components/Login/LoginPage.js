@@ -15,6 +15,7 @@ import useToast from "../../hooks/useToast";
 import { ReactComponent as NextArrowGray } from "../../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../../images/ic_next_arrow_white.svg";
 import useApi from "../../hooks/useApi";
+import SocialLoginCircleButton from "../SocialLogin/SocialLoginCircleButton";
 
 const useSendDeviceToken = () => {
   const { postFetcher } = useApi();
@@ -107,10 +108,9 @@ const LoginPage = () => {
     }
   };
 
-  const onPressEnter = (e) => {
-    if (e.key === "Enter") {
-      login();
-    }
+  const onSubmit = (e) => {
+    e.preventDefault();
+    login();
   };
 
   return (
@@ -119,14 +119,13 @@ const LoginPage = () => {
         <S.Logo src={LogoSVG} alt="logo" />
       </S.TopArea>
       <S.BottomArea>
-        <S.LoginForm>
+        <S.LoginForm onSubmit={onSubmit}>
           <Input label="아이디" value={idValue} onChangeHandler={onChangeId} />
           <Input
             label="비밀번호"
             value={pwdValue}
             type="password"
             onChangeHandler={onChangePwd}
-            onKeyPress={onPressEnter}
           />
           <Button
             buttonSize={ButtonSize.LARGE}
@@ -157,9 +156,9 @@ const LoginPage = () => {
             <S.SocialDividerLine />
           </S.SocialDividerContainer>
           <S.SocialButtons>
-            <div>카카오</div>
-            <div>네이버</div>
-            <div>애플</div>
+            <SocialLoginCircleButton theme="kakao" />
+            <SocialLoginCircleButton theme="naver" />
+            <SocialLoginCircleButton theme="apple" />
           </S.SocialButtons>
           <S.SignupTextsContainer>
             <S.SignupText>아직 계정이 없으신가요?</S.SignupText>
