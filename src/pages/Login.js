@@ -1,9 +1,9 @@
 // TODO: 파일명, 컴포넌트명 수정(첫화면이 이렇게 변경되면 Login은 적절하지 않게 됨)
 
+import SocialLoginLongButton from "../components/SocialLogin/SocialLoginLongButton";
 import styled from "styled-components";
-import SocialLoginBtn from "../components/SocialLoginBtn";
 import LogoSVG from "../images/logo_image.svg";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const S = {
   SocialLoginWrapper: styled.div`
@@ -72,31 +72,14 @@ const S = {
 };
 
 const SocialLogin = () => {
-  const {
-    REACT_APP_KAKAO_API_KEY,
-    REACT_APP_KAKAO_CLIENT_SECRET,
-    REACT_APP_KAKAO_URI,
-    REACT_APP_API_INTG,
-    REACT_APP_NAVER_API_KEY,
-    REACT_APP_NAVER_URI,
-  } = process.env;
-
-  let navigate = useNavigate();
-
-  const kakaoLink = () => {
-    window.open(
-      `https://kauth.kakao.com/oauth/authorize?client_id=${REACT_APP_KAKAO_API_KEY}&redirect_uri=${REACT_APP_KAKAO_URI}&response_type=code`
-    );
+  const continueWithKakao = () => {
+    alert();
   };
-
-  const naverLink = () => {
-    window.open(
-      `https://nid.naver.com/oauth2.0/authorize?client_id=${REACT_APP_NAVER_API_KEY}&redirect_uri=${REACT_APP_NAVER_URI}&response_type=code`
-    );
+  const continueWithNaver = () => {
+    alert();
   };
-
-  const navigateTo = (to) => () => {
-    navigate(to);
+  const continueWithApple = () => {
+    alert();
   };
 
   return (
@@ -108,18 +91,9 @@ const SocialLogin = () => {
       </S.LogoWrapper>
       <S.BottomWrapper>
         <S.BtnWrapper>
-          <SocialLoginBtn onClick={kakaoLink} theme={"kakao"}>
-            <S.IconWrapper src="images/ic_kakao.svg" />
-            카카오로 계속하기
-          </SocialLoginBtn>
-          <SocialLoginBtn onClick={naverLink} theme={"naver"}>
-            <S.IconWrapper src="images/ic_naver.svg" />
-            네이버로 계속하기
-          </SocialLoginBtn>
-          <SocialLoginBtn theme={"apple"}>
-            <S.IconWrapper src="images/ic_apple.svg" />
-            Apple로 계속하기
-          </SocialLoginBtn>
+          <SocialLoginLongButton theme={"kakao"} onClick={continueWithKakao} />
+          <SocialLoginLongButton theme={"naver"} onClick={continueWithNaver} />
+          <SocialLoginLongButton theme={"apple"} onClick={continueWithApple} />
         </S.BtnWrapper>
         <S.BottomLinks>
           <S.BottomLink to="/signup">회원가입하기</S.BottomLink>
