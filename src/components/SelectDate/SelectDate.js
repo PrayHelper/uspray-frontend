@@ -122,7 +122,7 @@ const SubModalBtn = styled.div`
     `}
   &:active {
     filter: ${(props) =>
-      props.disabled ? "brightness(1)" : "brightness(0.9)"};
+    props.disabled ? "brightness(1)" : "brightness(0.9)"};
     scale: ${(props) => (props.disabled ? "1" : "0.90")};
     transition: all 0.1s ease-in-out;
   }

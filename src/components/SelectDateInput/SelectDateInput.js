@@ -24,6 +24,7 @@ const SelectDateInput = (props) => {
     if (e.target.value.length > e.maxLength)
       setInputCount(e.value.slice(0, e.maxLength));
     setInputCount(e.target.value.length);
+    props.setValue(e.target.value);
   };
 
   return (
@@ -62,7 +63,7 @@ const SelectDateInput = (props) => {
           />
         </SubModalTop>
         <SubModalBottom onClick={props.onClickFunc}>
-          오늘의 기도에 추가하기
+          기도제목 작성
         </SubModalBottom>
       </SubModalWrapper>
     </>
@@ -140,6 +141,6 @@ const SubModalBottom = styled.div`
   &:active {
     transition: all 0.2s ease-in-out;
     filter: ${(props) =>
-      props.disabled ? "brightness(1)" : "brightness(0.9)"};
+    props.disabled ? "brightness(1)" : "brightness(0.9)"};
   }
 `;
