@@ -152,39 +152,31 @@ const Main = () => {
 
   // 기도를 입력하는 코드
   const onInsert = async (name, Dday, text) => {
-    if (text === "") {
-      return alert("기도제목이 입력이 되지 않았습니다.");
-    }
-    if (name == "") {
-      return alert("이름이 입력되지 않았습니다!");
-    }
-    else {
-      var date = new Date();
-      var day = addDay(date, Dday);
-      var zeroTime = setZeroTime(day);
-      var deadline =
-        zeroTime.getFullYear() +
-        "-" +
-        (zeroTime.getMonth() + 1) +
-        "-" +
-        zeroTime.getDate();
-      mutateSendPrayItem(
-        {
-          target: name,
-          title: text,
-          deadline: deadline,
+    var date = new Date();
+    var day = addDay(date, Dday);
+    var zeroTime = setZeroTime(day);
+    var deadline =
+      zeroTime.getFullYear() +
+      "-" +
+      (zeroTime.getMonth() + 1) +
+      "-" +
+      zeroTime.getDate();
+    mutateSendPrayItem(
+      {
+        target: name,
+        title: text,
+        deadline: deadline,
+      },
+      {
+        onSuccess: () => {
+          setUpPosition(true);
+          setDownPosition(false);
+          dayToggleTopDay && refetchPrayList();
+          dayToggleTopPrayer && refetch_PrayList();
         },
-        {
-          onSuccess: () => {
-            setUpPosition(true);
-            setDownPosition(false);
-            dayToggleTopDay && refetchPrayList();
-            dayToggleTopPrayer && refetch_PrayList();
-          },
-        }
-      );
-    }
-  };
+      }
+    );
+  }
 
   // 날짜를 넣는데에 있어서 도와주는 함수(onInsert에서 쓰임)
   const addDay = (today, Dday) => {
