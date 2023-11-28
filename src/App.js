@@ -43,7 +43,6 @@ import useAuthorized from "./hooks/useAuthorized";
 import GlobalStyle from "./styles/GlobalStyle";
 import useToast from "./hooks/useToast";
 import HistorySearch from "./pages/HistorySearch";
-<<<<<<< HEAD
 import GroupDetail from "./pages/GroupDetail";
 import GroupSettings from "./pages/GroupSettings";
 import ChangeGroupName from "./pages/ChangeGroupName";
@@ -51,8 +50,6 @@ import AssignGroupLeader from "./pages/AssignGroupLeader";
 import RemoveMember from "./pages/RemoveMember";
 import DeleteGroup from "./pages/DeleteGroup";
 import LeaveGroup from "./pages/LeaveGroup";
-=======
->>>>>>> 85a5099 (del: button 작업 취소)
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
