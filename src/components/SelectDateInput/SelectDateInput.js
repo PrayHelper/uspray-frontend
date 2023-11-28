@@ -47,7 +47,9 @@ const SelectDateInput = (props) => {
               maxLength={props.maxlen}
               onChange={onInputHandler}
               disabled={props.isDefault ? true : false}
-              value={props.isDefault ? "기도제목을 입력하였습니다." : undefined}
+              value={
+                props.isDefault ? "기도제목을 입력하였습니다." : props.value
+              }
             />
             {props.isShowWordCount && (
               <Countwords>
@@ -126,6 +128,7 @@ const ModalInput = styled(TextareaAutosize)`
     background-color: var(--color-white);
     color: var(--color-dark-grey-30);
   }
+  resize: none;
 `;
 
 const Countwords = styled.span`
