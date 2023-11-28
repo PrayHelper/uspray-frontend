@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PrayerList from "../components/Main/PrayerList";
 import TemplateMain from "../components/Main/TemplateMain";
 import { usePrayList } from "../hooks/usePrayList";
@@ -9,8 +9,8 @@ import { useChangeValue } from "../hooks/useChangeValue";
 import { useSendPrayItem } from "../hooks/useSendPrayItem";
 
 const Main = () => {
-  const { data: prayList, refetch: refetchPrayList } = usePrayList("date");
-  const { data: pray_List, refetch: refetch_PrayList } = usePrayList("cnt");
+  const { data: dateList, refetch: refetchdateList } = usePrayList("date");
+  const { data: cntList, refetch: refetchcntList } = usePrayList("cnt");
   const [uncompletedList, setUncompletedList] = useState([]);
   const [completedList, setCompletedList] = useState([]);
   const [clickId, setClickId] = useState(0);
@@ -35,6 +35,8 @@ const Main = () => {
   const [Sharelist, setShareList] = useState([]);
   const [updateDate, setUpdateDate] = useState(null);
   const [dayToggle, setDayToggle] = useState(false);
+
+
 
   const renderingData = async (result, sticker) => {
     setisloading(true);
@@ -90,23 +92,22 @@ const Main = () => {
   const sortDownPosition = (result) => {
     setDownPosition(result);
   };
+
   useEffect(() => {
-    if (!prayList) {
+    if (!dateList) {
       setisloading(true);
       return;
     }
-    renderingData(prayList, false);
-  }, [prayList]);
-
+    renderingData(dateList, false);
+  }, [dateList]);
 
   useEffect(() => {
-    if (!pray_List) {
+    if (!cntList) {
       setisloading(true);
       return;
     }
-    renderingData(pray_List, false);
-  }, [pray_List]);
-
+    renderingData(cntList, false);
+  }, [cntList]);
   // 모달 메세지 띄우는 거 하는 useEffect
   useEffect(() => {
     if (modalText) {
@@ -154,8 +155,8 @@ const Main = () => {
         onSuccess: () => {
           setUpPosition(true);
           setDownPosition(false);
-          dayToggleTopDay && refetchPrayList();
-          dayToggleTopPrayer && refetch_PrayList();
+          dayToggleTopDay && refetchdateList();
+          dayToggleTopPrayer && refetchcntList();
         },
       }
     );
@@ -181,8 +182,8 @@ const Main = () => {
       { id: id },
       {
         onSuccess: (res) => {
-          dayToggleBottomDay && refetchPrayList();
-          dayToggleBottomPrayer && refetch_PrayList();
+          dayToggleBottomDay && refetchdateList();
+          dayToggleBottomPrayer && refetchcntList();
           renderingData(res, true);
           setUncompletedList(
             uncompletedList.filter((prayer) => prayer.id !== id)
@@ -317,11 +318,11 @@ const Main = () => {
         {
           onSuccess: () => {
             if (modifyToggle) {
-              dayToggleTopDay && refetchPrayList();
-              dayToggleTopPrayer && refetch_PrayList();
+              dayToggleTopDay && refetchdateList();
+              dayToggleTopPrayer && refetchcntList();
             } else {
-              dayToggleBottomDay && refetchPrayList();
-              dayToggleBottomPrayer && refetch_PrayList();
+              dayToggleBottomDay && refetchdateList();
+              dayToggleBottomPrayer && refetchcntList();
             }
             setmodalToggle(true);
             setModalText("기도제목이 수정되었어요.")
