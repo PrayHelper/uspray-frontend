@@ -33,6 +33,7 @@ const PrayInput = (props) => {
         setShowSubModal={setShowSubModal}
         showSubModal={showSubModal}
         onClickFunc={props.onClickFunc}
+        value={updateValue}
       />
     </>
   );
