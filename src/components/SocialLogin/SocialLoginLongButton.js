@@ -17,12 +17,6 @@ const styleOptions = {
     color: "#000",
     outline: "1px solid #CECECE",
   },
-  // 이전에 작성해 놓은 흑색배경 버전 애플 버튼, 추후 다른 스타일에 이용하기 위해 남겨 놓음
-  // apple: {
-  //   bgColor: "rgba(0, 0, 0, 1)",
-  //   color: "rgba(255, 255, 255, 1)",
-  //   border: "none",
-  // },
 };
 
 const text = {
