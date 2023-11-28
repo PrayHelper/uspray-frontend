@@ -166,54 +166,6 @@ const LoginPage = () => {
           </S.SignupTextsContainer>
         </S.SocialAndSignup>
       </S.BottomArea>
-      {/* <BottomBtnWrapper>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ margin: "0px 24px 12px 24px" }}>
-            <Input
-              label="아이디"
-              value={idValue}
-              onChangeHandler={onChangeId}
-            />
-          </div>
-          <div style={{ margin: "0px 24px 12px 24px" }}>
-            <Input
-              label="비밀번호"
-              value={pwdValue}
-              type="password"
-              onChangeHandler={onChangePwd}
-              onKeyPress={onPressEnter}
-            />
-          </div>
-
-          <div style={{ margin: "0px 24px 12px 24px" }}>
-            <Button
-              buttonSize={ButtonSize.LARGE}
-              buttonTheme={
-                idValue.length > 0 && pwdValue.length > 0
-                  ? ButtonTheme.GREEN
-                  : ButtonTheme.GRAY
-              }
-              disabled={
-                idValue.length > 0 && pwdValue.length > 0 ? false : true
-              }
-              handler={() => {
-                login();
-              }}>
-              로그인
-              {idValue.length > 0 && pwdValue.length > 0 ? (
-                <NextArrowWhite />
-              ) : (
-                <NextArrowGray />
-              )}
-            </Button>
-          </div>
-          <div style={{ marginTop: "16px", marginBottom: "45px" }}>
-            <SubLink to="/findAccount">
-              아이디 또는 비밀번호를 잊으셨나요?
-            </SubLink>
-          </div>
-        </div>
-      </BottomBtnWrapper> */}
     </S.Root>
   );
 };
