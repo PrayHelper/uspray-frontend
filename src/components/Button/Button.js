@@ -53,6 +53,7 @@ const Button = ({
       buttonTheme={buttonTheme}
       disabled={disabled}
       onClick={handler}
+      isArrow={isArrow}
     >
       {children}
       <NextArrowStyle isArrow={isArrow}>

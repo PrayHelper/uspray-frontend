@@ -6,14 +6,32 @@ import { useNavigate } from 'react-router-dom';
 const Group = () => {
   const isData = true;
   const navigate = useNavigate();
+  const groupList = [
+    {
+      id: 0,
+      name: "string",
+      lastPrayContent: "string",
+      memberCount: 0,
+      prayCount: 0,
+      updatedAt: "2023-11-24T10:06:06.136Z"
+    }
+  ];
   return (
     <GroupWrapper>
       <Header>모임</Header>
       {
-        isData ?
+        groupList.length !== 0 ?
           <GroupItemWrapper>
-            <GroupItem />
-            <GroupItem />
+            {
+              groupList.map((group) => {
+                return (
+                  <GroupItem
+                    key={group.id}
+                    group={group}
+                  />
+                );
+              })
+            }
           </GroupItemWrapper>
           :
           <NoGroupWrapper>
@@ -58,4 +76,3 @@ const CreateBtn = styled.img`
 `
 
 export default Group;
-
