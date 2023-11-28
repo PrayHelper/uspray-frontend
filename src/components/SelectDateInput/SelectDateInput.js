@@ -21,7 +21,7 @@ const SelectDateInput = (props) => {
   const [inputCount, setInputCount] = useState(0);
 
   const onInputHandler = (e) => {
-    if (e.target.value.length >= e.maxLength)
+    if (e.target.value.length > e.maxLength)
       e.target.value = e.target.value.slice(0, e.maxLength);
     // setInputCount(e.value.slice(0, e.maxLength));
     setInputCount(e.target.value.length);
@@ -47,6 +47,7 @@ const SelectDateInput = (props) => {
               cacheMeasurements
               maxlength={props.maxlen}
               onChange={onInputHandler}
+              value={props.value}
             />
             <Countwords>
               <p>
