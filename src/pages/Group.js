@@ -1,8 +1,11 @@
 import Header from '../components/Header/Header';
 import styled from "styled-components";
 import GroupItem from '../components/Group/GroupItem';
+import { useNavigate } from 'react-router-dom';
 
 const Group = () => {
+  const isData = true;
+  const navigate = useNavigate();
   const groupList = [
     {
       id: 0,
@@ -36,6 +39,7 @@ const Group = () => {
             <div style={{color: "var(--color-secondary-green)", fontSize: "20px"}}>모임에 참여해서 기도제목을 공유해보세요!</div>
           </NoGroupWrapper>
       }
+      <CreateBtn src="images/ic_group_create.svg" alt="group_create_icon" onClick={() => navigate('/createGroup')} />
     </GroupWrapper>
   );
 };
@@ -60,9 +64,15 @@ const NoGroupWrapper = styled.div`
 const GroupItemWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 16px;
-  padding-top: 80px;
+  padding: 80px 16px;
   gap: 16px;
+  background-color: var(--color-light-green);
 `;
+
+const CreateBtn = styled.img`
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+`
 
 export default Group;
