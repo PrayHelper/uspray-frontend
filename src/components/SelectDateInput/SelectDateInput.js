@@ -22,7 +22,8 @@ const SelectDateInput = (props) => {
 
   const onInputHandler = (e) => {
     if (e.target.value.length > e.maxLength)
-      setInputCount(e.value.slice(0, e.maxLength));
+      e.target.value = e.target.value.slice(0, e.maxLength);
+    // setInputCount(e.value.slice(0, e.maxLength));
     setInputCount(e.target.value.length);
     props.setValue(e.target.value);
   };
@@ -46,6 +47,7 @@ const SelectDateInput = (props) => {
               cacheMeasurements
               maxlength={props.maxlen}
               onChange={onInputHandler}
+              value={props.value}
             />
             <Countwords>
               <p>
@@ -120,6 +122,7 @@ const ModalInput = styled(TextareaAutosize)`
     border-bottom: 1px solid var(--color-dark-green);
   }
   font-weight: 400;
+  resize: none;
 `;
 
 const Countwords = styled.span`
@@ -141,6 +144,6 @@ const SubModalBottom = styled.div`
   &:active {
     transition: all 0.2s ease-in-out;
     filter: ${(props) =>
-    props.disabled ? "brightness(1)" : "brightness(0.9)"};
+      props.disabled ? "brightness(1)" : "brightness(0.9)"};
   }
 `;
