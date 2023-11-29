@@ -154,7 +154,7 @@ const ModifyBar = ({ id, valueChange, onModify, clickData, isModify, updateDate,
   }
   return (
     <ModifyStyle style={{ opacity: isModify ? "1" : "0", transform: isModify ? "translateY(0%)" : "translateY(100%)" }}>
-      <TextWrapper isModify={isModify}>공유된 기도제목의 내용은 수정할 수 없습니다.</TextWrapper>
+      <TextWrapper isModify={clickIsShare}>공유된 기도제목의 내용은 수정할 수 없습니다.</TextWrapper>
       {showDatePicker ?
         <DatePickerContainer>
           <DatePicker
@@ -209,7 +209,7 @@ const ModifyBar = ({ id, valueChange, onModify, clickData, isModify, updateDate,
         <textarea style={{
           display: "flex", flexGrow: "1", minHeight: '85px', marginLeft: "20px", border: 'none', borderBottom: '1px solid #EEEEEE', outline: 'none',
           fontFamily: 'Noto Sans KR', fontStyle: "normal", fontWeight: '400', fontSize: '16px', lineHeight: '23px', color: '#808080',
-          opacity: clickIsShare ? "0.5" : "1", pointerEvents: clickIsShare ? "none" : ""
+          opacity: clickIsShare ? "0.5" : "1", pointerEvents: clickIsShare ? "none" : "", resize: "none"
         }} value={value}
           onChange={onChangeValue}></textarea>
       </div>
