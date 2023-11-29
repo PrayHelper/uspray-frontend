@@ -101,7 +101,7 @@ const TextWrapper = styled.div`
   display: flex;
   justify-content : center;
   position : fixed;
-  bottom : ${(props) => props.isModify ? "110%" : "0%"};
+  bottom : ${(props) => props.isModify ? "110%" : "-100%"};
   font-size: 12px;
   color: #75BD62;
 
