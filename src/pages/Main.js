@@ -9,8 +9,8 @@ import { useChangeValue } from "../hooks/useChangeValue";
 import { useSendPrayItem } from "../hooks/useSendPrayItem";
 
 const Main = () => {
-  const { data: dateList, refetch: refetchdateList } = usePrayList("date");
-  const { data: cntList, refetch: refetchcntList } = usePrayList("cnt");
+  const { data: dateList, refetch: refetchDateList } = usePrayList("date");
+  const { data: cntList, refetch: refetchCntList } = usePrayList("cnt");
   const [uncompletedList, setUncompletedList] = useState([]);
   const [completedList, setCompletedList] = useState([]);
   const [clickId, setClickId] = useState(0);
@@ -155,8 +155,8 @@ const Main = () => {
         onSuccess: () => {
           setUpPosition(true);
           setDownPosition(false);
-          dayToggleTopDay && refetchdateList();
-          dayToggleTopPrayer && refetchcntList();
+          dayToggleTopDay && refetchDateList();
+          dayToggleTopPrayer && refetchCntList();
         },
       }
     );
@@ -182,8 +182,8 @@ const Main = () => {
       { id: id },
       {
         onSuccess: (res) => {
-          dayToggleBottomDay && refetchdateList();
-          dayToggleBottomPrayer && refetchcntList();
+          dayToggleBottomDay && refetchDateList();
+          dayToggleBottomPrayer && refetchCntList();
           renderingData(res, true);
           setUncompletedList(
             uncompletedList.filter((prayer) => prayer.id !== id)
@@ -318,11 +318,11 @@ const Main = () => {
         {
           onSuccess: () => {
             if (modifyToggle) {
-              dayToggleTopDay && refetchdateList();
-              dayToggleTopPrayer && refetchcntList();
+              dayToggleTopDay && refetchDateList();
+              dayToggleTopPrayer && refetchCntList();
             } else {
-              dayToggleBottomDay && refetchdateList();
-              dayToggleBottomPrayer && refetchcntList();
+              dayToggleBottomDay && refetchDateList();
+              dayToggleBottomPrayer && refetchCntList();
             }
             setmodalToggle(true);
             setModalText("기도제목이 수정되었어요.")
