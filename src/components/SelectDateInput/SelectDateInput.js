@@ -1,6 +1,6 @@
 import TextareaAutosize from "react-textarea-autosize";
 import SelectDate from "../SelectDate/SelectDate";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import BlackScreen from "../BlackScreen/BlackScreen";
 
@@ -17,13 +17,19 @@ import BlackScreen from "../BlackScreen/BlackScreen";
 
 const SelectDateInput = (props) => {
   const outside = useRef();
+  const inputRef = useRef();
 
   const [inputCount, setInputCount] = useState(0);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   const onInputHandler = (e) => {
     if (e.target.value.length > e.maxLength)
       e.target.value = e.target.value.slice(0, e.maxLength);
-    // setInputCount(e.value.slice(0, e.maxLength));
     setInputCount(e.target.value.length);
     props.setValue(e.target.value);
   };
@@ -48,6 +54,7 @@ const SelectDateInput = (props) => {
               maxlength={props.maxlen}
               onChange={onInputHandler}
               value={props.value}
+              ref={inputRef}
             />
             <Countwords>
               <p>
