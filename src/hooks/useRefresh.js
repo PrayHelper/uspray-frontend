@@ -13,13 +13,13 @@ const useRefresh = () => {
     console.log("Refresh는 실행이 되나?")
   try {
     const refreshToken = await getRefreshToken();
-    const res = await publicapi.get('/user/token', {
+    const res = await publicapi.get('/auth/reissue', {
       headers: {
         Authorization: `${refreshToken}`,
       }
     });
-    console.log(`access_token: ${res.data.access_token}`);
-    setAccessToken(res.data.access_token);
+    console.log(`access_token: ${res.data.accessToken}`);
+    setAccessToken(res.data.accessToken);
 
   } catch (e) {
     console.log("catch에서 실행");
