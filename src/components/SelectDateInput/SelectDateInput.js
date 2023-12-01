@@ -1,6 +1,6 @@
 import TextareaAutosize from "react-textarea-autosize";
 import SelectDate from "../SelectDate/SelectDate";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import BlackScreen from "../BlackScreen/BlackScreen";
 
@@ -17,12 +17,19 @@ import BlackScreen from "../BlackScreen/BlackScreen";
 
 const SelectDateInput = (props) => {
   const outside = useRef();
+  const inputRef = useRef();
 
   const [inputCount, setInputCount] = useState(0);
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
   const onInputHandler = (e) => {
     if (e.target.value.length > e.maxLength)
-      setInputCount(e.value.slice(0, e.maxLength));
+      e.target.value = e.target.value.slice(0, e.maxLength);
     setInputCount(e.target.value.length);
     props.setValue(e.target.value);
   };
@@ -46,6 +53,8 @@ const SelectDateInput = (props) => {
               cacheMeasurements
               maxlength={props.maxlen}
               onChange={onInputHandler}
+              value={props.value}
+              ref={inputRef}
             />
             <Countwords>
               <p>
@@ -120,6 +129,7 @@ const ModalInput = styled(TextareaAutosize)`
     border-bottom: 1px solid var(--color-dark-green);
   }
   font-weight: 400;
+  resize: none;
 `;
 
 const Countwords = styled.span`
@@ -141,6 +151,6 @@ const SubModalBottom = styled.div`
   &:active {
     transition: all 0.2s ease-in-out;
     filter: ${(props) =>
-    props.disabled ? "brightness(1)" : "brightness(0.9)"};
+      props.disabled ? "brightness(1)" : "brightness(0.9)"};
   }
 `;
