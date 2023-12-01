@@ -65,12 +65,12 @@ const LoginPage = () => {
   const login = async () => {
     const api = `/auth/login`;
     const data = {
-      id: idValue,
+      userId: idValue,
       password: pwdValue,
     };
     try {
       const res = await publicapi.post(api, data);
-      if (res.code === 200) {
+      if (res.status === 200) {
         if (isMobile()) {
           const deviceToken = await getDeviceToken();
 
@@ -93,14 +93,15 @@ const LoginPage = () => {
         navigate("/main");
         setAutorized();
 
-        setAccessToken(res.data.accessToken);
-        await setRefreshToken(res.data.refreshToken);
+        setAccessToken(res.data.data.accessToken);
+        await setRefreshToken(res.data.data.refreshToken);
 
         console.log("access: ", getAccessToken());
         console.log("refresh: ", await getRefreshToken());
       }
     } catch (e) {
-      if (e.response.code === 400) {
+      console.log(e);
+      if (e.response.status === 400) {
         showToast({
           message: "회원정보가 일치하지 않습니다.",
           theme: ToastTheme.ERROR,

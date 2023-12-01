@@ -62,9 +62,9 @@ const useApi = () => {
   const refresh = async () => {
     try {
       const refreshToken = localStorage.getItem("refreshToken");
-      const res = await serverapi.get("/auth/reissue", {
+      const res = await serverapi.post("/auth/reissue", {
         headers: {
-          Authorization: `${refreshToken}`,
+          Refresh: `${refreshToken}`,
         },
       });
       return res.data.accessToken;
