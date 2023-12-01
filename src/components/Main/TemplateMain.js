@@ -9,6 +9,7 @@ const BackgroundWrapper = styled.div`
     background-color: #7BAB6E;
     overflow-y : hidden;
     height: 100vh;
+    
 `
 
 const BackgroundInput = styled.div`
