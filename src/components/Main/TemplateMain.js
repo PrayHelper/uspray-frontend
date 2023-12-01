@@ -8,7 +8,7 @@ const BackgroundWrapper = styled.div`
     width: 100%; 
     background-color: #7BAB6E;
     overflow-y : hidden;
-
+    height: 100vh;
 `
 
 const BackgroundInput = styled.div`
@@ -17,7 +17,7 @@ const BackgroundInput = styled.div`
     padding: 16px 12px 12px 12px;
     border-radius : ${(props) => props.visible ? "16px 16px 0px 0px" : "16px"};
     background: white;
-    box-sizing: border - box;
+    box-sizing: border-box;
     align-items: center;
     transition: all 0.5s ease -in -out;
 `;
