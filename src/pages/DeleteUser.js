@@ -59,7 +59,8 @@ const DeleteUser = () => {
     setEtcReasonInput(e.target.value);
   };
 
-  const reason_id = deleteReasonOptionList // 사유 state를 데이터로 전환 ex) [1, 2, 5]
+  // 사유 state를 API 호출을 위한 배열 데이터로 전환 ex) [1, 2, 5]
+  const reason_id = deleteReasonOptionList
     .filter((item) => item.checked)
     .map((item) => item.id);
   const reqData = { reason_id, etc: etcReasonInput };
@@ -159,7 +160,7 @@ const S = {
   `,
   TopTexts: styled.div``,
   TopTextCrying: styled.div`
-    color: var(--Dark_Gray, #606060);
+    color: var(--color-dark-grey);
     font-family: Noto Sans KR;
     font-size: 24px;
     font-style: normal;
@@ -167,7 +168,7 @@ const S = {
     line-height: normal;
   `,
   TopTextWondering: styled.div`
-    color: var(--Dark_Gray, #606060);
+    color: var(--color-dark-grey);
     font-family: Noto Sans KR;
     font-size: 16px;
     font-style: normal;
@@ -185,7 +186,7 @@ const S = {
     gap: 4px;
   `,
   CautionTitle: styled.div`
-    color: var(--Grey, #a0a0a0);
+    color: var(--color-grey);
     text-align: center;
     font-family: Noto Sans KR;
     font-size: 14px;
@@ -194,7 +195,7 @@ const S = {
     line-height: normal;
   `,
   CautionInformation: styled.div`
-    color: var(--Grey, #a0a0a0);
+    color: var(--color-grey);
     font-family: Noto Sans KR;
     font-size: 14px;
     font-style: normal;
@@ -203,7 +204,7 @@ const S = {
   `,
   Divider: styled.div`
     height: 1px;
-    background: var(--Light_Grey, #eee);
+    background: var(--color-light-grey);
     margin: 12px 0px;
   `,
   AgreementContainer: styled.div`
@@ -253,12 +254,12 @@ const S = {
     -moz-box-shadow: none;
     box-shadow: none;
 
-    resize: none; /*remove the resize handle on the bottom right*/
+    resize: none; /* remove the resize handle on the bottom right */
 
     height: 168px;
 
     border-radius: 4px;
-    border: 1px solid #eeeeee;
+    border: 1px solid var(--color-light-grey);
     padding: 16px 12px;
   `,
 };
