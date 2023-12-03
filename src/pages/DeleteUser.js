@@ -241,17 +241,10 @@ const S = {
 
     padding: 20px;
 
-    ${({ isEnabled }) =>
-      isEnabled
-        ? `
-    background-color: #FF6B6B;
-    color: #FFFFFF;
-    `
-        : `
-    background-color: #EEEEEE;
-    color: #A0A0A0;
-
-    `}
+    background-color: ${({ isEnabled }) =>
+      isEnabled ? "var(--color-red)" : "var(--color-light-grey)"};
+    color: ${({ isEnabled }) =>
+      isEnabled ? "var(--color-white)" : "var(--color-grey)"};
   `,
   EtcReasonInput: styled.textarea`
     border: none;
