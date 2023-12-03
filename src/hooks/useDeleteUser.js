@@ -14,8 +14,6 @@ export const useDeleteUser = (data) => {
       Authorization: getAccessToken(),
     };
 
-    console.log({ url, data, headers });
-
     return deleteDataFetcher(url, data, headers);
   };
 

@@ -110,7 +110,7 @@ function App() {
                 />
                 <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                 <Route path="/social" element={<SocialLogin />} />
-                <Route path="deleteUser" element={<DeleteUser />} />
+                <Route path="/deleteUser" element={<DeleteUser />} />
               </Route>
               <Route element={<Outlet />}>
                 <Route path="/" element={<Login />} />
