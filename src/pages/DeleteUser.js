@@ -67,6 +67,12 @@ const DeleteUser = () => {
 
   const { mutate: mutateDeleteUser } = useDeleteUser(reqData);
 
+  const onClickContinueButton = () => {
+    if (!isContinueBtnEnabled) return;
+
+    openModal();
+  };
+
   return (
     <S.Root>
       <UserHeader>회원정보 확인</UserHeader>
@@ -116,7 +122,9 @@ const DeleteUser = () => {
           </S.AgreementContainer>
         </S.DeleteCautionAndAgreement>
       </S.Content>
-      <S.ContinueBtn isEnabled={isContinueBtnEnabled} onClick={openModal}>
+      <S.ContinueBtn
+        isEnabled={isContinueBtnEnabled}
+        onClick={onClickContinueButton}>
         계속하기
       </S.ContinueBtn>
       <BlackScreen isModalOn={isModalOn} />
