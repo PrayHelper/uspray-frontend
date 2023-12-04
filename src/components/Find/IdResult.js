@@ -93,8 +93,8 @@ const AnimationContainer = styled.div`
 `;
 
 const IdResult = ( {userData} ) => {
-  const [id, setText] = useState("");
-  const [name, setText1] = useState("");
+  const [id, setId] = useState("");
+  const [name, setName] = useState("");
   const [isValid, setIsValid] = useState(true);
 
   const showId = async () => {
@@ -107,8 +107,8 @@ const IdResult = ( {userData} ) => {
     try {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
-        setText(res.data.message);
-        setText1(userData.name);
+        setId(res.data.data);
+        setName(userData.name);
         console.log(res.data);
       }
     } catch (e) {

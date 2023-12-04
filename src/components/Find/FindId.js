@@ -22,9 +22,10 @@ const FindId = () => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     phoneNumber: "",
+    certificateNumber: ""
   });
   const [showModal, setShowModal] = useState(false);
-  const [verficationNumber, setVerficationNumber] = useState("");
+  const [requestId, setRequestId] = useState("");
   const [time, setTime] = useState("");
   const [showResultPage, setShowRestultPage] = useState(false);
   const [isCetrificated, setIsCertificated] = useState(false);
@@ -45,25 +46,24 @@ const FindId = () => {
   const phoneNumberRegEx = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
   const certificateNumberRegEx = /^[0-9]{6}$/;
 
-  const phoneNumberCheck = (userInfo) => {
-    return phoneNumberRegEx.test(userInfo);
+  const phoneNumberCheck = (phoneNumber) => {
+    return phoneNumberRegEx.test(phoneNumber);
   };
 
-  const certificateNumberCheck = (userInfo) => {
-    return certificateNumberRegEx.test(userInfo);
+  const certificateNumberCheck = (certificateNumber) => {
+    return certificateNumberRegEx.test(certificateNumber);
   };
 
   const phoneNumVerfication = async (phoneNumber) => {
-    const api = "/admin/sms";
+    const api = "/sms/send";
     const data = {
-      phone: phoneNumber,
+      to: phoneNumber,
     };
     try {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
         showToast({ message: "인증번호가 전송되었습니다.", theme: ToastTheme.SUCCESS });
-        console.log(res.data.code);
-        setVerficationNumber(res.data.code);
+        setRequestId(res.data.data.requestId);
         setTime("180");
       }
     } catch (e) {
@@ -106,13 +106,32 @@ const FindId = () => {
     setUserInfo({ ...userInfo, certificateNumber: e.target.value });
   };
 
-  const isCertificationNumberValid = (certificateNumber) => {
-    if (verficationNumber == certificateNumber) {
-      setIsCertificated(true);
-      return true;
-    } else {
-      setIsCertificated(false);
-      return false;
+  const isCertificationNumberValid = async (certificateNumber) => {
+    // if (verficationNumber == certificateNumber) {
+    //   setIsCertificated(true);
+    //   return true;
+    // } else {
+    //   setIsCertificated(false);
+    //   return false;
+    // }
+    const api = "/sms/verification";
+    const data = {
+      requestId: requestId,
+      smsConfirmNum: certificateNumber,
+    };
+    try {
+      const res = await publicapi.post(api, data);
+      if (res.status === 200) {
+        if (res.data.data === true) {
+          setIsCertificated(true);
+          return true;
+        } else if (res.data.data === false) {
+          setIsCertificated(false);
+          return false;
+        }
+      }
+    } catch (e) {
+      showToast({ message: "error occured", theme: ToastTheme.ERROR });
     }
   };
 
@@ -202,12 +221,8 @@ const FindId = () => {
                 buttonTheme={
                   certificateNumberCheck(userInfo.certificateNumber)
                     ? !isCetrificated && isCertificateButtonClicked
-                      ? time === 0
-                        ? ButtonTheme.GRAY
-                        : ButtonTheme.RED
-                      : time === 0
-                      ? ButtonTheme.GRAY
-                      : ButtonTheme.GREEN
+                      ? time === 0 ? ButtonTheme.GRAY : ButtonTheme.RED
+                      : time === 0 ? ButtonTheme.GRAY : ButtonTheme.GREEN
                     : ButtonTheme.GRAY
                 }
                 disabled={
