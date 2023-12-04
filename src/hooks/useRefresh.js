@@ -14,7 +14,7 @@ const useRefresh = () => {
     console.log("Refresh는 실행이 되나?")
   try {
     const refreshToken = await getRefreshToken();
-    const res = await publicapi.post('/auth/reissue', {
+    const res = await publicapi.post('/auth/reissue', null, {
       headers: {
         Refresh: `${refreshToken}`,
       }
