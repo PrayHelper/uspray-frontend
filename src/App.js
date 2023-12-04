@@ -51,6 +51,7 @@ import RemoveMember from './pages/RemoveMember';
 import CreateGroup from './pages/CreateGroup';
 import DeleteGroup from './pages/DeleteGroup';
 import LeaveGroup from './pages/LeaveGroup';
+import ChangeCategoryOrder from "./pages/ChangeCategoryOrder";
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -128,6 +129,10 @@ function App() {
                 />
                 <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                 <Route path="/social" element={<SocialLogin />} />
+                <Route
+                  path="/change-category-order"
+                  element={<ChangeCategoryOrder />}
+                />
               </Route>
               <Route element={<Outlet />}>
                 <Route path="/" element={<Login />} />
