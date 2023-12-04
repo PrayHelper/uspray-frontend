@@ -63,9 +63,9 @@ const LoginPage = () => {
   const { setAutorized } = useAuthorized();
 
   const login = async () => {
-    const api = `/user/login`;
+    const api = `/auth/login`;
     const data = {
-      id: idValue,
+      userId: idValue,
       password: pwdValue,
     };
     try {
@@ -93,13 +93,14 @@ const LoginPage = () => {
         navigate("/main");
         setAutorized();
 
-        setAccessToken(res.data.access_token);
-        await setRefreshToken(res.data.refresh_token);
+        setAccessToken(res.data.data.accessToken);
+        await setRefreshToken(res.data.data.refreshToken);
 
         console.log("access: ", getAccessToken());
         console.log("refresh: ", await getRefreshToken());
       }
     } catch (e) {
+      console.log(e);
       if (e.response.status === 400) {
         showToast({
           message: "회원정보가 일치하지 않습니다.",
