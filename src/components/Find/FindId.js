@@ -107,13 +107,6 @@ const FindId = () => {
   };
 
   const isCertificationNumberValid = async (certificateNumber) => {
-    // if (verficationNumber == certificateNumber) {
-    //   setIsCertificated(true);
-    //   return true;
-    // } else {
-    //   setIsCertificated(false);
-    //   return false;
-    // }
     const api = "/sms/verification";
     const data = {
       requestId: requestId,

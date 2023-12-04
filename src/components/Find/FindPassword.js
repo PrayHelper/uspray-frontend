@@ -67,19 +67,19 @@ const FindPassword = () => {
   });
   const [invalidIdInfo, setInvalidIdInfo] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [verficationNumber, setVerficationNumber] = useState("");
+  const [requestId, setRequestId] = useState("");
   const [time, setTime] = useState("");
-  const [isCetrificated, setIsCertificated] = useState(false);
+  const [isCertificated, setIsCertificated] = useState(false);
   const [isCertificateButtonClicked, setIsCertificateButtonClicked] =
     useState(false);
   const [
     isPhoneNumVerficationButtonClicked,
-    setIsPhoneNumVerficationButtonClickClick,
+    setIsPhoneNumVerficationButtonClicked,
   ] = useState(false);
 
   const { showToast } = useToast({});
 
-  const isAllValid = isCetrificated && isCertificateButtonClicked;
+  const isAllValid = isCertificated && isCertificateButtonClicked;
 
   const idRegEx = /^[a-z0-9]{6,15}$/;
   const phoneNumberRegEx = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
@@ -89,51 +89,32 @@ const FindPassword = () => {
     setShowModal(false);
   };
 
-  const idCheck = (userInfo) => {
-    return idRegEx.test(userInfo);
+  const idCheck = (id) => {
+    return idRegEx.test(id);
   };
 
-  const phoneNumberCheck = (userInfo) => {
-    return phoneNumberRegEx.test(userInfo);
+  const phoneNumberCheck = (phoneNumber) => {
+    return phoneNumberRegEx.test(phoneNumber);
   };
 
-  const certificateNumberCheck = (userInfo) => {
-    return certificateNumberRegEx.test(userInfo);
-  };
-
-  const isIdDuplicated = async (uid) => {
-    const api = `/user/dup_check/${uid}`;
-    try {
-      const res = await publicapi.get(api);
-      if (res.status === 200) {
-        return res.data.dup;
-      }
-    } catch (e) {
-      console.log(e.response);
-    }
+  const certificateNumberCheck = (certificateNumber) => {
+    return certificateNumberRegEx.test(certificateNumber);
   };
 
   const phoneNumVerfication = async (phoneNumber) => {
-    const api = "/admin/sms";
+    const api = "/sms/send";
     const data = {
-      phone: phoneNumber,
+      to: phoneNumber,
     };
     try {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
-        showToast({
-          message: "인증번호가 전송되었습니다.",
-          theme: ToastTheme.SUCCESS,
-        });
-        console.log(res.data.code);
-        setVerficationNumber(res.data.code);
+        showToast({ message: "인증번호가 전송되었습니다.", theme: ToastTheme.SUCCESS });
+        setRequestId(res.data.data.requestId);
         setTime("180");
       }
     } catch (e) {
-      showToast({
-        message: "error occured",
-        theme: ToastTheme.ERROR,
-      });
+      showToast({ message: "error occured", theme: ToastTheme.ERROR });
     }
   };
 
@@ -166,10 +147,6 @@ const FindPassword = () => {
     setUserInfo({ ...userInfo, id: e.target.value });
     if (!idCheck(e.target.value)) {
       setInvalidIdInfo("6-15자의 영문 소문자, 숫자만 사용 가능");
-      return;
-    }
-    if (await isIdDuplicated(e.target.value)) {
-      setInvalidIdInfo("아이디가 중복되었습니다.");
       return;
     }
     setInvalidIdInfo("");
@@ -210,13 +187,25 @@ const FindPassword = () => {
     setUserInfo({ ...userInfo, certificateNumber: e.target.value });
   };
 
-  const isCertificationNumberValid = (certificateNumber) => {
-    if (verficationNumber == certificateNumber) {
-      setIsCertificated(true);
-      return true;
-    } else {
-      setIsCertificated(false);
-      return false;
+  const isCertificationNumberValid = async (certificateNumber) => {
+    const api = "/sms/verification";
+    const data = {
+      requestId: requestId,
+      smsConfirmNum: certificateNumber,
+    };
+    try {
+      const res = await publicapi.post(api, data);
+      if (res.status === 200) {
+        if (res.data.data === true) {
+          setIsCertificated(true);
+          return true;
+        } else if (res.data.data === false) {
+          setIsCertificated(false);
+          return false;
+        }
+      }
+    } catch (e) {
+      showToast({ message: "error occured", theme: ToastTheme.ERROR });
     }
   };
 
@@ -232,7 +221,7 @@ const FindPassword = () => {
 
   useEffect(() => {
     if (time === "") return;
-    if (isCetrificated && isCertificateButtonClicked) {
+    if (isCertificated && isCertificateButtonClicked) {
       setTime("");
       return;
     }
@@ -293,7 +282,7 @@ const FindPassword = () => {
                 setIsCertificated(false);
                 setIsCertificateButtonClicked(false);
                 setUserInfo({ ...userInfo, certificateNumber: "" });
-                setIsPhoneNumVerficationButtonClickClick(true);
+                setIsPhoneNumVerficationButtonClicked(true);
               }}>
               {time ? "진행 중" : "전송"}
             </Button>
@@ -303,14 +292,14 @@ const FindPassword = () => {
           label="인증번호"
           onChangeHandler={certificateNumberChangeHandler}
           value={
-            isCetrificated && isCertificateButtonClicked
+            isCertificated && isCertificateButtonClicked
               ? "인증에 성공하였습니다."
               : time === 0
               ? "인증번호가 만료되었습니다."
               : userInfo.certificateNumber
           }
           isError={
-            (!isCetrificated && isCertificateButtonClicked) || time === 0
+            (!isCertificated && isCertificateButtonClicked) || time === 0
           }
           description={
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -319,23 +308,17 @@ const FindPassword = () => {
                 buttonSize={ButtonSize.NORMAL}
                 buttonTheme={
                   certificateNumberCheck(userInfo.certificateNumber)
-                    ? !isCetrificated && isCertificateButtonClicked
-                      ? time === 0
-                        ? ButtonTheme.GRAY
-                        : ButtonTheme.RED
-                      : time === 0
-                      ? ButtonTheme.GRAY
-                      : ButtonTheme.GREEN
+                    ? !isCertificated && isCertificateButtonClicked
+                      ? time === 0 ? ButtonTheme.GRAY : ButtonTheme.RED
+                      : time === 0 ? ButtonTheme.GRAY : ButtonTheme.GREEN
                     : ButtonTheme.GRAY
                 }
                 disabled={
-                  (isCetrificated && isCertificateButtonClicked) ||
+                  (isCertificated && isCertificateButtonClicked) ||
                   time === 0 ||
                   !isPhoneNumVerficationButtonClicked
                 }
                 handler={() => {
-                  console.log(isCetrificated && isCertificateButtonClicked);
-                  console.log(time === 0);
                   setIsCertificateButtonClicked(true);
                   if (isCertificationNumberValid(userInfo.certificateNumber)) {
                     showToast({
@@ -344,12 +327,12 @@ const FindPassword = () => {
                     });
                   } else {
                     showToast({
-                      message: "인증에 실패하였습니다.",
+                      message: "인증번호가 일치하지 않습니다.",
                       theme: ToastTheme.ERROR,
                     });
                   }
                 }}>
-                {isCetrificated || isCertificateButtonClicked ? "완료" : "확인"}
+                {isCertificated || isCertificateButtonClicked ? "완료" : "확인"}
               </Button>
             </div>
           }
