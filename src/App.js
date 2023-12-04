@@ -48,6 +48,7 @@ import GroupSettings from "./pages/GroupSettings";
 import ChangeGroupName from './pages/ChangeGroupName';
 import AssignGroupLeader from './pages/AssignGroupLeader';
 import RemoveMember from './pages/RemoveMember';
+import CreateGroup from './pages/CreateGroup';
 import DeleteGroup from './pages/DeleteGroup';
 import LeaveGroup from './pages/LeaveGroup';
 
@@ -114,6 +115,7 @@ function App() {
                 <Route path="/leaveGroup" element={<LeaveGroup />} />
                 <Route path="/groupSettings" element={<GroupSettings />} />
                 <Route path="/changeGroupName" element={<ChangeGroupName />} />
+                <Route path="/createGroup" element={<CreateGroup />} />
                 <Route path="/assignGroupLeader" element={<AssignGroupLeader />} /> 
                 <Route path="/removeMember" element={<RemoveMember />} />
                 <Route path="/checkInfo" element={<CheckInfo />} />
