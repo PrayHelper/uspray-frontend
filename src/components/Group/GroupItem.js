@@ -46,7 +46,11 @@ const GroupItem = ({group}) => {
 
   const formatLastPrayContent = () => {
     if (group.lastPrayContent === null)
-      return "기도제목을 이곳에 공유해보세요!";
+      return (
+        <div style={{color: "var(--color-grey)", fontSize: "16px"}}>
+          기도제목을 이곳에 공유해보세요!
+        </div>
+      );
 
       const currentTime = new Date();
       const updateTime = new Date(group.updatedAt);
@@ -55,9 +59,17 @@ const GroupItem = ({group}) => {
     const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
     if (days < 1)
-      return group.lastPrayContent;
+      return (
+        <div style={{color: "var(--color-grey)", fontSize: "16px"}}>
+          {group.lastPrayContent}
+        </div>
+      );
     else
-      return `${1}개의 기도제목이 있어요!`; // TODO: api 수정되면 바꾸기
+      return (
+        <div style={{color: "var(--color-secondary-green)", fontSize: "16px"}}>
+          {1}개의 기도제목이 있어요!
+        </div>
+      ); // TODO: api 수정되면 바꾸기
     
   }
 
@@ -73,7 +85,7 @@ const GroupItem = ({group}) => {
         </div>
       </GroupTitle>
       <GroupContent>
-        <div style={{color: "var(--color-grey)", fontSize: "16px"}}>{formatLastPrayContent()}</div>
+        {formatLastPrayContent()}
         <div style={{color: "var(--color-secondary-grey)", fontSize: "12px"}}>{formatUpdatedAt(group.updatedAt)}</div>
       </GroupContent>
     </GroupItemWrapper>
