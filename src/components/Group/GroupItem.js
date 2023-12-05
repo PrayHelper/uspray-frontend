@@ -14,8 +14,11 @@ import { useNavigate } from 'react-router-dom';
 const GroupItem = ({group}) => {
   const navigate = useNavigate();
   const formatUpdatedAt = (updatedAt) => {
+    if (updatedAt === null)
+      return null;
     const currentTime = new Date();
-    const timeDifference = currentTime - new Date(updatedAt);
+    const updateTime = new Date(updatedAt);
+    const timeDifference = currentTime - updateTime;
 
     const minutes = Math.floor(timeDifference / (1000 * 60));
     const hours = Math.floor(timeDifference / (1000 * 60 * 60));
@@ -40,6 +43,23 @@ const GroupItem = ({group}) => {
     }
   };
 
+  const formatLastPrayContent = () => {
+    if (group.lastPrayContent === null)
+      return "기도제목을 이곳에 공유해보세요!";
+
+    const currentTime = new Date();
+    const updateTime = new Date(group.updatedAt);
+    const timeDifference = currentTime - updateTime;
+    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+
+    if (days < 1)
+      return group.lastPrayContent;
+    else
+      return `${1}개의 기도제목이 있어요!`; // TODO: api 수정되면 바꾸기
+    
+  }
+
   return (
     <GroupItemWrapper onClick={() => navigate('/groupDetail', { state: group })} >
       <GroupTitle>
@@ -52,7 +72,7 @@ const GroupItem = ({group}) => {
         </div>
       </GroupTitle>
       <GroupContent>
-        <div style={{color: "var(--color-grey)", fontSize: "16px"}}>{group.lastPrayContent}</div>
+        <div style={{color: "var(--color-grey)", fontSize: "16px"}}>{formatLastPrayContent()}</div>
         <div style={{color: "var(--color-secondary-grey)", fontSize: "12px"}}>{formatUpdatedAt(group.updatedAt)}</div>
       </GroupContent>
     </GroupItemWrapper>
