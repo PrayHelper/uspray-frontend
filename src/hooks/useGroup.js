@@ -23,7 +23,7 @@ export const useGroup = () => {
     }
   );
 
-  const { data: groupList } = useQuery(
+  const { data } = useQuery(
     ['groupList'],
     async () => {
       return await getFetcher(`/group`)
@@ -42,9 +42,11 @@ export const useGroup = () => {
       refetchOnWindowFocus: false,
     }
   );
-    
-    return {
-      groupList,
-      createGroup,
-    };
+
+  const groupList = data?.data.data.groupList || [];
+
+  return {
+    groupList,
+    createGroup,
+  };
 }

@@ -2,20 +2,11 @@ import Header from '../components/Header/Header';
 import styled from "styled-components";
 import GroupItem from '../components/Group/GroupItem';
 import { useNavigate } from 'react-router-dom';
+import { useGroup } from '../hooks/useGroup';
 
 const Group = () => {
-  const isData = true;
+  const { groupList } = useGroup();
   const navigate = useNavigate();
-  const groupList = [
-    {
-      id: 0,
-      name: "string",
-      lastPrayContent: "string",
-      memberCount: 0,
-      prayCount: 0,
-      updatedAt: "2023-11-24T10:06:06.136Z"
-    }
-  ];
   return (
     <GroupWrapper>
       <Header>모임</Header>
