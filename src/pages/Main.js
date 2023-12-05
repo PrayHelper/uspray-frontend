@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import MainContent from '../components/Main/MainContent';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ButtonV2, { ButtonTheme } from '../components/ButtonV2/ButtonV2';
 
 
@@ -11,6 +11,8 @@ const Main = () => {
   const [showCategorySetting, setShowCategorySetting] = useState(false);
   const [selectedColor, setSelectedColor] = useState('#D0E8CB');
   const [categories, setCategories] = useState([]);
+  const [onlyCategoryTags, setOnlyCategoryTags] = useState(false);
+
 
   const handleTabChange = (newTab) => {
     setTab(newTab);
@@ -52,7 +54,7 @@ const Main = () => {
         }
         </FlexContainer>
       </TopContainer>
-      <MainContent categories={categories} setCategories={setCategories} setShowCategorySetting={setShowCategorySetting}/>
+      <MainContent categories={categories} setCategories={setCategories} setShowCategorySetting={setShowCategorySetting} onlyCategoryTags={onlyCategoryTags}/>
       {showCategorySetting && (
         <CategorySetting  onClick={() => setShowCategorySetting(false)}>
           <Input type="text" value={inputValue} placeholder="카테고리를 입력해주세요" onChange={handleInputChange} onClick={handleInnerClick}/>

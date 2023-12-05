@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Category from "../Category/Category";
 import CategoryTag from "../CategoryTag/CategoryTag";
 
-const MainContent = ({categories, setCategories, setShowCategorySetting}) => {
+const MainContent = ({categories, setCategories, setShowCategorySetting, onlyCategoryTags}) => {
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(null);
   
   return (
@@ -15,6 +15,7 @@ const MainContent = ({categories, setCategories, setShowCategorySetting}) => {
           selectedCategoryIndex={selectedCategoryIndex} 
           setSelectedCategoryIndex={setSelectedCategoryIndex} 
           setShowCategorySetting={setShowCategorySetting} 
+          onlyCategoryTags={onlyCategoryTags}
         />
       </TopWrapper>
       <Content>

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const CategoryTag = ({categories, selectedCategoryIndex, setSelectedCategoryIndex, setShowCategorySetting}) => {
+const CategoryTag = ({categories, selectedCategoryIndex, setSelectedCategoryIndex, setShowCategorySetting, onlyCategoryTags}) => {
 
  
   const handleCategoryClick = (index) => {
@@ -21,11 +21,12 @@ const CategoryTag = ({categories, selectedCategoryIndex, setSelectedCategoryInde
           {category.name}
         </CategoryBox>
       ))}
-      
-      <AddButton onClick={() => {setShowCategorySetting(true)}}>
-        추가
-        <img src="images/ic_add.svg" alt="add_icon"/>
-      </AddButton>
+      {!onlyCategoryTags &&
+        <AddButton onClick={() => {setShowCategorySetting(true)}}>
+          추가
+          <img src="images/ic_add.svg" alt="add_icon"/>
+        </AddButton>
+      }
     </Container>
   );
 };
