@@ -1,12 +1,18 @@
 import { useQuery, useMutation } from 'react-query';
 import useApi from './useApi';
+import { useNavigate } from 'react-router-dom';
+import useToast from '../hooks/useToast';
+import { ToastTheme } from '../components/Toast/Toast';
 
 export const useGroup = () => {
   const { getFetcher, postFetcher } = useApi();
+  const navigate = useNavigate();
+  const { showToast } = useToast({});
 
-  const { mutate: createGroup }  = useMutation(
-    async (data) => {
-      return await postFetcher('/group', data)
+  const { data, refetch } = useQuery(
+    ['groupList'],
+    async () => {
+      return await getFetcher(`/group`)
     },
     {
       onError: async (e) => {
@@ -23,10 +29,9 @@ export const useGroup = () => {
     }
   );
 
-  const { data } = useQuery(
-    ['groupList'],
-    async () => {
-      return await getFetcher(`/group`)
+  const { mutate: createGroup }  = useMutation(
+    async (data) => {
+      return await postFetcher('/group', data)
     },
     {
       onError: async (e) => {
@@ -34,6 +39,12 @@ export const useGroup = () => {
       },
       onSuccess: (res) => {
         console.log(res);
+        refetch();
+        showToast({
+          message: "모임을 생성했어요.",
+          theme: ToastTheme.SUCCESS,
+        });
+        navigate('/group');
       },
       retry: (cnt) => {
         return cnt < 3;
