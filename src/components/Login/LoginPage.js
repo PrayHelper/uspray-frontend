@@ -101,7 +101,7 @@ const LoginPage = () => {
       }
     } catch (e) {
       console.log(e);
-      if (e.response.status === 400) {
+      if (e.response.status === 401) {
         showToast({
           message: "회원정보가 일치하지 않습니다.",
           theme: ToastTheme.ERROR,
