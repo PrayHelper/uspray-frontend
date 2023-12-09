@@ -18,8 +18,7 @@ const GroupItem = ({group}) => {
       return null;
     const currentTime = new Date();
     const updateTime = new Date(updatedAt);
-    const newUpdateTime = new Date(updateTime.getTime() + (9 * 60 * 60 * 1000));
-    const timeDifference = currentTime - newUpdateTime;
+    const timeDifference = currentTime - updateTime;
 
     const minutes = Math.floor(timeDifference / (1000 * 60));
     const hours = Math.floor(timeDifference / (1000 * 60 * 60));
@@ -52,10 +51,9 @@ const GroupItem = ({group}) => {
         </div>
       );
 
-      const currentTime = new Date();
-      const updateTime = new Date(group.updatedAt);
-      const newUpdateTime = new Date(updateTime.getTime() + (9 * 60 * 60 * 1000));
-      const timeDifference = currentTime - newUpdateTime;
+    const currentTime = new Date();
+    const updateTime = new Date(group.updatedAt);
+    const timeDifference = currentTime - updateTime;
     const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
     if (days < 1)
