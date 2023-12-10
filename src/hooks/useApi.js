@@ -62,12 +62,12 @@ const useApi = () => {
   const refresh = async () => {
     try {
       const refreshToken = localStorage.getItem("refreshToken");
-      const res = await serverapi.get("/user/token", {
+      const res = await serverapi.post("/auth/reissue", null, {
         headers: {
-          Authorization: `${refreshToken}`,
+          Refresh: `${refreshToken}`,
         },
       });
-      return res.data.access_token;
+      return res.data.accessToken;
     } catch (e) {
       // 401 : refresh token 만료
       if (e.status === 401) {

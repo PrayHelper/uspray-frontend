@@ -5,8 +5,8 @@ import Input from '../components/Input/Input';
 import { useState } from 'react';
 import Button, {ButtonSize, ButtonTheme} from '../components/Button/Button';
 
-const ChangeGroupName = () => {
-  const [groupName, setGroupName] = useState("북동 1팀");
+const CreateGroup = () => {
+  const [groupName, setGroupName] = useState("");
   const [invalidGroupName, setInvalidGroupName] = useState("");
 
   const groupNameCheck = (name) => {
@@ -25,7 +25,7 @@ const ChangeGroupName = () => {
 
   return (
     <Wrapper>
-      <UserHeader>모임 이름 변경</UserHeader>
+      <UserHeader>모임 생성</UserHeader>
       <ContentWrapper>
         <div style={{padding: "0 16px", display: "flex", flexDirection: "column", gap: "24px",}}>
           <Input
@@ -41,8 +41,9 @@ const ChangeGroupName = () => {
               buttonSize={ButtonSize.LARGE}
               buttonTheme={(groupName && !invalidGroupName) ? ButtonTheme.GREEN : ButtonTheme.GRAY}
               isArrow={true}
+              handler={() => {}}
             >
-              모임 이름 변경하기
+              모임 생성하기
             </Button>
           </BottomButtonWrapper>
         </div>
@@ -73,4 +74,4 @@ const BottomButtonWrapper = styled.div`
   flex-direction: column;
 `
 
-export default ChangeGroupName;
+export default CreateGroup;

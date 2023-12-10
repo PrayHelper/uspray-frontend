@@ -17,16 +17,21 @@ const Category = ({title, color}) => {
     });
   };
 
+  const titleClick = (e, index) => {
+    
+    (index);
+  }
+
   return (
     <CategoryContainer>
       <Title color={color}>{title}</Title>
       <ItemList>
-      {titles.map((title, index) => (
-        <Item key={index} >
-          <ItemText selected={selected[index]}>{title}</ItemText>
-          <img src={selected[index] ? ICON_HEART_FILLED : ICON_HEART_EMPTY} alt="heart_icon" onClick={(e) => handleClick(e, index)}/>
-        </Item>
-      ))}
+        {titles.map((title, index) => (
+          <Item key={index} >
+            <ItemText selected={selected[index]} onClick={(e) => titleClick(e, index)}>{title}</ItemText>
+            <img src={selected[index] ? ICON_HEART_FILLED : ICON_HEART_EMPTY} alt="heart_icon" onClick={(e) => handleClick(e, index)} />
+          </Item>
+        ))}
       </ItemList>
     </CategoryContainer>
   );
