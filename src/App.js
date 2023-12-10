@@ -111,13 +111,8 @@ function App() {
                   <Route path="/settings" element={<Settings />} />
                 </Route>
                 <Route path="/locker" element={<Locker />} />
-                <Route path="/deleteGroup" element={<DeleteGroup />} />
                 <Route path="/leaveGroup" element={<LeaveGroup />} />
-                <Route path="/groupSettings" element={<GroupSettings />} />
-                <Route path="/changeGroupName" element={<ChangeGroupName />} />
                 <Route path="/createGroup" element={<CreateGroup />} />
-                <Route path="/assignGroupLeader" element={<AssignGroupLeader />} /> 
-                <Route path="/removeMember" element={<RemoveMember />} />
                 <Route path="/checkInfo" element={<CheckInfo />} />
                 <Route path="/changeInfo" element={<ChangeInfo />} />
                 <Route path="/changePw" element={<ChangePw />} />

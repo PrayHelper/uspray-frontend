@@ -4,10 +4,12 @@ import UserHeader from '../components/UserHeader';
 import Input from '../components/Input/Input';
 import { useState } from 'react';
 import Button, {ButtonSize, ButtonTheme} from '../components/Button/Button';
+import { useGroupSetting } from '../hooks/useGroupSetting';
 
-const ChangeGroupName = () => {
-  const [groupName, setGroupName] = useState("북동 1팀");
+const ChangeGroupName = ({name, groupId, setCurrentPage}) => {
+  const [groupName, setGroupName] = useState(name);
   const [invalidGroupName, setInvalidGroupName] = useState("");
+  const {changeGroupName} = useGroupSetting();
 
   const groupNameCheck = (name) => {
     const groupNameRegEx = /^\s*\S.{0,14}\S\s*$/;
@@ -25,7 +27,7 @@ const ChangeGroupName = () => {
 
   return (
     <Wrapper>
-      <UserHeader>모임 이름 변경</UserHeader>
+      <UserHeader back={() => setCurrentPage('')}>모임 이름 변경</UserHeader>
       <ContentWrapper>
         <div style={{padding: "0 16px", display: "flex", flexDirection: "column", gap: "24px",}}>
           <Input
@@ -41,6 +43,7 @@ const ChangeGroupName = () => {
               buttonSize={ButtonSize.LARGE}
               buttonTheme={(groupName && !invalidGroupName) ? ButtonTheme.GREEN : ButtonTheme.GRAY}
               isArrow={true}
+              handler={() => changeGroupName(groupId)}
             >
               모임 이름 변경하기
             </Button>

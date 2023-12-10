@@ -5,10 +5,13 @@ import GroupInfo from '../components/Group/GroupDetail/GroupInfo';
 import GroupPrayList from '../components/Group/GroupDetail/GroupPrayList';
 import { useLocation } from 'react-router-dom';
 import RightIcons from '../components/Group/GroupDetail/RightIcons';
+import { useState } from 'react';
+import GroupSettings from './GroupSettings';
 
 const GroupDetail = () => {
   const location = useLocation();
   const group = location.state;
+  const [showGroupSetting, setShowGroupSetting] = useState(false);
 
   const groupPrayList = [
 
@@ -17,9 +20,10 @@ const GroupDetail = () => {
 
   return (
     <Wrapper>
+      {showGroupSetting && <GroupSettings group={group} setShow={setShowGroupSetting}/>}
       <UserHeader
         rightIcons={() => {
-          return <RightIcons />;
+          return <RightIcons group={group} setShow={setShowGroupSetting}/>;
         }}
       >
         {group.name}

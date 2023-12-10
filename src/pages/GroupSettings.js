@@ -3,20 +3,46 @@ import styled from 'styled-components';
 import Button from '../components/Button';
 import { ButtonSize, ButtonTheme } from '../components/Button/Button';
 import UserHeader from '../components/UserHeader';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import ChangeGroupName from './ChangeGroupName';
+import AssignGroupLeader from './AssignGroupLeader';
+import RemoveMember from './RemoveMember';
+import DeleteGroup from './DeleteGroup';
 
-const GroupSettings = () => {
-  const navigate = useNavigate();
+const GroupSettings = ({group, setShow}) => {
+  const [currentPage, setCurrentPage] = useState('');
+
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'changeGroupName':
+        return (
+          <ChangeGroupName
+            name={group.name}
+            groupId={group.id}
+            setCurrentPage={setCurrentPage}
+          />
+        );
+      case 'assignGroupLeader':
+        return <AssignGroupLeader groupId={group.id} setCurrentPage={setCurrentPage}/>;
+      case 'removeMember':
+        return <RemoveMember groupId={group.id} setCurrentPage={setCurrentPage}/>;
+      case 'deleteGroup':
+        return <DeleteGroup groupId={group.id} setCurrentPage={setCurrentPage}/>;
+      default:
+        return ;
+    }
+  };
   return (
     <Wrapper>
-      <UserHeader>모임 설정하기</UserHeader>
+      {currentPage && <RenderPage>{renderPage()}</RenderPage>}
+      <UserHeader back={() => setShow(prev => !prev)}>모임 설정하기</UserHeader>
       <ButtonWrapper>
         <div style={{padding: "0 16px", display: "flex", flexDirection: "column", gap: "24px",}}>
           <Button
             buttonSize={ButtonSize.LARGE}
             buttonTheme={ButtonTheme.GREEN}
             isArrow={true}
-            handler={() => navigate('/changeGroupName')}
+            handler={() => setCurrentPage('changeGroupName')}
           >
             모임 이름 변경하기
           </Button>
@@ -24,7 +50,7 @@ const GroupSettings = () => {
             buttonSize={ButtonSize.LARGE}
             buttonTheme={ButtonTheme.GREEN}
             isArrow={true}
-            handler={() => navigate('/assignGroupLeader')}
+            handler={() => setCurrentPage('assignGroupLeader')}
           >
             모임 리더 맡기기
           </Button>
@@ -32,7 +58,7 @@ const GroupSettings = () => {
             buttonSize={ButtonSize.LARGE}
             buttonTheme={ButtonTheme.WHITE}
             isArrow={true}
-            handler={() => navigate('/removeMember')}
+            handler={() => setCurrentPage('removeMember')}
           >
             멤버 내보내기
           </Button>
@@ -40,12 +66,11 @@ const GroupSettings = () => {
             buttonSize={ButtonSize.LARGE}
             buttonTheme={ButtonTheme.WHITE}
             isArrow={true}
-            handler={() => navigate('/deleteGroup')}
+            handler={() => setCurrentPage('deleteGroup')}
           >
             모임 삭제하기
           </Button>
         </div>
-
       </ButtonWrapper>
     </Wrapper>
   );
@@ -53,9 +78,34 @@ const GroupSettings = () => {
 
 const Wrapper = styled.div`
   width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #ffffff;
+  z-index: 101;
+  transition: all 0.3s ease-in-out;
+`
+
+const RenderPage = styled.div`
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  z-index: 102;
+  transition: all 0.3s ease-in-out;
 `
 
 const ButtonWrapper = styled.div`

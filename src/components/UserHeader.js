@@ -40,7 +40,7 @@ const Title = styled.div`
   font-weight: bold;
 `;
 
-const UserHeader = ({ children, fixed, rightIcons }) => {
+const UserHeader = ({ children, fixed, rightIcons, back }) => {
   const navigate = useNavigate();
 
   const goBack = () => {
@@ -65,7 +65,7 @@ const UserHeader = ({ children, fixed, rightIcons }) => {
   return (
     <StyledHeader>
       <BackButton
-        onClick={goBack}
+        onClick={back ? back : goBack}
         src="images/back_button.svg"
         alt="back_button"
       />
