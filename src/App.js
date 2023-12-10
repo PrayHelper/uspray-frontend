@@ -52,6 +52,7 @@ import DeleteGroup from "./pages/DeleteGroup";
 import LeaveGroup from "./pages/LeaveGroup";
 import SocialLoginNameInput from "./pages/SocialLoginNameInput";
 
+
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
   margin: 0 auto;
@@ -115,10 +116,8 @@ function App() {
                 <Route path="/leaveGroup" element={<LeaveGroup />} />
                 <Route path="/groupSettings" element={<GroupSettings />} />
                 <Route path="/changeGroupName" element={<ChangeGroupName />} />
-                <Route
-                  path="/assignGroupLeader"
-                  element={<AssignGroupLeader />}
-                />
+                <Route path="/createGroup" element={<CreateGroup />} />
+                <Route path="/assignGroupLeader" element={<AssignGroupLeader />} /> 
                 <Route path="/removeMember" element={<RemoveMember />} />
                 <Route path="/checkInfo" element={<CheckInfo />} />
                 <Route path="/changeInfo" element={<ChangeInfo />} />

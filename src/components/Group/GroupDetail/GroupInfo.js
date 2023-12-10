@@ -1,22 +1,26 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const GroupInfo = ({isData}) => {
+const GroupInfo = ({group, isData}) => {
   return (
     <Wrapper>
       {
         isData ?
           <GroupInfoText>
-            <div>오늘 하루동안</div>
             <div>
-              <span style={{color: "var(--color-green)"}}>289명</span>
-              <span>이 기도했어요!</span>
+              <span style={{color: "var(--color-green)"}}>{group.name} </span>
+              <span>모임에서는</span>
+            </div>
+            <div>
+              <span>기도가 </span>
+              <span style={{color: "var(--color-green)"}}>{group.prayCount}번 </span>
+              <span>쌓였어요!</span>
             </div>
           </GroupInfoText>
           : 
           <GroupInfoText>
             <div>
-              <span style={{color: "var(--color-green)"}}>북동1팀</span>
+              <span style={{color: "var(--color-green)"}}>{group.name}</span>
               <span> 모임이</span>
             </div>
             <div>새롭게 태어났어요!</div>

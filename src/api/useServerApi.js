@@ -54,7 +54,7 @@ const useServerApi = () => {
   serverapi.interceptors.request.use(
     (config) => {
       const token = getAccessToken();
-      config.headers.Authorization = token;
+      config.headers.Authorization = `Bearer ${token}`;
     
       return config;
     },
