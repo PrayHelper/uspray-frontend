@@ -253,7 +253,6 @@ const S = {
   SignupText: styled.div`
     color: var(--Dark_Green, #7bab6e);
     text-align: center;
-    font-family: Noto Sans KR;
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
@@ -261,7 +260,6 @@ const S = {
   `,
   SignupLink: styled(Link)`
     color: var(--Dark_Green, #7bab6e);
-    font-family: Noto Sans KR;
     font-size: 12px;
     font-style: normal;
     font-weight: 700;
