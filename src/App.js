@@ -53,7 +53,6 @@ import DeleteGroup from "./pages/DeleteGroup";
 import LeaveGroup from "./pages/LeaveGroup";
 import SocialLoginNameInput from "./pages/SocialLoginNameInput";
 
-
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
   margin: 0 auto;
