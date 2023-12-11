@@ -5,7 +5,8 @@ import useAuthorized from "./useAuthorized";
 
 const useRefresh = () => {
   const { getRefreshToken, setRefreshToken, setAccessToken } = useAuthToken();
-  const { setUnAuthorized } = useAuthorized()
+  const { setUnAuthorized } = useAuthorized();
+
   const navigate = useNavigate()
 
   // accessToken 재발급을 위한 axios 호출
@@ -13,13 +14,13 @@ const useRefresh = () => {
     console.log("Refresh는 실행이 되나?")
   try {
     const refreshToken = await getRefreshToken();
-    const res = await publicapi.get('/user/token', {
+    const res = await publicapi.post('/auth/reissue', null, {
       headers: {
-        Authorization: `${refreshToken}`,
+        Refresh: `${refreshToken}`,
       }
     });
-    console.log(`access_token: ${res.data.access_token}`);
-    setAccessToken(res.data.access_token);
+    console.log(`access_token: ${res.data.data.accessToken}`);
+    setAccessToken(res.data.data.accessToken);
 
   } catch (e) {
     console.log("catch에서 실행");

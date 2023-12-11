@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { BottomNavStyle } from "./style";
-import {Outlet} from "react-router"
+import {Outlet} from "react-router";
 
 const BottomNav = () => {
   const [activeNav, setActiveNav] = useState(1);
@@ -14,7 +14,7 @@ const BottomNav = () => {
       case "/main":
         setActiveNav(1);
         break;
-      case "/locker":
+      case "/group":
         setActiveNav(2);
         break;
       case "/history":
@@ -38,11 +38,11 @@ const BottomNav = () => {
             <img src="images/ic_main.svg" alt="main_icon" />
           )}
         </Link>
-        <Link to="/locker" onClick={() => setActiveNav(2)}>
+        <Link to="/group" onClick={() => setActiveNav(2)}>
           {activeNav === 2 ? (
-            <img src="images/ic_locker_filled.svg" alt="filled_locker_icon" />
+            <img src="images/ic_group_filled.svg" alt="filled_group_icon" />
           ) : (
-            <img src="images/ic_locker.svg" alt="locker_icon" />
+            <img src="images/ic_group.svg" alt="group_icon" />
           )}
         </Link>
         <Link to="/history" onClick={() => setActiveNav(3)}>

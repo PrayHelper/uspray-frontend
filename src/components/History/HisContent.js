@@ -53,17 +53,15 @@ const Name = styled.div`
   text-align: center;
   width: 71px;
   font-weight: 500;
-  line-height: 20px;
 `;
 
 const Content = styled.div`
   color: var(--color-dark-grey);
   font-size: 14px;
   margin-left: 8px;
-  line-height: 20px;
+  margin-right: 8px;
   word-break: keep-all;
-  width: 258px;
-
+  word-wrap: break-word;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;

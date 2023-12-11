@@ -19,12 +19,16 @@ export default LockerContent;
 const LockerContentWrapper = styled.div`
   cursor: pointer;
   padding: 16px;
-  background-color: ${(props) =>
-    props.isClicked ? "rgba(255, 255, 255, 0.75)" : "#ffffff"};
-  box-shadow: 0px 2px 8px rgba(49, 65, 44, 0.25);
+  background-color: var(
+    ${(props) => (props.isClicked ? "--color-white-75" : "--color-white")}
+  );
+  box-shadow: 0px 2px 8px var(--color-locker-content-shadow);
   border-radius: 16px;
   margin: 12px 24px;
-  outline: ${(props) => (props.isClicked ? "2px solid #7BAB6E" : "#ffffff")};
+  outline: ${(props) =>
+    props.isClicked
+      ? `2px solid var(--color-dark-green)`
+      : `var(--color-white)`};
   transition: all 0.3s ease-in-out;
   &:active {
     transition: all 0.2s ease-in-out;
@@ -43,18 +47,18 @@ const TopContentWrapper = styled.div`
 `;
 
 const Name = styled.div`
-  color: #7bab6f;
+  color: var(--color-dark-green);
   font-size: 12px;
   /* line-height: 17px; */
 `;
 
 const NameNDate = styled.div`
-  color: #a0a0a0;
+  color: var(--color-grey);
   font-size: 12px;
 `;
 
 const Content = styled.div`
-  color: #606060;
+  color: var(--color-dark-grey);
   font-size: 12px;
   line-height: 17px;
   display: -webkit-box;

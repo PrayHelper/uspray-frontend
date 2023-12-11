@@ -1,45 +1,38 @@
 import Header from "../components/Header/Header";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import HisContent from "../components/History/HisContent";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
-// import DatePicker from "react-datepicker";
-// import "react-datepicker/dist/react-datepicker.css";
-// import { ko } from "date-fns/esm/locale";
 import { useFetchHistory } from "../hooks/useFetchHistory";
 import { useHistoryModify } from "../hooks/useHistoryModify";
 import Lottie from "react-lottie";
-import LottieData from "../components/Main/json/uspray.json";
-import Calender from "../components/Calender/Calender";
+import LottieData from "../json/lottie.json";
 import useToast from "../hooks/useToast";
+import SelectDateInput from "../components/SelectDateInput/SelectDateInput";
 
 const History = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showSubModal, setShowSubModal] = useState(false);
-  const [page, setPage] = useState(1);
-  const [data, setData] = useState([]);
   const [currentData, setCurrentData] = useState({});
   const [currentId, setCurrentId] = useState();
-  const [selectedBtn, setSelectedBtn] = useState("");
-  const [selectedDate, setSelectedDate] = useState(null); // 선택한 날짜
-  const [updateDate, setUpdateDate] = useState(null); // yyyy.mm.dd (api 호출용)
-  const [designedDate, setDesignedDate] = useState(null); // yyyy-mm-dd (요일) 형태
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [isClickedDay, setIsClickedDay] = useState(false);
-
+  const [updateDate, setUpdateDate] = useState(null);
+  const [pageMy, setPageMy] = useState(1);
+  const [pageShared, setPageShared] = useState(1);
+  const [dataMy, setDataMy] = useState([]);
+  const [dataShared, setDataShared] = useState([]);
+  const [myScrollPos, setMyScrollPos] = useState(0);
+  const [sharedScrollPos, setSharedScrollPos] = useState(0);
+  const [sortBy, setSortBy] = useState("date");
   const [hasMore, setHasMore] = useState(true);
-  const [ref, inView] = useInView({
-    // triggerOnce: true, // 한 번만 트리거되도록 설정
-  });
+  const [ref, inView] = useInView({});
 
   const { showToast } = useToast({
     initialMessage: "기도제목이 오늘의 기도에 추가되었어요.",
   });
 
   const defaultOptions = {
-    //예제1
     loop: true,
     autoplay: true,
     animationData: LottieData,
@@ -48,92 +41,76 @@ const History = () => {
     },
   };
 
-  const onClickUpdateDate = (days) => {
-    const today = new Date();
-    const targetDate = new Date(today.getTime() + days * 24 * 60 * 60 * 1000);
-    const options = { weekday: "long" };
-    const koreanWeekday = new Intl.DateTimeFormat("ko-KR", options).format(
-      targetDate
-    );
-    const yyyy = targetDate.getFullYear();
-    const mm = String(targetDate.getMonth() + 1).padStart(2, "0");
-    const dd = String(targetDate.getDate()).padStart(2, "0");
-    // const formattedDate1 = `${yyyy}-${mm}-${dd} (${koreanWeekday[0]})`;
-    setDesignedDate(`${yyyy}-${mm}-${dd} (${koreanWeekday[0]})`);
-    const formattedDate1 = `${yyyy}-${mm}-${dd}`;
-    setUpdateDate(formattedDate1);
-    setSelectedBtn(days); // css 변경용
-    setIsClickedDay(true);
-    console.log(updateDate);
-  };
-
-  const onChangeDatePicker = (date) => {
-    setSelectedDate(date); // 선택된 날짜 업데이트
-    const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, "0");
-    const dd = String(date.getDate()).padStart(2, "0");
-    const formattedDate = `${yyyy}-${mm}-${dd}`; // 포맷된 날짜
-    const options = { weekday: "short" };
-    const formattedDayOfWeek = new Intl.DateTimeFormat("ko-KR", options).format(
-      date
-    );
-    setDesignedDate(`${yyyy}-${mm}-${dd} (${formattedDayOfWeek})`);
-    setUpdateDate(formattedDate); // formattedDate를 업데이트
-    setShowDatePicker(false); // DatePicker 닫기
-    setIsClickedDay(true);
-  };
-
-  const handleButtonClick = () => {
-    setShowDatePicker(!showDatePicker);
-    onClickUpdateDate("");
-  };
-
   const isEmptyData = (data) => {
     return data.length === 0 ? true : false;
   };
 
   const onClickExitModal = () => {
-    setSelectedBtn("");
-    setSelectedDate(null);
-    setShowDatePicker(false);
-    setIsClickedDay(false);
     setShowModal(false);
     setShowSubModal(false);
   };
 
   const onClickSubModal = () => {
     setShowSubModal(!showSubModal);
-    onClickUpdateDate(7);
   };
 
-  const {
-    data: historyData,
-    // isLoading: historyLoading,
-    refetch: refetchHistory,
-  } = useFetchHistory({
-    page: page,
+  const onClickToggle = (e) => {
+    sortBy === "date"
+      ? setMyScrollPos(window.scrollY)
+      : setSharedScrollPos(window.scrollY);
+    handleCategoryChange(e.currentTarget.id);
+  };
+
+  const handleCategoryChange = (newCategory) => {
+    setSortBy(newCategory);
+  };
+
+  useEffect(() => {
+    // 카테고리가 변경될 때 스크롤 위치 복원
+    sortBy === "date"
+      ? window.scrollTo(0, myScrollPos)
+      : window.scrollTo(0, sharedScrollPos);
+  }, [sortBy, myScrollPos, sharedScrollPos]);
+
+  const [deletedItemIds, setDeletedItemIds] = useState([]);
+
+  const { data: myPrayData, refetch: refetchMyData } = useFetchHistory({
+    page: pageMy,
     per_page: 15,
     sort_by: "date",
   });
 
-  const [deletedItemIds, setDeletedItemIds] = useState([]);
-  const fetchHistory = async () => {
-    // setLoading(historyLoading);
-    console.log(data);
-    const newData = await historyData.data.res;
+  const { data: sharedPrayData, refetch: refetchSharedData } = useFetchHistory({
+    page: pageShared,
+    per_page: 15,
+    sort_by: "cnt",
+  });
+
+  const fetchMyData = async () => {
+    const newData = await myPrayData.data.res;
     const filteredData = newData.filter(
-      (newItem) => !data.some((existingItem) => existingItem.id === newItem.id)
+      (newItem) =>
+        !dataMy.some((existingItem) => existingItem.id === newItem.id)
     );
-    console.log(filteredData);
-    console.log(deletedItemIds);
-    const dData = [...data, ...filteredData].filter(
-      (item) => !deletedItemIds.some((dItem) => dItem === item.id)
+    const tmpData = [...dataMy, ...filteredData].filter(
+      (item) => !deletedItemIds.some((tmpItem) => tmpItem === item.id)
     );
-    setData(dData);
-    console.log("리스트 읽기");
-    console.log("페이지 :" + page);
-    console.log("hasmore? :" + hasMore);
-    console.log("inview? :" + inView);
+    setDataMy(tmpData);
+    if (newData.length === 0) {
+      setHasMore(false);
+    }
+  };
+
+  const fetchSharedData = async () => {
+    const newData = await sharedPrayData.data.res;
+    const filteredData = newData.filter(
+      (newItem) =>
+        !dataShared.some((existingItem) => existingItem.id === newItem.id)
+    );
+    const tmpData = [...dataShared, ...filteredData].filter(
+      (item) => !deletedItemIds.some((tmpItem) => tmpItem === item.id)
+    );
+    setDataShared(tmpData);
     if (newData.length === 0) {
       setHasMore(false);
     }
@@ -141,7 +118,7 @@ const History = () => {
 
   const { mutate: mutateHistoryModify } = useHistoryModify();
 
-  const onClickModify = () => {
+  const onClickModify = (sortBy) => {
     mutateHistoryModify(
       {
         pray_id: currentId,
@@ -150,49 +127,62 @@ const History = () => {
       {
         onSuccess: (res) => {
           showToast({});
-          setShowModal(false);
-          setShowSubModal(false);
           setDeletedItemIds((prev) => [...prev, res.data.id]);
-          setSelectedBtn("");
-          setSelectedDate(null);
-          setShowDatePicker(false);
-          setIsClickedDay(false);
-          refetchHistory();
+          onClickExitModal();
+          sortBy === "Date" ? refetchMyData() : refetchSharedData();
         },
       }
     );
   };
 
-  const onClickHistory = async (e) => {
+  const onClickHistoryItem = async (e, sortBy) => {
     setShowModal(true);
     const id = e.currentTarget.id;
-    const currentData = data.find((item) => item.id === Number(id));
+    const currentData =
+      sortBy === "date"
+        ? dataMy.find((item) => item.id === Number(id))
+        : dataShared.find((item) => item.id === Number(id));
     setCurrentData(currentData);
     setCurrentId(Number(id));
   };
 
   useEffect(() => {
     setLoading(true);
-    if (historyData) {
-      fetchHistory();
+    if (myPrayData) {
+      fetchMyData();
       setLoading(false);
-      console.log(historyData);
     }
-  }, [historyData]);
+  }, [myPrayData]);
+
+  useEffect(() => {
+    setLoading(true);
+    if (sharedPrayData) {
+      fetchSharedData();
+      setLoading(false);
+    }
+  }, [sharedPrayData]);
 
   useEffect(() => {
     if (inView && hasMore && !loading) {
-      setPage((prev) => prev + 1);
+      sortBy === "date"
+        ? setPageMy((prev) => prev + 1)
+        : setPageShared((prev) => prev + 1);
     }
   }, [hasMore, inView]);
 
+  // const onClickFunc = () => {
+  //   console.log("gg");
+  // };
+
   return (
     <HistoryWrapper>
-      <Header>히스토리</Header>
+      <Header sortBy={sortBy} onClickToggle={onClickToggle}>
+        히스토리
+      </Header>
       {loading && (
         <LottieWrapper>
           <Lottie
-            style={{ scale: "0.5" }}
+            style={{ scale: "0.5", marginTop: "50px" }}
             options={defaultOptions}
             height={300}
             width={300}
@@ -200,7 +190,7 @@ const History = () => {
           />
         </LottieWrapper>
       )}
-      {!loading && isEmptyData(data) && (
+      {!loading && isEmptyData(dataMy) && (
         <NoDataWrapper>
           <NoDataTitle>완료된 기도제목이 없네요.</NoDataTitle>
           <NoDataContent>기간이 지나면 히스토리에 저장됩니다!</NoDataContent>
@@ -208,7 +198,7 @@ const History = () => {
       )}
       <div>
         <BlackScreen isModalOn={showModal} />
-        {!isEmptyData(data) && showModal && (
+        {!isEmptyData(dataMy) && showModal && (
           <>
             <ModalWrapper showSubModal={showSubModal}>
               <ModalHeader>
@@ -240,79 +230,55 @@ const History = () => {
             </ModalWrapper>
           </>
         )}
-        {/* {showSubModal && ( */}
-        <SubModalWrapper showSubModal={showSubModal}>
-          <SubModalTop>
-            <SubModalBtn
-              isSelected={selectedBtn === 3}
-              onClick={() => onClickUpdateDate(3)}
-            >
-              3일
-            </SubModalBtn>
-            <SubModalBtn
-              isSelected={selectedBtn === 7}
-              onClick={() => onClickUpdateDate(7)}
-            >
-              7일
-            </SubModalBtn>
-            <SubModalBtn
-              isSelected={selectedBtn === 30}
-              onClick={() => onClickUpdateDate(30)}
-            >
-              30일
-            </SubModalBtn>
-            <SubModalBtn
-              isSelected={selectedBtn === 100}
-              onClick={() => onClickUpdateDate(100)}
-            >
-              100일
-            </SubModalBtn>
-            {showDatePicker ? (
-              <img
-                src="../images/icon_calender_filled.svg"
-                alt="icon_calender"
-                onClick={handleButtonClick}
-              />
-            ) : (
-              <img
-                src="../images/icon_calender.svg"
-                alt="icon_calender"
-                onClick={handleButtonClick}
-              />
-            )}
-            {showDatePicker && (
-              <DatePickerContainer>
-                <Calender
-                  selectedDate={selectedDate}
-                  onChangeDatePicker={onChangeDatePicker}
-                  setShowDatePicker={setShowDatePicker}
-                />
-              </DatePickerContainer>
-            )}
-            {isClickedDay && (
-              <SubModalDate>~{designedDate.replace(/-/g, ".")}</SubModalDate>
-            )}
-          </SubModalTop>
-          <SubModalBottom onClick={() => onClickModify()}>
-            오늘의 기도에 추가하기
-          </SubModalBottom>
-        </SubModalWrapper>
-        {/* )} */}
+        <SelectDateInput
+          setUpdateDate={setUpdateDate}
+          setShowSubModal={setShowSubModal}
+          showSubModal={showSubModal}
+          isDefault={true}
+          isShowWordCount={false}
+          onClickFunc={() => onClickModify(sortBy)}
+        />
       </div>
-      <div style={{ paddingTop: "65px" }}>
-        {data.map((el) => (
-          <div onClick={onClickHistory} key={el.id} id={el.id}>
-            <HisContent
-              name={el.target}
-              content={el.title}
-              date={`${el.created_at.split(" ")[0]} ~ ${el.deadline}`}
-              pray_cnt={el.pray_cnt}
-            />
-            <div ref={ref}></div>
-          </div>
-        ))}
-      </div>
-      <div style={{ marginTop: "20px", color: "#D0E8CB" }}>.</div>
+      {sortBy === "date" && (
+        <div style={{ paddingTop: "115px" }}>
+          {/* <div> */}
+          {dataMy.map((el) => (
+            <div
+              onClick={(e) => onClickHistoryItem(e, sortBy)}
+              key={el.id}
+              id={el.id}
+            >
+              <HisContent
+                name={el.target}
+                content={el.title}
+                date={`${el.created_at.split(" ")[0]} ~ ${el.deadline}`}
+                pray_cnt={el.pray_cnt}
+              />
+              <div ref={ref}></div>
+            </div>
+          ))}
+        </div>
+      )}
+      {sortBy === "cnt" && (
+        <div style={{ paddingTop: "115px" }}>
+          {dataShared.map((el) => (
+            <div
+              onClick={(e) => onClickHistoryItem(e, sortBy)}
+              key={el.id}
+              id={el.id}
+            >
+              <HisContent
+                name={el.target}
+                content={el.title}
+                date={`${el.created_at.split(" ")[0]} ~ ${el.deadline}`}
+                pray_cnt={el.pray_cnt}
+              />
+              <div ref={ref}></div>
+            </div>
+          ))}
+        </div>
+      )}
+      <div style={{ marginTop: "20px", color: `#D0E8CB` }}>.</div>
     </HistoryWrapper>
   );
 };
@@ -327,7 +293,6 @@ const HistoryWrapper = styled.div`
   position: relative;
   /* padding-top: 65px; */
 `;
-
 const LottieWrapper = styled.div`
   position: fixed;
   width: 100%;
@@ -349,25 +314,23 @@ const NoDataWrapper = styled.div`
 `;
 
 const NoDataTitle = styled.div`
-  font-weight: 700;
+  font-weight: 500;
   font-size: 28px;
-  line-height: 41px;
   color: var(--color-grey);
 `;
 const NoDataContent = styled.div`
   font-weight: 400;
   font-size: 20px;
-  line-height: 29px;
   color: var(--color-secondary-grey);
 `;
 
 const ModalWrapper = styled.div`
   position: fixed;
   /* top: ${(props) => (props.showSubModal ? `40%` : `50%`)}; */
-  bottom: ${(props) => (props.showSubModal ? `32%` : `25%`)};
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: calc(100vw - 64px);
+  width: calc(100vw - 48px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -402,20 +365,25 @@ const ModalTarget = styled.span`
 const ModalDate = styled.div`
   color: var(--color-dark-green);
   font-size: 12px;
-  line-height: 17px;
 `;
 
 const ModalContent = styled.div`
-  padding: 0px 28px 12px 28px;
+  padding: 0px 28px 0px 28px;
   font-size: 16px;
-  line-height: 23px;
   color: var(--color-dark-grey);
+  word-break: keep-all;
+  word-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const ModalWriter = styled.div`
   display: flex;
   flex-direction: row-reverse;
-  padding: 0px 20px 11px 0px;
+  padding: 12px 20px 11px 0px;
   font-size: 12px;
   color: var(--color-grey);
 `;
@@ -459,86 +427,4 @@ const ModalButton2 = styled.button`
       props.disabled ? "brightness(1)" : "brightness(0.9)"};
     scale: ${(props) => (props.disabled ? "1" : "0.98")};
   }
-`;
-
-const SubModalWrapper = styled.div`
-  position: fixed;
-  left: 50%;
-  transform: translate(-50%, -40%);
-  width: calc(100vw - 64px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background-color: white;
-  border-radius: 16px;
-  z-index: 300;
-  top: 63%;
-  opacity: ${(props) => (props.showSubModal ? "1" : "0")};
-  transition: all 0.3s ease-in-out;
-  visibility: ${(props) => (props.showSubModal ? "visible" : "hidden")};
-`;
-
-const SubModalTop = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  padding: 24px 16px;
-  align-items: center;
-  gap: 8px;
-`;
-
-const SubModalBtn = styled.div`
-  border: 1px solid var(--color-green);
-  border-radius: 8px;
-  padding: 4px 8px;
-  word-break: keep-all;
-  font-size: 12px;
-  line-height: 17px;
-  color: var(--color-green);
-  cursor: pointer;
-  ${(props) =>
-    props.isSelected &&
-    css`
-      background-color: var(--color-green);
-      color: var(--color-white);
-    `}
-  &:active {
-    transition: all 0.2s ease-in-out;
-    filter: ${(props) =>
-      props.disabled ? "brightness(1)" : "brightness(0.9)"};
-    scale: ${(props) => (props.disabled ? "1" : "0.90")};
-  }
-`;
-
-const SubModalDate = styled.div`
-  font-size: 12px;
-  color: var(--color-green);
-  transform: translateX(-4px);
-`;
-
-const SubModalBottom = styled.div`
-  background: var(--color-dark-green);
-  border-radius: 0px 0px 16px 16px;
-  font-weight: 500;
-  font-size: 16px;
-  text-align: center;
-  color: var(--color-white);
-  padding: 20px 0px;
-  &:active {
-    transition: all 0.2s ease-in-out;
-    filter: ${(props) =>
-      props.disabled ? "brightness(1)" : "brightness(0.9)"};
-  }
-`;
-
-const DatePickerContainer = styled.div`
-  position: fixed;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 400;
-`;
-
-const ToastWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;

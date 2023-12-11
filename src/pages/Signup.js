@@ -6,7 +6,6 @@ import Button, { ButtonSize, ButtonTheme } from "../components/Button/Button";
 import Input from "../components/Input/Input";
 import styled from "styled-components";
 import { ToastTheme } from "../components/Toast/Toast";
-import Checkbox from "../components/Checkbox/Checkbox";
 import publicapi from "../api/publicapi";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +13,8 @@ import Modal from "../components/Modal/Modal";
 import useToast from "../hooks/useToast";
 import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
+import useSignupTos from "../hooks/useSignupTos";
+import SignupTos from "../components/SignupTos/SignupTos";
 
 let init = 0;
 
@@ -43,9 +44,6 @@ const Signup = () => {
     isPhoneNumVerficationButtonClicked,
     setIsPhoneNumVerficationButtonClickClick,
   ] = useState(false);
-  const [tos1Checked, setTos1Checked] = useState(false);
-  const [tos2Checked, setTos2Checked] = useState(false);
-  const [tos3Checked, setTos3Checked] = useState(false);
   const userInfoForCheck = { ...userInfo };
   delete userInfoForCheck.year;
   delete userInfoForCheck.month;
@@ -54,6 +52,8 @@ const Signup = () => {
   const checkEmptyUserInfoValue = Object.values(userInfoForCheck).some(
     (data) => data === ""
   );
+
+  const { isAgreed, toggleAll, toggleHandler, isAgreedAll } = useSignupTos();
 
   const { showToast } = useToast({});
 
@@ -65,9 +65,7 @@ const Signup = () => {
     !invalidMatchingPwdInfo &&
     isCetrificated &&
     isCertificateButtonClicked &&
-    tos1Checked &&
-    tos2Checked &&
-    tos3Checked &&
+    isAgreedAll &&
     !checkEmptyUserInfoValue;
 
   const idRegEx = /^[a-z0-9]{6,15}$/;
@@ -289,18 +287,6 @@ const Signup = () => {
     return () => clearInterval(id);
   }, [time]);
 
-  function handleTos1Change(event) {
-    setTos1Checked(event.target.checked);
-  }
-
-  function handleTos2Change(event) {
-    setTos2Checked(event.target.checked);
-  }
-
-  function handleTos3Change(event) {
-    setTos3Checked(event.target.checked);
-  }
-
   return (
     <SignupPageWrapper>
       <UserHeader>회원가입</UserHeader>
@@ -360,7 +346,7 @@ const Signup = () => {
               color: "#7BAB6E",
               paddingLeft: "16px",
               position: "absolute",
-              top: "-14px",
+              top: "-18px",
             }}
           >
             성별
@@ -465,30 +451,7 @@ const Signup = () => {
             </div>
           }
         />
-        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-          <Checkbox
-            id="tos1"
-            label={"만 14세 이상입니다."}
-            checked={tos1Checked}
-            handler={handleTos1Change}
-          />
-          <Checkbox
-            link={"/tos"}
-            id="tos2"
-            label={"에 동의합니다."}
-            linklabel={"서비스 이용약관"}
-            checked={tos2Checked}
-            handler={handleTos2Change}
-          />
-          <Checkbox
-            link={"/privacyProcessAgreement"}
-            id="tos3"
-            label={"에 동의합니다."}
-            linklabel={"개인정보 수집 및 이용"}
-            checked={tos3Checked}
-            handler={handleTos3Change}
-          />
-        </div>
+        <SignupTos {...{ isAgreed, toggleHandler, toggleAll, isAgreedAll }} />
         <Button
           // disabled={!isAllValid}
           buttonSize={ButtonSize.LARGE}

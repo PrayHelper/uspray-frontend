@@ -41,19 +41,18 @@ const StyledHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  background-color: white;
+  box-shadow: 0 2px 8px var(--color-black-25);
+  background-color: var(--color-white);
   position: fixed;
   top: 0;
   z-index: 1;
-  background-color: white;
+  background-color: var(--color-white);
 `;
 
 const Title = styled.div`
   font-weight: 700;
   font-size: 20px;
   margin-left: 16px;
-  line-height: 29px;
 `;
 
 const SelectGroup = styled.div`
@@ -63,7 +62,6 @@ const SelectGroup = styled.div`
   margin-right: 16px;
   font-weight: 400;
   font-size: 16px;
-  line-height: 23px;
   text-align: center;
-  color: #a0a0a0;
+  color: var(--color-grey);
 `;

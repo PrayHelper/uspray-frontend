@@ -28,13 +28,19 @@ const BackButton = styled.img`
   position: absolute;
   margin-left: 15px;
 `;
+
+const RightButton = styled.div`
+  position: absolute;
+  right: 15px;
+`;
+
 const Title = styled.div`
   margin: 0 auto;
   color: #7bab6e;
   font-weight: bold;
 `;
 
-const UserHeader = ({ children, fixed }) => {
+const UserHeader = ({ children, fixed, rightIcons }) => {
   const navigate = useNavigate();
 
   const goBack = () => {
@@ -50,6 +56,9 @@ const UserHeader = ({ children, fixed }) => {
           alt="back_button"
         />
         <Title>{children}</Title>
+        <RightButton>
+          {rightIcons && rightIcons()}
+        </RightButton>
       </FixedStyledHeader>
     );
 
@@ -61,6 +70,9 @@ const UserHeader = ({ children, fixed }) => {
         alt="back_button"
       />
       <Title>{children}</Title>
+      <RightButton>
+        {rightIcons && rightIcons()}
+      </RightButton>
     </StyledHeader>
   );
 };
