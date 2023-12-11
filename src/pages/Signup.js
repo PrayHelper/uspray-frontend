@@ -1,5 +1,5 @@
 import ToggleButton from "../components/ToggleButton";
-import React, { useEffect,  useState } from "react";
+import React, { useEffect, useState } from "react";
 import UserHeader from "../components/UserHeader";
 import InputBirth from "../components/InputBirth";
 import Button, { ButtonSize, ButtonTheme } from "../components/Button/Button";
@@ -14,7 +14,6 @@ import Modal from "../components/Modal/Modal";
 import useToast from "../hooks/useToast";
 import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
-
 
 let init = 0;
 
@@ -97,7 +96,7 @@ const Signup = () => {
   };
 
   const isIdDuplicated = async (uid) => {
-    const api = `/user/dup_check/${uid}`;
+    const api = `/auth/dup-check/${uid}`;
     try {
       const res = await publicapi.get(api);
       if (res.status === 200) {
@@ -109,9 +108,9 @@ const Signup = () => {
   };
 
   const phoneNumVerfication = async (phoneNumber) => {
-    const api = "/admin/sms";
+    const api = "/sms/send";
     const data = {
-      phone: phoneNumber,
+      to: phoneNumber,
     };
     try {
       const res = await publicapi.post(api, data);
@@ -141,11 +140,9 @@ const Signup = () => {
       phone: userInfo.phoneNumber.replace(/-/g, ""),
     };
 
-    if (gender)
-      data.gender = gender;
+    if (gender) data.gender = gender;
     if (userInfo.year && userInfo.month && userInfo.day)
       data.birth = userInfo.year + "-" + userInfo.month + "-" + userInfo.day;
-
 
     try {
       const res = await publicapi.post(api, data);
@@ -315,7 +312,8 @@ const Signup = () => {
           flexDirection: "column",
           gap: "27px",
           padding: "20px 27px",
-        }}>
+        }}
+      >
         <Input
           label="아이디*"
           onChangeHandler={idChangeHandler}
@@ -355,14 +353,16 @@ const Signup = () => {
               paddingLeft: "16px",
               position: "absolute",
               top: "-14px",
-            }}>
+            }}
+          >
             성별
           </div>
           <div
             style={{
               display: "flex",
               textAlign: "center",
-            }}>
+            }}
+          >
             <ToggleButton contents="남자" item={gender} setter={setGender} />
             <ToggleButton contents="여자" item={gender} setter={setGender} />
           </div>
@@ -395,7 +395,8 @@ const Signup = () => {
                 setIsCertificateButtonClicked(false);
                 setUserInfo({ ...userInfo, certificateNumber: "" });
                 setIsPhoneNumVerficationButtonClickClick(true);
-              }}>
+              }}
+            >
               {time ? "진행 중" : "전송"}
             </Button>
           }
@@ -449,7 +450,8 @@ const Signup = () => {
                       theme: ToastTheme.ERROR,
                     });
                   }
-                }}>
+                }}
+              >
                 {isCetrificated || isCertificateButtonClicked ? "완료" : "확인"}
               </Button>
             </div>
@@ -485,9 +487,10 @@ const Signup = () => {
           buttonTheme={isAllValid ? ButtonTheme.GREEN : ButtonTheme.GRAY}
           handler={() => {
             signup();
-          }}>
+          }}
+        >
           회원가입
-          {isAllValid ? <NextArrowWhite/> : <NextArrowGray/>}
+          {isAllValid ? <NextArrowWhite /> : <NextArrowGray />}
         </Button>
       </div>
     </SignupPageWrapper>
