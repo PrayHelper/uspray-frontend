@@ -73,13 +73,13 @@ const S = {
 
 const SocialLogin = () => {
   const continueWithKakao = () => {
-    alert();
+    console.log("continueWithKakao");
   };
   const continueWithNaver = () => {
-    alert();
+    console.log("continueWithNaver");
   };
   const continueWithApple = () => {
-    alert();
+    console.log("continueWithApple");
   };
 
   return (
