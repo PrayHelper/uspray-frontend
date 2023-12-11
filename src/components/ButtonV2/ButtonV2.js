@@ -16,5 +16,3 @@ const ButtonV2 = ({buttonTheme = ButtonTheme.FILLED, disabled, handler, children
 };
 
 export default ButtonV2;
-
-

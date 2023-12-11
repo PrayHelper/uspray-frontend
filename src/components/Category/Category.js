@@ -6,11 +6,11 @@ const ICON_HEART_EMPTY = "images/ic_empty_heart.svg";
 
 const Category = ({ title, color, setSelectedTitleIndex }) => {
   const [selected, setSelected] = useState([]);
-  const titles = ['기도제목1', '기도제목2', '기도제목3'];
+  const titles = ["기도제목1", "기도제목2", "기도제목3"];
 
   const handleClick = (e, index) => {
     e.stopPropagation();
-    setSelected(prev => {
+    setSelected((prev) => {
       const newSelected = [...prev];
       newSelected[index] = !newSelected[index];
       return newSelected;
@@ -19,15 +19,25 @@ const Category = ({ title, color, setSelectedTitleIndex }) => {
 
   const titleClick = (e, index) => {
     setSelectedTitleIndex(index);
-  }
+  };
+
   return (
     <CategoryContainer>
       <Title color={color}>{title}</Title>
       <ItemList>
         {titles.map((title, index) => (
-          <Item key={index} >
-            <ItemText selected={selected[index]} onClick={(e) => titleClick(e, index)}>{title}</ItemText>
-            <img src={selected[index] ? ICON_HEART_FILLED : ICON_HEART_EMPTY} alt="heart_icon" onClick={(e) => handleClick(e, index)} />
+          <Item key={index}>
+            <ItemText
+              selected={selected[index]}
+              onClick={(e) => titleClick(e, index)}
+            >
+              {title}
+            </ItemText>
+            <img
+              src={selected[index] ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
+              alt="heart_icon"
+              onClick={(e) => handleClick(e, index)}
+            />
           </Item>
         ))}
       </ItemList>
@@ -47,10 +57,10 @@ const CategoryContainer = styled.div`
 `;
 
 const Title = styled.div`
-  background-color: ${props => props.color};
+  background-color: ${(props) => props.color};
   border-radius: 16px 16px 0px 0px;
   padding: 12px 16px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-weight: 700;
 `;
 
@@ -61,7 +71,7 @@ const ItemList = styled.div`
 
 const ItemText = styled.div`
   flex: 1 1 0%;
-  color: ${props => props.selected ? "#49614380" : "#496143"};
+  color: ${(props) => (props.selected ? "#49614380" : "#496143")};
   font-size: 12px;
 `;
 
@@ -73,11 +83,11 @@ const Item = styled.div`
   gap: 2px;
 
   &:not(:last-child)::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    border-bottom: 1px solid #0000001A;
+    border-bottom: 1px solid #0000001a;
   }
 `;
