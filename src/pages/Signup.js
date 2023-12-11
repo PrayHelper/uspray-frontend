@@ -34,7 +34,7 @@ const Signup = () => {
   const [invalidPwdInfo, setInvalidPwdInfo] = useState("");
   const [invalidMatchingPwdInfo, setInvalidMatchingPwdInfo] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [verficationNumber, setVerficationNumber] = useState("");
+  const [requestId, setRequestId] = useState("");
   const [time, setTime] = useState("");
   const [isCetrificated, setIsCertificated] = useState(false);
   const [isCertificateButtonClicked, setIsCertificateButtonClicked] =
@@ -119,22 +119,18 @@ const Signup = () => {
           message: "인증번호가 전송되었습니다.",
           theme: ToastTheme.SUCCESS,
         });
-        console.log(res.data.code);
-        setVerficationNumber(res.data.code);
+        setRequestId(res.data.data.requestId);
         setTime("180");
       }
     } catch (e) {
-      showToast({
-        message: "error occured",
-        theme: ToastTheme.ERROR,
-      });
+      showToast({ message: "error occured", theme: ToastTheme.ERROR });
     }
   };
 
   const signup = async () => {
-    const api = "/user/signup";
+    const api = "/auth/signup";
     const data = {
-      id: userInfo.id,
+      userId: userInfo.id,
       password: userInfo.pwd,
       name: userInfo.name,
       phone: userInfo.phoneNumber.replace(/-/g, ""),
@@ -249,13 +245,25 @@ const Signup = () => {
     setUserInfo({ ...userInfo, certificateNumber: e.target.value });
   };
 
-  const isCertificationNumberValid = (certificateNumber) => {
-    if (verficationNumber == certificateNumber) {
-      setIsCertificated(true);
-      return true;
-    } else {
-      setIsCertificated(false);
-      return false;
+  const isCertificationNumberValid = async (certificateNumber) => {
+    const api = "/sms/verification";
+    const data = {
+      requestId: requestId,
+      smsConfirmNum: certificateNumber,
+    };
+    try {
+      const res = await publicapi.post(api, data);
+      if (res.status === 200) {
+        if (res.data.data === true) {
+          setIsCertificated(true);
+          return true;
+        } else if (res.data.data === false) {
+          setIsCertificated(false);
+          return false;
+        }
+      }
+    } catch (e) {
+      showToast({ message: "error occured", theme: ToastTheme.ERROR });
     }
   };
 
