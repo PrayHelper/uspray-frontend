@@ -25,7 +25,7 @@ const GroupDetail = () => {
         {group.name}
       </UserHeader>
       <GroupInfo group={group} isData={isData}/>
-      <GroupPrayList groupPrayList={groupPrayList} isData={isData}/>
+      <GroupPrayList name={group.name} groupPrayList={groupPrayList} isData={isData}/>
     </Wrapper>
   );
 };

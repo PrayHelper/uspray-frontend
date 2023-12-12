@@ -51,6 +51,7 @@ import RemoveMember from "./pages/RemoveMember";
 import CreateGroup from "./pages/CreateGroup";
 import DeleteGroup from "./pages/DeleteGroup";
 import LeaveGroup from "./pages/LeaveGroup";
+import SocialLoginNameInput from "./pages/SocialLoginNameInput";
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -132,14 +133,17 @@ function App() {
               <Route element={<Outlet />}>
                 <Route path="/" element={<Login />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route
+                  path="/socialLoginNameInput"
+                  element={<SocialLoginNameInput />}
+                />
                 <Route path="/findAccount" element={<Find />} />
                 <Route path="/findID" element={<FindId />}></Route>
                 <Route path="/findIDResult" element={<FindIdResult />}></Route>
                 <Route path="/findPW" element={<FindPassword />}></Route>
                 <Route
                   path="/findPWResult"
-                  element={<FindPasswordResult />}
-                ></Route>
+                  element={<FindPasswordResult />}></Route>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/loading" element={<SplashScreen />} />
                 <Route path="*" element={<NotFound />} />
