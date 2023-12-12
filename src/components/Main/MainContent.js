@@ -6,8 +6,13 @@ import completeImage from "../../images/check_img.svg";
 import deleteImage from "../../images/delete_img.svg";
 import modifyImage from "../../images/modify_img.svg";
 
-const MainContent = ({ categories, setCategories, setShowCategorySetting }) => {
-  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(null);
+const MainContent = ({
+  categories,
+  setCategories,
+  setShowCategorySetting,
+  selectedCategoryIndex,
+  setSelectedCategoryIndex,
+}) => {
   const [selectedTitleIndex, setSelectedTitleIndex] = useState(null);
 
   const prayComplete = () => {
@@ -30,6 +35,7 @@ const MainContent = ({ categories, setCategories, setShowCategorySetting }) => {
           selectedCategoryIndex={selectedCategoryIndex}
           setSelectedCategoryIndex={setSelectedCategoryIndex}
           setShowCategorySetting={setShowCategorySetting}
+          canAdd={true}
         />
       </TopWrapper>
       <Content>

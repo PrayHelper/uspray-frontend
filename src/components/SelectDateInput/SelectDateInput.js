@@ -1,10 +1,13 @@
+import React, { useEffect } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import SelectDate from "../SelectDate/SelectDate";
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import BlackScreen from "../BlackScreen/BlackScreen";
+import CategoryTag from "../CategoryTag/CategoryTag";
 
 const SelectDateInput = ({
+  categories, // 메인의 카테고리 목록
   showSubModal, // 현재 컴포넌트 창 켜져있는지
   setShowSubModal, // 현재 컴포넌트 창 켜져있는지 set
   inputPlaceHolder,
@@ -17,11 +20,17 @@ const SelectDateInput = ({
   setUpdateDate, // api 호출용 날짜 데이터 저장 함수
   setUpdateCategory, // api 호출용 카테고리 데이터 저장 함수
   onClickFunc, // 기도 추가 이벤트 함수
+  selectedCategoryIndex,
+  setSelectedCategoryIndex,
   buttonText, // 버튼 text
 }) => {
   const outside = useRef();
 
   const [inputCount, setInputCount] = useState(0);
+
+  useEffect(() => {
+    console.log("[SelectDateInput]categories", categories);
+  }, [categories]);
 
   const onInputHandler = (e) => {
     if (e.target.value.length > e.maxLength)
@@ -40,31 +49,41 @@ const SelectDateInput = ({
           if (e.target === outside.current) setShowSubModal(false);
         }}
       >
-        <SubModalTop>
-          <ModalInputWrapper>
-            <ModalInput
-              placeholder={inputPlaceHolder}
-              maxRows={maxrow}
-              minRows={1}
-              cacheMeasurements
-              maxLength={maxlen}
-              onChange={onInputHandler}
-              disabled={isDefault ? true : false}
-              value={isDefault ? "기도제목을 입력하였습니다." : value}
+        <div style={{ display: "flex", gap: "16px", flexDirection: "column" }}>
+          <SubModalTop>
+            <ModalInputWrapper>
+              <ModalInput
+                placeholder={inputPlaceHolder}
+                maxRows={maxrow}
+                minRows={1}
+                cacheMeasurements
+                maxLength={maxlen}
+                onChange={onInputHandler}
+                disabled={isDefault ? true : false}
+                value={isDefault ? "기도제목을 입력하였습니다." : value}
+              />
+              {isShowWordCount && (
+                <Countwords>
+                  <p>
+                    {inputCount}자 / {maxlen}자
+                  </p>
+                </Countwords>
+              )}
+            </ModalInputWrapper>
+            <SelectDate
+              setUpdateDate={setUpdateDate}
+              showSubModal={showSubModal}
             />
-            {isShowWordCount && (
-              <Countwords>
-                <p>
-                  {inputCount}자 / {maxlen}자
-                </p>
-              </Countwords>
-            )}
-          </ModalInputWrapper>
-          <SelectDate
-            setUpdateDate={setUpdateDate}
-            showSubModal={showSubModal}
-          />
-        </SubModalTop>
+          </SubModalTop>
+          <SubModalCategory>
+            <CategoryTag
+              categories={categories}
+              selectedCategoryIndex={selectedCategoryIndex}
+              setSelectedCategoryIndex={setSelectedCategoryIndex}
+              canAdd={false}
+            />
+          </SubModalCategory>
+        </div>
         <SubModalBottom onClick={onClickFunc}>{buttonText}</SubModalBottom>
       </SubModalWrapper>
     </>
@@ -106,6 +125,7 @@ const SubModalTop = styled.div`
   background-color: var(--color-white);
 `;
 
+const SubModalCategory = styled.div``;
 const ModalInputWrapper = styled.div``;
 
 const ModalInput = styled(TextareaAutosize)`
