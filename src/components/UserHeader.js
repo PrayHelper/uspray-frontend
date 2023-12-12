@@ -1,6 +1,6 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 const StyledHeader = styled.div`
   display: flex;
@@ -40,11 +40,19 @@ const Title = styled.div`
   font-weight: bold;
 `;
 
-const UserHeader = ({ children, fixed, rightIcons }) => {
+const UserHeader = ({
+  children,
+  fixed,
+  rightIcons,
+  Overlay,
+  setIsOverlayOn,
+}) => {
+  if (!Overlay) Overlay = false;
   const navigate = useNavigate();
 
   const goBack = () => {
-    navigate(-1); // 이전 페이지로 이동
+    if (Overlay) setIsOverlayOn(false);
+    else navigate(-1); // 이전 페이지로 이동
   };
 
   if (fixed)
@@ -56,9 +64,7 @@ const UserHeader = ({ children, fixed, rightIcons }) => {
           alt="back_button"
         />
         <Title>{children}</Title>
-        <RightButton>
-          {rightIcons && rightIcons()}
-        </RightButton>
+        <RightButton>{rightIcons && rightIcons()}</RightButton>
       </FixedStyledHeader>
     );
 
@@ -70,9 +76,7 @@ const UserHeader = ({ children, fixed, rightIcons }) => {
         alt="back_button"
       />
       <Title>{children}</Title>
-      <RightButton>
-        {rightIcons && rightIcons()}
-      </RightButton>
+      <RightButton>{rightIcons && rightIcons()}</RightButton>
     </StyledHeader>
   );
 };

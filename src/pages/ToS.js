@@ -8,10 +8,12 @@ const TitleTag = styled.div`
   margin-bottom: 8px;
 `;
 
-const ToS = () => {
+const ToS = ({ setIsOverlayOn }) => {
   return (
     <>
-      <UserHeader>이용 약관 및 정책</UserHeader>
+      <UserHeader Overlay={true} setIsOverlayOn={setIsOverlayOn}>
+        이용 약관 및 정책
+      </UserHeader>
       <div
         style={{
           width: "100%",

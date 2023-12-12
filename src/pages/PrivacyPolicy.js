@@ -8,18 +8,21 @@ const TitleTag = styled.div`
   margin-bottom: 8px;
 `;
 
-const PrivacyPolicy = () => {
+const PrivacyPolicy = ({ setIsOverlayOn }) => {
   return (
     <>
-      <UserHeader fixed>개인정보 처리 방침</UserHeader>
+      <UserHeader Overlay={true} setIsOverlayOn={setIsOverlayOn}>
+        개인정보 처리 방침
+      </UserHeader>
 
       <div
         style={{
           width: "100%",
           flexDirection: "column",
-          marginTop: "98px",
+          marginTop: "28px",
           lineHeight: "23px",
-        }}>
+        }}
+      >
         <div
           style={{
             display: "flex",
@@ -27,7 +30,8 @@ const PrivacyPolicy = () => {
             padding: "0 16px",
             color: "#606060",
             fontWeight: "400",
-          }}>
+          }}
+        >
           <TitleTag style={{ marginTop: "-16px" }}>제1조(목적)</TitleTag>이
           Uspray(‘www.uspray.kr’ 이하 '유스프레이' 라고 합니다)는 유스프레이가
           제공하고자 하는 서비스(이하 '유스프레이 서비스')를 이용하는 개인(이하

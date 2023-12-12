@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { ToastTheme } from "../components/Toast/Toast";
 import publicapi from "../api/publicapi";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
+import { Overlay } from "../components/Overlay/Overlay";
 import { useNavigate } from "react-router-dom";
 import Modal from "../components/Modal/Modal";
 import useToast from "../hooks/useToast";

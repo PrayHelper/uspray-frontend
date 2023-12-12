@@ -1,8 +1,20 @@
 import styled from "styled-components";
 import Checkbox from "../Checkbox/Checkbox";
+import ToS from "../../pages/ToS";
+import PrivacyProcessAgreement from "../../pages/PrivacyProcessAgreement";
+import { useState } from "react";
+import Overlay from "../Overlay/Overlay";
 
 /** 상위 컴포넌트에서 useSignupTos와 함께 불러와 사용 */
 const SignupTos = ({ isAgreed, toggleHandler, isAgreedAll, toggleAll }) => {
+  const [isOverlayOn, setIsOverlayOn] = useState(false);
+  const [information, setInformation] = useState(null);
+
+  function showInformation(page) {
+    setInformation(page);
+    setIsOverlayOn(true);
+  }
+
   return (
     <S.Root>
       <Checkbox
@@ -20,21 +32,30 @@ const SignupTos = ({ isAgreed, toggleHandler, isAgreedAll, toggleAll }) => {
         handler={toggleHandler}
       />
       <Checkbox
-        link={"/tos"}
         id="tos2"
         label={"에 동의합니다."}
         linklabel={"서비스 이용약관"}
         checked={isAgreed["tos2"]}
         handler={toggleHandler}
+        showInformation={() =>
+          showInformation(<ToS setIsOverlayOn={setIsOverlayOn} />)
+        }
       />
       <Checkbox
-        link={"/privacyProcessAgreement"}
         id="tos3"
         label={"에 동의합니다."}
         linklabel={"개인정보 수집 및 이용"}
         checked={isAgreed["tos3"]}
         handler={toggleHandler}
+        showInformation={() =>
+          showInformation(
+            <PrivacyProcessAgreement setIsOverlayOn={setIsOverlayOn} />
+          )
+        }
       />
+      {isOverlayOn && (
+        <Overlay isOverlayOn={isOverlayOn}>{information}</Overlay>
+      )}
     </S.Root>
   );
 };

@@ -151,11 +151,6 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/loading" element={<SplashScreen />} />
                 <Route path="*" element={<NotFound />} />
-                <Route path="/tos" element={<ToS />} />
-                <Route
-                  path="/privacyProcessAgreement"
-                  element={<PrivacyProcessAgreement />}
-                />
                 <Route path="/historySearch" element={<HistorySearch />} />
               </Route>
             </Route>

@@ -8,10 +8,12 @@ const TitleTag = styled.div`
   margin-bottom: 8px;
 `;
 
-const PrivacyProcessAgreement = () => {
+const PrivacyProcessAgreement = ({ setIsOverlayOn }) => {
   return (
     <>
-      <UserHeader>개인정보 처리 동의서</UserHeader>
+      <UserHeader Overlay={true} setIsOverlayOn={setIsOverlayOn} fixed={true}>
+        개인정보 처리 동의서
+      </UserHeader>
       <div
         style={{
           width: "100%",
