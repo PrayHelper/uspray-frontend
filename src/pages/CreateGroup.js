@@ -4,8 +4,10 @@ import UserHeader from '../components/UserHeader';
 import Input from '../components/Input/Input';
 import { useState } from 'react';
 import Button, {ButtonSize, ButtonTheme} from '../components/Button/Button';
+import { useGroup } from '../hooks/useGroup';
 
 const CreateGroup = () => {
+  const { createGroup } = useGroup();
   const [groupName, setGroupName] = useState("");
   const [invalidGroupName, setInvalidGroupName] = useState("");
 
@@ -41,7 +43,7 @@ const CreateGroup = () => {
               buttonSize={ButtonSize.LARGE}
               buttonTheme={(groupName && !invalidGroupName) ? ButtonTheme.GREEN : ButtonTheme.GRAY}
               isArrow={true}
-              handler={() => {}}
+              handler={() => createGroup({name: groupName})}
             >
               모임 생성하기
             </Button>
