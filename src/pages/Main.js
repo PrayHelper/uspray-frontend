@@ -1,68 +1,137 @@
-import styled from 'styled-components';
-import MainContent from '../components/Main/MainContent';
-import { useState } from 'react';
-import ButtonV2, { ButtonTheme } from '../components/ButtonV2/ButtonV2';
-
+import styled from "styled-components";
+import MainContent from "../components/Main/MainContent";
+import { useState } from "react";
+import ButtonV2, { ButtonTheme } from "../components/ButtonV2/ButtonV2";
+import SelectDateInput from "../components/SelectDateInput/SelectDateInput";
 
 const Main = () => {
-  const [tab, setTab] = useState('내가 쓴');
-  const [bgColor, setBgColor] = useState('#7BAB6E');
-  const [inputValue, setInputValue] = useState('');
+  const [tab, setTab] = useState("내가 쓴");
+  const [bgColor, setBgColor] = useState("#7BAB6E");
+  const [inputValue, setInputValue] = useState("");
   const [showCategorySetting, setShowCategorySetting] = useState(false);
-  const [selectedColor, setSelectedColor] = useState('#D0E8CB');
+  const [selectedColor, setSelectedColor] = useState("#D0E8CB");
   const [categories, setCategories] = useState([]);
+  const [showSubModal, setShowSubModal] = useState(false);
+  const [prayInputValue, setPrayInputValue] = useState("");
+  const [dateInputValue, setDateInputValue] = useState(null);
+  const [categoryInputValue, setCategoryInputValue] = useState(0);
 
   const handleTabChange = (newTab) => {
     setTab(newTab);
-    setBgColor(newTab === '내가 쓴' ? '#7BAB6E' : '#3D5537');
+    setBgColor(newTab === "내가 쓴" ? "#7BAB6E" : "#3D5537");
   };
 
   const addCategory = () => {
-    if(inputValue !== '') {
-      setCategories([...categories, { name: inputValue, color: selectedColor }]);
-      setInputValue('');
-      setSelectedColor('#D0E8CB');
+    if (inputValue !== "") {
+      setCategories([
+        ...categories,
+        { name: inputValue, color: selectedColor },
+      ]);
+      setInputValue("");
+      setSelectedColor("#D0E8CB");
       setShowCategorySetting(false);
     }
   };
-  
+
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
-  
+
   const handleInnerClick = (e) => {
     e.stopPropagation();
   };
 
-  const ColorList = ["#D0E8CB", "#AEDBA5", "#9BD88A", "#75BD62", "#649D55", "#58834D", "#507247"];
+  const ColorList = [
+    "#D0E8CB",
+    "#AEDBA5",
+    "#9BD88A",
+    "#75BD62",
+    "#649D55",
+    "#58834D",
+    "#507247",
+  ];
 
   return (
     <MainWrapper style={{ backgroundColor: bgColor }}>
       <TopContainer>
         <TopBox>
-        <TabContainer>
-            <Tab active={tab === '내가 쓴'} onClick={() => handleTabChange('내가 쓴')}>내가 쓴</Tab>
-            <Tab active={tab === '공유 받은'} onClick={() => handleTabChange('공유 받은')}>공유 받은</Tab>
+          <TabContainer>
+            <Tab
+              active={tab === "내가 쓴"}
+              onClick={() => handleTabChange("내가 쓴")}
+            >
+              내가 쓴
+            </Tab>
+            <Tab
+              active={tab === "공유 받은"}
+              onClick={() => handleTabChange("공유 받은")}
+            >
+              공유 받은
+            </Tab>
           </TabContainer>
         </TopBox>
         <FlexContainer>
-        {tab === '내가 쓴' ? 
-          <Input type="text" placeholder="기도제목을 입력해주세요." style={{width: "100%"}} /> : 
-          <MoveToLockerButton>보관함에 3개의 기도제목이 있어요</MoveToLockerButton>
-        }
+          {tab === "내가 쓴" ? (
+            showSubModal ? (
+              <SelectDateInput
+                showSubModal={showSubModal}
+                setShowSubModal={setShowSubModal}
+                inputPlaceHodler="기도제목을 입력해주세요"
+                maxrow={3}
+                maxlen={75}
+                isShowWordCount={true}
+                isDefault={false}
+                setUpdateValue={setPrayInputValue}
+                setUpdateDate={setDateInputValue}
+                setUpdateCategory={setCategoryInputValue}
+                buttonText="기도제목 작성"
+              />
+            ) : (
+              <Input
+                type="text"
+                placeholder="기도제목을 입력해주세요."
+                style={{ width: "100%" }}
+                onClick={() => setShowSubModal(!showSubModal)}
+              />
+            )
+          ) : (
+            <MoveToLockerButton>
+              보관함에 3개의 기도제목이 있어요
+            </MoveToLockerButton>
+          )}
         </FlexContainer>
       </TopContainer>
-      <MainContent categories={categories} setCategories={setCategories} setShowCategorySetting={setShowCategorySetting}/>
+      <MainContent
+        categories={categories}
+        setCategories={setCategories}
+        setShowCategorySetting={setShowCategorySetting}
+      />
       {showCategorySetting && (
-        <CategorySetting  onClick={() => setShowCategorySetting(false)}>
-          <Input type="text" value={inputValue} placeholder="카테고리를 입력해주세요" onChange={handleInputChange} onClick={handleInnerClick}/>
+        <CategorySetting onClick={() => setShowCategorySetting(false)}>
+          <Input
+            type="text"
+            value={inputValue}
+            placeholder="카테고리를 입력해주세요"
+            onChange={handleInputChange}
+            onClick={handleInnerClick}
+          />
           <FixedButtonContainer onClick={handleInnerClick}>
-            <ButtonV2 buttonTheme={ButtonTheme.FILLED} handler={addCategory}>카테고리 추가</ButtonV2>
+            <ButtonV2 buttonTheme={ButtonTheme.FILLED} handler={addCategory}>
+              카테고리 추가
+            </ButtonV2>
           </FixedButtonContainer>
           <ColorPalette>
-          {ColorList.map((color) => (
-            <ColorDrop color={color} selectedColor={selectedColor} onClick={(event) => {setSelectedColor(color); event.stopPropagation();}} key={color}/>
-          ))}
+            {ColorList.map((color) => (
+              <ColorDrop
+                color={color}
+                selectedColor={selectedColor}
+                onClick={(event) => {
+                  setSelectedColor(color);
+                  event.stopPropagation();
+                }}
+                key={color}
+              />
+            ))}
           </ColorPalette>
         </CategorySetting>
       )}
@@ -78,7 +147,7 @@ const MainWrapper = styled.div`
   height: 100vh;
   width: 100%;
   position: relative;
-  background-color: #7BAB6E;
+  background-color: #7bab6e;
 `;
 
 const TopContainer = styled.div`
@@ -99,7 +168,6 @@ const FlexContainer = styled.div`
   display: flex;
 `;
 
-
 const TabContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -108,9 +176,9 @@ const TabContainer = styled.div`
 
 const Tab = styled.div`
   font-size: 24px;
-  color: ${props => props.active ? '#FFFFFF' : '#FFFFFF80'};
+  color: ${(props) => (props.active ? "#FFFFFF" : "#FFFFFF80")};
   cursor: pointer;
-  border-bottom: ${props => props.active ? '2px solid #FFFFFF' : 'none'};
+  border-bottom: ${(props) => (props.active ? "2px solid #FFFFFF" : "none")};
 `;
 
 const Input = styled.input`
@@ -132,8 +200,8 @@ const Input = styled.input`
 const MoveToLockerButton = styled.div`
   width: 100%;
   padding: 14px 16px;
-  background-color: #FFFFFF40;
-  color: #FFFFFF;
+  background-color: #ffffff40;
+  color: #ffffff;
   border-radius: 16px;
   position: relative;
 
@@ -145,7 +213,7 @@ const MoveToLockerButton = styled.div`
     transform: translateY(-50%);
     width: 24px;
     height: 24px;
-    background-image: url('/images/ic_right_arrow.svg');
+    background-image: url("/images/ic_right_arrow.svg");
     background-size: contain;
   }
 `;
@@ -197,5 +265,6 @@ const ColorDrop = styled.div`
     background: white;
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    display: ${(props) => (props.color === props.selectedColor ? "block" : "none")};
+    display: ${(props) =>
+      props.color === props.selectedColor ? "block" : "none"};
 `;

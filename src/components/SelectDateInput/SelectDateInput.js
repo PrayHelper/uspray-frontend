@@ -5,7 +5,6 @@ import styled from "styled-components";
 import BlackScreen from "../BlackScreen/BlackScreen";
 
 const SelectDateInput = ({
-  setUpdateValue, // api 호출용 input 내용 데이터 저장
   showSubModal, // 현재 컴포넌트 창 켜져있는지
   setShowSubModal, // 현재 컴포넌트 창 켜져있는지 set
   inputPlaceHolder,
@@ -14,8 +13,11 @@ const SelectDateInput = ({
   isDefault, // 디폴트 값 존재하는지
   isShowWordCount, // 글자수 유무
   value,
-  setUpdateDate, // api 호출용 날짜 데이터 저장
+  setUpdateValue, // api 호출용 input 내용 데이터 저장 함수
+  setUpdateDate, // api 호출용 날짜 데이터 저장 함수
+  setUpdateCategory, // api 호출용 카테고리 데이터 저장 함수
   onClickFunc, // 기도 추가 이벤트 함수
+  buttonText, // 버튼 text
 }) => {
   const outside = useRef();
 
@@ -63,9 +65,7 @@ const SelectDateInput = ({
             showSubModal={showSubModal}
           />
         </SubModalTop>
-        <SubModalBottom onClick={onClickFunc}>
-          오늘의 기도에 추가하기
-        </SubModalBottom>
+        <SubModalBottom onClick={onClickFunc}>{buttonText}</SubModalBottom>
       </SubModalWrapper>
     </>
   );
