@@ -4,11 +4,12 @@ import MainContent from "../components/Main/MainContent";
 import { useState } from "react";
 import ButtonV2, { ButtonTheme } from "../components/ButtonV2/ButtonV2";
 import SelectDateInput from "../components/SelectDateInput/SelectDateInput";
-import serverapi from "../api/serverapi";
 import { useCategory } from "../hooks/useCategory";
+import { useSendPrayItem } from "../hooks/useSendPrayItem";
 
 const Main = () => {
   const { categoryList } = useCategory();
+  const { useSendPrayItem } = useSendPrayItem();
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
   const [inputValue, setInputValue] = useState("");
@@ -91,7 +92,8 @@ const Main = () => {
               <SelectDateInput
                 categoryList={categoryList}
                 showSubModal={showSubModal}
-                setShowSubModal={setShowSubModal}
+                setShowSub
+                Modal={setShowSubModal}
                 inputPlaceHodler="기도제목을 입력해주세요"
                 maxrow={3}
                 maxlen={75}
