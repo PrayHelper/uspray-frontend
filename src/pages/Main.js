@@ -61,20 +61,6 @@ const Main = () => {
     );
   };
 
-  // 날짜를 넣는데에 있어서 도와주는 함수(onInsert에서 쓰임)
-  const addDay = (today, Dday) => {
-    var day = new Date(today);
-    day.setDate(day.getDate() + Dday);
-    return day;
-  };
-
-  // 시간을 0으로 만들어주는 함수
-  const setZeroTime = (date) => {
-    const newDate = new Date(date);
-    newDate.setHours(0, 0, 0, 0);
-    return newDate;
-  };
-
   const onClickPrayInput = () => {
     if (categoryList.length === 0) {
       console.log("카테고리를 추가해주세요");
