@@ -1,6 +1,6 @@
 import { OverlayWrapper } from "./style";
 
-const Modal = ({ isOverlayOn, children }) => {
+const Overlay = ({ isOverlayOn, children }) => {
   return (
     <OverlayWrapper
       isOverlayOn={isOverlayOn}
@@ -11,4 +11,4 @@ const Modal = ({ isOverlayOn, children }) => {
   );
 };
 
-export default Modal;
+export default Overlay;
