@@ -4,14 +4,17 @@ import MainContent from "../components/Main/MainContent";
 import { useState } from "react";
 import ButtonV2, { ButtonTheme } from "../components/ButtonV2/ButtonV2";
 import SelectDateInput from "../components/SelectDateInput/SelectDateInput";
+import serverapi from "../api/serverapi";
+import { useCategory } from "../hooks/useCategory";
 
 const Main = () => {
+  const { categoryList } = useCategory();
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
   const [inputValue, setInputValue] = useState("");
   const [showCategorySetting, setShowCategorySetting] = useState(false);
   const [selectedColor, setSelectedColor] = useState("#D0E8CB");
-  const [categories, setCategories] = useState([]);
+  //const [categories, setCategories] = useState([]);
   const [showSubModal, setShowSubModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
@@ -23,6 +26,7 @@ const Main = () => {
     setBgColor(newTab === "내가 쓴" ? "#7BAB6E" : "#3D5537");
   };
 
+  /* 카테고리 추가는 다시 짜야함
   const addCategory = () => {
     if (inputValue !== "") {
       setCategories([
@@ -32,9 +36,9 @@ const Main = () => {
       setInputValue("");
       setSelectedColor("#D0E8CB");
       setShowCategorySetting(false);
-      console.log("addCategory", categories);
     }
   };
+*/
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -45,7 +49,7 @@ const Main = () => {
   };
 
   const onClickPrayInput = () => {
-    if (categories.length === 0) {
+    if (categoryList.length === 0) {
       console.log("카테고리를 추가해주세요");
     } else {
       setShowSubModal(!showSubModal);
@@ -85,7 +89,7 @@ const Main = () => {
           {tab === "내가 쓴" ? (
             showSubModal ? (
               <SelectDateInput
-                categories={categories}
+                categoryList={categoryList}
                 showSubModal={showSubModal}
                 setShowSubModal={setShowSubModal}
                 inputPlaceHodler="기도제목을 입력해주세요"
@@ -120,8 +124,8 @@ const Main = () => {
         </FlexContainer>
       </TopContainer>
       <MainContent
-        categories={categories}
-        setCategories={setCategories}
+        categoryList={categoryList}
+        //setCategories={setCategories}
         setShowCategorySetting={setShowCategorySetting}
         selectedCategoryIndex={selectedCategoryIndex}
         setSelectedCategoryIndex={setSelectedCategoryIndex}
@@ -136,7 +140,9 @@ const Main = () => {
             onClick={handleInnerClick}
           />
           <FixedButtonContainer onClick={handleInnerClick}>
-            <ButtonV2 buttonTheme={ButtonTheme.FILLED} handler={addCategory}>
+            <ButtonV2
+              buttonTheme={ButtonTheme.FILLED} /*handler={addCategory}*/
+            >
               카테고리 추가
             </ButtonV2>
           </FixedButtonContainer>
@@ -287,4 +293,5 @@ const ColorDrop = styled.div`
     transform: translate(-50%, -50%);
     display: ${(props) =>
       props.color === props.selectedColor ? "block" : "none"};
+  }
 `;

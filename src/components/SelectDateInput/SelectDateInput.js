@@ -7,7 +7,7 @@ import BlackScreen from "../BlackScreen/BlackScreen";
 import CategoryTag from "../CategoryTag/CategoryTag";
 
 const SelectDateInput = ({
-  categories, // 메인의 카테고리 목록
+  categoryList, // 메인의 카테고리 목록
   showSubModal, // 현재 컴포넌트 창 켜져있는지
   setShowSubModal, // 현재 컴포넌트 창 켜져있는지 set
   inputPlaceHolder,
@@ -83,7 +83,7 @@ const SelectDateInput = ({
           </SubModalTop>
           <SubModalCategory>
             <CategoryTag
-              categories={categories}
+              categoryList={categoryList}
               selectedCategoryIndex={selectedCategoryIndex}
               setSelectedCategoryIndex={setSelectedCategoryIndex}
               canAdd={false}

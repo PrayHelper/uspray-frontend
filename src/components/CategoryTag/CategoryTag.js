@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 
 const CategoryTag = ({
-  categories,
+  categoryList,
   selectedCategoryIndex,
   setSelectedCategoryIndex,
   setShowCategorySetting,
@@ -10,13 +10,13 @@ const CategoryTag = ({
 }) => {
   const handleCategoryClick = (index) => {
     setSelectedCategoryIndex(index);
-    console.log(categories[selectedCategoryIndex].name);
+    console.log(categoryList[selectedCategoryIndex].name);
   };
 
   return (
     <Container>
-      {categories &&
-        categories.map((category, index) => (
+      {categoryList &&
+        categoryList.map((category, index) => (
           <CategoryBox
             key={index}
             selected={index === selectedCategoryIndex}

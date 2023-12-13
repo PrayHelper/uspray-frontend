@@ -7,8 +7,8 @@ import deleteImage from "../../images/delete_img.svg";
 import modifyImage from "../../images/modify_img.svg";
 
 const MainContent = ({
-  categories,
-  setCategories,
+  categoryList,
+  //setCategories,
   setShowCategorySetting,
   selectedCategoryIndex,
   setSelectedCategoryIndex,
@@ -30,8 +30,8 @@ const MainContent = ({
     <MainContentWrapper>
       <TopWrapper>
         <CategoryTag
-          categories={categories}
-          setCategories={setCategories}
+          categoryList={categoryList}
+          //setCategories={setCategories}
           selectedCategoryIndex={selectedCategoryIndex}
           setSelectedCategoryIndex={setSelectedCategoryIndex}
           setShowCategorySetting={setShowCategorySetting}
