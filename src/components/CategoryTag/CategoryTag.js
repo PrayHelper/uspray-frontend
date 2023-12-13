@@ -8,10 +8,6 @@ const CategoryTag = ({
   setShowCategorySetting,
   canAdd,
 }) => {
-  useEffect(() => {
-    console.log("[CategoryTag]categories", categories);
-  }, [categories]);
-
   const handleCategoryClick = (index) => {
     setSelectedCategoryIndex(index);
     console.log(categories[selectedCategoryIndex].name);

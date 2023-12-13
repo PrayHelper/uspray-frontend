@@ -11,18 +11,12 @@ const Main = () => {
   const [inputValue, setInputValue] = useState("");
   const [showCategorySetting, setShowCategorySetting] = useState(false);
   const [selectedColor, setSelectedColor] = useState("#D0E8CB");
-  const [categories, setCategories] = useState([
-    { name: "ㅋ1", color: "#D0E8CB" },
-    { name: "ㅋ2", color: "#D0E8CB" },
-  ]);
+  const [categories, setCategories] = useState([]);
   const [showSubModal, setShowSubModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(null);
-  useEffect(() => {
-    console.log("[Main]categories", categories);
-  }, [categories]);
 
   const handleTabChange = (newTab) => {
     setTab(newTab);
@@ -54,9 +48,6 @@ const Main = () => {
     if (categories.length === 0) {
       console.log("카테고리를 추가해주세요");
     } else {
-      {
-        categories.map((category, index) => console.log(`${index}`, category));
-      }
       setShowSubModal(!showSubModal);
     }
   };
@@ -108,13 +99,17 @@ const Main = () => {
                 selectedCategoryIndex={selectedCategoryIndex}
                 setSelectedCategoryIndex={setSelectedCategoryIndex}
                 buttonText="기도제목 작성"
+                value={prayInputValue}
               />
             ) : (
               <Input
                 type="text"
                 placeholder="기도제목을 입력해주세요."
-                style={{ width: "100%" }}
+                style={{
+                  width: "100%",
+                }}
                 onClick={() => onClickPrayInput()}
+                value={prayInputValue}
               />
             )
           ) : (

@@ -15,7 +15,7 @@ const SelectDateInput = ({
   maxlen, // 최대 길이
   isDefault, // 디폴트 값 존재하는지
   isShowWordCount, // 글자수 유무
-  value,
+  value, // 이전 입력값
   setUpdateValue, // api 호출용 input 내용 데이터 저장 함수
   setUpdateDate, // api 호출용 날짜 데이터 저장 함수
   setUpdateCategory, // api 호출용 카테고리 데이터 저장 함수
@@ -25,12 +25,17 @@ const SelectDateInput = ({
   buttonText, // 버튼 text
 }) => {
   const outside = useRef();
+  const modalInputRef = useRef(null);
 
   const [inputCount, setInputCount] = useState(0);
 
   useEffect(() => {
-    console.log("[SelectDateInput]categories", categories);
-  }, [categories]);
+    if (showSubModal && modalInputRef.current) {
+      modalInputRef.current.focus();
+      const length = modalInputRef.current.value.length;
+      modalInputRef.current.setSelectionRange(length, length);
+    }
+  }, [showSubModal]);
 
   const onInputHandler = (e) => {
     if (e.target.value.length > e.maxLength)
@@ -61,6 +66,7 @@ const SelectDateInput = ({
                 onChange={onInputHandler}
                 disabled={isDefault ? true : false}
                 value={isDefault ? "기도제목을 입력하였습니다." : value}
+                ref={modalInputRef}
               />
               {isShowWordCount && (
                 <Countwords>
