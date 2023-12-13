@@ -9,7 +9,7 @@ import { useSendPrayItem } from "../hooks/useSendPrayItem";
 
 const Main = () => {
   const { categoryList } = useCategory();
-  const { useSendPrayItem } = useSendPrayItem();
+  const { mutate: mutateSendPrayItem } = useSendPrayItem();
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
   const [inputValue, setInputValue] = useState("");
@@ -47,6 +47,32 @@ const Main = () => {
 
   const handleInnerClick = (e) => {
     e.stopPropagation();
+  };
+
+  // 기도를 입력하는 코드
+  const onInsert = async (text, deadline, categoryId) => {
+    mutateSendPrayItem(
+      { content: text, deadline: deadline, categoryId: categoryId },
+      {
+        onSuccess: () => {
+          setShowSubModal(false);
+        },
+      }
+    );
+  };
+
+  // 날짜를 넣는데에 있어서 도와주는 함수(onInsert에서 쓰임)
+  const addDay = (today, Dday) => {
+    var day = new Date(today);
+    day.setDate(day.getDate() + Dday);
+    return day;
+  };
+
+  // 시간을 0으로 만들어주는 함수
+  const setZeroTime = (date) => {
+    const newDate = new Date(date);
+    newDate.setHours(0, 0, 0, 0);
+    return newDate;
   };
 
   const onClickPrayInput = () => {
@@ -106,6 +132,13 @@ const Main = () => {
                 setSelectedCategoryIndex={setSelectedCategoryIndex}
                 buttonText="기도제목 작성"
                 value={prayInputValue}
+                onClickFunc={() =>
+                  onInsert(
+                    prayInputValue,
+                    dateInputValue,
+                    selectedCategoryIndex
+                  )
+                }
               />
             ) : (
               <Input
