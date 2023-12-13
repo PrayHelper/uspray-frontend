@@ -15,12 +15,12 @@ Object.freeze(CheckboxTheme);
 const Checkbox = ({
   id,
   label,
-  link,
   linklabel,
   checked,
   handler,
   theme,
   size,
+  showInformation,
 }) => {
   if (!theme) {
     theme = CheckboxTheme.GRAY;
@@ -28,6 +28,7 @@ const Checkbox = ({
   if (!size) {
     size = "14px";
   }
+
   return (
     <CheckboxWrapper>
       <CheckboxStyle
@@ -39,7 +40,7 @@ const Checkbox = ({
         checked={checked}
         onChange={handler}
       ></CheckboxStyle>
-      <StyledLinkLabel theme={theme} to={link}>
+      <StyledLinkLabel theme={theme} onClick={() => showInformation()}>
         {linklabel}
       </StyledLinkLabel>
       <StyledLabel size={size} theme={theme} htmlFor={id}>

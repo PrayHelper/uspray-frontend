@@ -117,7 +117,10 @@ function App() {
                 <Route path="/groupSettings" element={<GroupSettings />} />
                 <Route path="/changeGroupName" element={<ChangeGroupName />} />
                 <Route path="/createGroup" element={<CreateGroup />} />
-                <Route path="/assignGroupLeader" element={<AssignGroupLeader />} /> 
+                <Route
+                  path="/assignGroupLeader"
+                  element={<AssignGroupLeader />}
+                />
                 <Route path="/removeMember" element={<RemoveMember />} />
                 <Route path="/checkInfo" element={<CheckInfo />} />
                 <Route path="/changeInfo" element={<ChangeInfo />} />
@@ -143,15 +146,11 @@ function App() {
                 <Route path="/findPW" element={<FindPassword />}></Route>
                 <Route
                   path="/findPWResult"
-                  element={<FindPasswordResult />}></Route>
+                  element={<FindPasswordResult />}
+                ></Route>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/loading" element={<SplashScreen />} />
                 <Route path="*" element={<NotFound />} />
-                <Route path="/tos" element={<ToS />} />
-                <Route
-                  path="/privacyProcessAgreement"
-                  element={<PrivacyProcessAgreement />}
-                />
                 <Route path="/historySearch" element={<HistorySearch />} />
               </Route>
             </Route>
