@@ -11,7 +11,7 @@ const TitleTag = styled.div`
 const PrivacyPolicy = ({ setIsOverlayOn }) => {
   return (
     <>
-      <UserHeader Overlay={true} setIsOverlayOn={setIsOverlayOn}>
+      <UserHeader overlay={true} setIsOverlayOn={setIsOverlayOn}>
         개인정보 처리 방침
       </UserHeader>
 

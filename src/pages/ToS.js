@@ -11,7 +11,7 @@ const TitleTag = styled.div`
 const ToS = ({ setIsOverlayOn }) => {
   return (
     <>
-      <UserHeader Overlay={true} setIsOverlayOn={setIsOverlayOn}>
+      <UserHeader overlay={true} setIsOverlayOn={setIsOverlayOn}>
         이용 약관 및 정책
       </UserHeader>
       <div

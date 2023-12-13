@@ -44,14 +44,14 @@ const UserHeader = ({
   children,
   fixed,
   rightIcons,
-  Overlay,
+  overlay,
   setIsOverlayOn,
 }) => {
-  if (!Overlay) Overlay = false;
+  if (!overlay) overlay = false;
   const navigate = useNavigate();
 
   const goBack = () => {
-    if (Overlay) setIsOverlayOn(false);
+    if (overlay) setIsOverlayOn(false);
     else navigate(-1); // 이전 페이지로 이동
   };
 

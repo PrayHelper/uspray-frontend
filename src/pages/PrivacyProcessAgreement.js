@@ -11,7 +11,7 @@ const TitleTag = styled.div`
 const PrivacyProcessAgreement = ({ setIsOverlayOn }) => {
   return (
     <>
-      <UserHeader Overlay={true} setIsOverlayOn={setIsOverlayOn} fixed={true}>
+      <UserHeader overlay={true} setIsOverlayOn={setIsOverlayOn} fixed={true}>
         개인정보 처리 동의서
       </UserHeader>
       <div
