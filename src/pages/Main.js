@@ -8,7 +8,7 @@ import { useCategory } from "../hooks/useCategory";
 import { useSendPrayItem } from "../hooks/useSendPrayItem";
 
 const Main = () => {
-  const { categoryList } = useCategory();
+  const { categoryList, firstCategoryIndex } = useCategory();
   const { mutate: mutateSendPrayItem } = useSendPrayItem();
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
@@ -19,7 +19,8 @@ const Main = () => {
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
-  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(null);
+  const [selectedCategoryIndex, setSelectedCategoryIndex] =
+    useState(firstCategoryIndex);
 
   const handleTabChange = (newTab) => {
     setTab(newTab);
@@ -69,7 +70,7 @@ const Main = () => {
 
   useEffect(() => {
     if (categoryList.length > 0) {
-      setSelectedCategoryIndex(categoryList[0].id);
+      setSelectedCategoryIndex(firstCategoryIndex);
     }
   }, []);
 
@@ -107,8 +108,6 @@ const Main = () => {
                 setUpdateValue={setPrayInputValue}
                 setUpdateDate={setDateInputValue}
                 setUpdateCategory={setCategoryInputValue}
-                selectedCategoryIndex={selectedCategoryIndex}
-                setSelectedCategoryIndex={setSelectedCategoryIndex}
                 buttonText="기도제목 작성"
                 value={prayInputValue}
                 category={selectedCategoryIndex}
@@ -119,7 +118,7 @@ const Main = () => {
             ) : (
               <Input
                 type="text"
-                placeholder="기도제목을 입력해주세요."
+                placeholder="기도제목을 입력해주세요"
                 style={{
                   width: "100%",
                 }}
@@ -226,8 +225,10 @@ const Input = styled.input`
   outline: none;
   border: 0;
   color: var(--color-green);
-  font-weight: 500;
+  font-weight: 400;
+  letter-spacing: -0.64px;
   font-size: 16px;
+  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.25);
 `;
 
 const MoveToLockerButton = styled.div`
