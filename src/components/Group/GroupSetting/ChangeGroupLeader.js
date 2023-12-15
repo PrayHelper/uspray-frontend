@@ -38,7 +38,6 @@ const ChangeGroupLeader = ({groupId, setCurrentPage, setShowGroupSetting}) => {
             btnContent2={"취소"}
             onClickBtn={() => {
               closeModal();
-              console.log(leaderId);
               changeGroupLeader(
                 {leaderId, groupId},
                 {
