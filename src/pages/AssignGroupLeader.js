@@ -9,12 +9,14 @@ import BlackScreen from "../components/BlackScreen/BlackScreen";
 import Modal from '../components/Modal/Modal';
 import useToast from '../hooks/useToast';
 import { ToastTheme } from '../components/Toast/Toast';
+import { useSearchGroupMember } from '../hooks/useSearchGroupMember';
 
-const AssignGroupLeader = () => {
+const AssignGroupLeader = ({groupId, setCurrentPage}) => {
   const [showModal, setShowModal] = useState(false);
-  const [leader, setLeader] = useState("");
+  const [leader, setLeader] = useState(null);
   const [searchName, setSearchName] = useState("");
   const { showToast } = useToast({});
+  const { memberList } = useSearchGroupMember(groupId, searchName);
   const data = ['김은혜', '권은혜', '박은혜', '이은혜', '허은혜', '허그레이스', '권은혜', '박은혜', '이은혜'];
 
   const closeModal = () => {
@@ -45,17 +47,17 @@ const AssignGroupLeader = () => {
           />
         </>
       )}
-      <UserHeader>모임 리더 맡기기</UserHeader>
+      <UserHeader back={() => setCurrentPage('')}>모임 리더 맡기기</UserHeader>
       <ContentWrapper>
         <div style={{display: "flex", flexDirection: "column", height: '100%'}}>
           <Search
             topText={"\"모임 리더 맡기기\"를 누르시면 모임리더 권한이 모두 위임되며, 나는 멤버로 변경됩니다."}
             setSearchName={setSearchName}
           />
-          <SearchList data={data} searchName={searchName} leader={leader} setLeader={setLeader}/>
+          <SearchList data={memberList} searchName={searchName} leader={leader} setLeader={setLeader}/>
           <BottomButtonWrapper>
             <Button
-              disabled={leader === ""}
+              disabled={leader === null}
               buttonSize={ButtonSize.LARGE}
               buttonTheme={leader ? ButtonTheme.GREEN : ButtonTheme.GRAY}
               isArrow={true}
