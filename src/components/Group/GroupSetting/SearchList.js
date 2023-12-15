@@ -1,28 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const SearchList = ({data, searchName, leader, setLeader}) => {
-  const filterName = data.filter((name) => {
-    if (leader !== "")
-      return name.includes(leader);
-    return name.includes(searchName);
-  });
+const SearchList = ({memberList, leaderId, setLeaderId}) => {
 
   return (
     <Wrapper>
-      {filterName.map((name, index) => {
+      {memberList.map((member, index) => {
         return (
           <NameDiv
             key={index}
-            onClick={() => setLeader((prev) => {
+            onClick={() => setLeaderId((prev) => {
               if (prev)
-                return "";
+                return null;
               else
-                return name;
+                return member.id;
             })} 
-            isLeader={leader === name}
+            isLeader={leaderId === member.id}
           >
-            {name}
+            {member.name}
+            {`(${member.userId})`}
           </NameDiv>
         )
       })}

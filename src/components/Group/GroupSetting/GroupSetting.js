@@ -5,7 +5,7 @@ import { ButtonSize, ButtonTheme } from '../../Button/Button';
 import UserHeader from '../../UserHeader';
 import { useState } from 'react';
 import ChangeGroupName from './ChangeGroupName';
-import AssignGroupLeader from './AssignGroupLeader';
+import ChangeGroupLeader from './ChangeGroupLeader';
 import RemoveMember from './RemoveMember';
 import DeleteGroup from './DeleteGroup';
 
@@ -23,8 +23,14 @@ const GroupSetting = ({group, setShowGroupSetting}) => {
             setShowGroupSetting={setShowGroupSetting}
           />
         );
-      case 'assignGroupLeader':
-        return <AssignGroupLeader groupId={group.id} setCurrentPage={setCurrentPage}/>;
+      case 'changeGroupLeader':
+        return (
+          <ChangeGroupLeader
+            groupId={group.id}
+            setCurrentPage={setCurrentPage}
+            setShowGroupSetting={setShowGroupSetting}
+          />
+        );
       case 'removeMember':
         return <RemoveMember groupId={group.id} setCurrentPage={setCurrentPage}/>;
       case 'deleteGroup':
@@ -51,7 +57,7 @@ const GroupSetting = ({group, setShowGroupSetting}) => {
             buttonSize={ButtonSize.LARGE}
             buttonTheme={ButtonTheme.GREEN}
             isArrow={true}
-            handler={() => setCurrentPage('assignGroupLeader')}
+            handler={() => setCurrentPage('changeGroupLeader')}
           >
             모임 리더 맡기기
           </Button>

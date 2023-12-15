@@ -3,6 +3,7 @@ import useApi from './useApi';
 
 export const useSearchGroupMember = (groupId, name) => {
   const { getFetcher } = useApi();
+
   const { data, refetch } = useQuery(
     ['groupMemberSearch', groupId, name],
     async () => {
@@ -23,7 +24,7 @@ export const useSearchGroupMember = (groupId, name) => {
     }
   );
   
-  const memberList = data?.data || [];
+  const memberList = data?.data.data || [];
 
   return {
     memberList,

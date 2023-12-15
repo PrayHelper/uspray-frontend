@@ -10,14 +10,15 @@ import Modal from '../../Modal/Modal';
 import useToast from '../../../hooks/useToast';
 import { ToastTheme } from '../../Toast/Toast';
 import { useSearchGroupMember } from '../../../hooks/useSearchGroupMember';
+import { useGroupSetting } from '../../../hooks/useGroupSetting';
 
-const AssignGroupLeader = ({groupId, setCurrentPage}) => {
+const ChangeGroupLeader = ({groupId, setCurrentPage, setShowGroupSetting}) => {
   const [showModal, setShowModal] = useState(false);
-  const [leader, setLeader] = useState(null);
+  const [leaderId, setLeaderId] = useState(null);
   const [searchName, setSearchName] = useState("");
   const { showToast } = useToast({});
   const { memberList } = useSearchGroupMember(groupId, searchName);
-  const data = ['김은혜', '권은혜', '박은혜', '이은혜', '허은혜', '허그레이스', '권은혜', '박은혜', '이은혜'];
+  const { changeGroupLeader } = useGroupSetting();
 
   const closeModal = () => {
     setShowModal(false);
@@ -37,10 +38,20 @@ const AssignGroupLeader = ({groupId, setCurrentPage}) => {
             btnContent2={"취소"}
             onClickBtn={() => {
               closeModal();
-              showToast({
-                message: "리더가 변경되었어요.",
-                theme: ToastTheme.SUCCESS,
-              });
+              console.log(leaderId);
+              changeGroupLeader(
+                {leaderId, groupId},
+                {
+                  onSuccess: () => {
+                    setCurrentPage('');
+                    setShowGroupSetting(false);
+                    showToast({
+                      message: "리더가 변경되었어요.",
+                      theme: ToastTheme.SUCCESS,
+                    });
+                  }
+                }
+              );
             }}
             onClickBtn2={closeModal}
             modalTheme={0}
@@ -54,12 +65,12 @@ const AssignGroupLeader = ({groupId, setCurrentPage}) => {
             topText={"\"모임 리더 맡기기\"를 누르시면 모임리더 권한이 모두 위임되며, 나는 멤버로 변경됩니다."}
             setSearchName={setSearchName}
           />
-          <SearchList data={memberList} searchName={searchName} leader={leader} setLeader={setLeader}/>
+          <SearchList memberList={memberList} leaderId={leaderId} setLeaderId={setLeaderId}/>
           <BottomButtonWrapper>
             <Button
-              disabled={leader === null}
+              disabled={leaderId === null}
               buttonSize={ButtonSize.LARGE}
-              buttonTheme={leader ? ButtonTheme.GREEN : ButtonTheme.GRAY}
+              buttonTheme={leaderId ? ButtonTheme.GREEN : ButtonTheme.GRAY}
               isArrow={true}
               handler={() => {
                 setShowModal(true);
@@ -99,4 +110,4 @@ const BottomButtonWrapper = styled.div`
   padding: 0 16px;
 `
 
-export default AssignGroupLeader;
+export default ChangeGroupLeader;
