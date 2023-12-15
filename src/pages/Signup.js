@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { ToastTheme } from "../components/Toast/Toast";
 import publicapi from "../api/publicapi";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
+import { Overlay } from "../components/Overlay/Overlay";
 import { useNavigate } from "react-router-dom";
 import Modal from "../components/Modal/Modal";
 import useToast from "../hooks/useToast";
@@ -35,7 +36,7 @@ const Signup = () => {
   const [invalidPwdInfo, setInvalidPwdInfo] = useState("");
   const [invalidMatchingPwdInfo, setInvalidMatchingPwdInfo] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [verficationNumber, setVerficationNumber] = useState("");
+  const [requestId, setRequestId] = useState("");
   const [time, setTime] = useState("");
   const [isCetrificated, setIsCertificated] = useState(false);
   const [isCertificateButtonClicked, setIsCertificateButtonClicked] =
@@ -94,7 +95,7 @@ const Signup = () => {
   };
 
   const isIdDuplicated = async (uid) => {
-    const api = `/user/dup_check/${uid}`;
+    const api = `/auth/dup-check/${uid}`;
     try {
       const res = await publicapi.get(api);
       if (res.status === 200) {
@@ -106,9 +107,9 @@ const Signup = () => {
   };
 
   const phoneNumVerfication = async (phoneNumber) => {
-    const api = "/admin/sms";
+    const api = "/sms/send";
     const data = {
-      phone: phoneNumber,
+      to: phoneNumber,
     };
     try {
       const res = await publicapi.post(api, data);
@@ -117,22 +118,18 @@ const Signup = () => {
           message: "인증번호가 전송되었습니다.",
           theme: ToastTheme.SUCCESS,
         });
-        console.log(res.data.code);
-        setVerficationNumber(res.data.code);
+        setRequestId(res.data.data.requestId);
         setTime("180");
       }
     } catch (e) {
-      showToast({
-        message: "error occured",
-        theme: ToastTheme.ERROR,
-      });
+      showToast({ message: "error occured", theme: ToastTheme.ERROR });
     }
   };
 
   const signup = async () => {
-    const api = "/user/signup";
+    const api = "/auth/signup";
     const data = {
-      id: userInfo.id,
+      userId: userInfo.id,
       password: userInfo.pwd,
       name: userInfo.name,
       phone: userInfo.phoneNumber.replace(/-/g, ""),
@@ -247,13 +244,25 @@ const Signup = () => {
     setUserInfo({ ...userInfo, certificateNumber: e.target.value });
   };
 
-  const isCertificationNumberValid = (certificateNumber) => {
-    if (verficationNumber == certificateNumber) {
-      setIsCertificated(true);
-      return true;
-    } else {
-      setIsCertificated(false);
-      return false;
+  const isCertificationNumberValid = async (certificateNumber) => {
+    const api = "/sms/verification";
+    const data = {
+      requestId: requestId,
+      smsConfirmNum: certificateNumber,
+    };
+    try {
+      const res = await publicapi.post(api, data);
+      if (res.status === 200) {
+        if (res.data.data === true) {
+          setIsCertificated(true);
+          return true;
+        } else if (res.data.data === false) {
+          setIsCertificated(false);
+          return false;
+        }
+      }
+    } catch (e) {
+      showToast({ message: "error occured", theme: ToastTheme.ERROR });
     }
   };
 
@@ -298,7 +307,8 @@ const Signup = () => {
           flexDirection: "column",
           gap: "27px",
           padding: "20px 27px",
-        }}>
+        }}
+      >
         <Input
           label="아이디*"
           onChangeHandler={idChangeHandler}
@@ -338,14 +348,16 @@ const Signup = () => {
               paddingLeft: "16px",
               position: "absolute",
               top: "-18px",
-            }}>
+            }}
+          >
             성별
           </div>
           <div
             style={{
               display: "flex",
               textAlign: "center",
-            }}>
+            }}
+          >
             <ToggleButton contents="남자" item={gender} setter={setGender} />
             <ToggleButton contents="여자" item={gender} setter={setGender} />
           </div>
@@ -378,7 +390,8 @@ const Signup = () => {
                 setIsCertificateButtonClicked(false);
                 setUserInfo({ ...userInfo, certificateNumber: "" });
                 setIsPhoneNumVerficationButtonClickClick(true);
-              }}>
+              }}
+            >
               {time ? "진행 중" : "전송"}
             </Button>
           }
@@ -432,7 +445,8 @@ const Signup = () => {
                       theme: ToastTheme.ERROR,
                     });
                   }
-                }}>
+                }}
+              >
                 {isCetrificated || isCertificateButtonClicked ? "완료" : "확인"}
               </Button>
             </div>
@@ -445,7 +459,8 @@ const Signup = () => {
           buttonTheme={isAllValid ? ButtonTheme.GREEN : ButtonTheme.GRAY}
           handler={() => {
             signup();
-          }}>
+          }}
+        >
           회원가입
           {isAllValid ? <NextArrowWhite /> : <NextArrowGray />}
         </Button>

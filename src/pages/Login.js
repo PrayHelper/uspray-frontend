@@ -102,8 +102,9 @@ const SocialLogin = () => {
           <S.Bar />
           <S.BottomLink
             onClick={() => {
-              alert("!");
-            }}>
+              console.log("!");
+            }}
+          >
             문의하기
           </S.BottomLink>
         </S.BottomLinks>
