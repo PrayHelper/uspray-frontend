@@ -1,20 +1,21 @@
 import ToggleButton from "../components/ToggleButton";
-import React, { useEffect,  useState } from "react";
+import React, { useEffect, useState } from "react";
 import UserHeader from "../components/UserHeader";
 import InputBirth from "../components/InputBirth";
 import Button, { ButtonSize, ButtonTheme } from "../components/Button/Button";
 import Input from "../components/Input/Input";
 import styled from "styled-components";
 import { ToastTheme } from "../components/Toast/Toast";
-import Checkbox from "../components/Checkbox/Checkbox";
 import publicapi from "../api/publicapi";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
+import { Overlay } from "../components/Overlay/Overlay";
 import { useNavigate } from "react-router-dom";
 import Modal from "../components/Modal/Modal";
 import useToast from "../hooks/useToast";
 import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
-
+import useSignupTos from "../hooks/useSignupTos";
+import SignupTos from "../components/SignupTos/SignupTos";
 
 let init = 0;
 
@@ -35,7 +36,7 @@ const Signup = () => {
   const [invalidPwdInfo, setInvalidPwdInfo] = useState("");
   const [invalidMatchingPwdInfo, setInvalidMatchingPwdInfo] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [verficationNumber, setVerficationNumber] = useState("");
+  const [requestId, setRequestId] = useState("");
   const [time, setTime] = useState("");
   const [isCetrificated, setIsCertificated] = useState(false);
   const [isCertificateButtonClicked, setIsCertificateButtonClicked] =
@@ -44,9 +45,6 @@ const Signup = () => {
     isPhoneNumVerficationButtonClicked,
     setIsPhoneNumVerficationButtonClickClick,
   ] = useState(false);
-  const [tos1Checked, setTos1Checked] = useState(false);
-  const [tos2Checked, setTos2Checked] = useState(false);
-  const [tos3Checked, setTos3Checked] = useState(false);
   const userInfoForCheck = { ...userInfo };
   delete userInfoForCheck.year;
   delete userInfoForCheck.month;
@@ -55,6 +53,8 @@ const Signup = () => {
   const checkEmptyUserInfoValue = Object.values(userInfoForCheck).some(
     (data) => data === ""
   );
+
+  const { isAgreed, toggleAll, toggleHandler, isAgreedAll } = useSignupTos();
 
   const { showToast } = useToast({});
 
@@ -66,9 +66,7 @@ const Signup = () => {
     !invalidMatchingPwdInfo &&
     isCetrificated &&
     isCertificateButtonClicked &&
-    tos1Checked &&
-    tos2Checked &&
-    tos3Checked &&
+    isAgreedAll &&
     !checkEmptyUserInfoValue;
 
   const idRegEx = /^[a-z0-9]{6,15}$/;
@@ -97,7 +95,7 @@ const Signup = () => {
   };
 
   const isIdDuplicated = async (uid) => {
-    const api = `/user/dup_check/${uid}`;
+    const api = `/auth/dup-check/${uid}`;
     try {
       const res = await publicapi.get(api);
       if (res.status === 200) {
@@ -109,9 +107,9 @@ const Signup = () => {
   };
 
   const phoneNumVerfication = async (phoneNumber) => {
-    const api = "/admin/sms";
+    const api = "/sms/send";
     const data = {
-      phone: phoneNumber,
+      to: phoneNumber,
     };
     try {
       const res = await publicapi.post(api, data);
@@ -120,32 +118,26 @@ const Signup = () => {
           message: "인증번호가 전송되었습니다.",
           theme: ToastTheme.SUCCESS,
         });
-        console.log(res.data.code);
-        setVerficationNumber(res.data.code);
+        setRequestId(res.data.data.requestId);
         setTime("180");
       }
     } catch (e) {
-      showToast({
-        message: "error occured",
-        theme: ToastTheme.ERROR,
-      });
+      showToast({ message: "error occured", theme: ToastTheme.ERROR });
     }
   };
 
   const signup = async () => {
-    const api = "/user/signup";
+    const api = "/auth/signup";
     const data = {
-      id: userInfo.id,
+      userId: userInfo.id,
       password: userInfo.pwd,
       name: userInfo.name,
       phone: userInfo.phoneNumber.replace(/-/g, ""),
     };
 
-    if (gender)
-      data.gender = gender;
+    if (gender) data.gender = gender;
     if (userInfo.year && userInfo.month && userInfo.day)
       data.birth = userInfo.year + "-" + userInfo.month + "-" + userInfo.day;
-
 
     try {
       const res = await publicapi.post(api, data);
@@ -252,13 +244,25 @@ const Signup = () => {
     setUserInfo({ ...userInfo, certificateNumber: e.target.value });
   };
 
-  const isCertificationNumberValid = (certificateNumber) => {
-    if (verficationNumber == certificateNumber) {
-      setIsCertificated(true);
-      return true;
-    } else {
-      setIsCertificated(false);
-      return false;
+  const isCertificationNumberValid = async (certificateNumber) => {
+    const api = "/sms/verification";
+    const data = {
+      requestId: requestId,
+      smsConfirmNum: certificateNumber,
+    };
+    try {
+      const res = await publicapi.post(api, data);
+      if (res.status === 200) {
+        if (res.data.data === true) {
+          setIsCertificated(true);
+          return true;
+        } else if (res.data.data === false) {
+          setIsCertificated(false);
+          return false;
+        }
+      }
+    } catch (e) {
+      showToast({ message: "error occured", theme: ToastTheme.ERROR });
     }
   };
 
@@ -284,18 +288,6 @@ const Signup = () => {
     return () => clearInterval(id);
   }, [time]);
 
-  function handleTos1Change(event) {
-    setTos1Checked(event.target.checked);
-  }
-
-  function handleTos2Change(event) {
-    setTos2Checked(event.target.checked);
-  }
-
-  function handleTos3Change(event) {
-    setTos3Checked(event.target.checked);
-  }
-
   return (
     <SignupPageWrapper>
       <UserHeader>회원가입</UserHeader>
@@ -315,7 +307,8 @@ const Signup = () => {
           flexDirection: "column",
           gap: "27px",
           padding: "20px 27px",
-        }}>
+        }}
+      >
         <Input
           label="아이디*"
           onChangeHandler={idChangeHandler}
@@ -355,14 +348,16 @@ const Signup = () => {
               paddingLeft: "16px",
               position: "absolute",
               top: "-18px",
-            }}>
+            }}
+          >
             성별
           </div>
           <div
             style={{
               display: "flex",
               textAlign: "center",
-            }}>
+            }}
+          >
             <ToggleButton contents="남자" item={gender} setter={setGender} />
             <ToggleButton contents="여자" item={gender} setter={setGender} />
           </div>
@@ -395,7 +390,8 @@ const Signup = () => {
                 setIsCertificateButtonClicked(false);
                 setUserInfo({ ...userInfo, certificateNumber: "" });
                 setIsPhoneNumVerficationButtonClickClick(true);
-              }}>
+              }}
+            >
               {time ? "진행 중" : "전송"}
             </Button>
           }
@@ -449,45 +445,24 @@ const Signup = () => {
                       theme: ToastTheme.ERROR,
                     });
                   }
-                }}>
+                }}
+              >
                 {isCetrificated || isCertificateButtonClicked ? "완료" : "확인"}
               </Button>
             </div>
           }
         />
-        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-          <Checkbox
-            id="tos1"
-            label={"만 14세 이상입니다."}
-            checked={tos1Checked}
-            handler={handleTos1Change}
-          />
-          <Checkbox
-            link={"/tos"}
-            id="tos2"
-            label={"에 동의합니다."}
-            linklabel={"서비스 이용약관"}
-            checked={tos2Checked}
-            handler={handleTos2Change}
-          />
-          <Checkbox
-            link={"/privacyProcessAgreement"}
-            id="tos3"
-            label={"에 동의합니다."}
-            linklabel={"개인정보 수집 및 이용"}
-            checked={tos3Checked}
-            handler={handleTos3Change}
-          />
-        </div>
+        <SignupTos {...{ isAgreed, toggleHandler, toggleAll, isAgreedAll }} />
         <Button
           // disabled={!isAllValid}
           buttonSize={ButtonSize.LARGE}
           buttonTheme={isAllValid ? ButtonTheme.GREEN : ButtonTheme.GRAY}
           handler={() => {
             signup();
-          }}>
+          }}
+        >
           회원가입
-          {isAllValid ? <NextArrowWhite/> : <NextArrowGray/>}
+          {isAllValid ? <NextArrowWhite /> : <NextArrowGray />}
         </Button>
       </div>
     </SignupPageWrapper>
