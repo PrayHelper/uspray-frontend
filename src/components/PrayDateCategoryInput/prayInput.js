@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import SelectDateInput from "./SelectDateInput";
+import PrayDateCategoryInput from "./PrayDateCategoryInput";
 /*
   props 넘겨받을 목록
     1. onClickFunc (기도제목 작성 클릭 함수)
@@ -26,7 +26,7 @@ const PrayInput = (props) => {
           value={updateValue}
         />
       </InputWrapper>
-      <SelectDateInput
+      <PrayDateCategoryInput
         setInputValue={props.setInputValue}
         setUpdateDate={props.setUpdateDate}
         setUpdateValue={setUpdateValue}
