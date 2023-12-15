@@ -1,14 +1,14 @@
 import React from 'react';
-import UserHeader from '../components/UserHeader';
+import UserHeader from '../../UserHeader';
 import styled from 'styled-components';
-import Button, {ButtonSize, ButtonTheme} from '../components/Button/Button';
+import Button, {ButtonSize, ButtonTheme} from '../../Button/Button';
 import { useState } from 'react';
-import Search from '../components/AssignGroupLeader/Search';
-import SearchList from '../components/AssignGroupLeader/SearchList';
-import BlackScreen from "../components/BlackScreen/BlackScreen";
-import Modal from '../components/Modal/Modal';
-import useToast from '../hooks/useToast';
-import { ToastTheme } from '../components/Toast/Toast';
+import Search from './Search';
+import SearchList from './SearchList';
+import BlackScreen from "../../BlackScreen/BlackScreen";
+import Modal from '../../Modal/Modal';
+import useToast from '../../../hooks/useToast';
+import { ToastTheme } from '../../Toast/Toast';
 
 const RemoveMember = () => {
   const [showModal, setShowModal] = useState(false);

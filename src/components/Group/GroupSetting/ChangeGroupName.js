@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import UserHeader from '../components/UserHeader';
-import Input from '../components/Input/Input';
 import { useState } from 'react';
-import Button, {ButtonSize, ButtonTheme} from '../components/Button/Button';
-import { useGroupSetting } from '../hooks/useGroupSetting';
+import { useGroupSetting } from '../../../hooks/useGroupSetting';
+import Button, {ButtonSize, ButtonTheme} from '../../Button/Button';
+import UserHeader from '../../UserHeader';
+import Input from '../../Input/Input';
 
 const ChangeGroupName = ({name, groupId, setCurrentPage}) => {
   const [groupName, setGroupName] = useState(name);

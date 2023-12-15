@@ -1,15 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
-import Button from '../components/Button';
-import { ButtonSize, ButtonTheme } from '../components/Button/Button';
-import UserHeader from '../components/UserHeader';
+import Button from '../../Button';
+import { ButtonSize, ButtonTheme } from '../../Button/Button';
+import UserHeader from '../../UserHeader';
 import { useState } from 'react';
 import ChangeGroupName from './ChangeGroupName';
 import AssignGroupLeader from './AssignGroupLeader';
 import RemoveMember from './RemoveMember';
 import DeleteGroup from './DeleteGroup';
 
-const GroupSettings = ({group, setShow}) => {
+const GroupSetting = ({group, setShow}) => {
   const [currentPage, setCurrentPage] = useState('');
 
   const renderPage = () => {
@@ -114,4 +114,4 @@ const ButtonWrapper = styled.div`
   margin-top: 24px;
 `
 
-export default GroupSettings;
+export default GroupSetting;

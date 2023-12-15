@@ -1,11 +1,11 @@
 import React from 'react';
-import UserHeader from '../components/UserHeader';
+import UserHeader from '../../UserHeader';
 import styled from 'styled-components';
 import { useState } from 'react';
-import BlackScreen from "../components/BlackScreen/BlackScreen";
-import Modal from '../components/Modal/Modal';
-import useToast from '../hooks/useToast';
-import { ToastTheme } from '../components/Toast/Toast';
+import BlackScreen from "../../BlackScreen/BlackScreen";
+import Modal from '../../Modal/Modal';
+import useToast from '../../../hooks/useToast';
+import { ToastTheme } from '../../Toast/Toast';
 import { useNavigate } from 'react-router-dom';
 
 const DeleteGroup = () => {
