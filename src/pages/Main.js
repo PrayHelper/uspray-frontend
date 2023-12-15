@@ -3,7 +3,7 @@ import styled from "styled-components";
 import MainContent from "../components/Main/MainContent";
 import { useState } from "react";
 import ButtonV2, { ButtonTheme } from "../components/ButtonV2/ButtonV2";
-import SelectDateInput from "../components/SelectDateInput/SelectDateInput";
+import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../hooks/useCategory";
 import { useSendPrayItem } from "../hooks/useSendPrayItem";
 
@@ -95,7 +95,7 @@ const Main = () => {
         <FlexContainer>
           {tab === "내가 쓴" ? (
             showSubModal ? (
-              <SelectDateInput
+              <PrayDateCategoryInput
                 categoryList={categoryList}
                 showSubModal={showSubModal}
                 setShowSubModal={setShowSubModal}

@@ -8,7 +8,6 @@ import modifyImage from "../../images/modify_img.svg";
 
 const MainContent = ({
   categoryList,
-  //setCategories,
   setShowCategorySetting,
   selectedCategoryIndex,
   setSelectedCategoryIndex,
@@ -31,7 +30,6 @@ const MainContent = ({
       <TopWrapper>
         <CategoryTag
           categoryList={categoryList}
-          //setCategories={setCategories}
           selectedCategoryIndex={selectedCategoryIndex}
           setSelectedCategoryIndex={setSelectedCategoryIndex}
           setShowCategorySetting={setShowCategorySetting}
