@@ -6,12 +6,14 @@ import { useInView } from "react-intersection-observer";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import { useFetchHistory } from "../hooks/useFetchHistory";
 import { useHistoryModify } from "../hooks/useHistoryModify";
+import { useCategory } from "../hooks/useCategory";
 import Lottie from "react-lottie";
 import LottieData from "../json/lottie.json";
 import useToast from "../hooks/useToast";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 
 const History = () => {
+  const { categoryList } = useCategory();
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showSubModal, setShowSubModal] = useState(false);
@@ -231,9 +233,10 @@ const History = () => {
           </>
         )}
         <PrayDateCategoryInput
-          setUpdateDate={setUpdateDate}
-          setShowSubModal={setShowSubModal}
+          categoryList={categoryList}
           showSubModal={showSubModal}
+          setShowSubModal={setShowSubModal}
+          setUpdateDate={setUpdateDate}
           isDefault={true}
           isShowWordCount={false}
           onClickFunc={() => onClickModify(sortBy)}
