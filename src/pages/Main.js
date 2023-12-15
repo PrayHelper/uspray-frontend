@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import MainContent from "../components/Main/MainContent";
 import { useState } from "react";
@@ -15,7 +15,6 @@ const Main = () => {
   const [inputValue, setInputValue] = useState("");
   const [showCategorySetting, setShowCategorySetting] = useState(false);
   const [selectedColor, setSelectedColor] = useState("#D0E8CB");
-  //const [categories, setCategories] = useState([]);
   const [showSubModal, setShowSubModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
@@ -27,20 +26,6 @@ const Main = () => {
     setBgColor(newTab === "내가 쓴" ? "#7BAB6E" : "#3D5537");
   };
 
-  /* 카테고리 추가는 다시 짜야함
-  const addCategory = () => {
-    if (inputValue !== "") {
-      setCategories([
-        ...categories,
-        { name: inputValue, color: selectedColor },
-      ]);
-      setInputValue("");
-      setSelectedColor("#D0E8CB");
-      setShowCategorySetting(false);
-    }
-  };
-*/
-
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
@@ -49,13 +34,16 @@ const Main = () => {
     e.stopPropagation();
   };
 
-  // 기도를 입력하는 코드
+  // 기도를 추가하는 함수
   const onInsert = async (text, deadline, categoryId) => {
     mutateSendPrayItem(
       { content: text, deadline: deadline, categoryId: categoryId },
       {
         onSuccess: () => {
           setShowSubModal(false);
+          setPrayInputValue("");
+          setDateInputValue(null);
+          setSelectedCategoryIndex(categoryId);
         },
       }
     );
@@ -78,6 +66,12 @@ const Main = () => {
     "#58834D",
     "#507247",
   ];
+
+  useEffect(() => {
+    if (categoryList.length > 0) {
+      setSelectedCategoryIndex(categoryList[0].id);
+    }
+  }, []);
 
   return (
     <MainWrapper style={{ backgroundColor: bgColor }}>
@@ -104,8 +98,7 @@ const Main = () => {
               <SelectDateInput
                 categoryList={categoryList}
                 showSubModal={showSubModal}
-                setShowSub
-                Modal={setShowSubModal}
+                setShowSubModal={setShowSubModal}
                 inputPlaceHodler="기도제목을 입력해주세요"
                 maxrow={3}
                 maxlen={75}
@@ -118,12 +111,9 @@ const Main = () => {
                 setSelectedCategoryIndex={setSelectedCategoryIndex}
                 buttonText="기도제목 작성"
                 value={prayInputValue}
+                category={selectedCategoryIndex}
                 onClickFunc={() =>
-                  onInsert(
-                    prayInputValue,
-                    dateInputValue,
-                    selectedCategoryIndex
-                  )
+                  onInsert(prayInputValue, dateInputValue, categoryInputValue)
                 }
               />
             ) : (
@@ -135,6 +125,7 @@ const Main = () => {
                 }}
                 onClick={() => onClickPrayInput()}
                 value={prayInputValue}
+                readOnly
               />
             )
           ) : (
@@ -146,7 +137,6 @@ const Main = () => {
       </TopContainer>
       <MainContent
         categoryList={categoryList}
-        //setCategories={setCategories}
         setShowCategorySetting={setShowCategorySetting}
         selectedCategoryIndex={selectedCategoryIndex}
         setSelectedCategoryIndex={setSelectedCategoryIndex}
@@ -161,11 +151,7 @@ const Main = () => {
             onClick={handleInnerClick}
           />
           <FixedButtonContainer onClick={handleInnerClick}>
-            <ButtonV2
-              buttonTheme={ButtonTheme.FILLED} /*handler={addCategory}*/
-            >
-              카테고리 추가
-            </ButtonV2>
+            <ButtonV2 buttonTheme={ButtonTheme.FILLED}>카테고리 추가</ButtonV2>
           </FixedButtonContainer>
           <ColorPalette>
             {ColorList.map((color) => (

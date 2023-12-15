@@ -8,9 +8,8 @@ const CategoryTag = ({
   setShowCategorySetting,
   canAdd,
 }) => {
-  const handleCategoryClick = (index) => {
-    setSelectedCategoryIndex(index);
-    console.log(categoryList[selectedCategoryIndex].name);
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategoryIndex(categoryId);
   };
 
   return (
@@ -18,10 +17,10 @@ const CategoryTag = ({
       {categoryList &&
         categoryList.map((category, index) => (
           <CategoryBox
-            key={index}
-            selected={index === selectedCategoryIndex}
+            key={category.id}
+            selected={category.id === selectedCategoryIndex}
             color={category.color}
-            onClick={() => handleCategoryClick(index)}
+            onClick={() => handleCategoryClick(category.id)}
           >
             {category.name}
           </CategoryBox>

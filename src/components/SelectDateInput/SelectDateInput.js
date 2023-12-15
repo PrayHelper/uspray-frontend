@@ -15,19 +15,19 @@ const SelectDateInput = ({
   maxlen, // 최대 길이
   isDefault, // 디폴트 값 존재하는지
   isShowWordCount, // 글자수 유무
-  value, // 이전 입력값
-  setUpdateValue, // api 호출용 input 내용 데이터 저장 함수
+  value, // 이전 화면에서 기도제목 입력 내용
+  category, // 이전 화면에서 카테고리 선택ID
+  setUpdateValue, // api 호출용 기도제목 내용 데이터 저장 함수
   setUpdateDate, // api 호출용 날짜 데이터 저장 함수
   setUpdateCategory, // api 호출용 카테고리 데이터 저장 함수
-  onClickFunc, // 기도 추가 이벤트 함수
-  selectedCategoryIndex,
-  setSelectedCategoryIndex,
+  onClickFunc, // 버튼 눌렀을 때 이벤트 함수
   buttonText, // 버튼 text
 }) => {
   const outside = useRef();
   const modalInputRef = useRef(null);
 
-  const [inputCount, setInputCount] = useState(0);
+  const [inputCount, setInputCount] = useState(value ? value.length : 0);
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(category);
 
   useEffect(() => {
     if (showSubModal && modalInputRef.current) {
@@ -36,6 +36,10 @@ const SelectDateInput = ({
       modalInputRef.current.setSelectionRange(length, length);
     }
   }, [showSubModal]);
+
+  useEffect(() => {
+    setUpdateCategory(selectedCategoryIndex);
+  }, [selectedCategoryIndex]);
 
   const onInputHandler = (e) => {
     if (e.target.value.length > e.maxLength)
