@@ -1,31 +1,40 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
-const CategoryTag = ({categories, selectedCategoryIndex, setSelectedCategoryIndex, setShowCategorySetting}) => {
-
- 
-  const handleCategoryClick = (index) => {
-    setSelectedCategoryIndex(index);
-    console.log(categories[selectedCategoryIndex].name);
+const CategoryTag = ({
+  categoryList,
+  selectedCategoryIndex,
+  setSelectedCategoryIndex,
+  setShowCategorySetting,
+  canAdd,
+}) => {
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategoryIndex(categoryId);
   };
 
   return (
     <Container>
-      {categories.map((category, index) => (
-        <CategoryBox 
-          key={index}
-          selected={index === selectedCategoryIndex}
-          color={category.color}
-          onClick={() => handleCategoryClick(index)}
+      {categoryList &&
+        categoryList.map((category, index) => (
+          <CategoryBox
+            key={category.id}
+            selected={category.id === selectedCategoryIndex}
+            color={category.color}
+            onClick={() => handleCategoryClick(category.id)}
           >
-          {category.name}
-        </CategoryBox>
-      ))}
-      
-      <AddButton onClick={() => {setShowCategorySetting(true)}}>
-        추가
-        <img src="images/ic_add.svg" alt="add_icon"/>
-      </AddButton>
+            {category.name}
+          </CategoryBox>
+        ))}
+      {canAdd && (
+        <AddButton
+          onClick={() => {
+            setShowCategorySetting(true);
+          }}
+        >
+          추가
+          <img src="images/ic_add.svg" alt="add_icon" />
+        </AddButton>
+      )}
     </Container>
   );
 };
@@ -49,8 +58,8 @@ const Container = styled.div`
 `;
 
 const CategoryBox = styled.div`
-  background-color: ${props => props.selected ? props.color : '#EEEEEE'};
-  color: ${props => props.selected ? '#FFFFFF' : '#CECECE'};
+  background-color: ${(props) => (props.selected ? props.color : "#EEEEEE")};
+  color: ${(props) => (props.selected ? "#FFFFFF" : "#CECECE")};
   border-radius: 24px;
   padding: 16px;
   font-size: 16px;
@@ -63,12 +72,11 @@ const AddButton = styled.button`
   gap: 4px;
   align-items: center;
   background-color: transparent;
-  border: 1px solid #75BD62;
+  border: 1px solid #75bd62;
   border-radius: 24px;
   padding: 16px;
-  color: #75BD62;
+  color: #75bd62;
   font-size: 16px;
   font-weight: 700;
   white-space: nowrap;
 `;
-

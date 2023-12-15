@@ -9,7 +9,7 @@ import { useHistoryModify } from "../hooks/useHistoryModify";
 import Lottie from "react-lottie";
 import LottieData from "../json/lottie.json";
 import useToast from "../hooks/useToast";
-import SelectDateInput from "../components/SelectDateInput/SelectDateInput";
+import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 
 const History = () => {
   const [loading, setLoading] = useState(true);
@@ -230,7 +230,7 @@ const History = () => {
             </ModalWrapper>
           </>
         )}
-        <SelectDateInput
+        <PrayDateCategoryInput
           setUpdateDate={setUpdateDate}
           setShowSubModal={setShowSubModal}
           showSubModal={showSubModal}
