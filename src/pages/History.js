@@ -20,6 +20,7 @@ const History = () => {
   const [currentData, setCurrentData] = useState({});
   const [currentId, setCurrentId] = useState();
   const [updateDate, setUpdateDate] = useState(null);
+  const [updateCategory, setUpdateCategory] = useState(0);
   const [pageMy, setPageMy] = useState(1);
   const [pageShared, setPageShared] = useState(1);
   const [dataMy, setDataMy] = useState([]);
@@ -236,10 +237,14 @@ const History = () => {
           categoryList={categoryList}
           showSubModal={showSubModal}
           setShowSubModal={setShowSubModal}
-          setUpdateDate={setUpdateDate}
           isDefault={true}
           isShowWordCount={false}
+          value
+          category
+          setUpdateDate={setUpdateDate}
+          setUpdateCategory={setUpdateCategory}
           onClickFunc={() => onClickModify(sortBy)}
+          buttonText="오늘의 기도에 추가"
         />
       </div>
       {sortBy === "date" && (

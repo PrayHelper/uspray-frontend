@@ -25,7 +25,6 @@ const PrayDateCategoryInput = ({
 }) => {
   const outside = useRef();
   const modalInputRef = useRef(null);
-  if (!inputPlaceHolder) inputPlaceHolder = "";
   const [inputCount, setInputCount] = useState(value ? value.length : 0);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(category);
 
