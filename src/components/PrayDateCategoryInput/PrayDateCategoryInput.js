@@ -6,7 +6,7 @@ import styled from "styled-components";
 import BlackScreen from "../BlackScreen/BlackScreen";
 import CategoryTag from "../CategoryTag/CategoryTag";
 
-const SelectDateInput = ({
+const PrayDateCategoryInput = ({
   categoryList, // 메인의 카테고리 목록
   showSubModal, // 현재 컴포넌트 창 켜져있는지
   setShowSubModal, // 현재 컴포넌트 창 켜져있는지 set
@@ -100,7 +100,7 @@ const SelectDateInput = ({
   );
 };
 
-SelectDateInput.defaultProps = {
+PrayDateCategoryInput.defaultProps = {
   inputPlaceHolder: "기도제목을 입력해주세요",
   maxlen: 75,
   maxrow: 3,
@@ -108,7 +108,7 @@ SelectDateInput.defaultProps = {
   isDefault: false,
 };
 
-export default SelectDateInput;
+export default PrayDateCategoryInput;
 
 const SubModalWrapper = styled.div`
   position: fixed;
