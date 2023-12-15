@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Button, {ButtonSize, ButtonTheme} from '../../Button/Button';
 import { useState } from 'react';
 import Search from './Search';
-import SearchList from './AssignGroupLeader/SearchList';
+import SearchList from './SearchList';
 import BlackScreen from "../../BlackScreen/BlackScreen";
 import Modal from '../../Modal/Modal';
 import useToast from '../../../hooks/useToast';

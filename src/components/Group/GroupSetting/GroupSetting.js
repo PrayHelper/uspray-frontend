@@ -9,7 +9,7 @@ import AssignGroupLeader from './AssignGroupLeader';
 import RemoveMember from './RemoveMember';
 import DeleteGroup from './DeleteGroup';
 
-const GroupSetting = ({group, setShow}) => {
+const GroupSetting = ({group, setShowGroupSetting}) => {
   const [currentPage, setCurrentPage] = useState('');
 
   const renderPage = () => {
@@ -20,6 +20,7 @@ const GroupSetting = ({group, setShow}) => {
             name={group.name}
             groupId={group.id}
             setCurrentPage={setCurrentPage}
+            setShowGroupSetting={setShowGroupSetting}
           />
         );
       case 'assignGroupLeader':
@@ -35,7 +36,7 @@ const GroupSetting = ({group, setShow}) => {
   return (
     <Wrapper>
       {currentPage && <RenderPage>{renderPage()}</RenderPage>}
-      <UserHeader back={() => setShow(prev => !prev)}>모임 설정하기</UserHeader>
+      <UserHeader back={() => setShowGroupSetting(prev => !prev)}>모임 설정하기</UserHeader>
       <ButtonWrapper>
         <div style={{padding: "0 16px", display: "flex", flexDirection: "column", gap: "24px",}}>
           <Button

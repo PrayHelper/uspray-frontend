@@ -1,16 +1,13 @@
 import React from 'react';
-import UserHeader from '../components/UserHeader';
+import UserHeader from '../../UserHeader';
 import styled from 'styled-components';
-import GroupInfo from '../components/Group/GroupDetail/GroupInfo';
-import GroupPrayList from '../components/Group/GroupDetail/GroupPrayList';
-import { useLocation } from 'react-router-dom';
-import RightIcons from '../components/Group/GroupDetail/RightIcons';
+import GroupInfo from './GroupInfo';
+import GroupPrayList from './GroupPrayList';
+import RightIcons from './RightIcons';
 import { useState } from 'react';
-import GroupSetting from '../components/Group/GroupSetting/GroupSetting';
+import GroupSetting from '../GroupSetting/GroupSetting';
 
-const GroupDetail = () => {
-  const location = useLocation();
-  const group = location.state;
+const GroupDetail = ({group, setShowGroupDetail}) => {
   const [showGroupSetting, setShowGroupSetting] = useState(false);
 
   const groupPrayList = [
@@ -20,11 +17,12 @@ const GroupDetail = () => {
 
   return (
     <Wrapper>
-      {showGroupSetting && <GroupSetting group={group} setShow={setShowGroupSetting}/>}
+      {showGroupSetting && <GroupSetting group={group} setShowGroupSetting={setShowGroupSetting}/>}
       <UserHeader
         rightIcons={() => {
           return <RightIcons group={group} setShow={setShowGroupSetting}/>;
         }}
+        back={() => setShowGroupDetail(prev => !prev)}
       >
         {group.name}
       </UserHeader>
@@ -35,10 +33,12 @@ const GroupDetail = () => {
 };
 
 const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
   width: 100%;
   height: 100vh;
-`;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  z-index: 100;
+`
 
 export default GroupDetail;

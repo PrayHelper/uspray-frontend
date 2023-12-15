@@ -5,11 +5,17 @@ import { useGroupSetting } from '../../../hooks/useGroupSetting';
 import Button, {ButtonSize, ButtonTheme} from '../../Button/Button';
 import UserHeader from '../../UserHeader';
 import Input from '../../Input/Input';
+import { useEffect } from 'react';
+import useToast from '../../../hooks/useToast';
+import { ToastTheme } from '../../Toast/Toast';
+import { useGroup } from '../../../hooks/useGroup';
 
-const ChangeGroupName = ({name, groupId, setCurrentPage}) => {
-  const [groupName, setGroupName] = useState(name);
+const ChangeGroupName = ({name, groupId, setCurrentPage, setShowGroupSetting}) => {
+  const { showToast } = useToast({});
+  const [groupName, setGroupName] = useState("");
   const [invalidGroupName, setInvalidGroupName] = useState("");
   const {changeGroupName} = useGroupSetting();
+  const {refetchGroupList} = useGroup();
 
   const groupNameCheck = (name) => {
     const groupNameRegEx = /^\s*\S.{0,14}\S\s*$/;
@@ -24,6 +30,10 @@ const ChangeGroupName = ({name, groupId, setCurrentPage}) => {
     }
     setInvalidGroupName("");
   };
+
+  useEffect(() => {
+    setGroupName(name);
+  }, []);
 
   return (
     <Wrapper>
@@ -43,7 +53,22 @@ const ChangeGroupName = ({name, groupId, setCurrentPage}) => {
               buttonSize={ButtonSize.LARGE}
               buttonTheme={(groupName && !invalidGroupName) ? ButtonTheme.GREEN : ButtonTheme.GRAY}
               isArrow={true}
-              handler={() => changeGroupName(groupId)}
+              handler={() => 
+                changeGroupName(
+                  {groupId, groupName},
+                  {
+                    onSuccess: () => {
+                      refetchGroupList();
+                      setCurrentPage('');
+                      setShowGroupSetting(false);
+                      showToast({
+                        message: "모임 이름이 변경되었어요.",
+                        theme: ToastTheme.SUCCESS,
+                      });
+                    }
+                  }
+                )
+              }
             >
               모임 이름 변경하기
             </Button>

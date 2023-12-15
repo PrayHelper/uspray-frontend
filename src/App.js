@@ -43,7 +43,7 @@ import useAuthorized from "./hooks/useAuthorized";
 import GlobalStyle from "./styles/GlobalStyle";
 import useToast from "./hooks/useToast";
 import HistorySearch from "./pages/HistorySearch";
-import GroupDetail from "./pages/GroupDetail";
+import GroupDetail from "./components/Group/GroupDetail/GroupDetail";
 import CreateGroup from "./pages/CreateGroup";
 import LeaveGroup from "./pages/LeaveGroup";
 import SocialLoginNameInput from "./pages/SocialLoginNameInput";
@@ -112,7 +112,6 @@ function App() {
                 <Route path="/checkInfo" element={<CheckInfo />} />
                 <Route path="/changeInfo" element={<ChangeInfo />} />
                 <Route path="/changePw" element={<ChangePw />} />
-                <Route path="/groupDetail" element={<GroupDetail />} />
                 <Route
                   path="/changePhoneNumber"
                   element={<ChangePhoneNumber />}
