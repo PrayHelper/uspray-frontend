@@ -1,21 +1,24 @@
 import React from 'react';
-import UserHeader from '../components/UserHeader';
+import UserHeader from '../../UserHeader';
 import styled from 'styled-components';
-import Button, {ButtonSize, ButtonTheme} from '../components/Button/Button';
+import Button, {ButtonSize, ButtonTheme} from '../../Button/Button';
 import { useState } from 'react';
-import Search from '../components/AssignGroupLeader/Search';
-import SearchList from '../components/AssignGroupLeader/SearchList';
-import BlackScreen from "../components/BlackScreen/BlackScreen";
-import Modal from '../components/Modal/Modal';
-import useToast from '../hooks/useToast';
-import { ToastTheme } from '../components/Toast/Toast';
+import Search from './Search';
+import SearchList from './SearchList';
+import BlackScreen from "../../BlackScreen/BlackScreen";
+import Modal from '../../Modal/Modal';
+import useToast from '../../../hooks/useToast';
+import { ToastTheme } from '../../Toast/Toast';
+import { useSearchGroupMember } from '../../../hooks/useSearchGroupMember';
+import { useGroupSetting } from '../../../hooks/useGroupSetting';
 
-const AssignGroupLeader = () => {
+const ChangeGroupLeader = ({groupId, setCurrentPage, setShowGroupSetting}) => {
   const [showModal, setShowModal] = useState(false);
-  const [leader, setLeader] = useState("");
+  const [leaderId, setLeaderId] = useState(null);
   const [searchName, setSearchName] = useState("");
   const { showToast } = useToast({});
-  const data = ['김은혜', '권은혜', '박은혜', '이은혜', '허은혜', '허그레이스', '권은혜', '박은혜', '이은혜'];
+  const { memberList } = useSearchGroupMember(groupId, searchName);
+  const { changeGroupLeader } = useGroupSetting();
 
   const closeModal = () => {
     setShowModal(false);
@@ -35,29 +38,38 @@ const AssignGroupLeader = () => {
             btnContent2={"취소"}
             onClickBtn={() => {
               closeModal();
-              showToast({
-                message: "리더가 변경되었어요.",
-                theme: ToastTheme.SUCCESS,
-              });
+              changeGroupLeader(
+                {leaderId, groupId},
+                {
+                  onSuccess: () => {
+                    setCurrentPage('');
+                    setShowGroupSetting(false);
+                    showToast({
+                      message: "리더가 변경되었어요.",
+                      theme: ToastTheme.SUCCESS,
+                    });
+                  }
+                }
+              );
             }}
             onClickBtn2={closeModal}
             modalTheme={0}
           />
         </>
       )}
-      <UserHeader>모임 리더 맡기기</UserHeader>
+      <UserHeader back={() => setCurrentPage('')}>모임 리더 맡기기</UserHeader>
       <ContentWrapper>
         <div style={{display: "flex", flexDirection: "column", height: '100%'}}>
           <Search
             topText={"\"모임 리더 맡기기\"를 누르시면 모임리더 권한이 모두 위임되며, 나는 멤버로 변경됩니다."}
             setSearchName={setSearchName}
           />
-          <SearchList data={data} searchName={searchName} leader={leader} setLeader={setLeader}/>
+          <SearchList memberList={memberList} memberId={leaderId} setMemberId={setLeaderId}/>
           <BottomButtonWrapper>
             <Button
-              disabled={leader === ""}
+              disabled={leaderId === null}
               buttonSize={ButtonSize.LARGE}
-              buttonTheme={leader ? ButtonTheme.GREEN : ButtonTheme.GRAY}
+              buttonTheme={leaderId ? ButtonTheme.GREEN : ButtonTheme.GRAY}
               isArrow={true}
               handler={() => {
                 setShowModal(true);
@@ -97,4 +109,4 @@ const BottomButtonWrapper = styled.div`
   padding: 0 16px;
 `
 
-export default AssignGroupLeader;
+export default ChangeGroupLeader;
