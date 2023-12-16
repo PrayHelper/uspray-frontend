@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const SearchList = ({memberList, leaderId, setLeaderId}) => {
+const SearchList = ({memberList, memberId, setMemberId}) => {
 
   return (
     <Wrapper>
@@ -9,13 +9,13 @@ const SearchList = ({memberList, leaderId, setLeaderId}) => {
         return (
           <NameDiv
             key={index}
-            onClick={() => setLeaderId((prev) => {
+            onClick={() => setMemberId((prev) => {
               if (prev)
                 return null;
               else
                 return member.id;
             })} 
-            isLeader={leaderId === member.id}
+            isSelected={memberId === member.id}
           >
             {member.name}
             {`(${member.userId})`}
@@ -35,7 +35,7 @@ const Wrapper = styled.div`
 `
 const NameDiv = styled.div`
   padding: 12px 0;
-  color: ${props => props.isLeader ? "var(--color-green)" : "var(--color-grey)"};
+  color: ${props => props.isSelected ? "var(--color-green)" : "var(--color-grey)"};
   font-size: 16px;
 `
 

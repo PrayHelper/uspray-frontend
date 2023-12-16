@@ -64,7 +64,7 @@ const ChangeGroupLeader = ({groupId, setCurrentPage, setShowGroupSetting}) => {
             topText={"\"모임 리더 맡기기\"를 누르시면 모임리더 권한이 모두 위임되며, 나는 멤버로 변경됩니다."}
             setSearchName={setSearchName}
           />
-          <SearchList memberList={memberList} leaderId={leaderId} setLeaderId={setLeaderId}/>
+          <SearchList memberList={memberList} memberId={leaderId} setMemberId={setLeaderId}/>
           <BottomButtonWrapper>
             <Button
               disabled={leaderId === null}

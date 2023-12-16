@@ -2,7 +2,7 @@ import { useQuery, useMutation } from 'react-query';
 import useApi from './useApi';
 
 export const useGroupSetting = () => {
-  const { putFetcher } = useApi();
+  const { putFetcher, deleteDataFetcher } = useApi();
 
   const { mutate: changeGroupName }  = useMutation(
     async (data) => {
@@ -41,8 +41,28 @@ export const useGroupSetting = () => {
       refetchOnWindowFocus: false,
     }
   );
+
+  const { mutate: kickGroupMember }  = useMutation(
+    async (data) => {
+      return await deleteDataFetcher(`/group/${data.groupId}/kick`, {memberId: data.memberId})
+    },
+    {
+      onError: async (e) => {
+        console.log(e);
+      },
+      onSuccess: (res) => {
+        console.log(res);
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
   return {
     changeGroupName,
     changeGroupLeader,
+    kickGroupMember,
   };
 }
