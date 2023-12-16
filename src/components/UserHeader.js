@@ -46,6 +46,7 @@ const UserHeader = ({
   rightIcons,
   overlay,
   setIsOverlayOn,
+  back
 }) => {
   if (!overlay) overlay = false;
   const navigate = useNavigate();
@@ -71,7 +72,7 @@ const UserHeader = ({
   return (
     <StyledHeader>
       <BackButton
-        onClick={goBack}
+        onClick={back ? back : goBack}
         src="images/back_button.svg"
         alt="back_button"
       />

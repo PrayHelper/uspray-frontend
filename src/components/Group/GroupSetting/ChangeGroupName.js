@@ -1,13 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
-import UserHeader from '../components/UserHeader';
-import Input from '../components/Input/Input';
 import { useState } from 'react';
-import Button, {ButtonSize, ButtonTheme} from '../components/Button/Button';
+import { useGroupSetting } from '../../../hooks/useGroupSetting';
+import Button, {ButtonSize, ButtonTheme} from '../../Button/Button';
+import UserHeader from '../../UserHeader';
+import Input from '../../Input/Input';
+import { useEffect } from 'react';
+import useToast from '../../../hooks/useToast';
+import { ToastTheme } from '../../Toast/Toast';
+import { useGroup } from '../../../hooks/useGroup';
 
-const ChangeGroupName = () => {
-  const [groupName, setGroupName] = useState("북동 1팀");
+const ChangeGroupName = ({name, groupId, setCurrentPage, setShowGroupSetting}) => {
+  const { showToast } = useToast({});
+  const [groupName, setGroupName] = useState("");
   const [invalidGroupName, setInvalidGroupName] = useState("");
+  const {changeGroupName} = useGroupSetting();
+  const {refetchGroupList} = useGroup();
 
   const groupNameCheck = (name) => {
     const groupNameRegEx = /^\s*\S.{0,14}\S\s*$/;
@@ -23,9 +31,13 @@ const ChangeGroupName = () => {
     setInvalidGroupName("");
   };
 
+  useEffect(() => {
+    setGroupName(name);
+  }, []);
+
   return (
     <Wrapper>
-      <UserHeader>모임 이름 변경</UserHeader>
+      <UserHeader back={() => setCurrentPage('')}>모임 이름 변경</UserHeader>
       <ContentWrapper>
         <div style={{padding: "0 16px", display: "flex", flexDirection: "column", gap: "24px",}}>
           <Input
@@ -41,6 +53,22 @@ const ChangeGroupName = () => {
               buttonSize={ButtonSize.LARGE}
               buttonTheme={(groupName && !invalidGroupName) ? ButtonTheme.GREEN : ButtonTheme.GRAY}
               isArrow={true}
+              handler={() => 
+                changeGroupName(
+                  {groupId, groupName},
+                  {
+                    onSuccess: () => {
+                      refetchGroupList();
+                      setCurrentPage('');
+                      setShowGroupSetting(false);
+                      showToast({
+                        message: "모임 이름이 변경되었어요.",
+                        theme: ToastTheme.SUCCESS,
+                      });
+                    }
+                  }
+                )
+              }
             >
               모임 이름 변경하기
             </Button>

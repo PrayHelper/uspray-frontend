@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from "styled-components";
-import { useNavigate } from 'react-router-dom';
 
 // group = {
 //   id: 0,
@@ -11,8 +10,7 @@ import { useNavigate } from 'react-router-dom';
 //   updatedAt: "2023-11-24T10:06:06.136Z"
 // }
 
-const GroupItem = ({group}) => {
-  const navigate = useNavigate();
+const GroupItem = ({group, setGroup, setShowGroupDetail}) => {
   const formatUpdatedAt = (updatedAt) => {
     if (updatedAt === null)
       return null;
@@ -72,7 +70,12 @@ const GroupItem = ({group}) => {
   }
 
   return (
-    <GroupItemWrapper onClick={() => navigate('/groupDetail', { state: group })} >
+    <GroupItemWrapper
+      onClick={() => {
+        setGroup(group);
+        setShowGroupDetail(prev => !prev);
+      }}
+    >
       <GroupTitle>
         <div style={{color: "var(--color-green)", fontSize: "24px", fontWeight: "500"}}>
           {group.name}
