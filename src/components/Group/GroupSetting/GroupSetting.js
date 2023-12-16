@@ -40,7 +40,13 @@ const GroupSetting = ({group, setShowGroupSetting}) => {
           />
         );
       case 'deleteGroup':
-        return <DeleteGroup groupId={group.id} setCurrentPage={setCurrentPage}/>;
+        return (
+          <DeleteGroup
+            groupId={group.id}
+            setCurrentPage={setCurrentPage}
+            setShowGroupSetting={setShowGroupSetting}
+          />
+        );
       default:
         return ;
     }

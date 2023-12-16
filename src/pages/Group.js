@@ -16,7 +16,10 @@ const Group = () => {
   useEffect(() => {
     if (group !== null)
       setGroup(prev => {
-        return groupList.find((group) => group.id === prev.id);
+        const foundGroup = groupList.find((group) => group.id === prev.id) || null;
+        if (foundGroup === null)
+          setShowGroupDetail(false);
+        return foundGroup;
       })
   }, [groupList]);
   return (
