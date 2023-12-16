@@ -7,11 +7,14 @@ import Modal from '../../Modal/Modal';
 import useToast from '../../../hooks/useToast';
 import { ToastTheme } from '../../Toast/Toast';
 import { useNavigate } from 'react-router-dom';
+import { useGroupSetting } from '../../../hooks/useGroupSetting';
+import { useGroup } from '../../../hooks/useGroup';
 
-const DeleteGroup = () => {
+const DeleteGroup = ({groupId, setCurrentPage, setShowGroupSetting}) => {
   const [showModal, setShowModal] = useState(false);
-  const navigate = useNavigate();
   const { showToast } = useToast({});
+  const { deleteGroup } = useGroupSetting();
+  const { refetchGroupList } = useGroup();
 
   const closeModal = () => {
     setShowModal(false);
@@ -31,18 +34,27 @@ const DeleteGroup = () => {
             btnContent2={"취소"}
             onClickBtn={() => {
               closeModal();
-              showToast({
-                message: "모임이 삭제되었어요.",
-                theme: ToastTheme.SUCCESS,
-              });
-              navigate('/group');
+              deleteGroup(
+                groupId,
+                {
+                  onSuccess: () => {
+                    refetchGroupList();
+                    setCurrentPage('');
+                    setShowGroupSetting(false);
+                    showToast({
+                      message: "모임이 삭제되었어요.",
+                      theme: ToastTheme.SUCCESS,
+                    });
+                  }
+                }
+              )
             }}
             onClickBtn2={closeModal}
             modalTheme={2}
           />
         </>
       )}
-      <UserHeader>모임 삭제하기</UserHeader>
+      <UserHeader back={() => setCurrentPage('')}>모임 삭제하기</UserHeader>
       <ContentWrapper>
         <div style={{display: "flex", flexDirection: "column", width: "calc(100% - 32px)", gap: "12px"}}>
           <NoticeDiv>
