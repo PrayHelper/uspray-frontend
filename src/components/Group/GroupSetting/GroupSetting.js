@@ -6,7 +6,7 @@ import UserHeader from '../../UserHeader';
 import { useState } from 'react';
 import ChangeGroupName from './ChangeGroupName';
 import ChangeGroupLeader from './ChangeGroupLeader';
-import RemoveMember from './RemoveMember';
+import KickMember from './KickMember';
 import DeleteGroup from './DeleteGroup';
 
 const GroupSetting = ({group, setShowGroupSetting}) => {
@@ -31,10 +31,22 @@ const GroupSetting = ({group, setShowGroupSetting}) => {
             setShowGroupSetting={setShowGroupSetting}
           />
         );
-      case 'removeMember':
-        return <RemoveMember groupId={group.id} setCurrentPage={setCurrentPage}/>;
+      case 'kickMember':
+        return (
+          <KickMember
+            groupId={group.id}
+            setCurrentPage={setCurrentPage}
+            setShowGroupSetting={setShowGroupSetting}
+          />
+        );
       case 'deleteGroup':
-        return <DeleteGroup groupId={group.id} setCurrentPage={setCurrentPage}/>;
+        return (
+          <DeleteGroup
+            groupId={group.id}
+            setCurrentPage={setCurrentPage}
+            setShowGroupSetting={setShowGroupSetting}
+          />
+        );
       default:
         return ;
     }
@@ -65,7 +77,7 @@ const GroupSetting = ({group, setShowGroupSetting}) => {
             buttonSize={ButtonSize.LARGE}
             buttonTheme={ButtonTheme.WHITE}
             isArrow={true}
-            handler={() => setCurrentPage('removeMember')}
+            handler={() => setCurrentPage('kickMember')}
           >
             멤버 내보내기
           </Button>
