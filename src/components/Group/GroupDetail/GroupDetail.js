@@ -6,14 +6,12 @@ import GroupPrayList from './GroupPrayList';
 import RightIcons from './RightIcons';
 import { useState } from 'react';
 import GroupSetting from '../GroupSetting/GroupSetting';
+import { useGroupPray } from '../../../hooks/useGroupPray';
 
 const GroupDetail = ({group, setShowGroupDetail}) => {
   const [showGroupSetting, setShowGroupSetting] = useState(false);
-
-  const groupPrayList = [
-
-  ]; // /grouppray/{groupId} 로 api 호출 후 받아오기
-  const isData = groupPrayList.length !== 0;
+  const { groupPrayList } = useGroupPray(group.id);
+  const isData = Object.keys(groupPrayList).length !== 0
 
   return (
     <Wrapper>
@@ -26,8 +24,10 @@ const GroupDetail = ({group, setShowGroupDetail}) => {
       >
         {group.name}
       </UserHeader>
-      <GroupInfo group={group} isData={isData}/>
-      <GroupPrayList name={group.name} groupPrayList={groupPrayList} isData={isData}/>
+      <GroupWrapper>
+        <GroupInfo group={group} isData={isData}/>
+        <GroupPrayList name={group.name} groupPrayList={groupPrayList} isData={isData}/>
+      </GroupWrapper>
     </Wrapper>
   );
 };
@@ -39,6 +39,13 @@ const Wrapper = styled.div`
   flex-direction: column;
   background-color: #ffffff;
   z-index: 100;
+`
+
+const GroupWrapper = styled.div`
+  width: 100%;
+  height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
 `
 
 export default GroupDetail;

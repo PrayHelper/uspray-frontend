@@ -24,7 +24,9 @@ export const useGroupPray = (groupId) => {
     }
   );
 
-  const groupPrayList = data?.data.data || [];
+  const groupPrayData = data?.data.data || {};
+  const groupPrayList = Object.keys(groupPrayData).length === 0
+    ? [] : groupPrayData;
 
   return {
     groupPrayList,
