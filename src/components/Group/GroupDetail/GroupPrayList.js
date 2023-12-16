@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import GroupPrayItem from './GroupPrayItem';
 
-const GroupPrayList = ({groupPrayList, isData}) => {
+const GroupPrayList = ({name, groupPrayList, isData}) => {
   return (
     <Wrapper>
       {
@@ -14,7 +14,7 @@ const GroupPrayList = ({groupPrayList, isData}) => {
           </PrayList>
           :
           <NoDataWrapper>
-            <div>북동1팀 모임원에게</div>
+            <div>{name} 모임원에게</div>
             <div>기도제목을 공유해보세요.</div>
           </NoDataWrapper>
       }

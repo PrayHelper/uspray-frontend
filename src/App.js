@@ -45,12 +45,13 @@ import useToast from "./hooks/useToast";
 import HistorySearch from "./pages/HistorySearch";
 import GroupDetail from "./pages/GroupDetail";
 import GroupSettings from "./pages/GroupSettings";
-import ChangeGroupName from './pages/ChangeGroupName';
-import AssignGroupLeader from './pages/AssignGroupLeader';
-import RemoveMember from './pages/RemoveMember';
-import CreateGroup from './pages/CreateGroup';
-import DeleteGroup from './pages/DeleteGroup';
-import LeaveGroup from './pages/LeaveGroup';
+import ChangeGroupName from "./pages/ChangeGroupName";
+import AssignGroupLeader from "./pages/AssignGroupLeader";
+import RemoveMember from "./pages/RemoveMember";
+import CreateGroup from "./pages/CreateGroup";
+import DeleteGroup from "./pages/DeleteGroup";
+import LeaveGroup from "./pages/LeaveGroup";
+import SocialLoginNameInput from "./pages/SocialLoginNameInput";
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -116,7 +117,10 @@ function App() {
                 <Route path="/groupSettings" element={<GroupSettings />} />
                 <Route path="/changeGroupName" element={<ChangeGroupName />} />
                 <Route path="/createGroup" element={<CreateGroup />} />
-                <Route path="/assignGroupLeader" element={<AssignGroupLeader />} /> 
+                <Route
+                  path="/assignGroupLeader"
+                  element={<AssignGroupLeader />}
+                />
                 <Route path="/removeMember" element={<RemoveMember />} />
                 <Route path="/checkInfo" element={<CheckInfo />} />
                 <Route path="/changeInfo" element={<ChangeInfo />} />
@@ -132,6 +136,10 @@ function App() {
               <Route element={<Outlet />}>
                 <Route path="/" element={<Login />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route
+                  path="/socialLoginNameInput"
+                  element={<SocialLoginNameInput />}
+                />
                 <Route path="/findAccount" element={<Find />} />
                 <Route path="/findID" element={<FindId />}></Route>
                 <Route path="/findIDResult" element={<FindIdResult />}></Route>
@@ -143,11 +151,6 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/loading" element={<SplashScreen />} />
                 <Route path="*" element={<NotFound />} />
-                <Route path="/tos" element={<ToS />} />
-                <Route
-                  path="/privacyProcessAgreement"
-                  element={<PrivacyProcessAgreement />}
-                />
                 <Route path="/historySearch" element={<HistorySearch />} />
               </Route>
             </Route>
