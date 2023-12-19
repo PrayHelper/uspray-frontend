@@ -1,5 +1,4 @@
-// TODO: 파일명, 컴포넌트명 수정(첫화면이 이렇게 변경되면 Login은 적절하지 않게 됨)
-
+import React, { useState, useEffect } from "react";
 import SocialLoginLongButton from "../components/SocialLogin/SocialLoginLongButton";
 import styled from "styled-components";
 import LogoSVG from "../images/logo_image.svg";
@@ -15,10 +14,12 @@ const S = {
     width: 100%;
   `,
   LogoWrapper: styled.div`
-    margin-top: 120px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    height: calc(100vh - 305px);
+    margin-bottom: ${(props) => (props.isViewportSmall ? "0px" : "12vh")};
   `,
   LogoImg: styled.img`
     width: 204px;
@@ -72,6 +73,21 @@ const S = {
 };
 
 const SocialLogin = () => {
+  const [isSmallViewport, setIsSmallViewport] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallViewport(window.innerHeight < 850);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const continueWithKakao = () => {
     console.log("continueWithKakao");
   };
@@ -84,7 +100,7 @@ const SocialLogin = () => {
 
   return (
     <S.SocialLoginWrapper>
-      <S.LogoWrapper>
+      <S.LogoWrapper isViewportSmall={isSmallViewport}>
         <S.LogoImg src={LogoSVG} alt="logo" />
         <S.LogoTitle>Uspray</S.LogoTitle>
         <S.LogoSubTitle>너에게 기도를, 유스프레이</S.LogoSubTitle>
