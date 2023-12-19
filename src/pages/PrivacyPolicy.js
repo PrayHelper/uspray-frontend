@@ -18,9 +18,9 @@ const PrivacyPolicy = ({ setIsOverlayOn }) => {
       <div
         style={{
           width: "100%",
-          flexDirection: "column",
-          marginTop: "28px",
           lineHeight: "23px",
+          height: "calc(100vh - 70px)",
+          overflowY: "auto",
         }}
       >
         <div
@@ -29,7 +29,7 @@ const PrivacyPolicy = ({ setIsOverlayOn }) => {
             flexDirection: "column",
             padding: "0 16px",
             color: "#606060",
-            fontWeight: "400",
+            marginTop: "28px",
           }}
         >
           <TitleTag style={{ marginTop: "-16px" }}>제1조(목적)</TitleTag>이
