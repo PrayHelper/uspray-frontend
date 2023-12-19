@@ -11,15 +11,15 @@ const TitleTag = styled.div`
 const PrivacyProcessAgreement = ({ setIsOverlayOn }) => {
   return (
     <>
-      <UserHeader overlay={true} setIsOverlayOn={setIsOverlayOn}>
+      <UserHeader overlay={true} setIsOverlayOn={setIsOverlayOn} fixed={true}>
         개인정보 처리 동의서
       </UserHeader>
       <div
         style={{
           width: "100%",
+          flexDirection: "column",
+          marginTop: "28px",
           lineHeight: "23px",
-          height: "calc(100vh - 70px)",
-          overflowY: "auto",
         }}
       >
         <div
@@ -28,9 +28,8 @@ const PrivacyProcessAgreement = ({ setIsOverlayOn }) => {
             flexDirection: "column",
             padding: "0 16px",
             color: "#606060",
-            marginTop: "16px",
             fontWeight: "400",
-            height: "fit-content",
+            marginTop: "-16px",
           }}
         >
           Uspray(‘www.uspray.kr“ 이하 '유스프레이' 라고 합니다)은(는)
