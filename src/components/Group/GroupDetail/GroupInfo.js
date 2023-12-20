@@ -6,7 +6,7 @@ import { useGroupPray } from "../../../hooks/useGroupPray";
 
 const GroupInfo = ({ group, isData }) => {
   const { categoryList, firstCategoryIndex } = useCategory();
-  const { addGroupPray } = useGroupPray();
+  const { addGroupPray } = useGroupPray(group.id);
   const [showSubModal, setShowSubModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
