@@ -54,9 +54,12 @@ export const useCategory = () => {
   );
 
   const categoryList = data?.data.data || [];
+  const firstCategoryIndex =
+    categoryList.length > 0 ? categoryList[0].id : null;
 
   return {
     categoryList,
     createCategory,
+    firstCategoryIndex,
   };
 };
