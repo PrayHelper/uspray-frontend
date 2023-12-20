@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import PrayDateCategoryInput from "../../PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../../../hooks/useCategory";
-import { useSendPrayItem } from "../../../hooks/useSendPrayItem";
+import { useGroupPray } from "../../../hooks/useGroupPray";
 
 const GroupInfo = ({ group, isData }) => {
   const { categoryList, firstCategoryIndex } = useCategory();
-  const { mutate: mutateSendPrayItem } = useSendPrayItem(); // GroupPray 버전으로 바꿔야 됨
+  const { addGroupPray } = useGroupPray();
   const [showSubModal, setShowSubModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
@@ -22,9 +22,13 @@ const GroupInfo = ({ group, isData }) => {
 
   // 기도를 추가하는 함수
   const onInsert = async (text, deadline, categoryId) => {
-    mutateSendPrayItem(
-      // GroupPray 버전으로 바꿔야 됨
-      { content: text, deadline: deadline, categoryId: categoryId },
+    addGroupPray(
+      {
+        content: text,
+        deadline: deadline,
+        categoryId: categoryId,
+        groupId: group.id,
+      },
       {
         onSuccess: () => {
           setShowSubModal(false);
