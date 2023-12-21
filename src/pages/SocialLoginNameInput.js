@@ -2,12 +2,14 @@ import React from "react";
 import SignupTos from "../components/SignupTos/SignupTos";
 import useSignupTos from "../hooks/useSignupTos";
 import UserHeader from "../components/UserHeader";
+import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import Input from "../components/Input/Input";
 import { useState } from "react";
 import Button, { ButtonSize, ButtonTheme } from "../components/Button/Button";
 import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
+import useSocialNameInput from "../hooks/useSocialNameInput";
 
 const SocialLoginNameInput = () => {
   const { isAgreed, toggleAll, toggleHandler, isAgreedAll } = useSignupTos();
@@ -17,9 +19,16 @@ const SocialLoginNameInput = () => {
     setName(e.target.value);
   };
 
-  const signup = () => {};
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+  console.log({ token });
+
   const isNameFieldEmpty = name !== "";
   const isSignupButtonActivated = isAgreedAll && isNameFieldEmpty;
+  const { mutate: socialLoginNameInputReq } = useSocialNameInput({
+    name,
+    token,
+  });
 
   return (
     <S.Root>
@@ -49,7 +58,7 @@ const SocialLoginNameInput = () => {
           buttonTheme={
             isSignupButtonActivated ? ButtonTheme.GREEN : ButtonTheme.GRAY
           }
-          handler={signup}>
+          handler={socialLoginNameInputReq}>
           회원가입
           {isSignupButtonActivated ? <NextArrowWhite /> : <NextArrowGray />}
         </Button>
