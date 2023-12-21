@@ -2,33 +2,117 @@ import React from "react";
 import SignupTos from "../components/SignupTos/SignupTos";
 import useSignupTos from "../hooks/useSignupTos";
 import UserHeader from "../components/UserHeader";
+import { ToastTheme } from "../components/Toast/Toast";
 import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import Input from "../components/Input/Input";
+import publicapi from "../api/publicapi";
 import { useState } from "react";
+import useToast from "../hooks/useToast";
+import { useNavigate } from "react-router-dom";
+import useAuthorized from "../hooks/useAuthorized";
+import useAuthToken from "../hooks/useAuthToken";
+import useFlutterWebview from "../hooks/useFlutterWebview";
+import useApi from "../hooks/useApi";
+import { useMutation } from "react-query";
 import Button, { ButtonSize, ButtonTheme } from "../components/Button/Button";
 import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
-import useSocialNameInput from "../hooks/useSocialNameInput";
+
+const useSendDeviceToken = () => {
+  const { postFetcher } = useApi();
+  return useMutation(
+    async (data) => {
+      return await postFetcher("/user/device/token", data);
+    },
+    {
+      onError: (e) => {
+        console.log(e);
+      },
+      onSuccess: (res) => {
+        console.log(res);
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
+};
 
 const SocialLoginNameInput = () => {
   const { isAgreed, toggleAll, toggleHandler, isAgreedAll } = useSignupTos();
+  const { setAccessToken, setRefreshToken, getAccessToken, getRefreshToken } =
+    useAuthToken();
+  const { isMobile, getDeviceToken } = useFlutterWebview();
+  const { showToast } = useToast({});
+  const { mutate: sendDeviceToken } = useSendDeviceToken();
+  const { setAutorized } = useAuthorized();
   const [name, setName] = useState("");
+  const navigate = useNavigate();
 
   const onChangeName = (e) => {
     setName(e.target.value);
   };
 
+  const socialLoginNameInputReq = async () => {
+    const api = `/member/oauth/${name}`;
+    try {
+      const res = await publicapi.put(
+        api,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        if (isMobile()) {
+          const deviceToken = await getDeviceToken();
+
+          sendDeviceToken(
+            {
+              device_token: deviceToken,
+            },
+            {
+              onSuccess: (res) => alert(res.status),
+              onError: (e) => alert(e.response.status),
+            }
+          );
+        } else {
+          showToast({
+            message: "푸쉬 알림은 모바일에서만 받을 수 있습니다.",
+            theme: ToastTheme.ERROR,
+          });
+        }
+
+        navigate("/main");
+        setAutorized();
+
+        setAccessToken(res.data.data.accessToken);
+        await setRefreshToken(res.data.data.refreshToken);
+
+        console.log("access: ", getAccessToken());
+        console.log("refresh: ", await getRefreshToken());
+      }
+    } catch (e) {
+      console.log(e);
+      if (e.response.data.message) {
+        showToast({
+          message: e.response.data.message,
+          theme: ToastTheme.ERROR,
+        });
+      }
+    }
+  };
+
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
-  console.log({ token });
 
   const isNameFieldEmpty = name !== "";
   const isSignupButtonActivated = isAgreedAll && isNameFieldEmpty;
-  const { mutate: socialLoginNameInputReq } = useSocialNameInput({
-    name,
-    token,
-  });
 
   return (
     <S.Root>
@@ -58,7 +142,10 @@ const SocialLoginNameInput = () => {
           buttonTheme={
             isSignupButtonActivated ? ButtonTheme.GREEN : ButtonTheme.GRAY
           }
-          handler={socialLoginNameInputReq}>
+          handler={() => {
+            socialLoginNameInputReq();
+          }}
+        >
           회원가입
           {isSignupButtonActivated ? <NextArrowWhite /> : <NextArrowGray />}
         </Button>
