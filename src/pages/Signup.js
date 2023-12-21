@@ -99,7 +99,7 @@ const Signup = () => {
     try {
       const res = await publicapi.get(api);
       if (res.status === 200) {
-        return res.data.dup;
+        return res.data.data.duplicate;
       }
     } catch (e) {
       console.log(e.response);
