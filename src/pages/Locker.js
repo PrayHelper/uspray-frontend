@@ -15,6 +15,7 @@ const Locker = () => {
   const [isClicked, setIsClicked] = useState([]);
   const [selectedID, setSelectedID] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const { showToast } = useToast({});
 
@@ -121,32 +122,39 @@ const Locker = () => {
   const { mutate: updateListData } = useUpdateSharedList();
 
   const saveSharedList = () => {
-    let pray_id_list = []; // 빈 배열을 초기화하여 pray_id_list를 설정합니다.
+    if (!saving) {
+      let pray_id_list = []; // 빈 배열을 초기화하여 pray_id_list를 설정합니다.
 
-    if (isClicked.every((clicked) => clicked)) {
-      // 모든 항목이 선택된 경우 모든 pray_id를 배열에 추가합니다.
-      pray_id_list = data.map((item) => item.pray_id);
-      console.log("전체선택");
-    } else {
-      // 선택된 항목만 배열에 추가합니다.
-      pray_id_list = selectedID;
-    }
-
-    updateListData(
-      {
-        pray_id_list: pray_id_list,
-      },
-      {
-        onSuccess: () => {
-          showToast({
-            message: "기도제목이 저장되었습니다.",
-            theme: ToastTheme.SUCCESS,
-          });
-          refetchSharedListData();
-          setSelectedID([]);
-        },
+      if (isClicked.every((clicked) => clicked)) {
+        // 모든 항목이 선택된 경우 모든 pray_id를 배열에 추가합니다.
+        pray_id_list = data.map((item) => item.pray_id);
+        console.log("전체선택");
+      } else {
+        // 선택된 항목만 배열에 추가합니다.
+        pray_id_list = selectedID;
       }
-    );
+      setSaving(true);
+      updateListData(
+        {
+          pray_id_list: pray_id_list,
+        },
+        {
+          onSuccess: () => {
+            showToast({
+              message: "기도제목이 저장되었습니다.",
+              theme: ToastTheme.SUCCESS,
+            });
+            refetchSharedListData();
+            setSelectedID([]);
+            setSaving(false);
+          },
+          onError: (e) => {
+            console.log(e);
+            setSaving(false);
+          },
+        }
+      );
+    }
   };
 
   useEffect(() => {
