@@ -32,9 +32,13 @@ const Locker = () => {
   const calculateDday = (startDate) => {
     const start = new Date(startDate);
     const today = new Date();
-    const millisecondsPerDay = 24 * 60 * 60 * 1000;
-    const diffInMilliseconds = today - start;
-    return Math.floor(diffInMilliseconds / millisecondsPerDay);
+    const oneDay = 24 * 60 * 60 * 1000;
+    if (start < today) {
+      const diffInMilliseconds = today - start;
+      const daysDiff = Math.floor(diffInMilliseconds / oneDay);
+      return daysDiff;
+    }
+    return 0;
   };
 
   // 데이터 저장 확인
@@ -75,8 +79,7 @@ const Locker = () => {
   };
 
   // 공유 리스트 읽기
-  const { sharedListData, refetchSharedListData } =
-    useFetchSharedList();
+  const { sharedListData, refetchSharedListData } = useFetchSharedList();
 
   const fetchSharedList = () => {
     setData(sharedListData);
@@ -194,9 +197,8 @@ const Locker = () => {
               >
                 <LockerContent
                   isClicked={isClicked[index]}
-                  name={item.share_name}
-                  title={item.title}
-                  target={item.target}
+                  title={item.content}
+                  target={item.userId}
                   dday={calculateDday(item.shared_at)}
                   key={item.pray_id}
                 />
