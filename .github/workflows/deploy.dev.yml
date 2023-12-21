@@ -10,7 +10,6 @@ env:
   USERNAME: ${{ secrets.USERNAME }}
   KEY:      ${{ secrets.SSH_KEY }}
   PORT:     ${{ secrets.PORT }}
-  INSTANCE_PATH: ./frontend-dev
 
 jobs:
   deploy:
@@ -20,15 +19,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Send
-        uses: appleboy/scp-action@master
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./deploy/Dockerfile
+          push: true
+          tags: registry.uspray.kr/uspray-client-dev:latest
+
+      - name: Aquire Lock
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ env.HOST }}
           username: ${{ env.USERNAME }}
           key: ${{ env.KEY }}
           port: ${{ env.PORT }}
-          source: "."
-          target: ${{ env.INSTANCE_PATH }}
+          script: |
+            while [ -f ~/SEMAPHORE ]; do sleep 10; done
+            touch ~/SEMAPHORE
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -38,5 +46,18 @@ jobs:
           key: ${{ env.KEY }}
           port: ${{ env.PORT }}
           script: |
-            cd ${{ env.INSTANCE_PATH }}
-            make build-dev
+            cd ~/frontend-dev
+            docker stop uspray-client-dev
+            docker rm uspray-client-dev
+            docker rmi registry.uspray.kr/uspray-client-dev:latest
+            docker run -d --name uspray-client-dev -p 4001:3000 --env-file .env registry.uspray.kr/uspray-client-dev:latest
+
+      - name: Release Lock
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.HOST }}
+          username: ${{ env.USERNAME }}
+          key: ${{ env.KEY }}
+          port: ${{ env.PORT }}
+          script: |
+            rm ~/SEMAPHORE
