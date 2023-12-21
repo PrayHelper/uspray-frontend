@@ -64,7 +64,7 @@ const ModalButton1 = styled.button`
   color: #FFFFFF;
   font-size: 18px;
 `;
-const PwResult = ({pwToken}) => {
+const PwResult = ({id}) => {
   const [pw, setPw] = useState("");
   const [matchingPw, setMatchingPw] = useState("");
   const [invalidPwInfo, setInvalidPwInfo] = useState("");
@@ -112,12 +112,13 @@ const PwResult = ({pwToken}) => {
   };
 
   const resetFindPw = async () => {
-    const api = `/user/find/password?token=${pwToken}`;
+    const api = `/auth/change-pw`;
     const data = {
+      id: id,
       password: pw,
     };
     try {
-      const res = await publicapi.put(api, data);
+      const res = await publicapi.post(api, data);
       if (res.status === 200) {
         setShowModal(true);
         console.log(res.data);
@@ -177,11 +178,12 @@ const PwResult = ({pwToken}) => {
               disabled={!isAllValid}
               buttonSize={ButtonSize.LARGE}
               buttonTheme={isAllValid ? ButtonTheme.GREEN : ButtonTheme.GRAY}
+              isArrow={true}
               handler={() => {
                 resetFindPw();
               }}
             >
-              재설정하기
+              비밀번호 변경하기
             </Button>
           </div>
         </div>
