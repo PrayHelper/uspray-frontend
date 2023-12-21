@@ -3,13 +3,16 @@ import styled from "styled-components";
 import MainContent from "../components/Main/MainContent";
 import { useState } from "react";
 import ButtonV2, { ButtonTheme } from "../components/ButtonV2/ButtonV2";
+import Toast, { ToastTheme } from "../components/Toast/Toast";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../hooks/useCategory";
 import { useSendPrayItem } from "../hooks/useSendPrayItem";
+import useToast from "../hooks/useToast";
 
 const Main = () => {
   const { categoryList, firstCategoryIndex } = useCategory();
   const { mutate: mutateSendPrayItem } = useSendPrayItem();
+  const { showToast } = useToast({});
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
   const [inputValue, setInputValue] = useState("");
@@ -52,7 +55,10 @@ const Main = () => {
 
   const onClickPrayInput = () => {
     if (categoryList.length === 0) {
-      console.log("카테고리를 추가해주세요");
+      showToast({
+        message: "카테고리를 먼저 입력해주세요",
+        theme: ToastTheme.ERROR,
+      });
     } else {
       setShowSubModal(!showSubModal);
     }

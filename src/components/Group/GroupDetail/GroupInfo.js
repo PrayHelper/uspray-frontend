@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import PrayDateCategoryInput from "../../PrayDateCategoryInput/PrayDateCategoryInput";
+import Toast, { ToastTheme } from "../../Toast/Toast";
 import { useCategory } from "../../../hooks/useCategory";
 import { useGroupPray } from "../../../hooks/useGroupPray";
+import useToast from "../../../hooks/useToast";
 
 const GroupInfo = ({ group, isData }) => {
   const { categoryList, firstCategoryIndex } = useCategory();
   const { addGroupPray } = useGroupPray(group.id);
+  const { showToast } = useToast({});
   const [showSubModal, setShowSubModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
@@ -14,7 +17,10 @@ const GroupInfo = ({ group, isData }) => {
 
   const onClickPrayInput = () => {
     if (categoryList.length === 0) {
-      console.log("카테고리를 추가해주세요");
+      showToast({
+        message: "기도 수첩에서 카테고리를 먼저 입력해주세요",
+        theme: ToastTheme.ERROR,
+      });
     } else {
       setShowSubModal(!showSubModal);
     }
