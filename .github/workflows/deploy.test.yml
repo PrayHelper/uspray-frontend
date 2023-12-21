@@ -11,7 +11,6 @@ env:
   USERNAME: ${{ secrets.USERNAME }}
   KEY:      ${{ secrets.SSH_KEY }}
   PORT:     ${{ secrets.PORT }}
-  INSTANCE_PATH: ./frontend-intg
 
 jobs:
   test:
@@ -23,6 +22,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     if: github.ref_name == vars.INTG_BRANCH
     steps:
       - name: Checkout
@@ -44,8 +44,8 @@ jobs:
           key: ${{ env.KEY }}
           port: ${{ env.PORT }}
           script: |
-            while [ -f ~/SEMAPHORE_FILE ]; do sleep 10; done
-            touch ~/SEMAPHORE_FILE
+            while [ -f ~/SEMAPHORE ]; do sleep 10; done
+            touch ~/SEMAPHORE
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -55,8 +55,10 @@ jobs:
           key: ${{ env.KEY }}
           port: ${{ env.PORT }}
           script: |
-            cd ${{ env.INSTANCE_PATH }}
-            make build-intg
+            cd ~/frontend-intg
+            docker compose down
+            docker rmi registry.uspray.kr/uspray-client-intg:latest
+            docker compose up -d
 
       - name: Release Lock
         uses: appleboy/ssh-action@master
@@ -66,4 +68,4 @@ jobs:
           key: ${{ env.KEY }}
           port: ${{ env.PORT }}
           script: |
-            rm ~/SEMAPHORE_FILE
+            rm ~/SEMAPHORE
