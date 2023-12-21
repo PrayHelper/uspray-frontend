@@ -51,17 +51,13 @@ const ModalButton = styled.button`
 `;
 
 const FindPassword = () => {
-  const [useToken, setUseToken] = useState("");
-  const [showResultPage, setShowRestultPage] = useState(false);
+  const [id, setId] = useState("");
+  const [showResultPage, setShowResultPage] = useState(false);
   const [showErrorPage, setShowErrorPage] = useState(false);
   const [userInfo, setUserInfo] = useState({
     id: "",
     pwd: "",
     matchingPwd: "",
-    name: "",
-    year: "",
-    month: "",
-    day: "",
     phoneNumber: "",
     certificateNumber: "",
   });
@@ -119,30 +115,22 @@ const FindPassword = () => {
   };
 
   const findPassword = async () => {
-    const api = "/user/check/inform";
+    const api = "/auth/check-pw";
     const data = {
-      id: userInfo.id,
+      userId: userInfo.id,
       phone: userInfo.phoneNumber.replace(/-/g, ""),
     };
     try {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
-        if (res.data.message === true) {
-          console.log(res.data);
-          setUseToken(res.data.token);
-          setShowRestultPage(true);
-        } else {
-          setShowErrorPage(true);
-        }
+        setId(res.data.data);
+        setShowResultPage(true);
       }
     } catch (e) {
-      showToast({
-        message: "error occured",
-        theme: ToastTheme.ERROR,
-      });
+      setShowErrorPage(true);
     }
   };
-  const pwToken = useToken;
+
   const idChangeHandler = async (e) => {
     setUserInfo({ ...userInfo, id: e.target.value });
     if (!idCheck(e.target.value)) {
@@ -150,17 +138,6 @@ const FindPassword = () => {
       return;
     }
     setInvalidIdInfo("");
-  };
-
-  const nameChangeHandler = (e) => {
-    setUserInfo({ ...userInfo, name: e.target.value });
-  };
-
-  const nameFocusHandler = () => {
-    if (init === 0) {
-      setShowModal(true);
-      init = 1;
-    }
   };
 
   const phoneNumberChangeHandler = (e) => {
@@ -196,16 +173,16 @@ const FindPassword = () => {
     try {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
-        if (res.data.data === true) {
-          setIsCertificated(true);
-          return true;
-        } else if (res.data.data === false) {
-          setIsCertificated(false);
-          return false;
-        }
+        setIsCertificated(true);
+        return true;
       }
     } catch (e) {
-      showToast({ message: "error occured", theme: ToastTheme.ERROR });
+      if (e.response.status === 400)
+      {
+        showToast({ message: e.response.data.message , theme: ToastTheme.ERROR });
+        setIsCertificated(false);
+      }
+      return false;
     }
   };
 
@@ -240,7 +217,7 @@ const FindPassword = () => {
         position: "relative",
         flexDirection: "column",
       }}>
-      {showResultPage && <PwResult pwToken={pwToken} />}
+      {showResultPage && <PwResult id={id} />}
       {showErrorPage && <PwError />}
       <UserHeader children={"비밀번호 찾기"} />
       <div
@@ -254,14 +231,6 @@ const FindPassword = () => {
           label="아이디"
           onChangeHandler={idChangeHandler}
           value={userInfo.id}
-        />
-        <Input
-          label="이름"
-          onChangeHandler={nameChangeHandler}
-          value={userInfo.name}
-          isError={false}
-          description=""
-          onFocusHandler={nameFocusHandler}
         />
         <Input
           label="전화번호"
@@ -316,7 +285,8 @@ const FindPassword = () => {
                 disabled={
                   (isCertificated && isCertificateButtonClicked) ||
                   time === 0 ||
-                  !isPhoneNumVerficationButtonClicked
+                  !isPhoneNumVerficationButtonClicked ||
+                  !certificateNumberCheck(userInfo.certificateNumber)
                 }
                 handler={() => {
                   setIsCertificateButtonClicked(true);
@@ -324,11 +294,6 @@ const FindPassword = () => {
                     showToast({
                       message: "인증에 성공하였습니다.",
                       theme: ToastTheme.SUCCESS,
-                    });
-                  } else {
-                    showToast({
-                      message: "인증번호가 일치하지 않습니다.",
-                      theme: ToastTheme.ERROR,
                     });
                   }
                 }}>
