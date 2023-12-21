@@ -13,7 +13,7 @@ import useToast from "../hooks/useToast";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 
 const History = () => {
-  const { categoryList } = useCategory();
+  const { categoryList, firstCategoryIndex } = useCategory();
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showSubModal, setShowSubModal] = useState(false);
@@ -239,8 +239,8 @@ const History = () => {
           setShowSubModal={setShowSubModal}
           isDefault={true}
           isShowWordCount={false}
-          value
-          category
+          value=""
+          category={firstCategoryIndex}
           setUpdateDate={setUpdateDate}
           setUpdateCategory={setUpdateCategory}
           onClickFunc={() => onClickModify(sortBy)}
