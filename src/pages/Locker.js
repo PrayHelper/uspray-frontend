@@ -75,12 +75,12 @@ const Locker = () => {
   };
 
   // 공유 리스트 읽기
-  const { data: sharedListData, refetch: refetchSharedListData } =
+  const { sharedListData, refetchSharedListData } =
     useFetchSharedList();
 
   const fetchSharedList = () => {
-    setData(sharedListData.data);
-    setIsClicked(new Array(sharedListData.data.length).fill(false));
+    setData(sharedListData);
+    setIsClicked(new Array(sharedListData.length).fill(false));
     console.log(sharedListData);
     console.log("리스트 읽기");
   };

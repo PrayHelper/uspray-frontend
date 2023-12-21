@@ -43,13 +43,10 @@ import useAuthorized from "./hooks/useAuthorized";
 import GlobalStyle from "./styles/GlobalStyle";
 import useToast from "./hooks/useToast";
 import HistorySearch from "./pages/HistorySearch";
-import GroupDetail from "./pages/GroupDetail";
-import GroupSettings from "./pages/GroupSettings";
-import ChangeGroupName from './pages/ChangeGroupName';
-import AssignGroupLeader from './pages/AssignGroupLeader';
-import RemoveMember from './pages/RemoveMember';
-import DeleteGroup from './pages/DeleteGroup';
-import LeaveGroup from './pages/LeaveGroup';
+import GroupDetail from "./components/Group/GroupDetail/GroupDetail";
+import CreateGroup from "./pages/CreateGroup";
+import LeaveGroup from "./pages/LeaveGroup";
+import SocialLoginNameInput from "./pages/SocialLoginNameInput";
 import DeleteUser from "./pages/DeleteUser";
 
 const ContainerWrapper = styled.div`
@@ -111,19 +108,11 @@ function App() {
                   <Route path="/settings" element={<Settings />} />
                 </Route>
                 <Route path="/locker" element={<Locker />} />
-                <Route path="/deleteGroup" element={<DeleteGroup />} />
                 <Route path="/leaveGroup" element={<LeaveGroup />} />
-                <Route path="/groupSettings" element={<GroupSettings />} />
-                <Route path="/changeGroupName" element={<ChangeGroupName />} />
-                <Route
-                  path="/assignGroupLeader"
-                  element={<AssignGroupLeader />}
-                />
-                <Route path="/removeMember" element={<RemoveMember />} />
+                <Route path="/createGroup" element={<CreateGroup />} />
                 <Route path="/checkInfo" element={<CheckInfo />} />
                 <Route path="/changeInfo" element={<ChangeInfo />} />
                 <Route path="/changePw" element={<ChangePw />} />
-                <Route path="/groupDetail" element={<GroupDetail />} />
                 <Route
                   path="/changePhoneNumber"
                   element={<ChangePhoneNumber />}
@@ -135,6 +124,10 @@ function App() {
               <Route element={<Outlet />}>
                 <Route path="/" element={<Login />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route
+                  path="/socialLoginNameInput"
+                  element={<SocialLoginNameInput />}
+                />
                 <Route path="/findAccount" element={<Find />} />
                 <Route path="/findID" element={<FindId />}></Route>
                 <Route path="/findIDResult" element={<FindIdResult />}></Route>
@@ -145,11 +138,6 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/loading" element={<SplashScreen />} />
                 <Route path="*" element={<NotFound />} />
-                <Route path="/tos" element={<ToS />} />
-                <Route
-                  path="/privacyProcessAgreement"
-                  element={<PrivacyProcessAgreement />}
-                />
                 <Route path="/historySearch" element={<HistorySearch />} />
               </Route>
             </Route>
