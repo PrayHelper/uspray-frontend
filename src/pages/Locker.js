@@ -9,6 +9,7 @@ import { useUpdateSharedList } from "../hooks/useUpdateSharedList";
 import Lottie from "react-lottie";
 import LottieData from "../json/lottie.json";
 import useToast from "../hooks/useToast";
+import { useNavigate } from "react-router-dom";
 
 const Locker = () => {
   const [data, setData] = useState([]);
@@ -18,6 +19,7 @@ const Locker = () => {
   const [saving, setSaving] = useState(false);
 
   const { showToast } = useToast({});
+  const navigate = useNavigate();
 
   const defaultOptions = {
     //예제1
@@ -217,6 +219,7 @@ const Locker = () => {
         </LockerList>
       )}
       <div style={{ marginTop: "20px", color: "var(--color-white)" }}>.</div>
+      <BottomButton onClick={() => navigate("/main")}>뒤로 가기</BottomButton>
     </LockerWrapper>
   );
 };
@@ -273,4 +276,21 @@ const LockerList = styled.div`
   height: 100%;
   width: 100%;
   overflow: auto;
+`;
+
+const BottomButton = styled.div`
+  background: inherit;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  overflow: visible;
+  cursor: pointer;
+  width: calc(100% - 40px);
+  font-weight: 500;
+  line-height: 23px;
+  text-align: center;
+  padding: 20px;
+  background-color: var(--color-dark-green);
+  color: var(--color-white);
 `;
