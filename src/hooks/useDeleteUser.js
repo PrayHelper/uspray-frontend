@@ -1,29 +1,20 @@
 import { useNavigate } from "react-router-dom";
-import { postFetcher } from "./api";
 import { useMutation } from "react-query";
-import useAuthToken from "./useAuthToken";
-import useRefresh from "./useRefresh";
+import useApi from "./useApi";
 
 export const useDeleteUser = (data) => {
-  const { getAccessToken } = useAuthToken();
-  const { refresh } = useRefresh();
+  const { postFetcher } = useApi();
 
   const deleteUserCall = (d) => {
     const url = `/auth/withdrawal`;
-    const headers = {
-      Authorization: `Bearer ${getAccessToken()}`,
-    };
 
-    return postFetcher(url, data, headers);
+    return postFetcher(url, data);
   };
 
   const navigate = useNavigate();
 
   const options = {
     onError: async (e) => {
-      if (e.status === 403) {
-        await refresh();
-      }
       console.log(e);
     },
     onSuccess: (res) => {
