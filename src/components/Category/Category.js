@@ -4,39 +4,38 @@ import styled from "styled-components";
 const ICON_HEART_FILLED = "images/ic_filled_heart.svg";
 const ICON_HEART_EMPTY = "images/ic_empty_heart.svg";
 
-const Category = ({ title, color, setSelectedTitleIndex }) => {
+const Category = ({ title, color, setSelectedTitleIndex, prays }) => {
   const [selected, setSelected] = useState([]);
-  const titles = ["기도제목1", "기도제목2", "기도제목3"];
 
-  const handleClick = (e, index) => {
+  const handleClick = (e, prayId) => {
     e.stopPropagation();
     setSelected((prev) => {
       const newSelected = [...prev];
-      newSelected[index] = !newSelected[index];
+      newSelected[prayId] = !newSelected[prayId];
       return newSelected;
     });
   };
 
-  const titleClick = (e, index) => {
-    setSelectedTitleIndex(index);
+  const titleClick = (e, prayId) => {
+    setSelectedTitleIndex(prayId);
   };
 
   return (
     <CategoryContainer>
       <Title color={color}>{title}</Title>
       <ItemList>
-        {titles.map((title, index) => (
-          <Item key={index}>
+        {prays.map((pray, prayId) => (
+          <Item key={prayId}>
             <ItemText
-              selected={selected[index]}
-              onClick={(e) => titleClick(e, index)}
+              selected={selected[prayId]}
+              onClick={(e) => titleClick(e, prayId)}
             >
-              {title}
+              {pray.content}
             </ItemText>
             <img
-              src={selected[index] ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
+              src={selected[prayId] ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
               alt="heart_icon"
-              onClick={(e) => handleClick(e, index)}
+              onClick={(e) => handleClick(e, prayId)}
             />
           </Item>
         ))}

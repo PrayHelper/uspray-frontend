@@ -6,7 +6,7 @@ const onErrorResponse = async (error) => {
     const { status } = error.response;
     switch (status) {
       case 401: {
-        console.log("refresh token is expired");
+        console.log("회원정보가 일치하지 않거나, 권한이 없습니다.");
         break;
       }
       case 403: {
