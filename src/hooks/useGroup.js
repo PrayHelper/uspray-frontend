@@ -9,7 +9,7 @@ export const useGroup = () => {
   const navigate = useNavigate();
   const { showToast } = useToast({});
 
-  const { data, refetch } = useQuery(
+  const { data, refetch: refetchGroupList } = useQuery(
     ['groupList'],
     async () => {
       return await getFetcher(`/group`)
@@ -39,7 +39,7 @@ export const useGroup = () => {
       },
       onSuccess: (res) => {
         console.log(res);
-        refetch();
+        refetchGroupList();
         showToast({
           message: "모임을 생성했어요.",
           theme: ToastTheme.SUCCESS,
@@ -58,6 +58,7 @@ export const useGroup = () => {
 
   return {
     groupList,
+    refetchGroupList,
     createGroup,
   };
 }

@@ -39,4 +39,5 @@ export const ToastStyle = styled.div`
       transform: translateY(20px);
     }
   }
+  z-index: 105;
 `;

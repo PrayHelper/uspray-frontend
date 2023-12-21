@@ -1,18 +1,16 @@
 import { useQuery, useMutation } from "react-query";
 import useApi from "./useApi";
-import { useNavigate } from "react-router-dom";
 import useToast from "../hooks/useToast";
 import { ToastTheme } from "../components/Toast/Toast";
 
-export const useCategory = () => {
+export const useGroupPray = (groupId) => {
   const { getFetcher, postFetcher } = useApi();
-  const navigate = useNavigate();
   const { showToast } = useToast({});
 
-  const { data, refetch } = useQuery(
-    ["categoryList"],
+  const { data, refetch: refetchGroupPrayList } = useQuery(
+    ["groupPrayList", groupId],
     async () => {
-      return await getFetcher(`/category`);
+      return await getFetcher(`/grouppray/${groupId}`);
     },
     {
       onError: async (e) => {
@@ -29,9 +27,9 @@ export const useCategory = () => {
     }
   );
 
-  const { mutate: createCategory } = useMutation(
+  const { mutate: addGroupPray } = useMutation(
     async (data) => {
-      return await postFetcher("/category", data);
+      return await postFetcher("/grouppray", data);
     },
     {
       onError: async (e) => {
@@ -39,9 +37,9 @@ export const useCategory = () => {
       },
       onSuccess: (res) => {
         console.log(res);
-        refetch();
+        refetchGroupPrayList();
         showToast({
-          message: "카테고리를 생성했어요.",
+          message: "기도제목이 모임원들에게 공유되었어요.",
           theme: ToastTheme.SUCCESS,
         });
       },
@@ -53,13 +51,13 @@ export const useCategory = () => {
     }
   );
 
-  const categoryList = data?.data.data || [];
-  const firstCategoryIndex =
-    categoryList.length > 0 ? categoryList[0].id : null;
+  const groupPrayData = data?.data.data || {};
+  const groupPrayList =
+    Object.keys(groupPrayData).length === 0 ? [] : groupPrayData;
 
   return {
-    categoryList,
-    createCategory,
-    firstCategoryIndex,
+    groupPrayList,
+    refetchGroupPrayList,
+    addGroupPray,
   };
 };

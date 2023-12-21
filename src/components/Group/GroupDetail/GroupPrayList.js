@@ -3,14 +3,27 @@ import styled from 'styled-components';
 import GroupPrayItem from './GroupPrayItem';
 
 const GroupPrayList = ({name, groupPrayList, isData}) => {
+  const groupedData = Object.keys(groupPrayList).map((date) => {
+    return {
+      date,
+      pray: groupPrayList[date],
+    };
+  });
   return (
     <Wrapper>
       {
         isData ?
           <PrayList>
-            <DateDiv>2023.10.27</DateDiv>
-            <GroupPrayItem />
-            <GroupPrayItem />
+            {
+              groupedData.map((data) => {
+                return (
+                  <PrayContent>
+                    <DateDiv>{data.date}</DateDiv>
+                    {data.pray.map((pray) => <GroupPrayItem pray={pray}/>)}
+                  </PrayContent>
+                )
+              })
+            }
           </PrayList>
           :
           <NoDataWrapper>
@@ -25,8 +38,9 @@ const GroupPrayList = ({name, groupPrayList, isData}) => {
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 1 0 auto;
-  padding-top: 16px;
+  width: 100%;
+  height: calc(100% - 145px);
+  overflow: auto;
 `;
 
 const NoDataWrapper = styled.div`
@@ -42,10 +56,20 @@ const NoDataWrapper = styled.div`
 `;
 
 const PrayList = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`
+
+const PrayContent = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
 `
 
 const DateDiv = styled.div`
