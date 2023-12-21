@@ -5,7 +5,7 @@ import useToast from '../hooks/useToast';
 import { ToastTheme } from '../components/Toast/Toast';
 
 export const useGroup = () => {
-  const { getFetcher, postFetcher } = useApi();
+  const { getFetcher, postFetcher, deleteFetcher } = useApi();
   const navigate = useNavigate();
   const { showToast } = useToast({});
 
@@ -54,6 +54,31 @@ export const useGroup = () => {
     }
   );
 
+  const { mutate: leaveGroup }  = useMutation(
+    async (groupId) => {
+      return await deleteFetcher(`/group/${groupId}/leave`)
+    },
+    {
+      onError: async (e) => {
+        console.log(e);
+      },
+      onSuccess: (res) => {
+        console.log(res);
+        refetchGroupList();
+        showToast({
+          message: "모임에서 나갔어요.",
+          theme: ToastTheme.SUCCESS,
+        });
+        navigate('/group');
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
+
   const { mutate: joinGroup }  = useMutation(
     async (groupId) => {
       return await postFetcher(`/group/${groupId}/join`)
@@ -89,5 +114,6 @@ export const useGroup = () => {
     refetchGroupList,
     createGroup,
     joinGroup,
+    leaveGroup,
   };
 }
