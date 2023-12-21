@@ -47,6 +47,7 @@ import GroupDetail from "./components/Group/GroupDetail/GroupDetail";
 import CreateGroup from "./pages/CreateGroup";
 import LeaveGroup from "./pages/LeaveGroup";
 import SocialLoginNameInput from "./pages/SocialLoginNameInput";
+import DeleteUser from "./pages/DeleteUser";
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -118,6 +119,7 @@ function App() {
                 />
                 <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                 <Route path="/social" element={<SocialLogin />} />
+                <Route path="/deleteUser" element={<DeleteUser />} />
               </Route>
               <Route element={<Outlet />}>
                 <Route path="/" element={<Login />} />
@@ -132,8 +134,7 @@ function App() {
                 <Route path="/findPW" element={<FindPassword />}></Route>
                 <Route
                   path="/findPWResult"
-                  element={<FindPasswordResult />}
-                ></Route>
+                  element={<FindPasswordResult />}></Route>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/loading" element={<SplashScreen />} />
                 <Route path="*" element={<NotFound />} />
