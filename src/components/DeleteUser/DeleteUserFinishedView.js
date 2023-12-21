@@ -1,7 +1,13 @@
 import styled from "styled-components";
 import { ReactComponent as DeleteUserFinishdIcon } from "../../images/ic_delete_user_finished.svg";
+import { useNavigate } from "react-router-dom";
 
 const DeleteUserFinishedView = () => {
+  const navigate = useNavigate();
+  const goToMainPage = () => {
+    navigate("/");
+  };
+
   return (
     <S.Root>
       <S.IconAndDesciptionsWrapper>
@@ -11,7 +17,7 @@ const DeleteUserFinishedView = () => {
           회원탈퇴까지 최대 7일이 소요될 수 있습니다.
         </S.Description2>
       </S.IconAndDesciptionsWrapper>
-      <S.BottomButton>메인 화면으로 이동</S.BottomButton>
+      <S.BottomButton onClick={goToMainPage}>메인 화면으로 이동</S.BottomButton>
     </S.Root>
   );
 };
