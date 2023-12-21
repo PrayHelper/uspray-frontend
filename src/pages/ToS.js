@@ -11,13 +11,12 @@ const TitleTag = styled.div`
 const ToS = ({ setIsOverlayOn }) => {
   return (
     <>
-      <UserHeader overlay={true} setIsOverlayOn={setIsOverlayOn}>
+      <UserHeader overlay={true} setIsOverlayOn={setIsOverlayOn} fixed={true}>
         이용 약관 및 정책
       </UserHeader>
       <div
         style={{
           width: "100%",
-          flexDirection: "column",
           marginTop: "28px",
           lineHeight: "23px",
         }}
@@ -28,6 +27,7 @@ const ToS = ({ setIsOverlayOn }) => {
             flexDirection: "column",
             padding: "0 16px",
             color: "#606060",
+            marginTop: "90px",
           }}
         >
           <TitleTag style={{ marginTop: "-16px" }}>제1조(목적) </TitleTag>이
