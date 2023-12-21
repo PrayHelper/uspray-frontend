@@ -46,10 +46,10 @@ const ModalButton1 = styled.button`
 const ChangePhoneNumber = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [certificateNumber, setCertificateNumber] = useState("");
-  const [verficationNumber, setVerficationNumber] = useState("");
   const [isCetrificated, setIsCertificated] = useState(false);
   const [isCertificateButtonClicked, setIsCertificateButtonClicked] =
     useState(false);
+  const [requestId, setRequestId] = useState("");
   const [time, setTime] = useState("");
   const [showModal, setShowModal] = useState(false);
 
@@ -92,13 +92,25 @@ const ChangePhoneNumber = () => {
     setCertificateNumber(e.target.value);
   };
 
-  const isCertificationNumberValid = (certificateNumber) => {
-    if (verficationNumber == certificateNumber) {
-      setIsCertificated(true);
-      return true;
-    } else {
-      setIsCertificated(false);
-      return false;
+  const isCertificationNumberValid = async (certificateNumber) => {
+    const api = "/sms/verification";
+    const data = {
+      requestId: requestId,
+      smsConfirmNum: certificateNumber,
+    };
+    try {
+      const res = await publicapi.post(api, data);
+      if (res.status === 200) {
+        if (res.data.data === true) {
+          setIsCertificated(true);
+          return true;
+        } else if (res.data.data === false) {
+          setIsCertificated(false);
+          return false;
+        }
+      }
+    } catch (e) {
+      showToast({ message: "error occured", theme: ToastTheme.ERROR });
     }
   };
 
@@ -130,35 +142,26 @@ const ChangePhoneNumber = () => {
   }, [time]);
 
   const phoneNumVerfication = async (phoneNumber) => {
-    const api = "/admin/sms";
+    const api = "/sms/send";
     const data = {
-      phone: phoneNumber,
+      to: phoneNumber,
     };
     try {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
-        showToast({
-          message: "인증번호가 전송되었습니다.",
-          theme: ToastTheme.SUCCESS,
-        });
-        console.log(res.data.code);
-        setVerficationNumber(res.data.code);
+        showToast({ message: "인증번호가 전송되었습니다.", theme: ToastTheme.SUCCESS });
+        setRequestId(res.data.data.requestId);
         setTime("180");
       }
     } catch (e) {
-      showToast({
-        message: "error occured",
-        theme: ToastTheme.ERROR,        
-      })
+      showToast({ message: "error occured", theme: ToastTheme.ERROR });
     }
   };
 
-  const { mutate } = useResetPhoneNumber({
-    phone: phoneNumber.replace(/-/g, ""),
-  });
+  const { mutate } = useResetPhoneNumber();
 
   const resetPhoneNumber = () => {
-    mutate(null, {
+    mutate(phoneNumber.replace(/-/g, ""), {
       onSuccess: (res) => {
         setShowModal(true);
         console.log(res);

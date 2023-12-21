@@ -1,7 +1,7 @@
-import useServerApi from '../api/useServerApi';
+import useServerApi from "../api/useServerApi";
 
 const useApi = () => {
-  const {serverapi} = useServerApi();
+  const { serverapi } = useServerApi();
 
   // get 방식의 axios 호출
   const getFetcher = async (url, params) => {
@@ -62,15 +62,15 @@ const useApi = () => {
   const refresh = async () => {
     try {
       const refreshToken = localStorage.getItem("refreshToken");
-      const res = await serverapi.get("/user/token", {
+      const res = await serverapi.post("/auth/reissue", null, {
         headers: {
-          Authorization: `${refreshToken}`,
+          Refresh: `${refreshToken}`,
         },
       });
-      return res.data.access_token;
+      return res.data.accessToken;
     } catch (e) {
       // 401 : refresh token 만료
-      if (e.status === 401) {
+      if (e.response.status === 401) {
         localStorage.setItem("refreshToken", "");
         window.location.href("/");
       }
@@ -85,7 +85,7 @@ const useApi = () => {
     deleteFetcher,
     deleteDataFetcher,
     refresh,
-  }
+  };
 };
 
 export default useApi;

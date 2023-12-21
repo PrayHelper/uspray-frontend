@@ -22,14 +22,19 @@ const FindId = () => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     phoneNumber: "",
+    certificateNumber: ""
   });
   const [showModal, setShowModal] = useState(false);
-  const [verficationNumber, setVerficationNumber] = useState("");
+  const [requestId, setRequestId] = useState("");
   const [time, setTime] = useState("");
   const [showResultPage, setShowRestultPage] = useState(false);
   const [isCetrificated, setIsCertificated] = useState(false);
   const [isCertificateButtonClicked, setIsCertificateButtonClicked] =
     useState(false);
+  const [
+    isPhoneNumVerficationButtonClicked,
+    setIsPhoneNumVerficationButtonClicked,
+  ] = useState(false);
   const { showToast } = useToast({});
 
   const moveToResult = () => {
@@ -45,29 +50,28 @@ const FindId = () => {
   const phoneNumberRegEx = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
   const certificateNumberRegEx = /^[0-9]{6}$/;
 
-  const phoneNumberCheck = (userInfo) => {
-    return phoneNumberRegEx.test(userInfo);
+  const phoneNumberCheck = (phoneNumber) => {
+    return phoneNumberRegEx.test(phoneNumber);
   };
 
-  const certificateNumberCheck = (userInfo) => {
-    return certificateNumberRegEx.test(userInfo);
+  const certificateNumberCheck = (certificateNumber) => {
+    return certificateNumberRegEx.test(certificateNumber);
   };
 
   const phoneNumVerfication = async (phoneNumber) => {
-    const api = "/admin/sms";
+    const api = "/sms/send";
     const data = {
-      phone: phoneNumber,
+      to: phoneNumber,
     };
     try {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
         showToast({ message: "인증번호가 전송되었습니다.", theme: ToastTheme.SUCCESS });
-        console.log(res.data.code);
-        setVerficationNumber(res.data.code);
+        setRequestId(res.data.data.requestId);
         setTime("180");
       }
     } catch (e) {
-      showToast({ message: "error occured", theme: ToastTheme.ERROR });
+      showToast({ message: e.response.data.message , theme: ToastTheme.ERROR });
     }
   };
 
@@ -106,12 +110,24 @@ const FindId = () => {
     setUserInfo({ ...userInfo, certificateNumber: e.target.value });
   };
 
-  const isCertificationNumberValid = (certificateNumber) => {
-    if (verficationNumber == certificateNumber) {
-      setIsCertificated(true);
-      return true;
-    } else {
-      setIsCertificated(false);
+  const isCertificationNumberValid = async (certificateNumber) => {
+    const api = "/sms/verification";
+    const data = {
+      requestId: requestId,
+      smsConfirmNum: certificateNumber,
+    };
+    try {
+      const res = await publicapi.post(api, data);
+      if (res.status === 200) {
+        setIsCertificated(true);
+        return true;
+      }
+    } catch (e) {
+      if (e.response.status === 400)
+      {
+        showToast({ message: e.response.data.message , theme: ToastTheme.ERROR });
+        setIsCertificated(false);
+      }
       return false;
     }
   };
@@ -176,6 +192,7 @@ const FindId = () => {
                 setIsCertificated(false);
                 setIsCertificateButtonClicked(false);
                 setUserInfo({ ...userInfo, certificateNumber: "" });
+                setIsPhoneNumVerficationButtonClicked(true);
               }}>
               {time ? "진행 중" : "전송"}
             </Button>
@@ -202,16 +219,15 @@ const FindId = () => {
                 buttonTheme={
                   certificateNumberCheck(userInfo.certificateNumber)
                     ? !isCetrificated && isCertificateButtonClicked
-                      ? time === 0
-                        ? ButtonTheme.GRAY
-                        : ButtonTheme.RED
-                      : time === 0
-                      ? ButtonTheme.GRAY
-                      : ButtonTheme.GREEN
+                      ? time === 0 ? ButtonTheme.GRAY : ButtonTheme.RED
+                      : time === 0 ? ButtonTheme.GRAY : ButtonTheme.GREEN
                     : ButtonTheme.GRAY
                 }
                 disabled={
-                  (isCetrificated && isCertificateButtonClicked) || time === 0
+                  (isCetrificated && isCertificateButtonClicked) ||
+                  time === 0 ||
+                  !isPhoneNumVerficationButtonClicked ||
+                  !certificateNumberCheck(userInfo.certificateNumber)
                 }
                 handler={() => {
                   setIsCertificateButtonClicked(true);
@@ -219,11 +235,6 @@ const FindId = () => {
                     showToast({
                       message: "인증에 성공하였습니다.",
                       theme: ToastTheme.SUCCESS,
-                    });
-                  } else {
-                    showToast({
-                      message: "인증번호가 일치하지 않습니다.",
-                      theme: ToastTheme.ERROR,
                     });
                   }
                 }}>
@@ -246,7 +257,7 @@ const FindId = () => {
             </SubLink>
           </div>
           <Button
-            // disabled={!isAllValid}
+            disabled={!isAllValid}
             buttonSize={ButtonSize.LARGE}
             buttonTheme={isAllValid ? ButtonTheme.GREEN : ButtonTheme.GRAY}
             handler={() => {

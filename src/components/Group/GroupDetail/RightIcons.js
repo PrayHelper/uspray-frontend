@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const RightIcons = () => {
+const RightIcons = ({group, setShow}) => {
+  const navigate = useNavigate();
   const [noticeOn, setNoticeOn] = useState(true);
-  const isLeader = false;
+  const isLeader = group.leader;
   return (
     <Wrapper>
       <div onClick={() => setNoticeOn(prev => !prev)}>
@@ -18,11 +20,10 @@ const RightIcons = () => {
       <div>
         {
           isLeader ?
-            <img src='images/ic_group_setting.svg' alt='group_setting_icon'/>
+            <img src='images/ic_group_setting.svg' alt='group_setting_icon' onClick={() => setShow(prev => !prev)}/>
             :
-            <img src='images/ic_group_leave.svg' alt='group_leave_icon'/>
+            <img src='images/ic_group_leave.svg' alt='group_leave_icon' onClick={() => navigate('/leaveGroup', { state: {groupId: group.id} })}/>
         }
-        {/* 관리자인지 멤버인지에 따라 아이콘 다름 */}
       </div>
     </Wrapper>
   );

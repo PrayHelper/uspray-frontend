@@ -1,14 +1,15 @@
 import axios from "axios";
-import useAuthToken from '../hooks/useAuthToken';
-import useRefresh from '../hooks/useRefresh';
+import useAuthToken from "../hooks/useAuthToken";
+import useRefresh from "../hooks/useRefresh";
 
 const useServerApi = () => {
   const { getAccessToken } = useAuthToken();
   const { refresh } = useRefresh();
 
-  const baseURL = process.env.REACT_APP_API_ORIGIN + process.env.REACT_APP_API_DEFAULT_PREFIX
+  const baseURL =
+    process.env.REACT_APP_API_ORIGIN + process.env.REACT_APP_API_DEFAULT_PREFIX;
   const serverapi = axios.create({
-    baseURL: `${baseURL}`
+    baseURL: `${baseURL}`,
   });
 
   const onErrorResponse = async (error) => {
@@ -16,12 +17,12 @@ const useServerApi = () => {
       const { status } = error.response;
       switch (status) {
         case 401: {
-          console.log("refresh token is expired");
+          console.log("access token is expired");
+          await refresh();
           break;
         }
         case 403: {
-          console.log("access token is expired");
-          await refresh();
+          console.log("refresh token is expired");
           break;
         }
         case 404: {
@@ -39,23 +40,21 @@ const useServerApi = () => {
         }
       }
     } else {
-  
     }
     return Promise.reject(error);
   };
 
-  //response: 
+  //response:
   serverapi.interceptors.response.use(function (response) {
     return response;
-  },
-   onErrorResponse);
-  
+  }, onErrorResponse);
+
   //request: header에 token 넣기
   serverapi.interceptors.request.use(
     (config) => {
       const token = getAccessToken();
-      config.headers.Authorization = token;
-    
+      config.headers.Authorization = `Bearer ${token}`;
+
       return config;
     },
     (error) => {

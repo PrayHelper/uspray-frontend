@@ -1,10 +1,12 @@
 services:
   api:
-    container_name: prayhelper-client-intg
+    container_name: uspray-client-intg
     build:
       context: ../
       dockerfile: ./deploy/Dockerfile
-    image: prayhelper-client-intg
+    image: registry.uspray.kr/uspray-client-intg:latest
     ports:
       - "4005:3000"
     command: ["serve", "-s", "build"]
+    env_file:
+      - .env

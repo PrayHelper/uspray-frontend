@@ -3,7 +3,8 @@ import useApi from './useApi';
 
 export const useFetchSharedList = () => {
   const { getFetcher } = useApi();
-  return useQuery(
+
+  const { data, refetch: refetchSharedListData } = useQuery(
     ["SharedList"],
     async () => {
       return await getFetcher("/share");
@@ -22,4 +23,11 @@ export const useFetchSharedList = () => {
       refetchOnWindowFocus: false,
     }
   );
+
+  const sharedListData = data?.data.data || [];
+
+  return {
+    sharedListData,
+    refetchSharedListData,
+  }
 };

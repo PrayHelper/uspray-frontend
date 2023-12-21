@@ -1,28 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const SearchList = ({data, searchName, leader, setLeader}) => {
-  const filterName = data.filter((name) => {
-    if (leader !== "")
-      return name.includes(leader);
-    return name.includes(searchName);
-  });
+const SearchList = ({memberList, memberId, setMemberId}) => {
 
   return (
     <Wrapper>
-      {filterName.map((name, index) => {
+      {memberList.map((member, index) => {
         return (
           <NameDiv
             key={index}
-            onClick={() => setLeader((prev) => {
+            onClick={() => setMemberId((prev) => {
               if (prev)
-                return "";
+                return null;
               else
-                return name;
+                return member.id;
             })} 
-            isLeader={leader === name}
+            isSelected={memberId === member.id}
           >
-            {name}
+            {member.name}
+            {`(${member.userId})`}
           </NameDiv>
         )
       })}
@@ -39,7 +35,7 @@ const Wrapper = styled.div`
 `
 const NameDiv = styled.div`
   padding: 12px 0;
-  color: ${props => props.isLeader ? "var(--color-green)" : "var(--color-grey)"};
+  color: ${props => props.isSelected ? "var(--color-green)" : "var(--color-grey)"};
   font-size: 16px;
 `
 

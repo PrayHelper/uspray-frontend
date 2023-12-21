@@ -1,21 +1,26 @@
 import { useMutation } from "react-query";
-import useApi from './useApi';
+import useApi from "./useApi";
 
-export const useDeleteUser = () => {
-  const { deleteFetcher } = useApi();
-  return useMutation(async (data) => {
-    return await deleteFetcher('/user/withdrawal')
-  }, {
-    onError: (e) => {
+export const useDeleteUser = ({ reqData, onSuccess }) => {
+  const { postFetcher } = useApi();
+
+  const deleteUserCall = () => {
+    const url = `/auth/withdrawal`;
+
+    return postFetcher(url, reqData);
+  };
+
+  const options = {
+    onError: async (e) => {
       console.log(e);
     },
-    onSuccess: (res) => {
-      console.log(res);
-    },
+    onSuccess,
     retry: (cnt) => {
       return cnt < 3;
     },
     retryDelay: 300,
     refetchOnWindowFocus: false,
-  });
-}
+  };
+
+  return useMutation(deleteUserCall, options);
+};
