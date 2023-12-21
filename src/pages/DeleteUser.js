@@ -169,19 +169,11 @@ const S = {
   TopTexts: styled.div``,
   TopTextCrying: styled.div`
     color: var(--color-dark-grey);
-    font-family: Noto Sans KR;
     font-size: 24px;
-    font-style: normal;
     font-weight: 500;
-    line-height: normal;
   `,
   TopTextWondering: styled.div`
     color: var(--color-dark-grey);
-    font-family: Noto Sans KR;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
   `,
   DeleteCautionAndAgreement: styled.div`
     display: flex;
