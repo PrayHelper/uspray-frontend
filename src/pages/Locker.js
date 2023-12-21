@@ -92,7 +92,6 @@ const Locker = () => {
 
   const deleteSharedList = () => {
     let pray_id_list = []; // 빈 배열을 초기화하여 pray_id_list를 설정합니다.
-
     if (isClicked.every((clicked) => clicked)) {
       // 모든 항목이 선택된 경우 모든 pray_id를 배열에 추가합니다.
       pray_id_list = data.map((item) => item.pray_id);
@@ -104,7 +103,7 @@ const Locker = () => {
 
     deleteListData(
       {
-        pray_id_list: pray_id_list,
+        sharedPrayIds: pray_id_list,
       },
       {
         onSuccess: () => {
@@ -113,6 +112,7 @@ const Locker = () => {
             theme: ToastTheme.SUCCESS,
           });
           refetchSharedListData();
+          setSelectedID([]);
         },
       }
     );
@@ -143,6 +143,7 @@ const Locker = () => {
             theme: ToastTheme.SUCCESS,
           });
           refetchSharedListData();
+          setSelectedID([]);
         },
       }
     );
@@ -193,7 +194,7 @@ const Locker = () => {
             {data.map((item, index) => (
               <div
                 // style={{ width: "100%" }}
-                onClick={() => onClickContent(index, item.pray_id)}
+                onClick={() => onClickContent(index, item.sharedPrayId)}
               >
                 <LockerContent
                   isClicked={isClicked[index]}
