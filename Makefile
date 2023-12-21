@@ -1,9 +1,11 @@
 build-dev:
 	docker compose -p frontend-dev -f ./deploy/docker-compose.dev.yml down
+	docker rmi registry.uspray.kr/uspray-dev:latest
 	docker compose -p frontend-dev -f ./deploy/docker-compose.dev.yml up --build -d
 
 build-prod:
 	docker compose -p frontend-prod -f ./deploy/docker-compose.prod.yml down
+	docker rmi registry.uspray.kr/uspray-prod:latest
 	docker compose -p frontend-prod -f ./deploy/docker-compose.prod.yml up --build -d
 
 build-intg:
@@ -13,4 +15,5 @@ build-intg:
 
 build-hotfix:
 	docker compose -p frontend-hotfix -f ./deploy/docker-compose.hotfix.yml down
+	docker rmi registry.uspray.kr/uspray-hotfix:latest
 	docker compose -p frontend-hotfix -f ./deploy/docker-compose.hotfix.yml up --build -d
