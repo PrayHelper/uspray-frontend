@@ -33,7 +33,7 @@ const FindId = () => {
     useState(false);
   const [
     isPhoneNumVerficationButtonClicked,
-    setIsPhoneNumVerficationButtonClickClick,
+    setIsPhoneNumVerficationButtonClicked,
   ] = useState(false);
   const { showToast } = useToast({});
 
@@ -192,7 +192,7 @@ const FindId = () => {
                 setIsCertificated(false);
                 setIsCertificateButtonClicked(false);
                 setUserInfo({ ...userInfo, certificateNumber: "" });
-                setIsPhoneNumVerficationButtonClickClick(true);
+                setIsPhoneNumVerficationButtonClicked(true);
               }}>
               {time ? "진행 중" : "전송"}
             </Button>
