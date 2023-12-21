@@ -54,11 +54,40 @@ export const useGroup = () => {
     }
   );
 
+  const { mutate: joinGroup }  = useMutation(
+    async (groupId) => {
+      return await postFetcher(`/group/${groupId}/join`)
+    },
+    {
+      onError: async (e) => {
+        if (e.response.status === 400)
+          showToast({
+            message: e.response.data.message,
+            theme: ToastTheme.ERROR,
+          });
+      },
+      onSuccess: (res) => {
+        console.log(res);
+        refetchGroupList();
+        showToast({
+          message: "모임에 가입했어요.",
+          theme: ToastTheme.SUCCESS,
+        });
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
+
   const groupList = data?.data.data.groupList || [];
 
   return {
     groupList,
     refetchGroupList,
     createGroup,
+    joinGroup,
   };
 }

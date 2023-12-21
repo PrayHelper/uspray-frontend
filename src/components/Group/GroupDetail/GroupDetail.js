@@ -7,11 +7,38 @@ import RightIcons from './RightIcons';
 import { useState } from 'react';
 import GroupSetting from '../GroupSetting/GroupSetting';
 import { useGroupPray } from '../../../hooks/useGroupPray';
+import useFlutterWebview from '../../../hooks/useFlutterWebview';
 
 const GroupDetail = ({group, setShowGroupDetail}) => {
   const [showGroupSetting, setShowGroupSetting] = useState(false);
   const { groupPrayList } = useGroupPray(group.id);
   const isData = Object.keys(groupPrayList).length !== 0
+  const { shareLink, isMobile } = useFlutterWebview();
+  const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
+
+  const onInvite = async () => {
+    const groupId = group.id;
+    var encodeGroupId = window.btoa(groupId.toString());
+    if (isMobile()) {
+      if (/android/i.test(navigator.userAgent)) {
+        shareLink({
+          title: "Web_invite",
+          url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
+        });
+      } else if (
+        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        navigator.share
+      ) {
+        navigator.share({
+          title: "Web_invite",
+          url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
+        });
+      } else {
+        alert("초대하기가 지원되지 않는 환경 입니다.");
+      }
+    }
+    console.log(`${WEB_ORIGIN}/group?id=` + encodeGroupId);
+  };
 
   return (
     <Wrapper>
@@ -28,6 +55,7 @@ const GroupDetail = ({group, setShowGroupDetail}) => {
         <GroupInfo group={group} isData={isData}/>
         <GroupPrayList name={group.name} groupPrayList={groupPrayList} isData={isData}/>
       </GroupWrapper>
+      <InviteBtn src="images/ic_group_invite.svg" alt="group_invite_icon" onClick={() => onInvite()} />
     </Wrapper>
   );
 };
@@ -48,4 +76,87 @@ const GroupWrapper = styled.div`
   flex-direction: column;
 `
 
+const InviteBtn = styled.img`
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+`
+
 export default GroupDetail;
+
+
+// import React from 'react';
+// import UserHeader from '../components/UserHeader';
+// import styled from 'styled-components';
+// import GroupInfo from '../components/Group/GroupDetail/GroupInfo';
+// import GroupPrayList from '../components/Group/GroupDetail/GroupPrayList';
+// import { useLocation } from 'react-router-dom';
+// import RightIcons from '../components/Group/GroupDetail/RightIcons';
+// import useFlutterWebview from '../hooks/useFlutterWebview';
+
+
+// const GroupDetail = () => {
+//   const location = useLocation();
+//   const group = location.state;
+//   const { shareLink, isMobile } = useFlutterWebview();
+//   const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
+
+//   const groupPrayList = [
+
+//   ]; // /grouppray/{groupId} 로 api 호출 후 받아오기
+//   const isData = groupPrayList.length !== 0;
+
+//   const onInvite = async () => {
+//       const groupId = 1;
+//       var encodeGroupId = window.btoa(groupId.toString());
+//       if (isMobile()) {
+//         if (/android/i.test(navigator.userAgent)) {
+//           shareLink({
+//             title: "Web_invite",
+//             url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
+//           });
+//         } else if (
+//           /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+//           navigator.share
+//         ) {
+//           navigator.share({
+//             title: "Web_invite",
+//             url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
+//           });
+//         } else {
+//           alert("초대하기가 지원되지 않는 환경 입니다.");
+//         }
+//       }
+//       console.log(`${WEB_ORIGIN}/group?id=` + encodeGroupId);
+//   };
+
+//   return (
+//     <Wrapper>
+//       <UserHeader
+//         rightIcons={() => {
+//           return <RightIcons />;
+//         }}
+//       >
+//         {group.name}
+//       </UserHeader>
+//       <GroupInfo group={group} isData={isData}/>
+//       <GroupPrayList groupPrayList={groupPrayList} isData={isData}/>
+//       <InviteBtn src="images/ic_group_invite.svg" alt="group_invite_icon" onClick={() => onInvite()} />
+//     </Wrapper>
+//   );
+// };
+
+// const Wrapper = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   width: 100%;
+//   height: 100vh;
+// `;
+
+// const InviteBtn = styled.img`
+//   position: fixed;
+//   bottom: 80px;
+//   right: 20px;
+// `
+
+// export default GroupDetail;
