@@ -53,8 +53,8 @@ jobs:
           file: ./deploy/Dockerfile
           push: true
           tags: registry.uspray.kr/uspray-client-intg:latest
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Aquire Lock
         uses: appleboy/ssh-action@master
