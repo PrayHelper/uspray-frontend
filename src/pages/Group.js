@@ -17,12 +17,12 @@ const Group = () => {
   const { joinGroup } = useGroup();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
-  const shareData = query.getAll('id');
+  const groupIdData = query.getAll('id');
 
   useEffect(() => {
-    if (shareData.length === 1)
+    if (groupIdData.length === 1)
     {
-      const groupId = window.atob(shareData[0]);
+      const groupId = window.atob(groupIdData[0]);
       joinGroup(parseInt(groupId));
     }
   }, []);
