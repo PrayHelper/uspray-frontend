@@ -67,7 +67,7 @@ const FindId = () => {
         setTime("180");
       }
     } catch (e) {
-      showToast({ message: "error occured", theme: ToastTheme.ERROR });
+      showToast({ message: e.response.data.message , theme: ToastTheme.ERROR });
     }
   };
 
@@ -116,6 +116,7 @@ const FindId = () => {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
         if (res.data.data === true) {
+          console.log(res);
           setIsCertificated(true);
           return true;
         } else if (res.data.data === false) {
@@ -124,7 +125,11 @@ const FindId = () => {
         }
       }
     } catch (e) {
-      showToast({ message: "error occured", theme: ToastTheme.ERROR });
+      if (e.response.status === 400)
+      {
+        showToast({ message: e.response.data.message , theme: ToastTheme.ERROR });
+        setIsCertificated(false);
+      }
     }
   };
 
@@ -204,7 +209,7 @@ const FindId = () => {
               : userInfo.certificateNumber
           }
           isError={
-            (!isCetrificated && isCertificateButtonClicked) || time === 0
+            !(isCetrificated && isCertificateButtonClicked) || time === 0
           }
           description={
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -219,7 +224,7 @@ const FindId = () => {
                     : ButtonTheme.GRAY
                 }
                 disabled={
-                  (isCetrificated && isCertificateButtonClicked) || time === 0
+                  !(isCetrificated && isCertificateButtonClicked) || time === 0
                 }
                 handler={() => {
                   setIsCertificateButtonClicked(true);
