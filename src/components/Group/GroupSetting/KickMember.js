@@ -1,21 +1,24 @@
 import React from 'react';
-import UserHeader from '../components/UserHeader';
+import UserHeader from '../../UserHeader';
 import styled from 'styled-components';
-import Button, {ButtonSize, ButtonTheme} from '../components/Button/Button';
+import Button, {ButtonSize, ButtonTheme} from '../../Button/Button';
 import { useState } from 'react';
-import Search from '../components/AssignGroupLeader/Search';
-import SearchList from '../components/AssignGroupLeader/SearchList';
-import BlackScreen from "../components/BlackScreen/BlackScreen";
-import Modal from '../components/Modal/Modal';
-import useToast from '../hooks/useToast';
-import { ToastTheme } from '../components/Toast/Toast';
+import Search from './Search';
+import SearchList from './SearchList';
+import BlackScreen from "../../BlackScreen/BlackScreen";
+import Modal from '../../Modal/Modal';
+import useToast from '../../../hooks/useToast';
+import { ToastTheme } from '../../Toast/Toast';
+import { useSearchGroupMember } from '../../../hooks/useSearchGroupMember';
+import { useGroupSetting } from '../../../hooks/useGroupSetting';
 
-const RemoveMember = () => {
+const KickMember = ({groupId, setCurrentPage, setShowGroupSetting}) => {
   const [showModal, setShowModal] = useState(false);
-  const [leader, setLeader] = useState("");
+  const [memberId, setMemberId] = useState(null);
   const [searchName, setSearchName] = useState("");
   const { showToast } = useToast({});
-  const data = ['김은혜', '권은혜', '박은혜', '이은혜', '허은혜', '허그레이스', '권은혜', '박은혜', '이은혜'];
+  const { memberList } = useSearchGroupMember(groupId, searchName);
+  const { kickGroupMember } = useGroupSetting();
 
   const closeModal = () => {
     setShowModal(false);
@@ -35,29 +38,38 @@ const RemoveMember = () => {
             btnContent2={"취소"}
             onClickBtn={() => {
               closeModal();
-              showToast({
-                message: "멤버가 내보내졌어요.",
-                theme: ToastTheme.SUCCESS,
-              });
+              kickGroupMember(
+                {memberId, groupId},
+                {
+                  onSuccess: () => {
+                    setCurrentPage('');
+                    setShowGroupSetting(false);
+                    showToast({
+                      message: "멤버가 내보내졌어요.",
+                      theme: ToastTheme.SUCCESS,
+                    });
+                  }
+                }
+              );
             }}
             onClickBtn2={closeModal}
             modalTheme={2}
           />
         </>
       )}
-      <UserHeader>멤버 내보내기</UserHeader>
+      <UserHeader back={() => setCurrentPage('')}>멤버 내보내기</UserHeader>
       <ContentWrapper>
         <div style={{display: "flex", flexDirection: "column", height: '100%'}}>
           <Search
             topText={"\"멤버 내보내기\"를 누르시면?"}
             setSearchName={setSearchName}
           />
-          <SearchList data={data} searchName={searchName} leader={leader} setLeader={setLeader}/>
+          <SearchList memberList={memberList} memberId={memberId} setMemberId={setMemberId}/>
           <BottomButtonWrapper>
             <Button
-              disabled={leader === ""}
+              disabled={memberId === null}
               buttonSize={ButtonSize.LARGE}
-              buttonTheme={leader ? ButtonTheme.GREEN : ButtonTheme.GRAY}
+              buttonTheme={memberId ? ButtonTheme.GREEN : ButtonTheme.GRAY}
               isArrow={true}
               handler={() => {
                 setShowModal(true);
@@ -97,4 +109,4 @@ const BottomButtonWrapper = styled.div`
   padding: 0 16px;
 `
 
-export default RemoveMember;
+export default KickMember;

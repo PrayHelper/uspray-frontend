@@ -6,18 +6,21 @@ import { useInView } from "react-intersection-observer";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import { useFetchHistory } from "../hooks/useFetchHistory";
 import { useHistoryModify } from "../hooks/useHistoryModify";
+import { useCategory } from "../hooks/useCategory";
 import Lottie from "react-lottie";
 import LottieData from "../json/lottie.json";
 import useToast from "../hooks/useToast";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 
 const History = () => {
+  const { categoryList, firstCategoryIndex } = useCategory();
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showSubModal, setShowSubModal] = useState(false);
   const [currentData, setCurrentData] = useState({});
   const [currentId, setCurrentId] = useState();
   const [updateDate, setUpdateDate] = useState(null);
+  const [updateCategory, setUpdateCategory] = useState(0);
   const [pageMy, setPageMy] = useState(1);
   const [pageShared, setPageShared] = useState(1);
   const [dataMy, setDataMy] = useState([]);
@@ -231,12 +234,17 @@ const History = () => {
           </>
         )}
         <PrayDateCategoryInput
-          setUpdateDate={setUpdateDate}
-          setShowSubModal={setShowSubModal}
+          categoryList={categoryList}
           showSubModal={showSubModal}
+          setShowSubModal={setShowSubModal}
           isDefault={true}
           isShowWordCount={false}
+          value=""
+          category={firstCategoryIndex}
+          setUpdateDate={setUpdateDate}
+          setUpdateCategory={setUpdateCategory}
           onClickFunc={() => onClickModify(sortBy)}
+          buttonText="오늘의 기도에 추가"
         />
       </div>
       {sortBy === "date" && (
