@@ -119,14 +119,8 @@ const FindId = () => {
     try {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
-        if (res.data.data === true) {
-          console.log(res);
-          setIsCertificated(true);
-          return true;
-        } else if (res.data.data === false) {
-          setIsCertificated(false);
-          return false;
-        }
+        setIsCertificated(true);
+        return true;
       }
     } catch (e) {
       if (e.response.status === 400)
@@ -134,6 +128,7 @@ const FindId = () => {
         showToast({ message: e.response.data.message , theme: ToastTheme.ERROR });
         setIsCertificated(false);
       }
+      return false;
     }
   };
 
@@ -231,7 +226,8 @@ const FindId = () => {
                 disabled={
                   (isCetrificated && isCertificateButtonClicked) ||
                   time === 0 ||
-                  !isPhoneNumVerficationButtonClicked
+                  !isPhoneNumVerficationButtonClicked ||
+                  !certificateNumberCheck(userInfo.certificateNumber)
                 }
                 handler={() => {
                   setIsCertificateButtonClicked(true);
@@ -239,11 +235,6 @@ const FindId = () => {
                     showToast({
                       message: "인증에 성공하였습니다.",
                       theme: ToastTheme.SUCCESS,
-                    });
-                  } else {
-                    showToast({
-                      message: "인증번호가 일치하지 않습니다.",
-                      theme: ToastTheme.ERROR,
                     });
                   }
                 }}>
