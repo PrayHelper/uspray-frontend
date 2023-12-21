@@ -79,7 +79,7 @@ const LoginPage = () => {
             },
             {
               onSuccess: (res) => alert(res.status),
-              onError: (e) => alert(e.status),
+              onError: (e) => alert(e.response.status),
             }
           );
         } else {
@@ -138,7 +138,8 @@ const LoginPage = () => {
             disabled={idValue.length > 0 && pwdValue.length > 0 ? false : true}
             handler={() => {
               login();
-            }}>
+            }}
+          >
             로그인
             {idValue.length > 0 && pwdValue.length > 0 ? (
               <NextArrowWhite />
