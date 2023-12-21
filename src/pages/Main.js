@@ -3,22 +3,22 @@ import styled from "styled-components";
 import MainContent from "../components/Main/MainContent";
 import { useState } from "react";
 import ButtonV2, { ButtonTheme } from "../components/ButtonV2/ButtonV2";
-import Toast, { ToastTheme } from "../components/Toast/Toast";
+import BlackScreen from "../components/BlackScreen/BlackScreen";
+import Modal from "../components/Modal/Modal";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../hooks/useCategory";
 import { useSendPrayItem } from "../hooks/useSendPrayItem";
-import useToast from "../hooks/useToast";
 
 const Main = () => {
   const { categoryList, firstCategoryIndex } = useCategory();
   const { mutate: mutateSendPrayItem } = useSendPrayItem();
-  const { showToast } = useToast({});
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
   const [inputValue, setInputValue] = useState("");
   const [showCategorySetting, setShowCategorySetting] = useState(false);
   const [selectedColor, setSelectedColor] = useState("#D0E8CB");
   const [showSubModal, setShowSubModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
@@ -38,6 +38,10 @@ const Main = () => {
     e.stopPropagation();
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   // 기도를 추가하는 함수
   const onInsert = async (text, deadline, categoryId) => {
     mutateSendPrayItem(
@@ -55,10 +59,7 @@ const Main = () => {
 
   const onClickPrayInput = () => {
     if (categoryList.length === 0) {
-      showToast({
-        message: "카테고리를 먼저 입력해주세요",
-        theme: ToastTheme.ERROR,
-      });
+      setShowModal(true);
     } else {
       setShowSubModal(!showSubModal);
     }
@@ -82,6 +83,16 @@ const Main = () => {
 
   return (
     <MainWrapper style={{ backgroundColor: bgColor }}>
+      <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
+      <Modal
+        isModalOn={showModal}
+        iconSrc={"images/icon_notice.svg"}
+        iconAlt={"icon_notice"}
+        mainContent={"카테고리를 먼저 추가해주세요!"}
+        subContent={"기도제목은 카테고리 안에서 생성됩니다."}
+        btnContent={"네, 그렇게 할게요."}
+        onClickBtn={handleCloseModal}
+      />
       <TopContainer>
         <TopBox>
           <TabContainer>

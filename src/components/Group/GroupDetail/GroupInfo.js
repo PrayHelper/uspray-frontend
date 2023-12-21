@@ -1,29 +1,30 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import PrayDateCategoryInput from "../../PrayDateCategoryInput/PrayDateCategoryInput";
-import Toast, { ToastTheme } from "../../Toast/Toast";
+import BlackScreen from "../../BlackScreen/BlackScreen";
+import Modal from "../../../components/Modal/Modal";
 import { useCategory } from "../../../hooks/useCategory";
 import { useGroupPray } from "../../../hooks/useGroupPray";
-import useToast from "../../../hooks/useToast";
 
 const GroupInfo = ({ group, isData }) => {
   const { categoryList, firstCategoryIndex } = useCategory();
   const { addGroupPray } = useGroupPray(group.id);
-  const { showToast } = useToast({});
   const [showSubModal, setShowSubModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
 
   const onClickPrayInput = () => {
     if (categoryList.length === 0) {
-      showToast({
-        message: "기도 수첩에서 카테고리를 먼저 입력해주세요",
-        theme: ToastTheme.ERROR,
-      });
+      setShowModal(true);
     } else {
       setShowSubModal(!showSubModal);
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   // 기도를 추가하는 함수
@@ -47,6 +48,16 @@ const GroupInfo = ({ group, isData }) => {
 
   return (
     <Wrapper>
+      <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
+      <Modal
+        isModalOn={showModal}
+        iconSrc={"images/icon_notice.svg"}
+        iconAlt={"icon_notice"}
+        mainContent={"카테고리를 먼저 추가해주세요!"}
+        subContent={"기도수첩 화면에서 생성할 수 있습니다."}
+        btnContent={"네, 그렇게 할게요."}
+        onClickBtn={handleCloseModal}
+      />
       {isData ? (
         <GroupInfoText>
           <div>
