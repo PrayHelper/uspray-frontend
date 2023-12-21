@@ -1,26 +1,20 @@
-import { useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import useApi from "./useApi";
 
-export const useDeleteUser = (data) => {
+export const useDeleteUser = ({ reqData, onSuccess }) => {
   const { postFetcher } = useApi();
 
-  const deleteUserCall = (d) => {
+  const deleteUserCall = () => {
     const url = `/auth/withdrawal`;
 
-    return postFetcher(url, data);
+    return postFetcher(url, reqData);
   };
-
-  const navigate = useNavigate();
 
   const options = {
     onError: async (e) => {
       console.log(e);
     },
-    onSuccess: (res) => {
-      console.log(res);
-      navigate("/");
-    },
+    onSuccess,
     retry: (cnt) => {
       return cnt < 3;
     },
