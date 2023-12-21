@@ -26,7 +26,7 @@ const GroupDetail = ({group, setShowGroupDetail}) => {
       </UserHeader>
       <GroupWrapper>
         <GroupInfo group={group} isData={isData}/>
-        <GroupPrayList name={group.name} groupPrayList={groupPrayList} isData={isData}/>
+        <GroupPrayList group={group} groupPrayList={groupPrayList} isData={isData}/>
       </GroupWrapper>
     </Wrapper>
   );
