@@ -93,13 +93,13 @@ const AnimationContainer = styled.div`
 `;
 
 const IdResult = ( {userData} ) => {
-  const [id, setText] = useState("");
-  const [name, setText1] = useState("");
+  const [id, setId] = useState("");
+  const [name, setName] = useState("");
   const [isValid, setIsValid] = useState(true);
 
   const showId = async () => {
     console.log(userData);
-    const api = "/user/find/id";
+    const api = "/auth/find-id";
     const data = {
       name: userData.name,
       phone: userData.phoneNumber.replace(/-/g, ""),
@@ -107,8 +107,8 @@ const IdResult = ( {userData} ) => {
     try {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
-        setText(res.data.message);
-        setText1(userData.name);
+        setId(res.data.data);
+        setName(userData.name);
         console.log(res.data);
       }
     } catch (e) {
@@ -149,13 +149,16 @@ const IdResult = ( {userData} ) => {
           alignSelf: "center",
         }}
       >
-        <Link to="/findPW" style={{ textDecoration: "none" }}>
-          <Button buttonSize={ButtonSize.LARGE} buttonTheme={ButtonTheme.WHITE}>
-            비밀번호 찾기
-          </Button>
-        </Link>
+        {
+          isValid &&
+          <Link to="/findPW" style={{ textDecoration: "none" }}>
+            <Button buttonSize={ButtonSize.LARGE} buttonTheme={ButtonTheme.WHITE} isArrow={true}>
+              비밀번호 찾기
+            </Button>
+          </Link>
+        }
         <Link to="/" style={{ textDecoration: "none" }}>
-          <Button buttonSize={ButtonSize.LARGE} buttonTheme={ButtonTheme.GREEN}>
+          <Button buttonSize={ButtonSize.LARGE} buttonTheme={ButtonTheme.GREEN} isArrow={true}>
             메인화면으로 이동
           </Button>
         </Link>
