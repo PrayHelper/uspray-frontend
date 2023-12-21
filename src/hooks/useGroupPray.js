@@ -4,7 +4,7 @@ import useToast from "../hooks/useToast";
 import { ToastTheme } from "../components/Toast/Toast";
 
 export const useGroupPray = (groupId) => {
-  const { getFetcher, postFetcher } = useApi();
+  const { getFetcher, postFetcher, deleteFetcher } = useApi();
   const { showToast } = useToast({});
 
   const { data, refetch: refetchGroupPrayList } = useQuery(
@@ -51,6 +51,27 @@ export const useGroupPray = (groupId) => {
     }
   );
 
+  const { mutate: deleteGroupPray } = useMutation(
+    async (groupPrayId) => {
+      return await deleteFetcher(`/grouppray/${groupPrayId}`);
+    },
+    {
+      onError: async (e) => {
+        console.log(e);
+      },
+      onSuccess: (res) => {
+        console.log(res);
+        refetchGroupPrayList();
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+
   const groupPrayData = data?.data.data || {};
   const groupPrayList =
     Object.keys(groupPrayData).length === 0 ? [] : groupPrayData;
@@ -59,5 +80,6 @@ export const useGroupPray = (groupId) => {
     groupPrayList,
     refetchGroupPrayList,
     addGroupPray,
+    deleteGroupPray,
   };
 };
