@@ -31,6 +31,10 @@ const FindId = () => {
   const [isCetrificated, setIsCertificated] = useState(false);
   const [isCertificateButtonClicked, setIsCertificateButtonClicked] =
     useState(false);
+  const [
+    isPhoneNumVerficationButtonClicked,
+    setIsPhoneNumVerficationButtonClickClick,
+  ] = useState(false);
   const { showToast } = useToast({});
 
   const moveToResult = () => {
@@ -193,6 +197,7 @@ const FindId = () => {
                 setIsCertificated(false);
                 setIsCertificateButtonClicked(false);
                 setUserInfo({ ...userInfo, certificateNumber: "" });
+                setIsPhoneNumVerficationButtonClickClick(true);
               }}>
               {time ? "진행 중" : "전송"}
             </Button>
@@ -209,7 +214,7 @@ const FindId = () => {
               : userInfo.certificateNumber
           }
           isError={
-            !(isCetrificated && isCertificateButtonClicked) || time === 0
+            (!isCetrificated && isCertificateButtonClicked) || time === 0
           }
           description={
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -224,7 +229,9 @@ const FindId = () => {
                     : ButtonTheme.GRAY
                 }
                 disabled={
-                  !(isCetrificated && isCertificateButtonClicked) || time === 0
+                  (isCetrificated && isCertificateButtonClicked) ||
+                  time === 0 ||
+                  !isPhoneNumVerficationButtonClicked
                 }
                 handler={() => {
                   setIsCertificateButtonClicked(true);
