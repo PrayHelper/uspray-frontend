@@ -25,6 +25,7 @@ const useRefresh = () => {
       setRefreshToken(res.data.data.refreshToken);
     } catch (e) {
       console.log("catch에서 실행");
+      console.log(e);
       // 401 : refresh token 만료
       if (e.status === 401) {
         await setRefreshToken("");
