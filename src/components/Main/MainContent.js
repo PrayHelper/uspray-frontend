@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Category from "../Category/Category";
 import CategoryTag from "../CategoryTag/CategoryTag";
 import completeImage from "../../images/check_img.svg";
 import deleteImage from "../../images/delete_img.svg";
 import modifyImage from "../../images/modify_img.svg";
+import { usePray } from "../../hooks/usePray";
 
 const MainContent = ({
   categoryList,
@@ -13,6 +14,7 @@ const MainContent = ({
   setSelectedCategoryIndex,
 }) => {
   const [selectedTitleIndex, setSelectedTitleIndex] = useState(null);
+  const { prayList } = usePray('personal');
 
   const prayComplete = () => {
     // 기도 완료하는 api
@@ -37,16 +39,15 @@ const MainContent = ({
         />
       </TopWrapper>
       <Content>
-        <Category
-          title="테스트"
-          color="#75BD62"
-          setSelectedTitleIndex={setSelectedTitleIndex}
-        />
-        <Category
-          title="테스트2"
-          color="#AEDBA5"
-          setSelectedTitleIndex={setSelectedTitleIndex}
-        />
+        {prayList && prayList.map((category, index) => (
+          <Category
+            key={index}
+            title={category.categoryName}
+            prays={category.prays}
+            color="#75BD62"
+            setSelectedTitleIndex={setSelectedTitleIndex}
+          />
+        ))}
       </Content>
       <BottomSetWrapper selectedTitleIndex={selectedTitleIndex}>
         <BottomButtonWrapper>
