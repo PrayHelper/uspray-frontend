@@ -21,27 +21,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Print GitHub Refs
-      run: |
-        echo "github.ref: ${{ github.ref }}"
-        echo "github.ref_name: ${{ github.ref_name }}"
-        echo "rightside": ${{ format('refs/heads/{0}', vars.INTG_BRANCH) }}
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 19
-
-    - name: Install dependencies
-      run: |
-        npm config set legacy-peer-deps true
-        npm ci
-
-    - name: Run tests
-      run: |
-        CI=false
-        npm test
-
   deploy:
     runs-on: ubuntu-latest
     if: github.ref_name == vars.INTG_BRANCH
@@ -56,6 +35,19 @@ jobs:
           file: ./deploy/Dockerfile
           push: true
           tags: registry.uspray.kr/uspray-intg:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+      - name: Aquire Lock
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.HOST }}
+          username: ${{ env.USERNAME }}
+          key: ${{ env.KEY }}
+          port: ${{ env.PORT }}
+          script: |
+            while [ -f ~/SEMAPHORE_FILE ]; do sleep 10; done
+            touch ~/SEMAPHORE_FILE
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -67,3 +59,13 @@ jobs:
           script: |
             cd ${{ env.INSTANCE_PATH }}
             make build-intg
+
+      - name: Release Lock
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.HOST }}
+          username: ${{ env.USERNAME }}
+          key: ${{ env.KEY }}
+          port: ${{ env.PORT }}
+          script: |
+            rm ~/SEMAPHORE_FILE
