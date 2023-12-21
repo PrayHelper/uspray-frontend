@@ -51,7 +51,7 @@ jobs:
             docker stop uspray-client-prod
             docker rm uspray-client-prod
             docker rmi registry.uspray.kr/uspray-client-prod:latest
-            docker run -d --name uspray-client-prod -p 4005:3000 --env-file .env registry.uspray.kr/uspray-client-prod:latest
+            docker run -d --name uspray-client-prod -p 4003:3000 --env-file .env registry.uspray.kr/uspray-client-prod:latest
 
       - name: Release Lock
         uses: appleboy/ssh-action@master
