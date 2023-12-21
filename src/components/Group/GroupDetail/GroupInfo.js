@@ -54,7 +54,7 @@ const GroupInfo = ({ group, isData }) => {
         iconSrc={"images/icon_notice.svg"}
         iconAlt={"icon_notice"}
         mainContent={"카테고리를 먼저 추가해주세요!"}
-        subContent={"기도수첩 화면에서 생성할 수 있습니다."}
+        subContent={"메인 화면에서 생성할 수 있습니다."}
         btnContent={"네, 그렇게 할게요."}
         onClickBtn={handleCloseModal}
       />
