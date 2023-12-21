@@ -56,9 +56,9 @@ jobs:
           port: ${{ env.PORT }}
           script: |
             cd ~/frontend-intg
-            docker compose down
+            docker stop uspray-client-intg
             docker rmi registry.uspray.kr/uspray-client-intg:latest
-            docker compose up -d
+            docker run --name uspray-client-intg -p 4005:3000 --env-file .env registry.uspray.kr/uspray-client-intg:latest
 
       - name: Release Lock
         uses: appleboy/ssh-action@master
