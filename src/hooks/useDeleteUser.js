@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { deleteDataFetcher } from "./api";
+import { postFetcher } from "./api";
 import { useMutation } from "react-query";
 import useAuthToken from "./useAuthToken";
 import useRefresh from "./useRefresh";
@@ -9,12 +9,12 @@ export const useDeleteUser = (data) => {
   const { refresh } = useRefresh();
 
   const deleteUserCall = (d) => {
-    const url = `/user/withdrawal`;
+    const url = `/auth/withdrawal`;
     const headers = {
-      Authorization: getAccessToken(),
+      Authorization: `Bearer ${getAccessToken()}`,
     };
 
-    return deleteDataFetcher(url, data, headers);
+    return postFetcher(url, data, headers);
   };
 
   const navigate = useNavigate();

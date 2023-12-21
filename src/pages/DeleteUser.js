@@ -8,15 +8,15 @@ import Modal from "../components/Modal/Modal";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 
 const initialDeleteReasonOptionList = [
-  { id: 1, text: "쓰지 않는 서비스에요.", checked: false },
-  { id: 2, text: "원하는 기능이 없어요.", checked: false },
+  { id: "DONT_NEED", text: "쓰지 않는 서비스에요.", checked: false },
+  { id: "NOT_USABLE", text: "원하는 기능이 없어요.", checked: false },
   {
-    id: 3,
+    id: "MANY_ERROR",
     text: "오류가 많아서 쓸 수가 없어요.",
     checked: false,
   },
-  { id: 4, text: "사용하기에 불편함이 있어요.", checked: false },
-  { id: 5, text: "기타", checked: false },
+  { id: "USE_DIFFICULT", text: "사용하기에 불편함이 있어요.", checked: false },
+  { id: "ETC", text: "기타", checked: false },
 ];
 
 const DeleteUser = () => {
@@ -40,7 +40,7 @@ const DeleteUser = () => {
     isAgreementsChecked && deleteReasonOptionList.some((item) => item.checked);
 
   const isEtcChecked = deleteReasonOptionList.find(
-    (item) => item.id === 5
+    (item) => item.id === "ETC"
   ).checked;
 
   const toggleOptionById = (id) => {
@@ -59,11 +59,11 @@ const DeleteUser = () => {
     setEtcReasonInput(e.target.value);
   };
 
-  // 사유 state를 API 호출을 위한 배열 데이터로 전환 ex) [1, 2, 5]
-  const reason_id = deleteReasonOptionList
+  // 사유 state를 API 호출을 위한 배열 데이터로 전환 ex) ["DONT_NEED", "USE_DIFFICULT"]
+  const withdrawReason = deleteReasonOptionList
     .filter((item) => item.checked)
     .map((item) => item.id);
-  const reqData = { reason_id, etc: etcReasonInput };
+  const reqData = { withdrawReason, description: etcReasonInput };
 
   const { mutate: mutateDeleteUser } = useDeleteUser(reqData);
 
