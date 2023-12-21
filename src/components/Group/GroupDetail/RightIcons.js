@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 const RightIcons = ({group, setShow}) => {
   const [noticeOn, setNoticeOn] = useState(true);
-  const isLeader = true;
+  const isLeader = group.leader;
   return (
     <Wrapper>
       <div onClick={() => setNoticeOn(prev => !prev)}>
@@ -22,7 +22,6 @@ const RightIcons = ({group, setShow}) => {
             :
             <img src='images/ic_group_leave.svg' alt='group_leave_icon'/>
         }
-        {/* 관리자인지 멤버인지에 따라 아이콘 다름 */}
       </div>
     </Wrapper>
   );
