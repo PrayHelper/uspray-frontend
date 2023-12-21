@@ -71,7 +71,7 @@ export const refresh = async () => {
     return res.data.access_token;
   } catch (e) {
     // 401 : refresh token 만료
-    if (e.status === 401) {
+    if (e.response.status === 401) {
       localStorage.setItem("refreshToken", "");
       window.location.href("/");
     }
