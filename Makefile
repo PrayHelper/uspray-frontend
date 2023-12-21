@@ -8,6 +8,7 @@ build-prod:
 
 build-intg:
 	docker compose -p frontend-intg -f ./deploy/docker-compose.intg.yml down
+	docker rmi registry.uspray.kr/uspray-intg:latest
 	docker compose -p frontend-intg -f ./deploy/docker-compose.intg.yml up --build -d
 
 build-hotfix:
