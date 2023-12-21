@@ -5,12 +5,14 @@ import { ToastTheme } from '../../Toast/Toast';
 import useToast from '../../../hooks/useToast';
 import BlackScreen from '../../BlackScreen/index';
 import Modal from '../../Modal/Modal';
+import { useGroupPray } from '../../../hooks/useGroupPray';
 
-const GroupPrayItem = ({pray}) => {
+const GroupPrayItem = ({groupId, pray}) => {
   const [showModal, setShowModal] = useState(false);
   const { showToast } = useToast({});
   const [heart, setHeart] = useState(false);
   const [scrap, setScrap] = useState(false);
+  const { deleteGroupPray } = useGroupPray(groupId);
   return (
     <Wrapper>
       {showModal && (
@@ -25,9 +27,10 @@ const GroupPrayItem = ({pray}) => {
             btnContent={"삭제"}
             btnContent2={"취소"}
             onClickBtn={() => {
+              deleteGroupPray(pray.groupPrayId);
               setShowModal(false);
               showToast({
-                message: "삭제되었습니다.",
+                message: "모임에서 기도제목을 삭제했어요.",
                 theme: ToastTheme.SUCCESS,
               });
             }}

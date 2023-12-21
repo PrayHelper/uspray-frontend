@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import GroupPrayItem from './GroupPrayItem';
 
-const GroupPrayList = ({name, groupPrayList, isData}) => {
+const GroupPrayList = ({group, groupPrayList, isData}) => {
   const groupedData = Object.keys(groupPrayList).map((date) => {
     return {
       date,
@@ -19,7 +19,7 @@ const GroupPrayList = ({name, groupPrayList, isData}) => {
                 return (
                   <PrayContent>
                     <DateDiv>{data.date}</DateDiv>
-                    {data.pray.map((pray) => <GroupPrayItem pray={pray}/>)}
+                    {data.pray.map((pray) => <GroupPrayItem groupId={group.id} pray={pray}/>)}
                   </PrayContent>
                 )
               })
@@ -27,7 +27,7 @@ const GroupPrayList = ({name, groupPrayList, isData}) => {
           </PrayList>
           :
           <NoDataWrapper>
-            <div>{name} 모임원에게</div>
+            <div>{group.name} 모임원에게</div>
             <div>기도제목을 공유해보세요.</div>
           </NoDataWrapper>
       }
