@@ -6,12 +6,26 @@ import { useGroup } from '../hooks/useGroup';
 import { useState } from 'react';
 import GroupDetail from '../components/Group/GroupDetail/GroupDetail';
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const Group = () => {
   const { groupList } = useGroup();
   const [group, setGroup] = useState(null);
   const [showGroupDetail, setShowGroupDetail] = useState(false);
   const navigate = useNavigate();
+
+  const { joinGroup } = useGroup();
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const groupIdData = query.getAll('id');
+
+  useEffect(() => {
+    if (groupIdData.length === 1)
+    {
+      const groupId = window.atob(groupIdData[0]);
+      joinGroup(parseInt(groupId));
+    }
+  }, []);
 
   useEffect(() => {
     if (group !== null)
