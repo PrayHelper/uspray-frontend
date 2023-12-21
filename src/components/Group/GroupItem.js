@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from "styled-components";
-import { useNavigate } from 'react-router-dom';
 
 // group = {
 //   id: 0,
@@ -11,11 +10,13 @@ import { useNavigate } from 'react-router-dom';
 //   updatedAt: "2023-11-24T10:06:06.136Z"
 // }
 
-const GroupItem = ({group}) => {
-  const navigate = useNavigate();
+const GroupItem = ({group, setGroup, setShowGroupDetail}) => {
   const formatUpdatedAt = (updatedAt) => {
+    if (updatedAt === null)
+      return null;
     const currentTime = new Date();
-    const timeDifference = currentTime - new Date(updatedAt);
+    const updateTime = new Date(updatedAt);
+    const timeDifference = currentTime - updateTime;
 
     const minutes = Math.floor(timeDifference / (1000 * 60));
     const hours = Math.floor(timeDifference / (1000 * 60 * 60));
@@ -40,8 +41,41 @@ const GroupItem = ({group}) => {
     }
   };
 
+  const formatLastPrayContent = () => {
+    if (group.lastPrayContent === null)
+      return (
+        <div style={{color: "var(--color-grey)", fontSize: "16px"}}>
+          기도제목을 이곳에 공유해보세요!
+        </div>
+      );
+
+    const currentTime = new Date();
+    const updateTime = new Date(group.updatedAt);
+    const timeDifference = currentTime - updateTime;
+    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+    if (days < 1)
+      return (
+        <div style={{color: "var(--color-grey)", fontSize: "16px"}}>
+          {group.lastPrayContent}
+        </div>
+      );
+    else
+      return (
+        <div style={{color: "var(--color-secondary-green)", fontSize: "16px"}}>
+          {1}개의 기도제목이 있어요!
+        </div>
+      ); // TODO: api 수정되면 바꾸기
+    
+  }
+
   return (
-    <GroupItemWrapper onClick={() => navigate('/groupDetail', { state: group })} >
+    <GroupItemWrapper
+      onClick={() => {
+        setGroup(group);
+        setShowGroupDetail(prev => !prev);
+      }}
+    >
       <GroupTitle>
         <div style={{color: "var(--color-green)", fontSize: "24px", fontWeight: "500"}}>
           {group.name}
@@ -52,7 +86,7 @@ const GroupItem = ({group}) => {
         </div>
       </GroupTitle>
       <GroupContent>
-        <div style={{color: "var(--color-grey)", fontSize: "16px"}}>{group.lastPrayContent}</div>
+        {formatLastPrayContent()}
         <div style={{color: "var(--color-secondary-grey)", fontSize: "12px"}}>{formatUpdatedAt(group.updatedAt)}</div>
       </GroupContent>
     </GroupItemWrapper>

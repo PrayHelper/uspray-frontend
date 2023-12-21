@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import IcGrayCheck from "../../images/ic_gray_check.svg";
 import IcGreenCheck from "../../images/ic_green_check.svg";
-import { Link } from "react-router-dom";
 import { CheckboxTheme } from "./Checkbox";
 
 export const CheckboxWrapper = styled.div`
@@ -49,7 +48,7 @@ export const CheckboxStyle = styled.input`
   }
 `;
 
-export const StyledLinkLabel = styled(Link)`
+export const StyledLinkLabel = styled.div`
   color: var(
     ${(props) =>
       props.theme === CheckboxTheme.GRAY

@@ -13,6 +13,9 @@ import { setRef } from "@mui/material";
 import useAuthorized from "../hooks/useAuthorized";
 import useSleep from "../hooks/useSleep";
 import Modal from "../components/Modal/Modal";
+import Overlay from "../components/Overlay/Overlay";
+import ToS from "./ToS";
+import PrivacyPolicy from "./PrivacyPolicy";
 
 // import { useNotificationEnable } from "../hooks/useNotificationEnable";
 
@@ -116,6 +119,8 @@ const ModalButton2 = styled.button`
 const Settings = () => {
   const [showModal, setShowModal] = useState(false);
   const [isAbledData, setIsAbledData] = useState([]);
+  const [isOverlayOn, setIsOverlayOn] = useState(false);
+  const [information, setInformation] = useState(null);
   const { setRefreshToken } = useAuthToken();
   const navigate = useNavigate();
 
@@ -144,12 +149,17 @@ const Settings = () => {
     window.open("https://www.instagram.com/_uspray/");
   };
 
+  function showInformation(page) {
+    setInformation(page);
+    setIsOverlayOn(true);
+  }
+
   const moveToToS = () => {
-    navigate("/tos");
+    showInformation(<ToS setIsOverlayOn={setIsOverlayOn} />);
   };
 
   const moveToPrivacyPolicy = () => {
-    navigate("/privacyPolicy");
+    showInformation(<PrivacyPolicy setIsOverlayOn={setIsOverlayOn} />);
   };
 
   const { data: isNotifiedData, refetch: refetchIsNotifiedData } =
@@ -208,14 +218,16 @@ const Settings = () => {
             <SettingToggle
               refetchIsNotifiedData={refetchIsNotifiedData}
               isAbledData={isAbledData[0]}
-              id={1}></SettingToggle>
+              id={1}
+            ></SettingToggle>
           </StyledItem>
           <StyledItem noActive={true}>
             <div>다른 사람이 내 기도제목을 공유 받았을 때</div>
             <SettingToggle
               refetchIsNotifiedData={refetchIsNotifiedData}
               isAbledData={isAbledData[1]}
-              id={2}></SettingToggle>
+              id={2}
+            ></SettingToggle>
           </StyledItem>
         </WhiteBox>
         <WhiteBox>
@@ -242,12 +254,16 @@ const Settings = () => {
           <StyledItem noActive={true}>
             <div>현재 서비스 버전 확인</div>
             <div
-              style={{ color: "#7BAB6E", fontWeight: "700", fontSize: "15px" }}>
+              style={{ color: "#7BAB6E", fontWeight: "700", fontSize: "15px" }}
+            >
               0.1.2
             </div>
           </StyledItem>
         </WhiteBox>
       </Wrapper>
+      {isOverlayOn && (
+        <Overlay isOverlayOn={isOverlayOn}>{information}</Overlay>
+      )}
     </Container>
   );
 };
