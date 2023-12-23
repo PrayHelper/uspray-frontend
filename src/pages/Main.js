@@ -8,6 +8,7 @@ import Modal from "../components/Modal/Modal";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../hooks/useCategory";
 import { useSendPrayItem } from "../hooks/useSendPrayItem";
+import { usePray } from "../hooks/usePray";
 
 const Main = () => {
   const { categoryList, firstCategoryIndex } = useCategory();
@@ -24,6 +25,7 @@ const Main = () => {
   const [categoryInputValue, setCategoryInputValue] = useState(0);
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
+  const { refetchPrayList } = usePray('personal');
 
   const handleTabChange = (newTab) => {
     setTab(newTab);
@@ -52,6 +54,7 @@ const Main = () => {
           setPrayInputValue("");
           setDateInputValue(null);
           setSelectedCategoryIndex(categoryId);
+          refetchPrayList();
         },
       }
     );
@@ -156,6 +159,7 @@ const Main = () => {
         setShowCategorySetting={setShowCategorySetting}
         selectedCategoryIndex={selectedCategoryIndex}
         setSelectedCategoryIndex={setSelectedCategoryIndex}
+        refetchPrayList={refetchPrayList}
       />
       {showCategorySetting && (
         <CategorySetting onClick={() => setShowCategorySetting(false)}>

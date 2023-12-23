@@ -12,6 +12,7 @@ const MainContent = ({
   setShowCategorySetting,
   selectedCategoryIndex,
   setSelectedCategoryIndex,
+  refetchPrayList
 }) => {
   const [selectedTitleIndex, setSelectedTitleIndex] = useState(null);
   const { prayList } = usePray('personal');
