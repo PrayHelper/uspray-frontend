@@ -1,9 +1,7 @@
 import styled from "styled-components";
 import UserHeader from "../components/UserHeader";
-import { useState } from "react";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import StrictModeDroppable from "../lib/StrictModeDroppable";
-import { useEffect } from "react";
 import { useCategoryTemp_by_limeojin } from "../hooks/useCategoryTemp_by_limeojin";
 
 const Hamburger = () => (

@@ -1,11 +1,5 @@
-import {
-  useQuery,
-  useMutation,
-  QueryClient,
-  useQueryClient,
-} from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import useApi from "./useApi";
-import { useNavigate } from "react-router-dom";
 import useToast from "./useToast";
 import { ToastTheme } from "../components/Toast/Toast";
 
