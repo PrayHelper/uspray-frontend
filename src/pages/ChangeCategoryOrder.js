@@ -4,7 +4,7 @@ import { useState } from "react";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import StrictModeDroppable from "../lib/StrictModeDroppable";
 import { useEffect } from "react";
-import { useCategory } from "../hooks/useCategory";
+import { useCategoryTemp_by_limeojin } from "../hooks/useCategoryTemp_by_limeojin";
 
 const Hamburger = () => (
   <S.HamburgerContainer>
@@ -16,13 +16,14 @@ const Hamburger = () => (
 
 const CategoryItem = ({ categoryItem, index }) => {
   return (
-    <Draggable draggableId={categoryItem.id} index={index}>
+    <Draggable draggableId={categoryItem.id.toString()} index={index}>
       {(provided) => (
         <S.CategoryItemContainer
+          bgColor={categoryItem.color}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}>
-          <S.CategoryItemText>{categoryItem.label}</S.CategoryItemText>
+          <S.CategoryItemText>{categoryItem.name}</S.CategoryItemText>
           <Hamburger />
         </S.CategoryItemContainer>
       )}
@@ -31,76 +32,53 @@ const CategoryItem = ({ categoryItem, index }) => {
 };
 
 const ChangeCategoryOrder = () => {
-  const [categories, setCategories] = useState([
-    {
-      id: "1",
-      label: "학교",
-      color: "var(--color-green)",
-    },
-    {
-      id: "2",
-      label: "가족",
-      color: "var(--color-secondary-grey)",
-    },
-    {
-      id: "3",
-      label: "치킨",
-      color: "var(--color-secondary-grey)",
-    },
-  ]);
-
-  const { categoryList } = useCategory();
-
-  useEffect(() => {
-    console.log(categoryList);
-  }, [categoryList]);
-
-  const moveItem = (dragIndex, hoverIndex) => {
-    setCategories((prev) => {
-      const result = [...prev];
-
-      result.splice(dragIndex, 1);
-      result.splice(hoverIndex, 0, prev[dragIndex]);
-
-      return result;
-    });
-  };
+  const { categoryList, updateCategoryOrder } = useCategoryTemp_by_limeojin();
 
   const onDragEnd = ({ source, destination }) => {
     if (!source || !destination) return;
 
-    moveItem(source.index, destination.index);
+    const srcIndex = source.index;
+    const destIndex = destination.index;
+
+    // Do not replace itself
+    if (srcIndex !== destIndex)
+      updateCategoryOrder({
+        srcIndex,
+        destIndex,
+      });
   };
 
   return (
-    <S.Root>
+    <S.PageRoot>
       <UserHeader>카테고리 순서 변경</UserHeader>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <StrictModeDroppable droppableId="droppable">
-          {(provided) => (
-            <S.CategoryList
-              ref={provided.innerRef}
-              {...provided.droppableProps}>
-              {categories.map((categoryItem, index) => (
-                <CategoryItem
-                  index={index}
-                  key={categoryItem.id}
-                  categoryItem={categoryItem}
-                />
-              ))}
-              {provided.placeholder}
-            </S.CategoryList>
-          )}
-        </StrictModeDroppable>
-      </DragDropContext>
-    </S.Root>
+      {categoryList && (
+        <DragDropContext onDragEnd={onDragEnd}>
+          <StrictModeDroppable droppableId="droppable">
+            {(provided) => (
+              <S.CategoryList
+                ref={provided.innerRef}
+                {...provided.droppableProps}>
+                {categoryList.map((categoryItem, index) => (
+                  <CategoryItem
+                    index={index}
+                    key={categoryItem.id}
+                    categoryItem={categoryItem}
+                  />
+                ))}
+                {provided.placeholder}
+              </S.CategoryList>
+            )}
+          </StrictModeDroppable>
+        </DragDropContext>
+      )}
+    </S.PageRoot>
   );
 };
 
 export default ChangeCategoryOrder;
 
 const S = {
-  Root: styled.div`
+  PageRoot: styled.div`
     width: 100%;
     height: 100vh;
 
@@ -117,7 +95,7 @@ const S = {
     }
   `,
   CategoryItemContainer: styled.div`
-    background-color: blue;
+    background-color: ${({ bgColor }) => bgColor};
 
     color: white;
     font-weight: 700;
