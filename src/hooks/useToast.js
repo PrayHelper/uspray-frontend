@@ -30,7 +30,7 @@ const useToast = ({ initialMessage, initialTheme }) => {
     }
 
     return () => {
-      clearTimeout(timer);
+      if (timer) clearTimeout(timer);
     };
   }, [toastVisible]);
 
