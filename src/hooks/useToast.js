@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import Toast, { ToastTheme } from "../components/Toast/Toast";
+import Toast from "../components/Toast/Toast";
 import { useRecoilState } from "recoil";
 import {
   toastMessageState,
@@ -21,11 +21,17 @@ const useToast = ({ initialMessage, initialTheme }) => {
   }, []);
 
   useEffect(() => {
+    let timer;
+
     if (toastVisible) {
-      setTimeout(() => {
+      timer = setTimeout(() => {
         setToastVisible(false);
       }, 3000);
     }
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, [toastVisible]);
 
   return {
@@ -33,7 +39,16 @@ const useToast = ({ initialMessage, initialTheme }) => {
     showToast: ({ message, theme }) => {
       setToastMessage(message ?? toastMessage);
       setToastTheme(theme ?? toastTheme);
-      setToastVisible(true);
+
+      if (!toastVisible) {
+        setToastVisible(true);
+      } else {
+        setToastVisible(false);
+        // setTimeout: to avoid batching
+        setTimeout(() => {
+          setToastVisible(true);
+        });
+      }
     },
     renderToast: () =>
       toastVisible && <Toast toastTheme={toastTheme}>{toastMessage}</Toast>,
