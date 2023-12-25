@@ -9,14 +9,20 @@ import { useUpdateSharedList } from "../hooks/useUpdateSharedList";
 import Lottie from "react-lottie";
 import LottieData from "../json/lottie.json";
 import useToast from "../hooks/useToast";
+import { useCategory } from "../hooks/useCategory";
 import { useNavigate } from "react-router-dom";
+import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 
 const Locker = () => {
   const [data, setData] = useState([]);
+  const { categoryList, firstCategoryIndex } = useCategory();
   const [isClicked, setIsClicked] = useState([]);
   const [selectedID, setSelectedID] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showSubModal, setShowSubModal] = useState(false);
+  const [dateInputValue, setDateInputValue] = useState(null);
+  const [categoryInputValue, setCategoryInputValue] = useState(0);
 
   const { showToast } = useToast({});
   const navigate = useNavigate();
@@ -81,6 +87,10 @@ const Locker = () => {
     setIsClicked(updateClickedList);
   };
 
+  const onClickSave = () => {
+    setShowSubModal(true);
+  };
+
   // 공유 리스트 읽기
   const { sharedListData, refetchSharedListData } = useFetchSharedList();
 
@@ -123,7 +133,7 @@ const Locker = () => {
 
   const { mutate: updateListData } = useUpdateSharedList();
 
-  const saveSharedList = () => {
+  const saveSharedList = (dateInputValue, categoryInputValue) => {
     if (!saving) {
       let pray_id_list = []; // 빈 배열을 초기화하여 pray_id_list를 설정합니다.
 
@@ -138,7 +148,8 @@ const Locker = () => {
       setSaving(true);
       updateListData(
         {
-          pray_id_list: pray_id_list,
+          sharedPrayIds: pray_id_list,
+          categoryId: categoryInputValue,
         },
         {
           onSuccess: () => {
@@ -148,6 +159,7 @@ const Locker = () => {
             });
             refetchSharedListData();
             setSelectedID([]);
+            setShowSubModal(false);
             setSaving(false);
           },
           onError: (e) => {
@@ -179,7 +191,7 @@ const Locker = () => {
         isClicked={isClicked.some((clicked) => clicked)}
         onClickSelectAll={onClickSelectAll}
         deleteSharedList={deleteSharedList}
-        saveSharedList={saveSharedList}
+        onClickSave={onClickSave}
       />
       {isLoading && (
         <LottieWrapper>
@@ -219,6 +231,21 @@ const Locker = () => {
         </LockerList>
       )}
       <div style={{ marginTop: "20px", color: "var(--color-white)" }}>.</div>
+      {showSubModal && (
+        <PrayDateCategoryInput
+          categoryList={categoryList}
+          showSubModal={showSubModal}
+          setShowSubModal={setShowSubModal}
+          isShowWordCount={false}
+          isDefault={true}
+          setUpdateDate={setDateInputValue}
+          setUpdateCategory={setCategoryInputValue}
+          buttonText="내 기도수첩에 저장하기"
+          value={`기도제목 ${selectedID.length}개 선택`}
+          category={firstCategoryIndex}
+          onClickFunc={() => onClickSave()}
+        />
+      )}
       <BottomButton onClick={() => navigate("/main")}>뒤로 가기</BottomButton>
     </LockerWrapper>
   );
