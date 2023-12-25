@@ -87,7 +87,7 @@ const SelectDateInput = ({
 SelectDateInput.defaultProps = {
   inputPlaceHolder: "기도제목을 입력해주세요",
   maxlen: 75,
-  maxrow: 3,
+  maxrow: 4,
 };
 
 export default SelectDateInput;

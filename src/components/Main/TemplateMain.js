@@ -124,7 +124,7 @@ const TemplateMain = ({ children, onInsert }) => {
               onClickFunc={submit}
               inputPlaceHolder={"기도제목을 입력해주세요"}
               maxlen={75}
-              maxrow={3}
+              maxrow={4}
             />
           ) : (
             <StyleInput
