@@ -72,12 +72,14 @@ export const useGroupPray = (groupId) => {
   );
 
 
-  const groupPrayData = data?.data.data || {};
+  const groupPrayData = data?.data.data?.groupPray || {};
+  const groupHeartCount = data?.data.data?.heartCount;
   const groupPrayList =
-    Object.keys(groupPrayData).length === 0 ? [] : groupPrayData;
+    Object.keys(groupPrayData).length === 0 ? {} : groupPrayData;
 
   return {
     groupPrayList,
+    groupHeartCount,
     refetchGroupPrayList,
     addGroupPray,
     deleteGroupPray,
