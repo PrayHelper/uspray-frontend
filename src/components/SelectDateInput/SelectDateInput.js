@@ -104,7 +104,7 @@ const SubModalWrapper = styled.div`
   flex-direction: column;
   z-index: 500;
   opacity: ${(props) => (props.showSubModal ? "1" : "0")};
-  transition: all 0.3s ease-in-out;
+  transition: all 0.1s ease-in-out;
   visibility: ${(props) => (props.showSubModal ? "visible" : "hidden")};
 `;
 
