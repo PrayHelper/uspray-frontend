@@ -4,18 +4,22 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import BlackScreen from "../BlackScreen/BlackScreen";
 
-/*
-  props 넘겨받을 목록 (2.0 History.js 파일 참고하기)
-  1. maxlen : 최대 길이, maxrow : 최대 줄바꿈, inputPlaceHolder
-  2. setUpdateDate 변수 (api 호출용 날짜 데이터 저장)
-  3. showSubModal setShowSubModal 변수 (현재 컴포넌트 창 켜져있는지)
-  4. onClickFunc 기도 추가 이벤트 함수
-  ------ Calender 관련 ------
-  1. selectedDate, setSelectedDate 변수 (현재 선택된 날짜)
-  2. showDatePicker, setShowDatePicker 변수 (달력 show 유무)
-*/
-
-const SelectDateInput = (props) => {
+const SelectDateInput = ({
+  maxlen, // 최대 길이
+  maxrow, // 최대 줄바꿈
+  inputPlaceHolder,
+  setUpdateDate, // api 호출용 날짜 데이터 저장 변수
+  showSubModal, // 현재 컴포넌트 창 켜져있는지 변수
+  setShowSubModal,
+  onClickFunc, // 기도 추가 이벤트 함수
+  value,
+  setValue,
+  // Calender 관련
+  selectedDate, // 현재 선택된 날짜 변수
+  setSelectedDate,
+  showDatePicker, // 달력 show 유무 변수
+  setShowDatePicker,
+}) => {
   const outside = useRef();
   const inputRef = useRef();
 
@@ -31,49 +35,47 @@ const SelectDateInput = (props) => {
     if (e.target.value.length > e.maxLength)
       e.target.value = e.target.value.slice(0, e.maxLength);
     setInputCount(e.target.value.length);
-    props.setValue(e.target.value);
+    setValue(e.target.value);
   };
 
   return (
     <>
-      <BlackScreen isModalOn={props.showSubModal} zindex={400} />
+      <BlackScreen isModalOn={showSubModal} zindex={400} />
       <SubModalWrapper
-        showSubModal={props.showSubModal}
+        showSubModal={showSubModal}
         ref={outside}
         onClick={(e) => {
-          if (e.target === outside.current) props.setShowSubModal(false);
+          if (e.target === outside.current) setShowSubModal(false);
         }}
       >
         <SubModalTop>
           <ModalInputWrapper>
             <ModalInput
-              placeholder={props.inputPlaceHolder}
-              maxRows={props.maxrow}
+              placeholder={inputPlaceHolder}
+              maxRows={maxrow}
               minRows={1}
               cacheMeasurements
-              maxlength={props.maxlen}
+              maxlength={maxlen}
               onChange={onInputHandler}
-              value={props.value}
+              value={value}
               ref={inputRef}
             />
             <Countwords>
               <p>
-                {inputCount}자 / {props.maxlen}자
+                {inputCount}자 / {maxlen}자
               </p>
             </Countwords>
           </ModalInputWrapper>
           <SelectDate
-            selectedDate={props.selectedDate}
-            setSelectedDate={props.setSelectedDate}
-            showDatePicker={props.showDatePicker}
-            setShowDatePicker={props.setShowDatePicker}
-            setUpdateDate={props.setUpdateDate}
-            showSubModal={props.showSubModal}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            showDatePicker={showDatePicker}
+            setShowDatePicker={setShowDatePicker}
+            setUpdateDate={setUpdateDate}
+            showSubModal={showSubModal}
           />
         </SubModalTop>
-        <SubModalBottom onClick={props.onClickFunc}>
-          기도제목 작성
-        </SubModalBottom>
+        <SubModalBottom onClick={onClickFunc}>기도제목 작성</SubModalBottom>
       </SubModalWrapper>
     </>
   );
