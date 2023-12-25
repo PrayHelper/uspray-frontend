@@ -71,6 +71,46 @@ export const useGroupPray = (groupId) => {
     }
   );
 
+  const { mutate: likeGroupPray } = useMutation(
+    async (groupPrayId) => {
+      return await postFetcher(`/grouppray/${groupPrayId}/like`);
+    },
+    {
+      onError: async (e) => {
+        console.log(e);
+      },
+      onSuccess: (res) => {
+        console.log(res);
+        refetchGroupPrayList();
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const { mutate: scrapGroupPray } = useMutation(
+    async (data) => {
+      return await postFetcher(`/grouppray/scrap`, data);
+    },
+    {
+      onError: async (e) => {
+        console.log(e);
+      },
+      onSuccess: (res) => {
+        console.log(res);
+        refetchGroupPrayList();
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
+
 
   const groupPrayData = data?.data.data?.groupPray || {};
   const groupHeartCount = data?.data.data?.heartCount;
@@ -83,5 +123,7 @@ export const useGroupPray = (groupId) => {
     refetchGroupPrayList,
     addGroupPray,
     deleteGroupPray,
+    likeGroupPray,
+    scrapGroupPray,
   };
 };
