@@ -21,21 +21,24 @@ const SelectDateInput = ({
   setShowDatePicker,
 }) => {
   const outside = useRef();
-  const inputRef = useRef();
+  const modalInputRef = useRef();
 
-  const [inputCount, setInputCount] = useState(0);
+  const [inputCount, setInputCount] = useState(value ? value.length : 0);
+  const [currentValue, setCurrentValue] = useState(value || "");
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
+    if (showSubModal && modalInputRef.current) {
+      modalInputRef.current.focus();
+      const length = modalInputRef.current.value.length;
+      modalInputRef.current.setSelectionRange(length, length);
     }
   }, []);
 
   const onInputHandler = (e) => {
-    if (e.target.value.length > e.maxLength)
-      e.target.value = e.target.value.slice(0, e.maxLength);
-    setInputCount(e.target.value.length);
-    setValue(e.target.value);
+    const inputValue = e.target.value.slice(0, maxlen);
+    setCurrentValue(inputValue);
+    setInputCount(inputValue.length);
+    setValue(inputValue);
   };
 
   return (
@@ -55,10 +58,10 @@ const SelectDateInput = ({
               maxRows={maxrow}
               minRows={1}
               cacheMeasurements
-              maxlength={maxlen}
+              maxLength={maxlen}
               onChange={onInputHandler}
-              value={value}
-              ref={inputRef}
+              value={currentValue}
+              ref={modalInputRef}
             />
             <Countwords>
               <p>
