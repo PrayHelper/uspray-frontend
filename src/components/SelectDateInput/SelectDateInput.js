@@ -120,7 +120,7 @@ const SubModalTop = styled.div`
 const ModalInputWrapper = styled.div``;
 
 const ModalInput = styled(TextareaAutosize)`
-  width: 100%;
+  width: calc(100% - 4px);
   margin-bottom: 12px;
   border: none;
   font-size: 16px;
@@ -135,6 +135,7 @@ const ModalInput = styled(TextareaAutosize)`
   }
   font-weight: 400;
   resize: none;
+  border-radius: 0px;
 `;
 
 const Countwords = styled.span`
