@@ -15,13 +15,15 @@ const MainContent = styled.div`
 
 const NameContent = styled.div`
   flex-shrink: 0;
-  font-family: "Noto Sans KR";
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
   line-height: 17px;
-  padding-right: 8px;
+  padding-left: 4px;
   border-right: 1px solid #cecece;
+  width: 48px;
+  display: flex;
+  align-items: center;
 `;
 
 const TextContent = styled.div`
@@ -92,17 +94,20 @@ function PrayerContent({
         ))}
       <NameContent
         style={{ color: bottom ? "#FFFFFF" : "#7BAB6F" }}
-        onClick={() => contentClick(id, checked, isShare)}>
+        onClick={() => contentClick(id, checked, isShare)}
+      >
         {name}
       </NameContent>
       <TextContent
         style={{ color: bottom ? "#D0E8CB" : "#496143" }}
-        onClick={() => contentClick(id, checked, isShare)}>
+        onClick={() => contentClick(id, checked, isShare)}
+      >
         {text}
       </TextContent>
       {dayToggle ? (
         <DdayContent
-          style={{ color: bottom ? "#FFFFFF" : "#A1B398", fontSize: "12px" }}>
+          style={{ color: bottom ? "#FFFFFF" : "#A1B398", fontSize: "12px" }}
+        >
           {dday !== 0 ? "D-" + dday : "D-Day"}
         </DdayContent>
       ) : (
