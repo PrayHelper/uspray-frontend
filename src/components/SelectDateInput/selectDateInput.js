@@ -1,83 +1,61 @@
 import TextareaAutosize from "react-textarea-autosize";
-import SelectDate from "../SelectDate/SelectDate";
-import { useEffect, useRef, useState } from "react";
+import SelectDate from "../SelectDate/selectDate";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 
-const SelectDateInput = ({
-  maxlen, // 최대 길이
-  maxrow, // 최대 줄바꿈
-  inputPlaceHolder,
-  setUpdateDate, // api 호출용 날짜 데이터 저장 변수
-  showSubModal, // 현재 컴포넌트 창 켜져있는지 변수
-  setShowSubModal,
-  onClickFunc, // 기도 추가 이벤트 함수
-  value,
-  setValue,
-  // Calender 관련
-  selectedDate, // 현재 선택된 날짜 변수
-  setSelectedDate,
-  showDatePicker, // 달력 show 유무 변수
-  setShowDatePicker,
-}) => {
+/*
+  props 넘겨받을 목록 (2.0 History.js 파일 참고하기)
+  1. maxlen : 최대 길이, maxrow : 최대 줄바꿈, inputPlaceHolder
+  2. setUpdateDate 변수 (api 호출용 날짜 데이터 저장)
+  3. showSubModal setShowSubModal 변수 (현재 컴포넌트 창 켜져있는지)
+  4. onClickFunc 기도 추가 이벤트 함수
+  ------ Calender 관련 ------
+  1. selectedDate, setSelectedDate 변수 (현재 선택된 날짜)
+  2. showDatePicker, setShowDatePicker 변수 (달력 show 유무)
+*/
+
+const SelectDateInput = (props) => {
   const outside = useRef();
-  const modalInputRef = useRef();
 
-  const [inputCount, setInputCount] = useState(value ? value.length : 0);
-  const [currentValue, setCurrentValue] = useState(value || "");
-
-  useEffect(() => {
-    if (showSubModal && modalInputRef.current) {
-      modalInputRef.current.focus();
-      const length = modalInputRef.current.value.length;
-      modalInputRef.current.setSelectionRange(length, length);
-    }
-  }, []);
+  const [inputCount, setInputCount] = useState(0);
 
   const onInputHandler = (e) => {
-    const inputValue = e.target.value.slice(0, maxlen);
-    setCurrentValue(inputValue);
-    setInputCount(inputValue.length);
-    setValue(inputValue);
+    if (e.target.value.length > e.maxLength)
+      setInputCount(e.value.slice(0, e.maxLength));
+    setInputCount(e.target.value.length);
   };
 
   return (
     <>
-      <BlackScreen isModalOn={showSubModal} zindex={400} />
-      <SubModalWrapper
-        showSubModal={showSubModal}
-        ref={outside}
-        onClick={(e) => {
-          if (e.target === outside.current) setShowSubModal(false);
-        }}
-      >
+      <SubModalWrapper showSubModal={props.showSubModal} ref={outside}>
         <SubModalTop>
           <ModalInputWrapper>
             <ModalInput
-              placeholder={inputPlaceHolder}
-              maxRows={maxrow}
+              placeholder={props.inputPlaceHolder}
+              maxRows={props.maxrow}
               minRows={1}
               cacheMeasurements
-              maxLength={maxlen}
+              maxlength={props.maxlen}
               onChange={onInputHandler}
-              value={currentValue}
-              ref={modalInputRef}
             />
             <Countwords>
               <p>
-                {inputCount}자 / {maxlen}자
+                {inputCount}자 / {props.maxlen}자
               </p>
             </Countwords>
           </ModalInputWrapper>
           <SelectDate
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-            showDatePicker={showDatePicker}
-            setShowDatePicker={setShowDatePicker}
-            setUpdateDate={setUpdateDate}
-            showSubModal={showSubModal}
+            selectedDate={props.selectedDate}
+            setSelectedDate={props.setSelectedDate}
+            showDatePicker={props.showDatePicker}
+            setShowDatePicker={props.setShowDatePicker}
+            setUpdateDate={props.setUpdateDate}
+            showSubModal={props.showSubModal}
           />
         </SubModalTop>
-        <SubModalBottom onClick={onClickFunc}>기도제목 작성</SubModalBottom>
+        <SubModalBottom onClick={props.onClickFunc}>
+          오늘의 기도에 추가하기
+        </SubModalBottom>
       </SubModalWrapper>
     </>
   );
@@ -86,7 +64,7 @@ const SelectDateInput = ({
 SelectDateInput.defaultProps = {
   inputPlaceHolder: "기도제목을 입력해주세요",
   maxlen: 75,
-  maxrow: 4,
+  maxrow: 3,
 };
 
 export default SelectDateInput;
@@ -105,7 +83,7 @@ const SubModalWrapper = styled.div`
   border-radius: 16px;
   z-index: 400;
   opacity: ${(props) => (props.showSubModal ? "1" : "0")};
-  transition: all 0.1s ease-in-out;
+  transition: all 0.3s ease-in-out;
   visibility: ${(props) => (props.showSubModal ? "visible" : "hidden")};
 `;
 
@@ -121,7 +99,7 @@ const SubModalTop = styled.div`
 const ModalInputWrapper = styled.div``;
 
 const ModalInput = styled(TextareaAutosize)`
-  width: calc(100% - 4px);
+  width: 100%;
   margin-bottom: 12px;
   border: none;
   font-size: 16px;
@@ -135,8 +113,6 @@ const ModalInput = styled(TextareaAutosize)`
     border-bottom: 1px solid var(--color-dark-green);
   }
   font-weight: 400;
-  resize: none;
-  border-radius: 0px;
 `;
 
 const Countwords = styled.span`

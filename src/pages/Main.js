@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import PrayerList from "../components/Main/PrayerList";
 import TemplateMain from "../components/Main/TemplateMain";
 import { usePrayList } from "../hooks/usePrayList";
@@ -7,10 +7,12 @@ import { useCompletePrayList } from "../hooks/useCompletePrayList";
 import { usePrayDelete } from "../hooks/usePrayDelete";
 import { useChangeValue } from "../hooks/useChangeValue";
 import { useSendPrayItem } from "../hooks/useSendPrayItem";
+import { useLocation } from "react-router";
+import { useShareSocial } from "../hooks/useShareSocial";
 
 const Main = () => {
-  const { data: dateList, refetch: refetchDateList } = usePrayList("date");
-  const { data: cntList, refetch: refetchCntList } = usePrayList("cnt");
+  const { data: prayList, refetch: refetchPrayList } = usePrayList("date");
+  const { data: pray_List, refetch: refetch_PrayList } = usePrayList("cnt");
   const [uncompletedList, setUncompletedList] = useState([]);
   const [completedList, setCompletedList] = useState([]);
   const [clickId, setClickId] = useState(0);
@@ -37,6 +39,12 @@ const Main = () => {
   const [dayToggle, setDayToggle] = useState(false);
 
 
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const shareData = query.getAll('share');
+
+  const { data: shareSocialList, refetch: refetch_shareSocialList} 
+  = useShareSocial(shareData);
 
   const renderingData = async (result, sticker) => {
     setisloading(true);
@@ -67,7 +75,7 @@ const Main = () => {
           count: uncompletedItem.pray_cnt,
           isShare: uncompletedItem.is_shared
         });
-      });
+      });     
       result.data.completed.map((completedItem) => {
         let dDay = dDayCalculate(completedItem.deadline);
         completedList.push({
@@ -92,22 +100,30 @@ const Main = () => {
   const sortDownPosition = (result) => {
     setDownPosition(result);
   };
-
   useEffect(() => {
-    if (!dateList) {
+    if (!prayList) {
       setisloading(true);
       return;
     }
-    renderingData(dateList, false);
-  }, [dateList]);
+    renderingData(prayList, false);
+  }, [prayList]);
+
 
   useEffect(() => {
-    if (!cntList) {
+    if (!pray_List) {
       setisloading(true);
       return;
     }
-    renderingData(cntList, false);
-  }, [cntList]);
+    renderingData(pray_List, false);
+  }, [pray_List]);
+
+
+  useEffect(() =>{
+    if(Array.isArray(shareData) && shareData.length !== 0){
+        refetch_shareSocialList();
+    }
+  }, [shareData]);
+
   // 모달 메세지 띄우는 거 하는 useEffect
   useEffect(() => {
     if (modalText) {
@@ -126,7 +142,7 @@ const Main = () => {
   const { mutate: mutateSendPrayItem } = useSendPrayItem();
 
 
-  const calculateDate = (date) => {
+  const calculateDate = (date) =>{
     const yyyy = date.getFullYear();
     const mm = String(date.getMonth() + 1).padStart(2, "0");
     const dd = String(date.getDate()).padStart(2, "0");
@@ -136,33 +152,41 @@ const Main = () => {
 
   // 기도를 입력하는 코드
   const onInsert = async (name, Dday, text) => {
-    var date = new Date();
-    var day = addDay(date, Dday);
-    var zeroTime = setZeroTime(day);
-    var deadline =
-      zeroTime.getFullYear() +
-      "-" +
-      (zeroTime.getMonth() + 1) +
-      "-" +
-      zeroTime.getDate();
-    mutateSendPrayItem(
-      {
-        target: name,
-        title: text,
-        deadline: deadline,
-      },
-      {
-        onSuccess: () => {
-          setUpPosition(true);
-          setDownPosition(false);
-          dayToggleTopDay && refetchDateList();
-          dayToggleTopPrayer && refetchCntList();
+    if (text === "") {
+      return alert("기도제목이 입력이 되지 않았습니다.");
+    } 
+    if(name == ""){
+      return alert("이름이 입력되지 않았습니다!");
+    }
+    else {
+      var date = new Date();
+      var day = addDay(date, Dday);
+      var zeroTime = setZeroTime(day);
+      var deadline =
+        zeroTime.getFullYear() +
+        "-" +
+        (zeroTime.getMonth() + 1) +
+        "-" +
+        zeroTime.getDate();
+      mutateSendPrayItem(
+        {
+          target: name,
+          title: text,
+          deadline: deadline,
         },
-      }
-    );
-  }
+        {
+          onSuccess: () => {
+            setUpPosition(true);
+            setDownPosition(false);
+            dayToggleTopDay && refetchPrayList();
+            dayToggleTopPrayer && refetch_PrayList();
+          },
+        }
+      );
+    }
+  };
 
-  // 날짜를 넣는데에 있어서 도와주는 함수(onInsert에서 쓰임)
+// 날짜를 넣는데에 있어서 도와주는 함수(onInsert에서 쓰임)
   const addDay = (today, Dday) => {
     var day = new Date(today);
     day.setDate(day.getDate() + Dday);
@@ -182,8 +206,8 @@ const Main = () => {
       { id: id },
       {
         onSuccess: (res) => {
-          dayToggleBottomDay && refetchDateList();
-          dayToggleBottomPrayer && refetchCntList();
+          dayToggleBottomDay && refetchPrayList();
+          dayToggleBottomPrayer && refetch_PrayList();
           renderingData(res, true);
           setUncompletedList(
             uncompletedList.filter((prayer) => prayer.id !== id)
@@ -197,12 +221,12 @@ const Main = () => {
   const contentClick = (id, checked, shareCheck) => {
     if (isChecked === isModify) {
       if (isShare) {
-        if (checked) {
+        if(checked){
           clickOff(id);
-        } else {
-          shareList(id, !checked);
+        }else{
+        shareList(id, !checked);
         }
-
+        
       } else {
         setIsChecked(!isChecked);
         setClickIsShare(shareCheck);
@@ -248,13 +272,13 @@ const Main = () => {
     var returnValue_ = completedList.find(function (data) {
       return data.id === id;
     });
-    if (returnValue) {
+    if(returnValue){
       var data = returnValue
       const date = new Date();
       var changeDate = addDay(date, data.dday);
       calculateDate(changeDate)
       setModifyToggle(true);
-    } else {
+    }else{
       var data = returnValue_
       const date = new Date();
       var changeDate = addDay(date, data.dday);
@@ -298,7 +322,7 @@ const Main = () => {
     );
     setIsDeleted(!isDeleted);
   };
-
+  
   // isDelete를 바꾸는 함수
   const onDeleted = () => {
     setIsDeleted(!isDeleted);
@@ -313,16 +337,16 @@ const Main = () => {
       mutateChangeValue(
         {
           id: id,
-          data: { target: name, title: value, deadline: newUpdateDate },
+          data: { target: name, title: value, deadline : newUpdateDate},
         },
         {
           onSuccess: () => {
-            if (modifyToggle) {
-              dayToggleTopDay && refetchDateList();
-              dayToggleTopPrayer && refetchCntList();
-            } else {
-              dayToggleBottomDay && refetchDateList();
-              dayToggleBottomPrayer && refetchCntList();
+            if(modifyToggle){
+              dayToggleTopDay && refetchPrayList();
+              dayToggleTopPrayer && refetch_PrayList();
+            }else{
+              dayToggleBottomDay && refetchPrayList();
+              dayToggleBottomPrayer && refetch_PrayList();
             }
             setmodalToggle(true);
             setModalText("기도제목이 수정되었어요.")
@@ -337,9 +361,9 @@ const Main = () => {
   const dDayCalculate = (res_data) => {
     var today = new Date();
     var dday = new Date(res_data);
-    dday.setHours(23, 59, 59);
+    dday.setHours(23,59,59);
     var diff = dday.getTime() - today.getTime();
-    var result = Math.floor(diff / (1000 * 60 * 60 * 24));
+    var result = Math.floor(diff/ (1000 * 60 * 60 * 24));
     return result;
   };
 
@@ -380,20 +404,24 @@ const Main = () => {
   };
 
   // 공유모드에서 체크를 누르고 다시 체크를 눌렀을 때
-  const clickOff = (id) => {
-    setShareLength(shareLength - 1);
-    setUncompletedList(prayerContent => prayerContent.map(PrayerContent =>
-      (Number(PrayerContent.id) === Number(id) ? { ...PrayerContent, checked: false } : PrayerContent)));
-    setCompletedList(prayerMoreContent => prayerMoreContent.map(PrayerMoreContent =>
-      (Number(PrayerMoreContent.id) === Number(id) ? { ...PrayerMoreContent, checked: false } : PrayerMoreContent)));
+  const clickOff = (id) =>{
+    setShareLength(shareLength-1);
+    setUncompletedList(prayerContent => prayerContent.map(PrayerContent => 
+        (Number(PrayerContent.id) === Number(id) ? {...PrayerContent, checked:false}: PrayerContent)));
+    setCompletedList(prayerMoreContent => prayerMoreContent.map(PrayerMoreContent => 
+        (Number(PrayerMoreContent.id) === Number(id) ? {...PrayerMoreContent, checked:false}: PrayerMoreContent)));
     let filtered = Sharelist.filter((element) => Number(element) !== Number(id));
     setShareList(filtered);
-  }
+}
 
 
   return (
     <TemplateMain
       onInsert={onInsert}
+      setshareToggle={setshareToggle}
+      shareToggle={shareToggle}
+      isShare={isShare}
+      setIsShare={setIsShare}
     >
       <PrayerList
         prayerContent={uncompletedList}
@@ -440,10 +468,10 @@ const Main = () => {
         Sharelist={Sharelist}
         setShareList={setShareList}
         clickIsShare={clickIsShare}
-        clickOff={clickOff}
+        clickOff = {clickOff}
         updateDate={updateDate}
         setUpdateDate={setUpdateDate}
-        dayToggle={dayToggle}
+        dayToggle={dayToggle} 
         setDayToggle={setDayToggle}
       />
     </TemplateMain>

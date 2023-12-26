@@ -5,7 +5,9 @@ const LockerContent = (props) => {
     <LockerContentWrapper isClicked={props.isClicked}>
       <TopContentWrapper>
         <Name>{props.target}</Name>
-        <NameNDate>D+{props.dday}</NameNDate>
+        <NameNDate>
+          {props.name}, D+{props.dday}
+        </NameNDate>
       </TopContentWrapper>
       <Content>{props.title}</Content>
     </LockerContentWrapper>
