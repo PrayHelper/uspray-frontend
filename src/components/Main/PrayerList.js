@@ -18,9 +18,9 @@ const Background = styled.div`
   width: 100%;
   background-color: #d0e8cb;
   height: calc(100vh - 150px);
-  overflow-y : scroll;
-  min-height: 812px;
-  border-radius : 32px 32px 0px 0px;
+  overflow-y: scroll;
+  min-height: fit-content;
+  border-radius: 32px 32px 0px 0px;
 `;
 
 const TopContent = styled.div`
@@ -53,7 +53,6 @@ const ToastWrapper = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
 
 function PrayerList({
   prayerContent,
@@ -247,28 +246,29 @@ function PrayerList({
         style={{
           zIndex: "103",
           opacity: isModify ? "1" : "0",
-          pointerEvents: isModify ? "auto" : "none"
+          pointerEvents: isModify ? "auto" : "none",
         }}
-        onClick={onModify}>
-      </BackgroundBright>
+        onClick={onModify}
+      ></BackgroundBright>
       <BackgroundBright
         style={{
           zIndex: "103",
           opacity: isDeleted ? "1" : "0",
           pointerEvents: isDeleted ? "auto" : "none",
         }}
-        onClick={onDeleted}></BackgroundBright>
+        onClick={onDeleted}
+      ></BackgroundBright>
       <BackgroundBright
         style={{
           zIndex: "103",
           opacity: isChecked ? "1" : "0",
           pointerEvents: isChecked ? "auto" : "none",
         }}
-        onClick={changeCheck}></BackgroundBright>
+        onClick={changeCheck}
+      ></BackgroundBright>
       <Background style={{ paddingBottom: padding }}>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
-          <div
-            style={{ flex: 1, flexGrow: 1, flexBasis: "500px" }}>
+          <div style={{ flex: 1, flexGrow: 1, flexBasis: "500px" }}>
             <TopContent>
               <TodayPrayer>기도할게요</TodayPrayer>
               <PrayerSortToggle
@@ -306,8 +306,7 @@ function PrayerList({
               )}
             </PrayerContentStyle>
           </div>
-          <div
-            style={{ flex: 1, flexGrow: 1, flexBasis: "500px" }}>
+          <div style={{ flex: 1, flexGrow: 1, flexBasis: "500px" }}>
             <TopContent>
               <TodayPrayer style={{ marginTop: "46px" }}>
                 기도했어요
@@ -357,7 +356,8 @@ function PrayerList({
           shareLength={shareLength}
           setshareToggle={setshareToggle}
           isModify={isModify}
-          isChecked={isChecked}></Share>
+          isChecked={isChecked}
+        ></Share>
         <ToastWrapper>{modalToggle && <Toast>{modalText}</Toast>}</ToastWrapper>
         <BottomMenu
           completeBtnClick={completeBtnClick}

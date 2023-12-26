@@ -5,21 +5,21 @@ import { useGetInfo } from "../../hooks/useGetInfo";
 import SelectDateInput from "../SelectDateInput/SelectDateInput";
 
 const BackgroundWrapper = styled.div`
-    width: 100%; 
-    background-color: #7BAB6E;
-    overflow-y : hidden;
-    height: 100vh;
-`
+  width: 100%;
+  background-color: #7bab6e;
+  overflow-y: hidden;
+  height: 100vh;
+`;
 
 const BackgroundInput = styled.div`
-    display: flex;
-    position: relative;
-    padding: 16px 12px 12px 12px;
-    border-radius : ${(props) => props.visible ? "16px 16px 0px 0px" : "16px"};
-    background: white;
-    box-sizing: border-box;
-    align-items: center;
-    transition: all 0.5s ease-in-out;
+  display: flex;
+  position: relative;
+  padding: 12px;
+  border-radius: ${(props) => (props.visible ? "16px 16px 0px 0px" : "16px")};
+  background: white;
+  box-sizing: border-box;
+  align-items: center;
+  transition: all 0.5s ease-in-out;
 `;
 
 const LogoTitle = styled.div`
@@ -124,7 +124,7 @@ const TemplateMain = ({ children, onInsert }) => {
               onClickFunc={submit}
               inputPlaceHolder={"기도제목을 입력해주세요"}
               maxlen={75}
-              maxrow={3}
+              maxrow={4}
             />
           ) : (
             <StyleInput

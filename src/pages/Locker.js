@@ -13,15 +13,15 @@ import { useLocation } from "react-router";
 import { useShareSocialNew } from "../hooks/useShareSocialNew";
 import { useRef } from "react";
 
-
 const Locker = () => {
   const [data, setData] = useState([]);
   const [isClicked, setIsClicked] = useState([]);
   const [selectedID, setSelectedID] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const location = useLocation();
   const query = new URLSearchParams(location.search);
-  const shareData = query.getAll('share');
+  const shareData = query.getAll("share");
   const [isNewSocial, setIsNewSocial] = useState(true);
   const { showToast } = useToast({});
   const prevShareValues = useRef([]);
@@ -86,7 +86,9 @@ const Locker = () => {
   const { data: sharedListData, refetch: refetchSharedListData } =
     useFetchSharedList();
 
-  const { mutate: mutateUseShareSocialNew } = useShareSocialNew(refetchSharedListData);
+  const { mutate: mutateUseShareSocialNew } = useShareSocialNew(
+    refetchSharedListData
+  );
   const fetchSharedList = () => {
     setData(sharedListData.data);
     setIsClicked(new Array(sharedListData.data.length).fill(false));
@@ -127,8 +129,10 @@ const Locker = () => {
   const { mutate: updateListData } = useUpdateSharedList();
 
   const saveSharedList = () => {
+    if (isSaving) return;
     let pray_id_list = []; // 빈 배열을 초기화하여 pray_id_list를 설정합니다.
 
+    setIsSaving(true);
     if (isClicked.every((clicked) => clicked)) {
       // 모든 항목이 선택된 경우 모든 pray_id를 배열에 추가합니다.
       pray_id_list = data.map((item) => item.pray_id);
@@ -149,30 +153,30 @@ const Locker = () => {
             theme: ToastTheme.SUCCESS,
           });
           refetchSharedListData();
+          setIsSaving(false);
+        },
+        onError: () => {
+          setIsSaving(false);
         },
       }
     );
   };
 
-
   useEffect(() => {
     if (Array.isArray(shareData) && shareData.length !== 0) {
       var queryString = "share=" + atob(shareData);
       var params = new URLSearchParams(queryString);
-      var shareValues = params.getAll('share');
+      var shareValues = params.getAll("share");
       if (shareValues.toString() !== prevShareValues.current.toString()) {
         // shareValues가 이전과 다를 때만 mutateUseShareSocialNew를 호출합니다.
-        mutateUseShareSocialNew(
-          {
-            pray_id_list: shareValues
-          },
-        );
+        mutateUseShareSocialNew({
+          pray_id_list: shareValues,
+        });
       }
       // 현재 shareValues를 prevShareValues에 저장합니다.
       prevShareValues.current = shareValues;
     }
   }, [shareData.length]);
-
 
   useEffect(() => {
     setIsLoading(true);

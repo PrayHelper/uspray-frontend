@@ -21,21 +21,24 @@ const SelectDateInput = ({
   setShowDatePicker,
 }) => {
   const outside = useRef();
-  const inputRef = useRef();
+  const modalInputRef = useRef();
 
-  const [inputCount, setInputCount] = useState(0);
+  const [inputCount, setInputCount] = useState(value ? value.length : 0);
+  const [currentValue, setCurrentValue] = useState(value || "");
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
+    if (showSubModal && modalInputRef.current) {
+      modalInputRef.current.focus();
+      const length = modalInputRef.current.value.length;
+      modalInputRef.current.setSelectionRange(length, length);
     }
   }, []);
 
   const onInputHandler = (e) => {
-    if (e.target.value.length > e.maxLength)
-      e.target.value = e.target.value.slice(0, e.maxLength);
-    setInputCount(e.target.value.length);
-    setValue(e.target.value);
+    const inputValue = e.target.value.slice(0, maxlen);
+    setCurrentValue(inputValue);
+    setInputCount(inputValue.length);
+    setValue(inputValue);
   };
 
   return (
@@ -55,10 +58,10 @@ const SelectDateInput = ({
               maxRows={maxrow}
               minRows={1}
               cacheMeasurements
-              maxlength={maxlen}
+              maxLength={maxlen}
               onChange={onInputHandler}
-              value={value}
-              ref={inputRef}
+              value={currentValue}
+              ref={modalInputRef}
             />
             <Countwords>
               <p>
@@ -84,7 +87,7 @@ const SelectDateInput = ({
 SelectDateInput.defaultProps = {
   inputPlaceHolder: "기도제목을 입력해주세요",
   maxlen: 75,
-  maxrow: 3,
+  maxrow: 4,
 };
 
 export default SelectDateInput;
@@ -101,7 +104,7 @@ const SubModalWrapper = styled.div`
   flex-direction: column;
   z-index: 500;
   opacity: ${(props) => (props.showSubModal ? "1" : "0")};
-  transition: all 0.3s ease-in-out;
+  transition: all 0.1s ease-in-out;
   visibility: ${(props) => (props.showSubModal ? "visible" : "hidden")};
 `;
 
@@ -117,7 +120,7 @@ const SubModalTop = styled.div`
 const ModalInputWrapper = styled.div``;
 
 const ModalInput = styled(TextareaAutosize)`
-  width: 100%;
+  width: calc(100% - 4px);
   margin-bottom: 12px;
   border: none;
   font-size: 16px;
@@ -132,6 +135,7 @@ const ModalInput = styled(TextareaAutosize)`
   }
   font-weight: 400;
   resize: none;
+  border-radius: 0px;
 `;
 
 const Countwords = styled.span`

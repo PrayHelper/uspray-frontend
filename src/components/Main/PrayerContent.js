@@ -21,7 +21,7 @@ const NameContent = styled.div`
   line-height: 17px;
   padding-left: 4px;
   border-right: 1px solid #cecece;
-  width: 52px;
+  width: 48px;
   display: flex;
   align-items: center;
 `;

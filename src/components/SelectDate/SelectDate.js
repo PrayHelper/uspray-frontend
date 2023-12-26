@@ -106,7 +106,7 @@ const SubModalBtn = styled.div`
   border: 1px solid var(--color-green);
   border-radius: 8px;
   padding: 4px 0px;
-  width: 48px;
+  width: 44px;
   word-break: keep-all;
   text-align: center;
   font-size: 12px;
@@ -122,7 +122,7 @@ const SubModalBtn = styled.div`
     `}
   &:active {
     filter: ${(props) =>
-    props.disabled ? "brightness(1)" : "brightness(0.9)"};
+      props.disabled ? "brightness(1)" : "brightness(0.9)"};
     scale: ${(props) => (props.disabled ? "1" : "0.90")};
     transition: all 0.1s ease-in-out;
   }
@@ -132,7 +132,6 @@ const SubModalDate = styled.div`
   font-size: 12px;
   color: var(--color-green);
   transform: translateX(-4px);
-  margin-left: 4px;
   white-space: nowrap;
 `;
 
