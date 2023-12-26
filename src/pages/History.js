@@ -235,7 +235,7 @@ export default History;
 const HistoryWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   position: relative;
   /* padding-top: 65px; */
@@ -275,7 +275,7 @@ const NoDataContent = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  position: fixed;
+  position: absolute;
   /* top: ${(props) => (props.showSubModal ? `40%` : `50%`)}; */
   bottom: ${(props) => (props.showSubModal ? `32%` : `25%`)};
   left: 50%;
@@ -348,7 +348,7 @@ const ModalButton1 = styled.button`
   width: 100%;
   background-color: var(
     ${(props) =>
-    props.showSubModal ? "--color-light-green" : "--color-dark-green"}
+      props.showSubModal ? "--color-light-green" : "--color-dark-green"}
   );
   border: none;
   border-radius: 16px;
@@ -374,13 +374,13 @@ const ModalButton2 = styled.button`
   &:active {
     transition: all 0.2s ease-in-out;
     filter: ${(props) =>
-    props.disabled ? "brightness(1)" : "brightness(0.9)"};
+      props.disabled ? "brightness(1)" : "brightness(0.9)"};
     scale: ${(props) => (props.disabled ? "1" : "0.98")};
   }
 `;
 
 const SubModalWrapper = styled.div`
-  position: fixed;
+  position: absolute;
   left: 50%;
   transform: translate(-50%, -40%);
   width: calc(100vw - 64px);

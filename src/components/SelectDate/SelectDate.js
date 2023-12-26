@@ -62,8 +62,7 @@ const SelectDate = (props) => {
         <SubModalBtn
           key={option}
           isSelected={selectedBtn === option}
-          onClick={() => onChangeDate(option)}
-        >
+          onClick={() => onChangeDate(option)}>
           {`${option}일`}
         </SubModalBtn>
       ))}
@@ -77,7 +76,7 @@ const SelectDate = (props) => {
         onClick={onClickCalendar}
       />
 
-      {props.showDatePicker && (
+      {selectedBtn === "calendar" && (
         <DatePickerContainer>
           <Calender
             selectedDate={props.selectedDate}

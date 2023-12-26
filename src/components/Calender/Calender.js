@@ -46,7 +46,8 @@ const Calender = (props) => {
       minDate={new Date()}
       dateFormat="yyyy-MM-dd"
       popperPlacement="bottom-start"
-      onClickOutside={() => props.setShowDatePicker(false)}
+      // 스크롤 시에도 동작하는 UX 이슈로 인해 비활성화
+      // onClickOutside={() => props.setShowDatePicker(false)}
       locale={ko}
       inline
     />
