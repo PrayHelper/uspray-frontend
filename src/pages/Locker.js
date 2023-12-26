@@ -148,12 +148,12 @@ const Locker = () => {
       },
       {
         onSuccess: () => {
-          setIsSaving(false);
           showToast({
             message: "기도제목이 저장되었습니다.",
             theme: ToastTheme.SUCCESS,
           });
           refetchSharedListData();
+          setIsSaving(false);
         },
         onError: () => {
           setIsSaving(false);
