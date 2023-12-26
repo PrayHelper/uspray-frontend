@@ -37,40 +37,6 @@ const TodayPrayer = styled.div`
   margin: 44px 0px 13px 34px;
   color: #7bab6e;
 `;
-const BtnSet = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 8px;
-  margin-top: 40px;
-  margin-right: 32px;
-  background-color: #7bab6e;
-  border: none;
-  border-radius: 4px;
-  padding: 4px;
-`;
-
-const BtnElementDay = styled.button`
-  font-size: 10px;
-  padding: 2px 6px;
-  border: none;
-  border-radius: 2px;
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-`;
-
-const BtnElementPrayer = styled.button`
-  font-size: 10px;
-  padding: 2px 6px;
-  border: none;
-  border-radius: 2px;
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-`;
 
 const PrayerContentStyle = styled.div`
   background-color: #ffffff;
@@ -220,11 +186,12 @@ function PrayerList({
       setshareToggle(!shareToggle);
       setIsShare(!isShare);
       const listJoin = Sharelist.join("&share=");
+      var encodeList = btoa(listJoin);
       if (isMobile()) {
         if (/android/i.test(navigator.userAgent)) {
           shareLink({
             title: "Web_share",
-            url: `${WEB_ORIGIN}/main?share=` + listJoin,
+            url: `${WEB_ORIGIN}/locker?share=` + encodeList,
           });
         } else if (
           /iPad|iPhone|iPod/.test(navigator.userAgent) ||
@@ -232,14 +199,14 @@ function PrayerList({
         ) {
           navigator.share({
             title: "Web_share",
-            url: `${WEB_ORIGIN}/main?share=` + listJoin,
+            url: `${WEB_ORIGIN}/locker?share=` + encodeList,
           });
         } else {
           alert("공유하기가 지원되지 않는 환경 입니다.");
         }
       }
 
-      console.log(`${WEB_ORIGIN}/main?share=` + listJoin);
+      console.log(`${WEB_ORIGIN}/locker?share=` + encodeList);
       setShareList([]);
       setPrayerContent((prayerContent) =>
         prayerContent.map((prayerContent) => ({
@@ -280,21 +247,24 @@ function PrayerList({
           opacity: isModify ? "1" : "0",
           pointerEvents: isModify ? "auto" : "none",
         }}
-        onClick={onModify}></BackgroundBright>
+        onClick={onModify}
+      ></BackgroundBright>
       <BackgroundBright
         style={{
           zIndex: "103",
           opacity: isDeleted ? "1" : "0",
           pointerEvents: isDeleted ? "auto" : "none",
         }}
-        onClick={onDeleted}></BackgroundBright>
+        onClick={onDeleted}
+      ></BackgroundBright>
       <BackgroundBright
         style={{
           zIndex: "103",
           opacity: isChecked ? "1" : "0",
           pointerEvents: isChecked ? "auto" : "none",
         }}
-        onClick={changeCheck}></BackgroundBright>
+        onClick={changeCheck}
+      ></BackgroundBright>
       <Background style={{ paddingBottom: padding }}>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           <div style={{ flex: 1, flexGrow: 1, flexBasis: "500px" }}>
@@ -385,7 +355,8 @@ function PrayerList({
           shareLength={shareLength}
           setshareToggle={setshareToggle}
           isModify={isModify}
-          isChecked={isChecked}></Share>
+          isChecked={isChecked}
+        ></Share>
         <ToastWrapper>{modalToggle && <Toast>{modalText}</Toast>}</ToastWrapper>
         <BottomMenu
           completeBtnClick={completeBtnClick}
@@ -406,6 +377,7 @@ function PrayerList({
           setUpdateDate={setUpdateDate}
           dayToggle={dayToggle}
           setDayToggle={setDayToggle}
+          clickIsShare={clickIsShare}
         />
         <DeleteBar
           deleteBtnClick={deleteBtnClick}

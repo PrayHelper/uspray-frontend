@@ -9,6 +9,7 @@ import { useHistoryModify } from "../hooks/useHistoryModify";
 import Lottie from "react-lottie";
 import LottieData from "../components/Main/json/uspray.json";
 import useToast from "../hooks/useToast";
+import SelectDate from "../components/SelectDate/SelectDate";
 import SelectDateInput from "../components/SelectDateInput/SelectDateInput";
 
 const History = () => {
@@ -21,13 +22,7 @@ const History = () => {
   const [selectedBtn, setSelectedBtn] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [pageMy, setPageMy] = useState(1);
-  const [pageShared, setPageShared] = useState(1);
-  const [dataMy, setDataMy] = useState([]);
-  const [dataShared, setDataShared] = useState([]);
-  const [myScrollPos, setMyScrollPos] = useState(0);
-  const [sharedScrollPos, setSharedScrollPos] = useState(0);
-  const [sortBy, setSortBy] = useState("date");
+
   const [hasMore, setHasMore] = useState(true);
   const [ref, inView] = useInView({});
 
@@ -126,7 +121,7 @@ const History = () => {
 
   const { mutate: mutateHistoryModify } = useHistoryModify();
 
-  const onClickModify = (sortBy) => {
+  const onClickModify = () => {
     mutateHistoryModify(
       {
         pray_id: currentId,
@@ -138,6 +133,9 @@ const History = () => {
           setDeletedItemIds((prev) => [...prev, res.data.id]);
           onClickExitModal();
           sortBy === "Date" ? refetchMyData() : refetchSharedData();
+        },
+        onSettled: () => {
+          setIsRequesting(false);
         },
       }
     );
@@ -225,7 +223,8 @@ const History = () => {
               <ModalButtonWrapper>
                 <ModalButton1
                   showSubModal={showSubModal}
-                  onClick={onClickSubModal}>
+                  onClick={onClickSubModal}
+                >
                   또 기도하기
                 </ModalButton1>
                 <ModalButton2 onClick={onClickExitModal}>닫기</ModalButton2>
@@ -258,7 +257,8 @@ const History = () => {
             <div
               onClick={(e) => onClickHistoryItem(e, sortBy)}
               key={el.id}
-              id={el.id}>
+              id={el.id}
+            >
               <HisContent
                 name={el.target}
                 content={el.title}
@@ -276,7 +276,8 @@ const History = () => {
             <div
               onClick={(e) => onClickHistoryItem(e, sortBy)}
               key={el.id}
-              id={el.id}>
+              id={el.id}
+            >
               <HisContent
                 name={el.target}
                 content={el.title}
@@ -434,5 +435,45 @@ const ModalButton2 = styled.button`
     filter: ${(props) =>
       props.disabled ? "brightness(1)" : "brightness(0.9)"};
     scale: ${(props) => (props.disabled ? "1" : "0.98")};
+  }
+`;
+
+const SubModalWrapper = styled.div`
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  width: calc(100vw - 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+  border-radius: 16px;
+  z-index: 300;
+  top: 63%;
+  opacity: ${(props) => (props.showSubModal ? "1" : "0")};
+  transition: all 0.3s ease-in-out;
+  visibility: ${(props) => (props.showSubModal ? "visible" : "hidden")};
+`;
+
+const SubModalTop = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  padding: 24px 16px;
+  align-items: center;
+  gap: 8px;
+`;
+
+const SubModalBottom = styled.div`
+  background: var(--color-dark-green);
+  border-radius: 0px 0px 16px 16px;
+  font-weight: 500;
+  font-size: 16px;
+  text-align: center;
+  color: var(--color-white);
+  padding: 20px 0px;
+  &:active {
+    transition: all 0.2s ease-in-out;
+    filter: ${(props) =>
+      props.disabled ? "brightness(1)" : "brightness(0.9)"};
   }
 `;
