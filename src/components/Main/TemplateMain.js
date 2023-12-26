@@ -8,7 +8,7 @@ const BackgroundWrapper = styled.div`
   width: 100%;
   background-color: #7bab6e;
   overflow-y: hidden;
-  height: 100vh;
+  min-height: 100vh;
 `;
 
 const BackgroundInput = styled.div`
