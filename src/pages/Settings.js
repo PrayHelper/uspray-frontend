@@ -242,7 +242,7 @@ const Settings = () => {
             <div>현재 서비스 버전 확인</div>
             <div
               style={{ color: "#7BAB6E", fontWeight: "700", fontSize: "15px" }}>
-              0.1.2
+              0.1.5
             </div>
           </StyledItem>
         </WhiteBox>

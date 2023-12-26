@@ -1,5 +1,5 @@
 import ToggleButton from "../components/ToggleButton";
-import React, { useEffect,  useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import UserHeader from "../components/UserHeader";
 import InputBirth from "../components/InputBirth";
 import Button, { ButtonSize, ButtonTheme } from "../components/Button/Button";
@@ -14,7 +14,6 @@ import Modal from "../components/Modal/Modal";
 import useToast from "../hooks/useToast";
 import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
-
 
 let init = 0;
 
@@ -78,6 +77,7 @@ const Signup = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
+    nameInputRef?.current.focus();
   };
 
   const idCheck = (userInfo) => {
@@ -141,11 +141,9 @@ const Signup = () => {
       phone: userInfo.phoneNumber.replace(/-/g, ""),
     };
 
-    if (gender)
-      data.gender = gender;
+    if (gender) data.gender = gender;
     if (userInfo.year && userInfo.month && userInfo.day)
       data.birth = userInfo.year + "-" + userInfo.month + "-" + userInfo.day;
-
 
     try {
       const res = await publicapi.post(api, data);
@@ -166,6 +164,8 @@ const Signup = () => {
       }
     }
   };
+
+  const nameInputRef = useRef(null);
 
   const idChangeHandler = async (e) => {
     setUserInfo({ ...userInfo, id: e.target.value });
@@ -212,6 +212,8 @@ const Signup = () => {
   const nameFocusHandler = () => {
     if (init === 0) {
       setShowModal(true);
+      // alert(nameInputRef);
+      nameInputRef?.current.blur();
       init = 1;
     }
   };
@@ -346,6 +348,7 @@ const Signup = () => {
           isError={false}
           description=""
           onFocusHandler={nameFocusHandler}
+          ref={nameInputRef}
         />
         <div style={{ position: "relative" }}>
           <div
@@ -487,7 +490,7 @@ const Signup = () => {
             signup();
           }}>
           회원가입
-          {isAllValid ? <NextArrowWhite/> : <NextArrowGray/>}
+          {isAllValid ? <NextArrowWhite /> : <NextArrowGray />}
         </Button>
       </div>
     </SignupPageWrapper>
