@@ -56,12 +56,16 @@ const SocialLoginNameInput = () => {
     setName(e.target.value);
   };
 
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+  const id = searchParams.get("id");
+
   const socialLoginNameInputReq = async () => {
-    const api = `/member/oauth/${name}`;
+    const api = `/member/oauth`;
     try {
       const res = await publicapi.put(
         api,
-        {},
+        { name, id },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -108,9 +112,6 @@ const SocialLoginNameInput = () => {
     }
   };
 
-  const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
-
   const isNameFieldEmpty = name !== "";
   const isSignupButtonActivated = isAgreedAll && isNameFieldEmpty;
 
@@ -144,8 +145,7 @@ const SocialLoginNameInput = () => {
           }
           handler={() => {
             socialLoginNameInputReq();
-          }}
-        >
+          }}>
           회원가입
           {isSignupButtonActivated ? <NextArrowWhite /> : <NextArrowGray />}
         </Button>
