@@ -275,7 +275,7 @@ const NoDataContent = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  position: absolute;
+  position: fixed;
   /* top: ${(props) => (props.showSubModal ? `40%` : `50%`)}; */
   bottom: ${(props) => (props.showSubModal ? `32%` : `25%`)};
   left: 50%;
@@ -380,7 +380,7 @@ const ModalButton2 = styled.button`
 `;
 
 const SubModalWrapper = styled.div`
-  position: absolute;
+  position: fixed;
   left: 50%;
   transform: translate(-50%, -40%);
   width: calc(100vw - 64px);

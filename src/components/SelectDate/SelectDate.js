@@ -99,7 +99,9 @@ const SelectDateWrapper = styled.div`
   flex-direction: row;
   gap: 8px;
   align-items: center;
-  overflow: scroll;
+  width: 100%;
+
+  overflow-x: auto;
 `;
 
 const SubModalBtn = styled.div`
