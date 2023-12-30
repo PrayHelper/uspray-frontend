@@ -324,7 +324,6 @@ const ModalContent = styled.div`
   word-break: keep-all;
   word-wrap: break-word;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -415,6 +414,6 @@ const SubModalBottom = styled.div`
   &:active {
     transition: all 0.2s ease-in-out;
     filter: ${(props) =>
-    props.disabled ? "brightness(1)" : "brightness(0.9)"};
+      props.disabled ? "brightness(1)" : "brightness(0.9)"};
   }
 `;
