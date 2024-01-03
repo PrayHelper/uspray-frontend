@@ -10,7 +10,7 @@ export const useCategoryTemp_by_limeojin = () => {
   const { data: fetchedData, refetch } = useQuery(
     ["categoryList"],
     async () => {
-      return await getFetcher(`/category`);
+      return await getFetcher(`/category?categoryType=PERSONAL`);
     },
     {
       onError: async (e) => {
@@ -59,7 +59,6 @@ export const useCategoryTemp_by_limeojin = () => {
 
       try {
         // TODO: 살려주세요(.data, .data ..? Response Body에 대한 협의가 필요할듯)
-        console.log("line 68: ", queryClient.getQueryData(["categoryList"]));
         const arrayData = queryClient.getQueryData(["categoryList"]).data.data;
 
         // 반응성 개선을 위한 코드((update 요청 + refetch 요청) 완료 전에 프론트에서 먼저 완료 상태 보여주기)
@@ -76,7 +75,10 @@ export const useCategoryTemp_by_limeojin = () => {
         const categoryId = arrayData[srcIndex].id;
         const index = destIndex;
 
-        return await putFetcher(`/category/${categoryId}/order/${index}`, {});
+        return await putFetcher(
+          `/category/${categoryId}/order/${index + 1}`,
+          {}
+        );
       } catch (error) {
         // 에러 발생 시 원상복구
         queryClient.setQueryData(["categoryList"], (prev) => {
