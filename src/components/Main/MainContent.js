@@ -45,7 +45,7 @@ const MainContent = ({
             key={index}
             title={category.categoryName}
             prays={category.prays}
-            color="#75BD62"
+            color={category.categoryColor}
             setSelectedTitleIndex={setSelectedTitleIndex}
           />
         ))}
