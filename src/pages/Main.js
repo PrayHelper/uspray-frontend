@@ -11,7 +11,6 @@ import { useSendPrayItem } from "../hooks/useSendPrayItem";
 import { usePray } from "../hooks/usePray";
 
 const Main = () => {
-  const { categoryList, firstCategoryIndex } = useCategory();
   const { mutate: mutateSendPrayItem } = useSendPrayItem();
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
@@ -23,9 +22,19 @@ const Main = () => {
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
+  
+  const categoryState = useCategory(tab === "내가 쓴" ? 'PERSONAL' : 'SHARED');
+  const prayState = usePray(tab === "내가 쓴" ? 'personal' : 'shared');
+  const { categoryList, firstCategoryIndex } = categoryState;
+  const { refetchCategoryList } = categoryState;
+  const { refetchPrayList } = prayState;
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
-    useState(firstCategoryIndex);
-  const { refetchPrayList } = usePray('personal');
+  useState(firstCategoryIndex);
+
+  useEffect(() => {
+    refetchCategoryList();
+    refetchPrayList();
+  }, [tab]);
 
   const handleTabChange = (newTab) => {
     setTab(newTab);
