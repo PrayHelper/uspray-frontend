@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BlackScreen from "../components/BlackScreen/BlackScreen";
-import Button, { ButtonSize, ButtonTheme } from "../components/Button/Button";
-import LoginButton from "../components/Login/LoginButton/LoginButton";
-import UserHeader from "../components/UserHeader";
+import BlackScreen from "../BlackScreen/BlackScreen";
+import Button, { ButtonSize, ButtonTheme } from "../Button/Button";
+import LoginButton from "../Login/LoginButton/LoginButton";
+import UserHeader from "../UserHeader";
 import styled from 'styled-components';
-import { useDeleteUser } from "../hooks/useDeleteUser";
-import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
-
-
-
+import { useDeleteUser } from "../../hooks/useDeleteUser";
+import { ReactComponent as NextArrowWhite } from "../../images/ic_next_arrow_white.svg";
+import ChangePw from "./ChangePw";
+import ChangePhoneNumber from './ChangePhoneNumber';
 
 const ModalContent = styled.div`
   position: fixed;
@@ -54,6 +53,8 @@ const ModalButton2 = styled.button`
 
 const ChangeInfo = () => {
   const [showModal, setShowModal] = useState(false);
+  const [showChangePw, setShowChangePw] = useState(false);
+  const [showChangePhoneNumber, setShowChangePhoneNumber] = useState(false);
 
   const navigate = useNavigate();
   
@@ -61,29 +62,22 @@ const ChangeInfo = () => {
     setShowModal(false);
   };
 
-  const {mutate: mutateDeleteUser} = useDeleteUser();
+  // const {mutate: mutateDeleteUser} = useDeleteUser();
 
-  const withdrawal = () => {
-    mutateDeleteUser(null,
-      {
-        onSuccess: (res) => {
-          navigate("/");
-          console.log(res);
-        }
-      }
-    );
-  }
+  // const withdrawal = () => {
+  //   mutateDeleteUser(null,
+  //     {
+  //       onSuccess: (res) => {
+  //         navigate("/");
+  //         console.log(res);
+  //       }
+  //     }
+  //   );
+  // }
 
   return (
-    <div
-      style={{
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      {showModal && (
+    <Wrapper>
+      {/* {showModal && (
         <>
           <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
           <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -117,7 +111,9 @@ const ChangeInfo = () => {
             </div>
           </ModalContent>
         </>
-        )}
+        )} */}
+      {showChangePw && <ChangePw setShowChangePw={setShowChangePw}/>}
+      {showChangePhoneNumber && <ChangePhoneNumber setShowChangePhoneNumber={setShowChangePhoneNumber}/>}
       <UserHeader>회원정보 변경</UserHeader>
       <div
         style={{
@@ -138,15 +134,19 @@ const ChangeInfo = () => {
             buttonSize={ButtonSize.LARGE}
             buttonTheme={ButtonTheme.GREEN}
             handler={() => {
-              navigate("/changePw");
+              setShowChangePw(true);
             }}
           >
             비밀번호 변경
             <NextArrowWhite/>
           </Button>
-          <Button buttonSize={ButtonSize.LARGE} buttonTheme={ButtonTheme.GREEN}  handler={() => {
-              navigate("/changePhoneNumber");
-            }}>
+          <Button
+            buttonSize={ButtonSize.LARGE}
+            buttonTheme={ButtonTheme.GREEN}
+            handler={() => {
+              setShowChangePhoneNumber(true);
+            }}
+          >
             전화번호 변경
             <NextArrowWhite/>
           </Button>
@@ -160,8 +160,17 @@ const ChangeInfo = () => {
           />
         </div>
       </div>
-    </div>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  z-index: 100;
+`
 
 export default ChangeInfo;

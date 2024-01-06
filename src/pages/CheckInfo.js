@@ -8,11 +8,13 @@ import { useCheckPassword } from "../hooks/useCheckPassword";
 import useToast from "../hooks/useToast";
 import { ReactComponent as NextArrow_gray } from "../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrow_white } from "../images/ic_next_arrow_white.svg";
+import ChangeInfo from "../components/ChangeInfo/ChangeInfo";
 
 
 const CheckInfo = () => {
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(false);
+  const [showChangeInfo, setShowChangeInfo] = useState(false);
 
   const navigate = useNavigate();
 
@@ -36,7 +38,8 @@ const CheckInfo = () => {
     mutate(null, {
       onSuccess: (res) => {
         console.log(res);
-        if (res.data.data === true) navigate("/changeInfo");
+        if (res.data.data === true)
+          setShowChangeInfo(true);
         else if (res.data.data === false) {
           showToast({
             message: "비밀번호가 일치하지 않습니다.",
@@ -71,64 +74,71 @@ const CheckInfo = () => {
   // height: "calc(var(--var, 1vh) * 100)"
 
   return (
-    <div style={{ width: "100%", height: "100vh", position: "relative" }}>
-      <UserHeader>회원정보 확인</UserHeader>
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          marginTop: "24px",
-        }}>
-        <div style={{ padding: "0 16px" }}>
-          <div
-            style={{
-              lineHeight: "35px",
-              color: "#75BD62",
-              fontWeight: "700",
-              fontSize: "24px",
-              marginBottom: "40px",
-            }}>
-            안전을 위해 <br />
-            회원정보를 확인할게요!
-          </div>
-          <Input
-            label="비밀번호"
-            type="password"
-            onChangeHandler={passwordChangeHandler}
-            value={password}
-            onFocusHandler={() => {
-              setDisabled(false);
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              bottom: "40px",
-              width: "calc(100% - 32px)",
-              display: "flex",
-              flexDirection: "column",
-            }}>
-            <Button
-              buttonSize={ButtonSize.LARGE}
-              buttonTheme={
-                pwCheck(password) && !disabled
-                  ? ButtonTheme.GREEN
-                  : ButtonTheme.GRAY
-              }
-              disabled={!pwCheck(password) || disabled}
-              handler={() => {
-                checkPassword();
+    <>
+      {
+        showChangeInfo ?
+          <ChangeInfo setShowChangeInfo={setShowChangeInfo}/>
+          :
+          <div style={{ width: "100%", height: "100vh", position: "relative" }}>
+            <UserHeader>회원정보 확인</UserHeader>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                marginTop: "24px",
               }}>
-              회원정보 확인
-              {(pwCheck(password) && !disabled) ? <NextArrow_white/> 
-              : 
-              <NextArrow_gray/>} 
-            </Button>
+              <div style={{ padding: "0 16px" }}>
+                <div
+                  style={{
+                    lineHeight: "35px",
+                    color: "#75BD62",
+                    fontWeight: "700",
+                    fontSize: "24px",
+                    marginBottom: "40px",
+                  }}>
+                  안전을 위해 <br />
+                  회원정보를 확인할게요!
+                </div>
+                <Input
+                  label="비밀번호"
+                  type="password"
+                  onChangeHandler={passwordChangeHandler}
+                  value={password}
+                  onFocusHandler={() => {
+                    setDisabled(false);
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "40px",
+                    width: "calc(100% - 32px)",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}>
+                  <Button
+                    buttonSize={ButtonSize.LARGE}
+                    buttonTheme={
+                      pwCheck(password) && !disabled
+                        ? ButtonTheme.GREEN
+                        : ButtonTheme.GRAY
+                    }
+                    disabled={!pwCheck(password) || disabled}
+                    handler={() => {
+                      checkPassword();
+                    }}>
+                    회원정보 확인
+                    {(pwCheck(password) && !disabled) ? <NextArrow_white/> 
+                    : 
+                    <NextArrow_gray/>} 
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
+      }
+    </>
   );
 };
 
