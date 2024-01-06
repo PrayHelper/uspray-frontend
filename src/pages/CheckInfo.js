@@ -36,8 +36,8 @@ const CheckInfo = () => {
     mutate(null, {
       onSuccess: (res) => {
         console.log(res);
-        if (res.data.message === true) navigate("/changeInfo");
-        else if (res.data.message === false) {
+        if (res.data.data === true) navigate("/changeInfo");
+        else if (res.data.data === false) {
           showToast({
             message: "비밀번호가 일치하지 않습니다.",
             theme: ToastTheme.ERROR,
@@ -45,7 +45,13 @@ const CheckInfo = () => {
           setDisabled(true);
         }
       },
-      onError: (e) => {},
+      onError: (e) => {
+        showToast({
+          message: "비밀번호가 일치하지 않습니다.",
+          theme: ToastTheme.ERROR,
+        });
+        setDisabled(true);
+      },
     });
   };
 
