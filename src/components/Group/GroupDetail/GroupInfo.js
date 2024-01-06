@@ -8,7 +8,7 @@ import { useGroupPray } from "../../../hooks/useGroupPray";
 
 const GroupInfo = ({ group, isData }) => {
   const { categoryList, firstCategoryIndex } = useCategory();
-  const { addGroupPray } = useGroupPray(group.id);
+  const { addGroupPray, groupHeartCount } = useGroupPray(group.id);
   const [showSubModal, setShowSubModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
@@ -67,7 +67,7 @@ const GroupInfo = ({ group, isData }) => {
           <div>
             <span>기도가 </span>
             <span style={{ color: "var(--color-green)" }}>
-              {group.prayCount}번{" "}
+              {groupHeartCount}번{" "}
             </span>
             <span>쌓였어요!</span>
           </div>

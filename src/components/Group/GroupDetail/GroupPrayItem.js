@@ -10,9 +10,9 @@ import { useGroupPray } from '../../../hooks/useGroupPray';
 const GroupPrayItem = ({groupId, pray}) => {
   const [showModal, setShowModal] = useState(false);
   const { showToast } = useToast({});
-  const [heart, setHeart] = useState(false);
-  const [scrap, setScrap] = useState(false);
-  const { deleteGroupPray } = useGroupPray(groupId);
+  const [heart, setHeart] = useState(pray.heart);
+  const [scrap, setScrap] = useState(pray.scrap);
+  const { deleteGroupPray, likeGroupPray, scrapGroupPray } = useGroupPray(groupId);
   return (
     <Wrapper>
       {showModal && (
@@ -52,12 +52,25 @@ const GroupPrayItem = ({groupId, pray}) => {
             {
               heart ? 
               <img src="images/ic_group_heart_filled.svg" alt="filled_heart_icon" /> :
-              <img onClick={() => setHeart(true)} src="images/ic_group_heart.svg" alt="heart_icon" />
+              <img
+                onClick={() => {
+                  setHeart(true);
+                  likeGroupPray(pray.groupPrayId);
+                }}
+                src="images/ic_group_heart.svg"
+                alt="heart_icon"
+              />
             } 
             {
               scrap ?
               <img src="images/ic_group_bookmark_filled.svg" alt="filled_bookmark_icon" /> :
-              <img onClick={() => setScrap(true)} src="images/ic_group_bookmark.svg" alt="bookmark_icon" />
+              <img
+                onClick={() => {
+                  setScrap(true);
+                }}
+                src="images/ic_group_bookmark.svg"
+                alt="bookmark_icon"
+              />
             }
           </PrayButton>
         }
