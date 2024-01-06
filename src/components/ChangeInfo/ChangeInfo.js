@@ -52,66 +52,13 @@ const ModalButton2 = styled.button`
 `;
 
 const ChangeInfo = () => {
-  const [showModal, setShowModal] = useState(false);
   const [showChangePw, setShowChangePw] = useState(false);
   const [showChangePhoneNumber, setShowChangePhoneNumber] = useState(false);
 
   const navigate = useNavigate();
-  
-  const handleCloseModal = () =>{
-    setShowModal(false);
-  };
-
-  // const {mutate: mutateDeleteUser} = useDeleteUser();
-
-  // const withdrawal = () => {
-  //   mutateDeleteUser(null,
-  //     {
-  //       onSuccess: (res) => {
-  //         navigate("/");
-  //         console.log(res);
-  //       }
-  //     }
-  //   );
-  // }
 
   return (
     <Wrapper>
-      {/* {showModal && (
-        <>
-          <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
-          <ModalContent onClick={(e) => e.stopPropagation()}>
-            <img src="images/ic_withdrawal.svg" alt="withdrawal_icon" style={{marginTop: "8px"}}/>
-            <div
-              style={{
-                fontSize: "24px",
-                color: "#FF6B6B",
-                fontWeight: "700",
-                paddingBottom: "2px",
-              }}
-            >
-              회원탈퇴 하시겠습니까?
-            </div>
-            <div
-              style={{
-                fontSize: "18px",
-                marginTop: "2px",
-                marginBottom: "26px",
-              }}
-            >
-             신중하게 결정해주세요!
-            </div>
-            <div style={{display: "flex", flexDirection: "row", width: "100%", gap: "8px"}}>
-              <ModalButton1 onClick={handleCloseModal}>
-                취소
-              </ModalButton1>
-              <ModalButton2 onClick={withdrawal}>
-                회원탈퇴
-              </ModalButton2>
-            </div>
-          </ModalContent>
-        </>
-        )} */}
       {showChangePw && <ChangePw setShowChangePw={setShowChangePw}/>}
       {showChangePhoneNumber && <ChangePhoneNumber setShowChangePhoneNumber={setShowChangePhoneNumber}/>}
       <UserHeader>회원정보 변경</UserHeader>
@@ -156,7 +103,7 @@ const ChangeInfo = () => {
             color={"#7bab6e"}
             borderColor={"#7bab6e"}
             arrowColor={"#7bab6e"}
-            handler={() => {setShowModal(true)}}
+            handler={() => navigate('/deleteUser')}
           />
         </div>
       </div>
