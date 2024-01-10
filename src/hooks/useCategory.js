@@ -4,15 +4,15 @@ import { useNavigate } from "react-router-dom";
 import useToast from "../hooks/useToast";
 import { ToastTheme } from "../components/Toast/Toast";
 
-export const useCategory = () => {
+export const useCategory = (categoryType) => {
   const { getFetcher, postFetcher } = useApi();
   const navigate = useNavigate();
   const { showToast } = useToast({});
 
-  const { data, refetch } = useQuery(
+  const { data, refetch: refetchCategoryList } = useQuery(
     ["categoryList"],
     async () => {
-      return await getFetcher(`/category`);
+      return await getFetcher(`/category/?categoryType=${categoryType}`);
     },
     {
       onError: async (e) => {
@@ -39,7 +39,7 @@ export const useCategory = () => {
       },
       onSuccess: (res) => {
         console.log(res);
-        refetch();
+        refetchCategoryList();
         showToast({
           message: "카테고리를 생성했어요.",
           theme: ToastTheme.SUCCESS,
@@ -59,6 +59,7 @@ export const useCategory = () => {
 
   return {
     categoryList,
+    refetchCategoryList,
     createCategory,
     firstCategoryIndex,
   };
