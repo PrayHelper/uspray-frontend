@@ -23,8 +23,9 @@ const Main = () => {
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
   
-  const categoryState = useCategory(tab === "내가 쓴" ? 'PERSONAL' : 'SHARED');
-  const prayState = usePray(tab === "내가 쓴" ? 'personal' : 'shared');
+  const tabType = tab === "내가 쓴" ? 'personal' : 'shared';
+  const categoryState = useCategory(tabType);
+  const prayState = usePray(tabType);
   const { categoryList, firstCategoryIndex } = categoryState;
   const { refetchCategoryList } = categoryState;
   const { refetchPrayList } = prayState;
