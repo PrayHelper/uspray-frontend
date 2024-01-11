@@ -13,7 +13,7 @@ import { useCategory } from "../hooks/useCategory";
 import { useNavigate } from "react-router-dom";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 
-const Locker = () => {
+const Locker = ({ setIsOverlayOn }) => {
   const [data, setData] = useState([]);
   const { categoryList, firstCategoryIndex } = useCategory();
   const [isClicked, setIsClicked] = useState([]);
@@ -246,7 +246,9 @@ const Locker = () => {
           onClickFunc={() => onClickSave()}
         />
       )}
-      <BottomButton onClick={() => navigate("/main")}>뒤로 가기</BottomButton>
+      <BottomButton onClick={() => setIsOverlayOn(false)}>
+        뒤로 가기
+      </BottomButton>
     </LockerWrapper>
   );
 };

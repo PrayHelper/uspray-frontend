@@ -6,10 +6,12 @@ import { useState } from "react";
 import ButtonV2, { ButtonTheme } from "../components/ButtonV2/ButtonV2";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import Modal from "../components/Modal/Modal";
+import Overlay from "../components/Overlay/Overlay";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../hooks/useCategory";
 import { useSendPrayItem } from "../hooks/useSendPrayItem";
 import { usePray } from "../hooks/usePray";
+import Locker from "./Locker";
 
 const Main = () => {
   const { mutate: mutateSendPrayItem } = useSendPrayItem();
@@ -23,14 +25,15 @@ const Main = () => {
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
-  
-  const categoryState = useCategory(tab === "내가 쓴" ? 'PERSONAL' : 'SHARED');
-  const prayState = usePray(tab === "내가 쓴" ? 'personal' : 'shared');
+  const [isOverlayOn, setIsOverlayOn] = useState(false);
+
+  const categoryState = useCategory(tab === "내가 쓴" ? "PERSONAL" : "SHARED");
+  const prayState = usePray(tab === "내가 쓴" ? "personal" : "shared");
   const { categoryList, firstCategoryIndex } = categoryState;
   const { refetchCategoryList } = categoryState;
   const { refetchPrayList } = prayState;
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
-  useState(firstCategoryIndex);
+    useState(firstCategoryIndex);
 
   useEffect(() => {
     refetchCategoryList();
@@ -45,7 +48,7 @@ const Main = () => {
   };
 
   const clickLocker = () => {
-    navigate("/locker");
+    setIsOverlayOn(true);
   };
 
   const handleInputChange = (e) => {
@@ -203,6 +206,11 @@ const Main = () => {
             ))}
           </ColorPalette>
         </CategorySetting>
+      )}
+      {isOverlayOn && (
+        <Overlay isOverlayOn={isOverlayOn}>
+          <Locker setIsOverlayOn={setIsOverlayOn} />
+        </Overlay>
       )}
     </MainWrapper>
   );
