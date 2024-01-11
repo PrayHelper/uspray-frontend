@@ -15,7 +15,7 @@ import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateC
 
 const Locker = ({ setIsOverlayOn }) => {
   const [data, setData] = useState([]);
-  const { categoryList, firstCategoryIndex } = useCategory();
+  const { categoryList, firstCategoryIndex } = useCategory("shared");
   const [isClicked, setIsClicked] = useState([]);
   const [selectedID, setSelectedID] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
