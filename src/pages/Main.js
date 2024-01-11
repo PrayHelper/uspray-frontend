@@ -295,6 +295,13 @@ const MoveToLockerButton = styled.div`
     background-image: url("/images/ic_right_arrow.svg");
     background-size: contain;
   }
+
+  &:active {
+    transition: all 0.2s ease-in-out;
+    filter: ${(props) =>
+      props.disabled ? "brightness(1)" : "brightness(0.9)"};
+    scale: ${(props) => (props.disabled ? "1" : "0.98")};
+  }
 `;
 
 const CategorySetting = styled.div`
