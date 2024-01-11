@@ -230,7 +230,6 @@ const Locker = ({ setIsOverlayOn }) => {
           </div>
         </LockerList>
       )}
-      <div style={{ marginTop: "20px", color: "var(--color-white)" }}>.</div>
       {showSubModal && (
         <PrayDateCategoryInput
           categoryList={categoryList}
@@ -262,6 +261,7 @@ const LockerWrapper = styled.div`
   height: 100vh;
   width: 100%;
   background-color: var(--color-light-green);
+  justify-content: flex-end;
 `;
 
 const LottieWrapper = styled.div`
