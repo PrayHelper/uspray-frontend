@@ -1,23 +1,30 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import PrayDateCategoryInput from "../../PrayDateCategoryInput/PrayDateCategoryInput";
+import BlackScreen from "../../BlackScreen/BlackScreen";
+import Modal from "../../../components/Modal/Modal";
 import { useCategory } from "../../../hooks/useCategory";
 import { useGroupPray } from "../../../hooks/useGroupPray";
 
 const GroupInfo = ({ group, isData }) => {
   const { categoryList, firstCategoryIndex } = useCategory();
-  const { addGroupPray } = useGroupPray(group.id);
+  const { addGroupPray, groupHeartCount } = useGroupPray(group.id);
   const [showSubModal, setShowSubModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
 
   const onClickPrayInput = () => {
     if (categoryList.length === 0) {
-      console.log("카테고리를 추가해주세요");
+      setShowModal(true);
     } else {
       setShowSubModal(!showSubModal);
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   // 기도를 추가하는 함수
@@ -41,6 +48,16 @@ const GroupInfo = ({ group, isData }) => {
 
   return (
     <Wrapper>
+      <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
+      <Modal
+        isModalOn={showModal}
+        iconSrc={"images/icon_notice.svg"}
+        iconAlt={"icon_notice"}
+        mainContent={"카테고리를 먼저 추가해주세요!"}
+        subContent={"메인 화면에서 생성할 수 있습니다."}
+        btnContent={"네, 그렇게 할게요."}
+        onClickBtn={handleCloseModal}
+      />
       {isData ? (
         <GroupInfoText>
           <div>
@@ -50,7 +67,7 @@ const GroupInfo = ({ group, isData }) => {
           <div>
             <span>기도가 </span>
             <span style={{ color: "var(--color-green)" }}>
-              {group.prayCount}번{" "}
+              {groupHeartCount}번{" "}
             </span>
             <span>쌓였어요!</span>
           </div>

@@ -4,12 +4,14 @@ import { useNavigate } from "react-router-dom";
 import MainContent from "../components/Main/MainContent";
 import { useState } from "react";
 import ButtonV2, { ButtonTheme } from "../components/ButtonV2/ButtonV2";
+import BlackScreen from "../components/BlackScreen/BlackScreen";
+import Modal from "../components/Modal/Modal";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../hooks/useCategory";
 import { useSendPrayItem } from "../hooks/useSendPrayItem";
+import { usePray } from "../hooks/usePray";
 
 const Main = () => {
-  const { categoryList, firstCategoryIndex } = useCategory();
   const { mutate: mutateSendPrayItem } = useSendPrayItem();
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
@@ -17,11 +19,23 @@ const Main = () => {
   const [showCategorySetting, setShowCategorySetting] = useState(false);
   const [selectedColor, setSelectedColor] = useState("#D0E8CB");
   const [showSubModal, setShowSubModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
+  
+  const categoryState = useCategory(tab === "내가 쓴" ? 'PERSONAL' : 'SHARED');
+  const prayState = usePray(tab === "내가 쓴" ? 'personal' : 'shared');
+  const { categoryList, firstCategoryIndex } = categoryState;
+  const { refetchCategoryList } = categoryState;
+  const { refetchPrayList } = prayState;
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
-    useState(firstCategoryIndex);
+  useState(firstCategoryIndex);
+
+  useEffect(() => {
+    refetchCategoryList();
+    refetchPrayList();
+  }, [tab]);
 
   const navigate = useNavigate();
 
@@ -42,6 +56,10 @@ const Main = () => {
     e.stopPropagation();
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   // 기도를 추가하는 함수
   const onInsert = async (text, deadline, categoryId) => {
     mutateSendPrayItem(
@@ -52,6 +70,7 @@ const Main = () => {
           setPrayInputValue("");
           setDateInputValue(null);
           setSelectedCategoryIndex(categoryId);
+          refetchPrayList();
         },
       }
     );
@@ -59,7 +78,7 @@ const Main = () => {
 
   const onClickPrayInput = () => {
     if (categoryList.length === 0) {
-      console.log("카테고리를 추가해주세요");
+      setShowModal(true);
     } else {
       setShowSubModal(!showSubModal);
     }
@@ -83,6 +102,16 @@ const Main = () => {
 
   return (
     <MainWrapper style={{ backgroundColor: bgColor }}>
+      <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
+      <Modal
+        isModalOn={showModal}
+        iconSrc={"images/icon_notice.svg"}
+        iconAlt={"icon_notice"}
+        mainContent={"카테고리를 먼저 추가해주세요!"}
+        subContent={"기도제목은 카테고리 안에서 생성됩니다."}
+        btnContent={"네, 그렇게 할게요."}
+        onClickBtn={handleCloseModal}
+      />
       <TopContainer>
         <TopBox>
           <TabContainer>
@@ -146,6 +175,7 @@ const Main = () => {
         setShowCategorySetting={setShowCategorySetting}
         selectedCategoryIndex={selectedCategoryIndex}
         setSelectedCategoryIndex={setSelectedCategoryIndex}
+        refetchPrayList={refetchPrayList}
       />
       {showCategorySetting && (
         <CategorySetting onClick={() => setShowCategorySetting(false)}>
