@@ -24,11 +24,7 @@ const MainContent = ({
   const [showModal, setShowModal] = useState(false);
   const { prayList } = usePray("personal");
   const { showToast } = useToast({});
-  const { deletePray } = useSendPrayItem();
-
-  const prayComplete = () => {
-    // 기도 완료하는 api
-  };
+  const { deletePray, completePray } = useSendPrayItem();
 
   const prayModify = () => {
     // 기도 수정하는 api
@@ -89,7 +85,18 @@ const MainContent = ({
       <BottomSetWrapper selectedTitleIndex={selectedTitleIndex}>
         <BottomButtonWrapper>
           <img src={completeImage} />
-          <BottomButtonText color={"green"} onClick={() => prayComplete()}>
+          <BottomButtonText
+            color={"green"}
+            onClick={() => {
+              completePray(selectedTitleIndex);
+              showToast({
+                message: "기도제목을 완료했어요.",
+                theme: ToastTheme.SUCCESS,
+              });
+              setSelectedTitleIndex(null);
+              refetchPrayList();
+            }}
+          >
             완료하기
           </BottomButtonText>
         </BottomButtonWrapper>
