@@ -5,7 +5,7 @@ export const usePray = (prayType) => {
   const { getFetcher } = useApi();
 
   const { data, refetch: refetchPrayList } = useQuery(
-    ['prayList'],
+    ["prayList"],
     async () => {
       return await getFetcher(`/pray/?prayType=${prayType}`);
     },
@@ -30,5 +30,4 @@ export const usePray = (prayType) => {
     prayList,
     refetchPrayList,
   };
-}
-
+};

@@ -6,16 +6,25 @@ import completeImage from "../../images/check_img.svg";
 import deleteImage from "../../images/delete_img.svg";
 import modifyImage from "../../images/modify_img.svg";
 import { usePray } from "../../hooks/usePray";
+import { useSendPrayItem } from "../../hooks/useSendPrayItem";
+import { ToastTheme } from "../../components/Toast/Toast";
+import BlackScreen from "../BlackScreen";
+import Modal from "../Modal/Modal";
+import useToast from "../../hooks/useToast";
 
 const MainContent = ({
   categoryList,
   setShowCategorySetting,
   selectedCategoryIndex,
   setSelectedCategoryIndex,
-  refetchPrayList
+  refetchPrayList,
+  tabType,
 }) => {
   const [selectedTitleIndex, setSelectedTitleIndex] = useState(null);
-  const { prayList } = usePray('personal');
+  const [showModal, setShowModal] = useState(false);
+  const { prayList } = usePray("personal");
+  const { showToast } = useToast({});
+  const { deletePray } = useSendPrayItem();
 
   const prayComplete = () => {
     // 기도 완료하는 api
@@ -25,11 +34,37 @@ const MainContent = ({
     // 기도 수정하는 api
   };
 
-  const prayDeleted = () => {
-    // 기도 삭제하는 api
-  };
   return (
     <MainContentWrapper>
+      {showModal && (
+        <>
+          <BlackScreen
+            isModalOn={showModal}
+            onClick={() => setShowModal(false)}
+          />
+          <Modal
+            isModalOn={showModal}
+            iconSrc={"images/ic_group_pray_delete.svg"}
+            iconAlt={"group_pray_delete"}
+            mainContent={"정말 삭제하시겠습니까?"}
+            subContent={"선택한 기도제목이 삭제됩니다."}
+            btnContent={"삭제"}
+            btnContent2={"취소"}
+            onClickBtn={() => {
+              deletePray(selectedTitleIndex);
+              setShowModal(false);
+              showToast({
+                message: "기도제목을 삭제했어요.",
+                theme: ToastTheme.SUCCESS,
+              });
+              setSelectedTitleIndex(null);
+              refetchPrayList();
+            }}
+            onClickBtn2={() => setShowModal(false)}
+            modalTheme={2}
+          />
+        </>
+      )}
       <TopWrapper>
         <CategoryTag
           categoryList={categoryList}
@@ -40,15 +75,16 @@ const MainContent = ({
         />
       </TopWrapper>
       <Content>
-        {prayList && prayList.map((category, index) => (
-          <Category
-            key={index}
-            title={category.categoryName}
-            prays={category.prays}
-            color={category.categoryColor}
-            setSelectedTitleIndex={setSelectedTitleIndex}
-          />
-        ))}
+        {prayList &&
+          prayList.map((category, index) => (
+            <Category
+              key={index}
+              title={category.categoryName}
+              prays={category.prays}
+              color={category.categoryColor}
+              setSelectedTitleIndex={setSelectedTitleIndex}
+            />
+          ))}
       </Content>
       <BottomSetWrapper selectedTitleIndex={selectedTitleIndex}>
         <BottomButtonWrapper>
@@ -65,7 +101,7 @@ const MainContent = ({
         </BottomButtonWrapper>
         <BottomButtonWrapper>
           <img src={deleteImage} />
-          <BottomButtonText color={"red"} onClick={() => prayDeleted()}>
+          <BottomButtonText color={"red"} onClick={() => setShowModal(true)}>
             삭제하기
           </BottomButtonText>
         </BottomButtonWrapper>

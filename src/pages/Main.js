@@ -11,7 +11,7 @@ import { useSendPrayItem } from "../hooks/useSendPrayItem";
 import { usePray } from "../hooks/usePray";
 
 const Main = () => {
-  const { mutate: mutateSendPrayItem } = useSendPrayItem();
+  const { createPray } = useSendPrayItem();
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
   const [inputValue, setInputValue] = useState("");
@@ -22,19 +22,19 @@ const Main = () => {
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
-  
-  const tabType = tab === "내가 쓴" ? 'PERSONAL' : 'SHARED';
+
+  const tabType = tab === "내가 쓴" ? "PERSONAL" : "SHARED";
   const categoryState = useCategory(tabType);
   const prayState = usePray(tabType);
+  const { refetchPrayList } = prayState;
   const { categoryList, firstCategoryIndex } = categoryState;
   const { refetchCategoryList } = categoryState;
-  const { refetchPrayList } = prayState;
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
-  useState(firstCategoryIndex);
+    useState(firstCategoryIndex);
 
   const { createCategory } = useCategory(tabType);
 
-  const createCategoryHandler = async(categoryData) =>{
+  const createCategoryHandler = async (categoryData) => {
     try {
       await createCategory(categoryData);
     } catch (error) {
@@ -42,7 +42,7 @@ const Main = () => {
     } finally {
       setShowCategorySetting(false);
     }
-  }
+  };
 
   useEffect(() => {
     refetchCategoryList();
@@ -68,7 +68,7 @@ const Main = () => {
 
   // 기도를 추가하는 함수
   const onInsert = async (text, deadline, categoryId) => {
-    mutateSendPrayItem(
+    createPray(
       { content: text, deadline: deadline, categoryId: categoryId },
       {
         onSuccess: () => {
@@ -182,6 +182,7 @@ const Main = () => {
         selectedCategoryIndex={selectedCategoryIndex}
         setSelectedCategoryIndex={setSelectedCategoryIndex}
         refetchPrayList={refetchPrayList}
+        tabType={tab}
       />
       {showCategorySetting && (
         <CategorySetting onClick={() => setShowCategorySetting(false)}>
@@ -193,7 +194,18 @@ const Main = () => {
             onClick={handleInnerClick}
           />
           <FixedButtonContainer onClick={handleInnerClick}>
-            <ButtonV2 buttonTheme={ButtonTheme.FILLED} handler={() => createCategoryHandler({name: inputValue, color: selectedColor, type: tabType})}>카테고리 추가</ButtonV2>
+            <ButtonV2
+              buttonTheme={ButtonTheme.FILLED}
+              handler={() =>
+                createCategoryHandler({
+                  name: inputValue,
+                  color: selectedColor,
+                  type: tabType,
+                })
+              }
+            >
+              카테고리 추가
+            </ButtonV2>
           </FixedButtonContainer>
           <ColorPalette>
             {ColorList.map((color) => (
