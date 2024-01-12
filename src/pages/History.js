@@ -13,7 +13,6 @@ import useToast from "../hooks/useToast";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 
 const History = () => {
-  const { categoryList, firstCategoryIndex } = useCategory();
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showSubModal, setShowSubModal] = useState(false);
@@ -21,16 +20,31 @@ const History = () => {
   const [currentId, setCurrentId] = useState();
   const [updateDate, setUpdateDate] = useState(null);
   const [updateCategory, setUpdateCategory] = useState(0);
-  const [pageMy, setPageMy] = useState(1);
-  const [pageShared, setPageShared] = useState(1);
+  const [pageMy, setPageMy] = useState(0);
+  const [pageShared, setPageShared] = useState(0);
   const [dataMy, setDataMy] = useState([]);
   const [dataShared, setDataShared] = useState([]);
   const [myScrollPos, setMyScrollPos] = useState(0);
   const [sharedScrollPos, setSharedScrollPos] = useState(0);
-  const [sortBy, setSortBy] = useState("date");
   const [hasMore, setHasMore] = useState(true);
   const [ref, inView] = useInView({});
+  const [tab, setTab] = useState("personal");
+  const tabType = tab === "personal" ? "personal" : "shared";
+  const categoryState = useCategory(tabType);
+  const { categoryList, firstCategoryIndex } = categoryState;
+  const [deletedItemIds, setDeletedItemIds] = useState([]);
 
+  const { data: myPrayData, refetch: refetchMyData } = useFetchHistory({
+    type: "personal",
+    page: pageMy,
+    size: 15,
+  });
+
+  const { data: sharedPrayData, refetch: refetchSharedData } = useFetchHistory({
+    type: "shared",
+    page: pageShared,
+    size: 15,
+  });
   const { showToast } = useToast({
     initialMessage: "기도제목이 오늘의 기도에 추가되었어요.",
   });
@@ -58,45 +72,29 @@ const History = () => {
   };
 
   const onClickToggle = (e) => {
-    sortBy === "date"
+    tab === "personal"
       ? setMyScrollPos(window.scrollY)
       : setSharedScrollPos(window.scrollY);
-    handleCategoryChange(e.currentTarget.id);
-  };
-
-  const handleCategoryChange = (newCategory) => {
-    setSortBy(newCategory);
+    setTab(e.currentTarget.id);
   };
 
   useEffect(() => {
     // 카테고리가 변경될 때 스크롤 위치 복원
-    sortBy === "date"
+    tab === "personal"
       ? window.scrollTo(0, myScrollPos)
       : window.scrollTo(0, sharedScrollPos);
-  }, [sortBy, myScrollPos, sharedScrollPos]);
-
-  const [deletedItemIds, setDeletedItemIds] = useState([]);
-
-  const { data: myPrayData, refetch: refetchMyData } = useFetchHistory({
-    page: pageMy,
-    per_page: 15,
-    sort_by: "date",
-  });
-
-  const { data: sharedPrayData, refetch: refetchSharedData } = useFetchHistory({
-    page: pageShared,
-    per_page: 15,
-    sort_by: "cnt",
-  });
+  }, [tab, myScrollPos, sharedScrollPos]);
 
   const fetchMyData = async () => {
-    const newData = await myPrayData.data.res;
+    const newData = await myPrayData.data.data.historyList;
     const filteredData = newData.filter(
       (newItem) =>
-        !dataMy.some((existingItem) => existingItem.id === newItem.id)
+        !dataMy.some(
+          (existingItem) => existingItem.historyId === newItem.historyId
+        )
     );
     const tmpData = [...dataMy, ...filteredData].filter(
-      (item) => !deletedItemIds.some((tmpItem) => tmpItem === item.id)
+      (item) => !deletedItemIds.some((tmpItem) => tmpItem === item.historyId)
     );
     setDataMy(tmpData);
     if (newData.length === 0) {
@@ -105,13 +103,15 @@ const History = () => {
   };
 
   const fetchSharedData = async () => {
-    const newData = await sharedPrayData.data.res;
+    const newData = await sharedPrayData.data.data.historyList;
     const filteredData = newData.filter(
       (newItem) =>
-        !dataShared.some((existingItem) => existingItem.id === newItem.id)
+        !dataShared.some(
+          (existingItem) => existingItem.historyId === newItem.historyId
+        )
     );
     const tmpData = [...dataShared, ...filteredData].filter(
-      (item) => !deletedItemIds.some((tmpItem) => tmpItem === item.id)
+      (item) => !deletedItemIds.some((tmpItem) => tmpItem === item.historyId)
     );
     setDataShared(tmpData);
     if (newData.length === 0) {
@@ -121,7 +121,7 @@ const History = () => {
 
   const { mutate: mutateHistoryModify } = useHistoryModify();
 
-  const onClickModify = (sortBy) => {
+  const onClickModify = (tab) => {
     mutateHistoryModify(
       {
         pray_id: currentId,
@@ -132,17 +132,17 @@ const History = () => {
           showToast({});
           setDeletedItemIds((prev) => [...prev, res.data.id]);
           onClickExitModal();
-          sortBy === "Date" ? refetchMyData() : refetchSharedData();
+          tab === "personal" ? refetchMyData() : refetchSharedData();
         },
       }
     );
   };
 
-  const onClickHistoryItem = async (e, sortBy) => {
+  const onClickHistoryItem = async (e, tab) => {
     setShowModal(true);
     const id = e.currentTarget.id;
     const currentData =
-      sortBy === "date"
+      tab === "personal"
         ? dataMy.find((item) => item.id === Number(id))
         : dataShared.find((item) => item.id === Number(id));
     setCurrentData(currentData);
@@ -167,19 +167,15 @@ const History = () => {
 
   useEffect(() => {
     if (inView && hasMore && !loading) {
-      sortBy === "date"
+      tab === "personal"
         ? setPageMy((prev) => prev + 1)
         : setPageShared((prev) => prev + 1);
     }
   }, [hasMore, inView]);
 
-  // const onClickFunc = () => {
-  //   console.log("gg");
-  // };
-
   return (
     <HistoryWrapper>
-      <Header sortBy={sortBy} onClickToggle={onClickToggle}>
+      <Header tab={tab} onClickToggle={onClickToggle}>
         히스토리
       </Header>
       {loading && (
@@ -243,43 +239,41 @@ const History = () => {
           category={firstCategoryIndex}
           setUpdateDate={setUpdateDate}
           setUpdateCategory={setUpdateCategory}
-          onClickFunc={() => onClickModify(sortBy)}
+          onClickFunc={() => onClickModify(tab)}
           buttonText="오늘의 기도에 추가"
         />
       </div>
-      {sortBy === "date" && (
+      {tab === "personal" && (
         <div style={{ paddingTop: "115px" }}>
           {/* <div> */}
           {dataMy.map((el) => (
             <div
-              onClick={(e) => onClickHistoryItem(e, sortBy)}
-              key={el.id}
-              id={el.id}
+              onClick={(e) => onClickHistoryItem(e, tab)}
+              key={el.historyId}
+              id={el.historyId}
             >
               <HisContent
-                name={el.target}
-                content={el.title}
-                date={`${el.created_at.split(" ")[0]} ~ ${el.deadline}`}
-                pray_cnt={el.pray_cnt}
+                name={el.name}
+                content={el.content}
+                date={`${el.createdAt.split("T")[0]} ~ ${el.deadline}`}
               />
               <div ref={ref}></div>
             </div>
           ))}
         </div>
       )}
-      {sortBy === "cnt" && (
+      {tab === "shared" && (
         <div style={{ paddingTop: "115px" }}>
           {dataShared.map((el) => (
             <div
-              onClick={(e) => onClickHistoryItem(e, sortBy)}
-              key={el.id}
-              id={el.id}
+              onClick={(e) => onClickHistoryItem(e, tab)}
+              key={el.historyId}
+              id={el.historyId}
             >
               <HisContent
-                name={el.target}
-                content={el.title}
-                date={`${el.created_at.split(" ")[0]} ~ ${el.deadline}`}
-                pray_cnt={el.pray_cnt}
+                name={el.name}
+                content={el.content}
+                date={`${el.createdAt.split("T")[0]} ~ ${el.deadline}`}
               />
               <div ref={ref}></div>
             </div>
