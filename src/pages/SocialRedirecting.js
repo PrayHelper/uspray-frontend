@@ -18,10 +18,11 @@ const SocialRedirecting = () => {
 
   useEffect(() => {
     if (!!accessToken && !!refreshToken) {
+      alert(`access: ${accessToken} refresh: ${refreshToken}`);
       setAccessToken(accessToken);
       setRefreshToken(refreshToken);
       setAutorized();
-      navigate("/");
+      navigate("/main");
     }
   }, [
     setAccessToken,
