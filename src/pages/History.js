@@ -267,7 +267,29 @@ const History = () => {
       <div style={{ marginTop: "20px", color: `#D0E8CB` }}>.</div>
       {isOverlayOn && (
         <Overlay isOverlayOn={isOverlayOn}>
-          <HistorySearch setIsOverlayOn={setIsOverlayOn} />
+          <HistorySearch
+            setIsOverlayOn={setIsOverlayOn}
+            ref={ref}
+            HisContent={HisContent}
+            onClickHistoryItem={onClickHistoryItem}
+            onClickModify={onClickModify}
+            setUpdateCategory={setUpdateCategory}
+            setUpdateDate={setUpdateDate}
+            firstCategoryIndex={firstCategoryIndex}
+            setShowSubModal={setShowModal}
+            showSubModal={showSubModal}
+            categoryList={categoryList}
+            PrayDateCategoryInput={PrayDateCategoryInput}
+            onClickExitModal={onClickExitModal}
+            onClickSubModal={onClickSubModal}
+            PrayDetailModal={PrayDetailModal}
+            showModal={showModal}
+            isEmptyData={isEmptyData}
+            NoDataWrapper={NoDataWrapper}
+            defaultOptions={defaultOptions}
+            Lottie={Lottie}
+            LottieWrapper={LottieWrapper}
+          />
         </Overlay>
       )}
     </HistoryWrapper>

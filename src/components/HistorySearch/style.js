@@ -106,18 +106,6 @@ export const CheckboxWrapper = styled.div`
   gap: 9px;
 `;
 
-export const ContentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  width: 100%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-`;
-
 export const NoDataContent = styled.div`
   font-weight: 500;
   font-size: 24px;

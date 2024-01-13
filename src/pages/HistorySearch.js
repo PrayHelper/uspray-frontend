@@ -6,7 +6,6 @@ import Checkbox, { CheckboxTheme } from "../components/Checkbox/Checkbox";
 import { useHistorySearch } from "../hooks/useHistorySearch";
 import {
   CheckboxWrapper,
-  ContentWrapper,
   DateBox,
   DateWrapper,
   EndDatePickerContainer,
@@ -22,7 +21,29 @@ import {
 } from "../components/HistorySearch/style";
 import { useEffect } from "react";
 
-const HistorySearch = ({ setIsOverlayOn }) => {
+const HistorySearch = ({
+  setIsOverlayOn,
+  ref,
+  HisContent,
+  onClickHistoryItem,
+  onClickModify,
+  setUpdateCategory,
+  setUpdateDate,
+  firstCategoryIndex,
+  setShowSubModal,
+  showSubModal,
+  categoryList,
+  PrayDateCategoryInput,
+  onClickExitModal,
+  onClickSubModal,
+  PrayDetailModal,
+  showModal,
+  isEmptyData,
+  NoDataWrapper,
+  defaultOptions,
+  Lottie,
+  LottieWrapper,
+}) => {
   const [isClickedCalender, setIsClickedCalender] = useState(false);
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
@@ -34,10 +55,13 @@ const HistorySearch = ({ setIsOverlayOn }) => {
   const [isPersonal, setIsPersonal] = useState(true);
   const [isShared, setIsShared] = useState(true);
   const { searchHistory } = useHistorySearch();
-  const [loading, setLoading] = useState(true);
-  const [date, setDate] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
   const navigate = useNavigate();
   const today = new Date();
+  const [NoDataText, setNoDataText] = useState("히스토리를 검색해보세요");
+  const [tab, setTab] = useState(null);
+  const [currentData, setCurrentData] = useState(null);
 
   useEffect(() => {
     setStartDate(updateDate(-30));
@@ -70,15 +94,27 @@ const HistorySearch = ({ setIsOverlayOn }) => {
   };
 
   const onClickSearch = () => {
-    searchHistory({
-      keyword: keyWord,
-      startDate: apiFormDate(startDate),
-      endDate: apiFormDate(endDate),
-      page: page,
-      size: 15,
-      isPersonal: isPersonal,
-      isShared: isShared,
-    });
+    if (keyWord === "") return;
+    setLoading(true);
+    searchHistory(
+      {
+        keyword: keyWord,
+        startDate: apiFormDate(startDate),
+        endDate: apiFormDate(endDate),
+        page: page,
+        size: 15,
+        isPersonal: isPersonal,
+        isShared: isShared,
+      },
+      {
+        onSuccess: (res) => {
+          setData(res.data.data.historyList);
+          if (res.data.data.historyList.length === 0)
+            setNoDataText("검색 결과가 없습니다");
+        },
+      }
+    );
+    setLoading(false);
   };
 
   const toggleHandler = (event) => {
@@ -213,12 +249,66 @@ const HistorySearch = ({ setIsOverlayOn }) => {
             </CheckboxWrapper>
           </MainWrapper>
         </SearchWrapper>
-        <ContentWrapper>
-          <div>
-            <img src="../images/ic_search_history.svg" alt="icon_searchbar" />
-          </div>
-          <NoDataContent>히스토리를 검색해보세요</NoDataContent>
-        </ContentWrapper>
+        {loading && (
+          <LottieWrapper>
+            <Lottie
+              style={{ scale: "0.5", marginTop: "50px" }}
+              options={defaultOptions}
+              height={300}
+              width={300}
+              isClickToPauseDisabled={true}
+            />
+          </LottieWrapper>
+        )}
+        {!loading && isEmptyData(data) && (
+          <NoDataWrapper>
+            <div>
+              <img src="../images/ic_search_history.svg" alt="icon_searchbar" />
+            </div>
+            <NoDataContent>{NoDataText}</NoDataContent>;
+          </NoDataWrapper>
+        )}
+        <div>
+          <BlackScreen isModalOn={showModal} />
+          {!isEmptyData(data) && showModal && (
+            <PrayDetailModal
+              showSubModal={showSubModal}
+              currentData={currentData}
+              onClickSubModal={onClickSubModal}
+              onClickExitModal={onClickExitModal}
+            />
+          )}
+          <PrayDateCategoryInput
+            categoryList={categoryList}
+            showSubModal={showSubModal}
+            setShowSubModal={setShowSubModal}
+            isDefault={true}
+            isShowWordCount={false}
+            value=""
+            category={firstCategoryIndex}
+            setUpdateDate={setUpdateDate}
+            setUpdateCategory={setUpdateCategory}
+            onClickFunc={() => onClickModify(tab)}
+            buttonText="오늘의 기도에 추가"
+          />
+        </div>
+        <div>
+          {/* <div> */}
+          {data.map((el) => (
+            <div
+              onClick={(e) => onClickHistoryItem(e, tab)}
+              key={el.historyId}
+              id={el.historyId}
+            >
+              <HisContent
+                name={el.name}
+                content={el.content}
+                date={`${el.createdAt.split("T")[0]} ~ ${el.deadline}`}
+              />
+              <div ref={ref}></div>
+            </div>
+          ))}
+        </div>
       </Wrapper>
     </>
   );
