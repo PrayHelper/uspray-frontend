@@ -12,6 +12,8 @@ import LottieData from "../json/lottie.json";
 import useToast from "../hooks/useToast";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import PrayDetailModal from "../components/History/PrayDetailModal";
+import Overlay from "../components/Overlay/Overlay";
+import HistorySearch from "./HistorySearch";
 
 const History = () => {
   const [loading, setLoading] = useState(true);
@@ -34,6 +36,7 @@ const History = () => {
   const categoryState = useCategory(tabType);
   const { categoryList, firstCategoryIndex } = categoryState;
   const [deletedItemIds, setDeletedItemIds] = useState([]);
+  const [isOverlayOn, setIsOverlayOn] = useState(false);
 
   const { data: myPrayData, refetch: refetchMyData } = useFetchHistory({
     type: "personal",
@@ -176,7 +179,11 @@ const History = () => {
 
   return (
     <HistoryWrapper>
-      <Header tab={tab} onClickToggle={onClickToggle}>
+      <Header
+        tab={tab}
+        onClickToggle={onClickToggle}
+        setIsOverlayOn={setIsOverlayOn}
+      >
         히스토리
       </Header>
       {loading && (
@@ -258,6 +265,11 @@ const History = () => {
         </div>
       )}
       <div style={{ marginTop: "20px", color: `#D0E8CB` }}>.</div>
+      {isOverlayOn && (
+        <Overlay isOverlayOn={isOverlayOn}>
+          <HistorySearch setIsOverlayOn={setIsOverlayOn} />
+        </Overlay>
+      )}
     </HistoryWrapper>
   );
 };

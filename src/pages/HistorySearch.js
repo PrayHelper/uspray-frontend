@@ -22,7 +22,7 @@ import {
 } from "../components/HistorySearch/style";
 import { useEffect } from "react";
 
-const HistorySearch = () => {
+const HistorySearch = ({ setIsOverlayOn }) => {
   const [isClickedCalender, setIsClickedCalender] = useState(false);
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
@@ -129,7 +129,7 @@ const HistorySearch = () => {
         <SearchWrapper>
           <Header>
             <img
-              onClick={onClickBackArrow}
+              onClick={() => setIsOverlayOn(false)}
               src="../images/ic_back_arrow.svg"
               alt="icon_backArrow"
             />

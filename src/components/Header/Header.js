@@ -14,9 +14,11 @@ const Header = (props) => {
         <HeaderCont>
           <div>{props.children}</div>
           {props.children === "히스토리" && (
-            <Link to={"/historySearch"} style={{ textDecoration: "none" }}>
-              <img src="../images/ic_search_grey.svg" alt="icon_search" />
-            </Link>
+            <img
+              src="../images/ic_search_grey.svg"
+              alt="icon_search"
+              onClick={() => props.setIsOverlayOn(true)}
+            />
           )}
         </HeaderCont>
         {props.children === "히스토리" && (
