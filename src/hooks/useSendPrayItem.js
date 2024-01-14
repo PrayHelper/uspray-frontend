@@ -14,6 +14,10 @@ export const useSendPrayItem = () => {
     {
       onError: async (e) => {
         console.log(e);
+        showToast({
+          message: e.response.data.message,
+          theme: ToastTheme.ERROR,
+        });
       },
       onSuccess: (res) => {
         console.log(res);
@@ -37,9 +41,17 @@ export const useSendPrayItem = () => {
     {
       onError: (e) => {
         console.log(e);
+        showToast({
+          message: e.response.data.message,
+          theme: ToastTheme.ERROR,
+        });
       },
       onSuccess: (res) => {
         console.log(res);
+        showToast({
+          message: "기도제목을 삭제했어요.",
+          theme: ToastTheme.SUCCESS,
+        });
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -56,6 +68,10 @@ export const useSendPrayItem = () => {
     {
       onError: async (e) => {
         console.log(e);
+        showToast({
+          message: e.response.data.message,
+          theme: ToastTheme.ERROR,
+        });
       },
       onSuccess: (res) => {
         console.log(res);

@@ -47,14 +47,13 @@ const MainContent = ({
             btnContent={"삭제"}
             btnContent2={"취소"}
             onClickBtn={() => {
-              deletePray(selectedTitleIndex);
-              setShowModal(false);
-              showToast({
-                message: "기도제목을 삭제했어요.",
-                theme: ToastTheme.SUCCESS,
+              deletePray(selectedTitleIndex, {
+                onSuccess: () => {
+                  setShowModal(false);
+                  setSelectedTitleIndex(null);
+                  refetchPrayList();
+                },
               });
-              setSelectedTitleIndex(null);
-              refetchPrayList();
             }}
             onClickBtn2={() => setShowModal(false)}
             modalTheme={2}
