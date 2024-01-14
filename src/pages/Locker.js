@@ -65,20 +65,18 @@ const Locker = ({ setIsOverlayOn }) => {
   };
 
   // 배열 요소 선택
-  const onClickContent = (index, pray_id) => {
-    console.log(pray_id);
-    console.log(index);
-    const updateClickedID = pray_id;
-    // 이미 선택된 pray_id인지 확인
+  const onClickContent = (index, prayId) => {
+    const updateClickedID = prayId;
+    // 이미 선택된 prayId인지 확인
     const isSelected = selectedID.includes(updateClickedID);
     if (isSelected) {
-      // 이미 선택된 경우 해당 pray_id를 제거
+      // 이미 선택된 경우 해당 prayId를 제거
       const updatedSelectedID = selectedID.filter(
         (id) => id !== updateClickedID
       );
       setSelectedID(updatedSelectedID);
     } else {
-      // 선택되지 않은 경우 해당 pray_id를 추가
+      // 선택되지 않은 경우 해당 prayId를 추가
       setSelectedID([...selectedID, updateClickedID]);
     }
 
@@ -104,19 +102,19 @@ const Locker = ({ setIsOverlayOn }) => {
   const { mutateAsync: deleteListData } = useDeleteSharedList();
 
   const deleteSharedList = () => {
-    let pray_id_list = []; // 빈 배열을 초기화하여 pray_id_list를 설정합니다.
+    let prayIdList = []; // 빈 배열을 초기화하여 prayIdList를 설정합니다.
     if (isClicked.every((clicked) => clicked)) {
-      // 모든 항목이 선택된 경우 모든 pray_id를 배열에 추가합니다.
-      pray_id_list = data.map((item) => item.pray_id);
+      // 모든 항목이 선택된 경우 모든 prayId를 배열에 추가합니다.
+      prayIdList = data.map((item) => item.sharedPrayId);
       console.log("전체선택");
     } else {
       // 선택된 항목만 배열에 추가합니다.
-      pray_id_list = selectedID;
+      prayIdList = selectedID;
     }
 
     deleteListData(
       {
-        sharedPrayIds: pray_id_list,
+        sharedPrayIds: prayIdList,
       },
       {
         onSuccess: () => {
@@ -135,20 +133,20 @@ const Locker = ({ setIsOverlayOn }) => {
 
   const saveSharedList = (dateInputValue, categoryInputValue) => {
     if (!saving) {
-      let pray_id_list = []; // 빈 배열을 초기화하여 pray_id_list를 설정합니다.
+      let prayIdList = []; // 빈 배열을 초기화하여 prayIdList를 설정합니다.
 
       if (isClicked.every((clicked) => clicked)) {
-        // 모든 항목이 선택된 경우 모든 pray_id를 배열에 추가합니다.
-        pray_id_list = data.map((item) => item.pray_id);
+        // 모든 항목이 선택된 경우 모든 prayId를 배열에 추가합니다.
+        prayIdList = data.map((item) => item.sharedPrayId);
         console.log("전체선택");
       } else {
         // 선택된 항목만 배열에 추가합니다.
-        pray_id_list = selectedID;
+        prayIdList = selectedID;
       }
       setSaving(true);
       updateListData(
         {
-          sharedPrayIds: pray_id_list,
+          sharedPrayIds: prayIdList,
           categoryId: categoryInputValue,
         },
         {
@@ -222,8 +220,8 @@ const Locker = ({ setIsOverlayOn }) => {
                   isClicked={isClicked[index]}
                   title={item.content}
                   target={item.userId}
-                  dday={calculateDday(item.shared_at)}
-                  key={item.pray_id}
+                  dday={calculateDday(item.createdAt)}
+                  key={item.prayId}
                 />
               </div>
             ))}
@@ -308,18 +306,15 @@ const LockerList = styled.div`
 `;
 
 const BottomButton = styled.div`
-  background: inherit;
   border: none;
   box-shadow: none;
   border-radius: 0;
-  padding: 0;
   overflow: visible;
   cursor: pointer;
-  width: calc(100% - 40px);
+  width: 100%
   font-weight: 500;
-  line-height: 23px;
   text-align: center;
-  padding: 20px;
+  padding: 20px 0px;
   background-color: var(--color-dark-green);
   color: var(--color-white);
 `;
