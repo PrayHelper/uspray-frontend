@@ -4,7 +4,7 @@ import styled from "styled-components";
 const ICON_HEART_FILLED = "images/ic_filled_heart.svg";
 const ICON_HEART_EMPTY = "images/ic_empty_heart.svg";
 
-const Category = ({ title, color, setSelectedTitleIndex, prays }) => {
+const Category = ({ categoryId, title, color, setSelectedTitleIndex, prays, onDotIconClicked, setClickedCategoryData }) => {
   const [selected, setSelected] = useState([]);
 
   const handleClick = (e, prayId) => {
@@ -20,9 +20,14 @@ const Category = ({ title, color, setSelectedTitleIndex, prays }) => {
     setSelectedTitleIndex(prayId);
   };
 
+  const handleCategoryTitleClick = () => {
+    onDotIconClicked();
+    setClickedCategoryData({id: categoryId, color: color, name: title});
+  }
+
   return (
     <CategoryContainer>
-      <Title color={color}>{title}</Title>
+      <Title color={color}>{title}<img src="/images/ic_dot.svg" alt="dot_icon" onClick={handleCategoryTitleClick}/></Title>
       <ItemList>
         {prays.map((pray, prayId) => (
           <Item key={prayId}>
@@ -61,6 +66,9 @@ const Title = styled.div`
   padding: 12px 16px;
   color: #ffffff;
   font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const ItemList = styled.div`

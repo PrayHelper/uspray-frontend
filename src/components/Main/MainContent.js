@@ -12,7 +12,9 @@ const MainContent = ({
   setShowCategorySetting,
   selectedCategoryIndex,
   setSelectedCategoryIndex,
-  refetchPrayList
+  refetchPrayList,
+  onDotIconClicked,
+  setClickedCategoryData
 }) => {
   const [selectedTitleIndex, setSelectedTitleIndex] = useState(null);
   const { prayList } = usePray('personal');
@@ -43,10 +45,13 @@ const MainContent = ({
         {prayList && prayList.map((category, index) => (
           <Category
             key={index}
+            categoryId={category.categoryId}
             title={category.categoryName}
             prays={category.prays}
             color={category.categoryColor}
             setSelectedTitleIndex={setSelectedTitleIndex}
+            onDotIconClicked={onDotIconClicked}
+            setClickedCategoryData={setClickedCategoryData}
           />
         ))}
       </Content>

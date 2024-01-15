@@ -9,40 +9,83 @@ import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateC
 import { useCategory } from "../hooks/useCategory";
 import { useSendPrayItem } from "../hooks/useSendPrayItem";
 import { usePray } from "../hooks/usePray";
+import { useCategorySetting } from "../hooks/useCategorySetting";
+import useToast from "../hooks/useToast";
+import { ToastTheme } from "../components/Toast/Toast";
 
 const Main = () => {
+  const { showToast } = useToast({});
   const { mutate: mutateSendPrayItem } = useSendPrayItem();
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
   const [inputValue, setInputValue] = useState("");
   const [showCategorySetting, setShowCategorySetting] = useState(false);
-  const [selectedColor, setSelectedColor] = useState("#D0E8CB");
+
   const [showSubModal, setShowSubModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
-  
-  const tabType = tab === "내가 쓴" ? 'PERSONAL' : 'SHARED';
+  const [dotIconClicked, setDotIconClicked] = useState(false);
+  const [clickedCategoryData, setClickedCategoryData] = useState([]);
+
+  const tabType = tab === "내가 쓴" ? "PERSONAL" : "SHARED";
   const categoryState = useCategory(tabType);
   const prayState = usePray(tabType);
   const { categoryList, firstCategoryIndex } = categoryState;
   const { refetchCategoryList } = categoryState;
   const { refetchPrayList } = prayState;
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
-  useState(firstCategoryIndex);
+    useState(firstCategoryIndex);
+
+  const ColorList = [
+    "#D0E8CB",
+    "#AEDBA5",
+    "#9BD88A",
+    "#75BD62",
+    "#649D55",
+    "#58834D",
+    "#507247",
+  ];
+  const [selectedColor, setSelectedColor] = useState(ColorList[0]);
+
+  useEffect(() => {
+    if (ColorList.includes(clickedCategoryData.color)) {
+        setSelectedColor(clickedCategoryData.color);
+    } else {
+        setSelectedColor(ColorList[0]);
+    }
+}, [clickedCategoryData]);
 
   const { createCategory } = useCategory(tabType);
-
-  const createCategoryHandler = async(categoryData) =>{
+  
+  const createCategoryHandler = async (categoryData) => {
     try {
       await createCategory(categoryData);
+
+      refetchCategoryList();
+      showToast({
+        message: "카테고리를 수정했어요.",
+        theme: ToastTheme.SUCCESS,
+      });
     } catch (error) {
       console.error(error);
     } finally {
       setShowCategorySetting(false);
     }
-  }
+  };
+  
+  const { changeCategory } = useCategorySetting();
+
+  const changeCategoryHandler = async (data) => {
+    try {
+      await changeCategory(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setDotIconClicked(false);
+    }
+  };
 
   useEffect(() => {
     refetchCategoryList();
@@ -90,15 +133,11 @@ const Main = () => {
     }
   };
 
-  const ColorList = [
-    "#D0E8CB",
-    "#AEDBA5",
-    "#9BD88A",
-    "#75BD62",
-    "#649D55",
-    "#58834D",
-    "#507247",
-  ];
+  const onDotIconClicked = () => {
+    setDotIconClicked(true);
+  };
+
+
 
   useEffect(() => {
     if (categoryList.length > 0) {
@@ -182,18 +221,83 @@ const Main = () => {
         selectedCategoryIndex={selectedCategoryIndex}
         setSelectedCategoryIndex={setSelectedCategoryIndex}
         refetchPrayList={refetchPrayList}
+        onDotIconClicked={onDotIconClicked}
+        setClickedCategoryData={setClickedCategoryData}
       />
       {showCategorySetting && (
         <CategorySetting onClick={() => setShowCategorySetting(false)}>
           <Input
             type="text"
             value={inputValue}
-            placeholder="카테고리를 입력해주세요"
+            placeholder={"카테고리를 입력해주세요"}
             onChange={handleInputChange}
             onClick={handleInnerClick}
           />
           <FixedButtonContainer onClick={handleInnerClick}>
-            <ButtonV2 buttonTheme={ButtonTheme.FILLED} handler={() => createCategoryHandler({name: inputValue, color: selectedColor, type: tabType})}>카테고리 추가</ButtonV2>
+            <ButtonV2
+              buttonTheme={ButtonTheme.FILLED}
+              handler={() =>
+                createCategoryHandler({
+                  name: inputValue,
+                  color: selectedColor,
+                  type: tabType,
+                })
+              }
+            >
+              카테고리 추가
+            </ButtonV2>
+          </FixedButtonContainer>
+          <ColorPalette>
+            {ColorList.map((color) => (
+              <ColorDrop
+                color={color}
+                selectedColor={selectedColor}
+                onClick={(event) => {
+                  setSelectedColor(color);
+                  event.stopPropagation();
+                }}
+                key={color}
+              />
+            ))}
+          </ColorPalette>
+        </CategorySetting>
+      )}
+      {dotIconClicked && (
+        <CategorySetting onClick={() => setDotIconClicked(false)}>
+          <Input
+            type="text"
+            value={inputValue}
+            placeholder={clickedCategoryData.name}
+            onChange={handleInputChange}
+            onClick={handleInnerClick}
+          />
+          <FixedButtonContainer onClick={handleInnerClick}>
+            <ButtonV2
+                buttonTheme={ButtonTheme.OUTLINED}
+                handler={() =>
+                  // createCategoryHandler({
+                  //   name: inputValue,
+                  //   color: selectedColor,
+                  //   type: tabType,
+                  // })
+                  console.log("삭제 버튼 clicked")
+                }
+              >
+              카테고리 삭제
+            </ButtonV2>
+            <ButtonV2
+              buttonTheme={ButtonTheme.FILLED}
+              handler={() =>
+                changeCategoryHandler({
+                  id: clickedCategoryData.id,
+                  name: inputValue,
+                  color: selectedColor,
+                  type: tabType,
+                })
+              }
+            >
+              카테고리 수정
+            </ButtonV2>
           </FixedButtonContainer>
           <ColorPalette>
             {ColorList.map((color) => (
@@ -321,6 +425,9 @@ const FixedButtonContainer = styled.div`
   bottom: 64px;
   width: calc(100% - 32px);
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 const ColorDrop = styled.div`
