@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { ToastTheme } from "../components/Toast/Toast";
 import { useCheckPassword } from "../hooks/useCheckPassword";
 import useToast from "../hooks/useToast";
-import { ReactComponent as NextArrow_gray } from "../images/ic_next_arrow_gray.svg";
-import { ReactComponent as NextArrow_white } from "../images/ic_next_arrow_white.svg";
+import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
+import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
 import ChangeInfo from "../components/ChangeInfo/ChangeInfo";
 
 
@@ -129,9 +129,9 @@ const CheckInfo = () => {
                       checkPassword();
                     }}>
                     회원정보 확인
-                    {(pwCheck(password) && !disabled) ? <NextArrow_white/> 
+                    {(pwCheck(password) && !disabled) ? <NextArrowWhite/> 
                     : 
-                    <NextArrow_gray/>} 
+                    <NextArrowGray/>} 
                   </Button>
                 </div>
               </div>
