@@ -9,12 +9,8 @@ import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateC
 import { useCategory } from "../hooks/useCategory";
 import { useSendPrayItem } from "../hooks/useSendPrayItem";
 import { usePray } from "../hooks/usePray";
-import { useCategorySetting } from "../hooks/useCategorySetting";
-import useToast from "../hooks/useToast";
-import { ToastTheme } from "../components/Toast/Toast";
 
 const Main = () => {
-  const { showToast } = useToast({});
   const { mutate: mutateSendPrayItem } = useSendPrayItem();
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
@@ -57,7 +53,7 @@ const Main = () => {
     }
 }, [clickedCategoryData]);
 
-  const { createCategory } = useCategory(tabType);
+  const { createCategory, changeCategory, deleteCategory} = useCategory(tabType);
   
   const createCategoryHandler = async (categoryData) => {
     try {
@@ -70,16 +66,11 @@ const Main = () => {
     }
   };
   
-  const { changeCategory, deleteCategory } = useCategorySetting();
+  // const { changeCategory, deleteCategory } = useCategorySetting();
 
   const changeCategoryHandler = async (data) => {
     try {
       await changeCategory(data);
-      refetchCategoryList();
-      showToast({
-        message: "카테고리를 수정했어요.",
-        theme: ToastTheme.SUCCESS,
-      });
     } catch (error) {
       console.error(error);
     } finally {
@@ -91,11 +82,6 @@ const Main = () => {
   const deleteCategoryHandler = async (categoryId) => {
     try {
       await deleteCategory(categoryId);
-      refetchCategoryList();
-      showToast({
-        message: "카테고리를 삭제했어요.",
-        theme: ToastTheme.ERROR,
-      });
     } catch (error) {
       console.error(error);
     } finally {
