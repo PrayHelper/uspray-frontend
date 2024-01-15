@@ -62,7 +62,19 @@ const Main = () => {
   const createCategoryHandler = async (categoryData) => {
     try {
       await createCategory(categoryData);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setShowCategorySetting(false);
+      setInputValue("");
+    }
+  };
+  
+  const { changeCategory, deleteCategory } = useCategorySetting();
 
+  const changeCategoryHandler = async (data) => {
+    try {
+      await changeCategory(data);
       refetchCategoryList();
       showToast({
         message: "카테고리를 수정했어요.",
@@ -71,26 +83,34 @@ const Main = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      setShowCategorySetting(false);
+      setDotIconClicked(false);
+      setInputValue("");
     }
   };
-  
-  const { changeCategory } = useCategorySetting();
 
-  const changeCategoryHandler = async (data) => {
+  const deleteCategoryHandler = async (categoryId) => {
     try {
-      await changeCategory(data);
+      await deleteCategory(categoryId);
+      refetchCategoryList();
+      showToast({
+        message: "카테고리를 삭제했어요.",
+        theme: ToastTheme.ERROR,
+      });
     } catch (error) {
       console.error(error);
     } finally {
       setDotIconClicked(false);
+      setInputValue("");
     }
-  };
+  }
 
   useEffect(() => {
     refetchCategoryList();
-    refetchPrayList();
   }, [tab]);
+
+  useEffect(() => {
+    refetchPrayList();
+  }, [categoryList]);
 
   const handleTabChange = (newTab) => {
     setTab(newTab);
@@ -275,12 +295,7 @@ const Main = () => {
             <ButtonV2
                 buttonTheme={ButtonTheme.OUTLINED}
                 handler={() =>
-                  // createCategoryHandler({
-                  //   name: inputValue,
-                  //   color: selectedColor,
-                  //   type: tabType,
-                  // })
-                  console.log("삭제 버튼 clicked")
+                  deleteCategoryHandler(clickedCategoryData.id)
                 }
               >
               카테고리 삭제
