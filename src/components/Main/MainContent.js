@@ -6,7 +6,6 @@ import completeImage from "../../images/check_img.svg";
 import deleteImage from "../../images/delete_img.svg";
 import modifyImage from "../../images/modify_img.svg";
 import { usePray } from "../../hooks/usePray";
-import { useSendPrayItem } from "../../hooks/useSendPrayItem";
 import { ToastTheme } from "../../components/Toast/Toast";
 import BlackScreen from "../BlackScreen";
 import Modal from "../Modal/Modal";
@@ -22,9 +21,8 @@ const MainContent = ({
 }) => {
   const [selectedTitleIndex, setSelectedTitleIndex] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const { prayList } = usePray("personal");
+  const { prayList, deletePray, completePray } = usePray();
   const { showToast } = useToast({});
-  const { deletePray, completePray } = useSendPrayItem();
 
   const prayModify = () => {
     // 기도 수정하는 api

@@ -7,12 +7,10 @@ import BlackScreen from "../components/BlackScreen/BlackScreen";
 import Modal from "../components/Modal/Modal";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../hooks/useCategory";
-import { useSendPrayItem } from "../hooks/useSendPrayItem";
 import { usePray } from "../hooks/usePray";
 
 const Main = () => {
-  const { createPray } = useSendPrayItem();
-  const [tab, setTab] = useState("내가 쓴");
+  const [tab, setTab] = useState("personal");
   const [bgColor, setBgColor] = useState("#7BAB6E");
   const [inputValue, setInputValue] = useState("");
   const [showCategorySetting, setShowCategorySetting] = useState(false);
@@ -25,8 +23,7 @@ const Main = () => {
 
   const tabType = tab === "내가 쓴" ? "PERSONAL" : "SHARED";
   const categoryState = useCategory(tabType);
-  const prayState = usePray(tabType);
-  const { refetchPrayList } = prayState;
+  const { refetchPrayList, createPray } = usePray();
   const { categoryList, firstCategoryIndex } = categoryState;
   const { refetchCategoryList } = categoryState;
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
@@ -46,7 +43,8 @@ const Main = () => {
 
   useEffect(() => {
     refetchCategoryList();
-    refetchPrayList();
+    console.log(tabType);
+    refetchPrayList(tabType);
   }, [tab]);
 
   const handleTabChange = (newTab) => {
@@ -76,7 +74,6 @@ const Main = () => {
           setPrayInputValue("");
           setDateInputValue(null);
           setSelectedCategoryIndex(categoryId);
-          refetchPrayList();
         },
       }
     );
@@ -181,7 +178,6 @@ const Main = () => {
         setShowCategorySetting={setShowCategorySetting}
         selectedCategoryIndex={selectedCategoryIndex}
         setSelectedCategoryIndex={setSelectedCategoryIndex}
-        refetchPrayList={refetchPrayList}
         tabType={tab}
       />
       {showCategorySetting && (
