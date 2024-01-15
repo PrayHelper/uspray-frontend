@@ -25,7 +25,7 @@ const Main = () => {
   const [dotIconClicked, setDotIconClicked] = useState(false);
   const [clickedCategoryData, setClickedCategoryData] = useState([]);
 
-  const tabType = tab === "내가 쓴" ? "PERSONAL" : "SHARED";
+  const tabType = tab === "내가 쓴" ? "personal" : "shared";
   const categoryState = useCategory(tabType);
   const prayState = usePray(tabType);
   const { categoryList, firstCategoryIndex } = categoryState;
