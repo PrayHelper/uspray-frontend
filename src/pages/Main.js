@@ -23,7 +23,7 @@ const Main = () => {
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
   const [dotIconClicked, setDotIconClicked] = useState(false);
-  const [clickedCategoryData, setClickedCategoryData] = useState([]);
+  const [clickedCategoryData, setClickedCategoryData] = useState({});
 
   const tabType = tab === "내가 쓴" ? "personal" : "shared";
   const categoryState = useCategory(tabType);
