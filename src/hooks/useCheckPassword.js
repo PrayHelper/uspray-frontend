@@ -5,7 +5,7 @@ export const useCheckPassword = (data) => {
   const { postFetcher } = useApi();
 
   return useMutation(async () => {
-    return await postFetcher('/user/check/pw', data)}, {
+    return await postFetcher('/member/check-pw', data)}, {
       onError: (e) => {
         console.log(e);
       },

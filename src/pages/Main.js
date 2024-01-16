@@ -26,14 +26,27 @@ const Main = () => {
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
   const [isOverlayOn, setIsOverlayOn] = useState(false);
+  const tabType = tab === "내가 쓴" ? 'PERSONAL' : 'SHARED';
+  const categoryState = useCategory(tabType);
+  const prayState = usePray(tabType);
 
-  const categoryState = useCategory(tab === "내가 쓴" ? "PERSONAL" : "SHARED");
-  const prayState = usePray(tab === "내가 쓴" ? "personal" : "shared");
   const { categoryList, firstCategoryIndex } = categoryState;
   const { refetchCategoryList } = categoryState;
   const { refetchPrayList } = prayState;
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
+
+  const { createCategory } = useCategory(tabType);
+
+  const createCategoryHandler = async(categoryData) =>{
+    try {
+      await createCategory(categoryData);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setShowCategorySetting(false);
+    }
+  }
 
   useEffect(() => {
     refetchCategoryList();
@@ -190,7 +203,7 @@ const Main = () => {
             onClick={handleInnerClick}
           />
           <FixedButtonContainer onClick={handleInnerClick}>
-            <ButtonV2 buttonTheme={ButtonTheme.FILLED}>카테고리 추가</ButtonV2>
+            <ButtonV2 buttonTheme={ButtonTheme.FILLED} handler={() => createCategoryHandler({name: inputValue, color: selectedColor, type: tabType})}>카테고리 추가</ButtonV2>
           </FixedButtonContainer>
           <ColorPalette>
             {ColorList.map((color) => (

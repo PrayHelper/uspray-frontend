@@ -29,9 +29,6 @@ import FindIdResult from "./components/Find/IdResult";
 import FindPassword from "./components/Find/FindPassword";
 import FindPasswordResult from "./components/Find/PwResult";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
-import ChangeInfo from "./pages/ChangeInfo";
-import ChangePw from "./pages/ChangePw";
-import ChangePhoneNumber from "./pages/ChangePhoneNumber";
 import SocialLogin from "./pages/SocialLogin";
 import useAuthToken from "./hooks/useAuthToken";
 import useRefresh from "./hooks/useRefresh";
@@ -109,12 +106,6 @@ function App() {
                 <Route path="/leaveGroup" element={<LeaveGroup />} />
                 <Route path="/createGroup" element={<CreateGroup />} />
                 <Route path="/checkInfo" element={<CheckInfo />} />
-                <Route path="/changeInfo" element={<ChangeInfo />} />
-                <Route path="/changePw" element={<ChangePw />} />
-                <Route
-                  path="/changePhoneNumber"
-                  element={<ChangePhoneNumber />}
-                />
                 <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                 <Route path="/social" element={<SocialLogin />} />
                 <Route path="/deleteUser" element={<DeleteUser />} />
