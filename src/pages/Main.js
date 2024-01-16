@@ -5,10 +5,12 @@ import { useState } from "react";
 import ButtonV2, { ButtonTheme } from "../components/ButtonV2/ButtonV2";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import Modal from "../components/Modal/Modal";
+import Overlay from "../components/Overlay/Overlay";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../hooks/useCategory";
 import { useSendPrayItem } from "../hooks/useSendPrayItem";
 import { usePray } from "../hooks/usePray";
+import Locker from "./Locker";
 
 const Main = () => {
   const { mutate: mutateSendPrayItem } = useSendPrayItem();
@@ -24,10 +26,11 @@ const Main = () => {
   const [categoryInputValue, setCategoryInputValue] = useState(0);
   const [dotIconClicked, setDotIconClicked] = useState(false);
   const [clickedCategoryData, setClickedCategoryData] = useState({});
-
   const tabType = tab === "내가 쓴" ? "personal" : "shared";
+  const [isOverlayOn, setIsOverlayOn] = useState(false);
   const categoryState = useCategory(tabType);
   const prayState = usePray(tabType);
+
   const { categoryList, firstCategoryIndex } = categoryState;
   const { refetchCategoryList } = categoryState;
   const { refetchPrayList } = prayState;
@@ -99,6 +102,10 @@ const Main = () => {
   const handleTabChange = (newTab) => {
     setTab(newTab);
     setBgColor(newTab === "내가 쓴" ? "#7BAB6E" : "#3D5537");
+  };
+
+  const clickLocker = () => {
+    setIsOverlayOn(true);
   };
 
   const handleInputChange = (e) => {
@@ -213,7 +220,7 @@ const Main = () => {
               />
             )
           ) : (
-            <MoveToLockerButton>
+            <MoveToLockerButton onClick={() => clickLocker()}>
               보관함에 3개의 기도제목이 있어요
             </MoveToLockerButton>
           )}
@@ -313,6 +320,11 @@ const Main = () => {
           </ColorPalette>
         </CategorySetting>
       )}
+      {isOverlayOn && (
+        <Overlay isOverlayOn={isOverlayOn}>
+          <Locker setIsOverlayOn={setIsOverlayOn} />
+        </Overlay>
+      )}
     </MainWrapper>
   );
 };
@@ -395,6 +407,13 @@ const MoveToLockerButton = styled.div`
     height: 24px;
     background-image: url("/images/ic_right_arrow.svg");
     background-size: contain;
+  }
+
+  &:active {
+    transition: all 0.2s ease-in-out;
+    filter: ${(props) =>
+      props.disabled ? "brightness(1)" : "brightness(0.9)"};
+    scale: ${(props) => (props.disabled ? "1" : "0.98")};
   }
 `;
 
