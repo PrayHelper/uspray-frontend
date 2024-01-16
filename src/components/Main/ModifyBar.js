@@ -143,7 +143,7 @@ const ModifyBar = ({ id, valueChange, onModify, clickData, isModify, updateDate,
     const yyyy = date.getFullYear();
     const mm = String(date.getMonth() + 1).padStart(2, "0");
     const dd = String(date.getDate()).padStart(2, "0");
-    const formattedDate = `${yyyy} -${mm} -${dd} `; // 포맷된 날짜 생성
+    const formattedDate = `${yyyy}-${mm}-${dd}`; // 포맷된 날짜 생성
     setUpdateDate(formattedDate);
   }
 
