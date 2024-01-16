@@ -14,24 +14,22 @@ const Header = (props) => {
         <HeaderCont>
           <div>{props.children}</div>
           {props.children === "히스토리" && (
-            <Link to={"/historySearch"} style={{ textDecoration: "none" }}>
-              <img src="../images/ic_search_grey.svg" alt="icon_search" />
-            </Link>
+            <img
+              src="../images/ic_search_grey.svg"
+              alt="icon_search"
+              onClick={() => props.setIsOverlayOn(true)}
+            />
           )}
         </HeaderCont>
         {props.children === "히스토리" && (
           <BtnWrapper>
-            <MyBtn
-              id="date"
-              onClick={props.onClickToggle}
-              sortBy={props.sortBy}
-            >
+            <MyBtn id="personal" onClick={props.onClickToggle} tab={props.tab}>
               내가 쓴 기도
             </MyBtn>
             <SharedBtn
-              id="cnt"
+              id="shared"
               onClick={props.onClickToggle}
-              sortBy={props.sortBy}
+              tab={props.tab}
             >
               공유받은 기도
             </SharedBtn>

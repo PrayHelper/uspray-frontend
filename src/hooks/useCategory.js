@@ -1,12 +1,10 @@
 import { useQuery, useMutation } from "react-query";
 import useApi from "./useApi";
-import { useNavigate } from "react-router-dom";
 import useToast from "../hooks/useToast";
 import { ToastTheme } from "../components/Toast/Toast";
 
 export const useCategory = (categoryType) => {
   const { getFetcher, postFetcher } = useApi();
-  const navigate = useNavigate();
   const { showToast } = useToast({});
 
   const { data, refetch: refetchCategoryList } = useQuery(

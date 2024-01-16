@@ -33,9 +33,9 @@ export const MyBtn = styled.div`
   padding: 14px;
   transition: all 0.3s;
   background-color: ${(props) =>
-    props.sortBy === "date" ? `var(--color-green)` : `var(--color-white)`};
+    props.tab === "personal" ? `var(--color-green)` : `var(--color-white)`};
   color: ${(props) =>
-    props.sortBy === "date"
+    props.tab === "personal"
       ? `var(--color-white)`
       : `var(--color-secondary-grey)`};
   cursor: pointer;
@@ -46,9 +46,9 @@ export const SharedBtn = styled.div`
   padding: 14px;
   transition: all 0.3s;
   background-color: ${(props) =>
-    props.sortBy === "date" ? `var(--color-white)` : `var(--color-green)`};
+    props.tab === "personal" ? `var(--color-white)` : `var(--color-green)`};
   color: ${(props) =>
-    props.sortBy === "date"
+    props.tab === "personal"
       ? `var(--color-secondary-grey)`
       : `var(--color-white)`};
   cursor: pointer;
