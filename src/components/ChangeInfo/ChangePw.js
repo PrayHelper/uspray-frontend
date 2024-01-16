@@ -1,13 +1,13 @@
 import { useState } from "react";
-import Button, { ButtonSize, ButtonTheme } from "../components/Button/Button";
-import Input from "../components/Input/Input";
-import UserHeader from "../components/UserHeader";
+import Button, { ButtonSize, ButtonTheme } from "../Button/Button";
+import Input from "../Input/Input";
+import UserHeader from "../UserHeader";
 import styled from "styled-components";
-import BlackScreen from "../components/BlackScreen/BlackScreen";
-import { useResetPw } from "../hooks/useResetPw";
-import Modal from "../components/Modal/Modal";
-import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
-import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
+import BlackScreen from "../BlackScreen/BlackScreen";
+import { useResetPw } from "../../hooks/useResetPw";
+import Modal from "../Modal/Modal";
+import { ReactComponent as NextArrowGray } from "../../images/ic_next_arrow_gray.svg";
+import { ReactComponent as NextArrowWhite } from "../../images/ic_next_arrow_white.svg";
 
 
 const ModalContent = styled.div`
@@ -40,7 +40,7 @@ const ModalButton1 = styled.button`
   font-size: 18px;
 `;
 
-const ChangePw = () => {
+const ChangePw = ({setShowChangePw}) => {
   const [pw, setPw] = useState("");
   const [matchingPw, setMatchingPw] = useState("");
   const [invalidPwInfo, setInvalidPwInfo] = useState("");
@@ -103,16 +103,7 @@ const ChangePw = () => {
   };
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100vh",
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
+    <Wrapper>
       {showModal && (
         <>
           <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
@@ -127,7 +118,7 @@ const ChangePw = () => {
           />
         </>
       )}
-      <UserHeader>비밀번호 변경</UserHeader>
+      <UserHeader back={() => setShowChangePw(false)}>비밀번호 변경</UserHeader>
       <div
         style={{
           width: "100%",
@@ -182,8 +173,23 @@ const ChangePw = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  z-index: 101;
+`
 
 export default ChangePw;

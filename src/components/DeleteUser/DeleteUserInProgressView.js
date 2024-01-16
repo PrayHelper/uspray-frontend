@@ -21,7 +21,7 @@ const DeleteUserInProgressView = ({
 }) => {
   return (
     <S.Root>
-      <UserHeader>회원정보 확인</UserHeader>
+      <UserHeader>계정 삭제</UserHeader>
       <S.Content>
         <S.TopTextsAndOptions>
           <S.TopTexts>
