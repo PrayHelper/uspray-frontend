@@ -68,7 +68,7 @@ const PrayDateCategoryInput = ({
                 maxLength={maxlen}
                 onChange={onInputHandler}
                 disabled={isDefault ? true : false}
-                value={isDefault ? "기도제목을 입력하였습니다." : value}
+                value={value}
                 ref={modalInputRef}
               />
               {isShowWordCount && (
