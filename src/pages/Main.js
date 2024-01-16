@@ -65,8 +65,6 @@ const Main = () => {
       setInputValue("");
     }
   };
-  
-  // const { changeCategory, deleteCategory } = useCategorySetting();
 
   const changeCategoryHandler = async (data) => {
     try {
