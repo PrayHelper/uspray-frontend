@@ -1,14 +1,15 @@
 import { useMutation } from "react-query";
 import useApi from "./useApi";
 
-export const useShare = () => {
+export const useHistorySearch = () => {
   const { postFetcher } = useApi();
-  return useMutation(
+
+  const { mutate: searchHistory } = useMutation(
     async (data) => {
-      return await postFetcher("/share/receive", data);
+      return await postFetcher("/history/search", data);
     },
     {
-      onError: (e) => {
+      onError: async (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
@@ -21,4 +22,8 @@ export const useShare = () => {
       refetchOnWindowFocus: false,
     }
   );
+
+  return {
+    searchHistory,
+  };
 };

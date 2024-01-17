@@ -18,6 +18,8 @@ const MainContent = ({
   setSelectedCategoryIndex,
   refetchPrayList,
   tabType,
+  onDotIconClicked,
+  setClickedCategoryData
 }) => {
   const [selectedTitleIndex, setSelectedTitleIndex] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -68,16 +70,18 @@ const MainContent = ({
         />
       </TopWrapper>
       <Content>
-        {prayList &&
-          prayList.map((category, index) => (
-            <Category
-              key={index}
-              title={category.categoryName}
-              prays={category.prays}
-              color={category.categoryColor}
-              setSelectedTitleIndex={setSelectedTitleIndex}
-            />
-          ))}
+        {prayList && prayList.map((category, index) => (
+          <Category
+            key={index}
+            categoryId={category.categoryId}
+            title={category.categoryName}
+            prays={category.prays}
+            color={category.categoryColor}
+            setSelectedTitleIndex={setSelectedTitleIndex}
+            onDotIconClicked={onDotIconClicked}
+            setClickedCategoryData={setClickedCategoryData}
+          />
+        ))}
       </Content>
       <BottomSetWrapper selectedTitleIndex={selectedTitleIndex}>
         <BottomButtonWrapper>

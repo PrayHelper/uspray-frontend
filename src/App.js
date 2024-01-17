@@ -15,7 +15,6 @@ import NotFound from "./pages/NotFound";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Main from "./pages/Main";
-import Locker from "./pages/Locker";
 import Group from "./pages/Group";
 import LoginPage from "./components/Login/LoginPage";
 import Settings from "./pages/Settings";
@@ -45,6 +44,7 @@ import CreateGroup from "./pages/CreateGroup";
 import LeaveGroup from "./pages/LeaveGroup";
 import SocialLoginNameInput from "./pages/SocialLoginNameInput";
 import DeleteUser from "./pages/DeleteUser";
+import ChangeCategoryOrder from "./pages/ChangeCategoryOrder";
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -104,13 +104,15 @@ function App() {
                   <Route path="/group" element={<Group />} />
                   <Route path="/settings" element={<Settings />} />
                 </Route>
-                <Route path="/locker" element={<Locker />} />
                 <Route path="/leaveGroup" element={<LeaveGroup />} />
                 <Route path="/createGroup" element={<CreateGroup />} />
                 <Route path="/checkInfo" element={<CheckInfo />} />
                 <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                 <Route path="/social" element={<SocialLogin />} />
-                <Route path="/deleteUser" element={<DeleteUser />} />
+                <Route
+                  path="/change-category-order/:categoryType"
+                  element={<ChangeCategoryOrder />}
+                />
               </Route>
               <Route element={<Outlet />}>
                 <Route path="/" element={<Login />} />
@@ -125,7 +127,8 @@ function App() {
                 <Route path="/findPW" element={<FindPassword />}></Route>
                 <Route
                   path="/findPWResult"
-                  element={<FindPasswordResult />}></Route>
+                  element={<FindPasswordResult />}
+                ></Route>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/loading" element={<SplashScreen />} />
                 <Route path="*" element={<NotFound />} />
