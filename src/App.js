@@ -121,7 +121,7 @@ function App() {
                 <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                 <Route path="/social" element={<SocialLogin />} />
                 <Route
-                  path="/change-category-order"
+                  path="/change-category-order/:categoryType"
                   element={<ChangeCategoryOrder />}
                 />
               </Route>

@@ -3,14 +3,19 @@ import useApi from "./useApi";
 import useToast from "./useToast";
 import { ToastTheme } from "../components/Toast/Toast";
 
-export const useCategoryTemp_by_limeojin = () => {
+export const categoryTypeConfig = {
+  personal: "personal",
+  shared: "shared",
+};
+
+export const useCategoryTemp_by_limeojin = ({ categoryType }) => {
   const { getFetcher, postFetcher, putFetcher } = useApi();
   const { showToast } = useToast({});
 
   const { data: fetchedData, refetch } = useQuery(
     ["categoryList"],
     async () => {
-      return await getFetcher(`/category?categoryType=PERSONAL`);
+      return await getFetcher(`/category?categoryType=${categoryType}`);
     },
     {
       onError: async (e) => {

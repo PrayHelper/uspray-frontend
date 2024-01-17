@@ -1,8 +1,9 @@
 import styled from "styled-components";
-import UserHeader from "../components/UserHeader";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import StrictModeDroppable from "../lib/StrictModeDroppable";
 import { useCategoryTemp_by_limeojin } from "../hooks/useCategoryTemp_by_limeojin";
+import { useParams } from "react-router-dom";
+import UserHeader from "../components/UserHeader";
 
 const Hamburger = () => (
   <S.HamburgerContainer>
@@ -30,7 +31,10 @@ const CategoryItem = ({ categoryItem, index }) => {
 };
 
 const ChangeCategoryOrder = () => {
-  const { categoryList, updateCategoryOrder } = useCategoryTemp_by_limeojin();
+  const { categoryType } = useParams(); // "personal" or "shared"
+  const { categoryList, updateCategoryOrder } = useCategoryTemp_by_limeojin({
+    categoryType,
+  });
 
   const onDragEnd = ({ source, destination }) => {
     if (!source || !destination) return;
