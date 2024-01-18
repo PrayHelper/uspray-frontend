@@ -214,7 +214,7 @@ const Settings = () => {
         <WhiteBox>
           <SubTitle>알림</SubTitle>
           <StyledItem noActive={true}>
-            <div>다른 사람이 내 기도제목을 기도 했을 때</div>
+            <div>기도 시간 - 오전 8시</div>
             <SettingToggle
               refetchIsNotifiedData={refetchIsNotifiedData}
               isAbledData={isAbledData[0]}
@@ -222,11 +222,19 @@ const Settings = () => {
             ></SettingToggle>
           </StyledItem>
           <StyledItem noActive={true}>
-            <div>다른 사람이 내 기도제목을 공유 받았을 때</div>
+            <div>다른 사람이 내 기도제목을 기도 했을 때</div>
             <SettingToggle
               refetchIsNotifiedData={refetchIsNotifiedData}
               isAbledData={isAbledData[1]}
               id={2}
+            ></SettingToggle>
+          </StyledItem>
+          <StyledItem noActive={true}>
+            <div>다른 사람이 내 기도제목을 공유 받았을 때</div>
+            <SettingToggle
+              refetchIsNotifiedData={refetchIsNotifiedData}
+              isAbledData={isAbledData[2]}
+              id={3}
             ></SettingToggle>
           </StyledItem>
         </WhiteBox>
