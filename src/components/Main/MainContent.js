@@ -16,12 +16,13 @@ const MainContent = ({
   setShowCategorySetting,
   selectedCategoryIndex,
   setSelectedCategoryIndex,
+  tabType,
   onDotIconClicked,
   setClickedCategoryData,
 }) => {
   const [selectedTitleIndex, setSelectedTitleIndex] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const { prayList, deletePray, completePray } = usePray();
+  const { prayList, deletePray, completePray } = usePray(tabType);
   const { showToast } = useToast({});
 
   const prayModify = () => {

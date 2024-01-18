@@ -231,7 +231,7 @@ const Main = () => {
         setShowCategorySetting={setShowCategorySetting}
         selectedCategoryIndex={selectedCategoryIndex}
         setSelectedCategoryIndex={setSelectedCategoryIndex}
-        tabType={tab}
+        tabType={tabType}
         refetchPrayList={refetchPrayList}
         onDotIconClicked={onDotIconClicked}
         setClickedCategoryData={setClickedCategoryData}
