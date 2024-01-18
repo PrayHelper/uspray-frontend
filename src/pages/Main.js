@@ -256,6 +256,7 @@ const Main = () => {
           <FixedButtonContainer onClick={handleInnerClick}>
             <ButtonV2
               buttonTheme={ButtonTheme.FILLED}
+              disabled={!inputValue}
               handler={() =>
                 createCategoryHandler({
                   name: inputValue,
