@@ -3,13 +3,13 @@ import useApi from "./useApi";
 import useToast from "./useToast";
 import { ToastTheme } from "../components/Toast/Toast";
 
-export const usePray = () => {
+export const usePray = (tabType) => {
   const { getFetcher, postFetcher, putFetcher, deleteFetcher } = useApi();
   const { showToast } = useToast({});
 
   const { data, refetch: refetchPrayList } = useQuery(
-    ["prayList", tabType],
-    async (_, tabType) => {
+    ["prayList"],
+    async () => {
       return await getFetcher(`/pray/?prayType=${tabType}`);
     },
     {
@@ -73,6 +73,7 @@ export const usePray = () => {
           message: "기도제목을 삭제했어요.",
           theme: ToastTheme.SUCCESS,
         });
+        refetchPrayList(tabType);
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -96,6 +97,7 @@ export const usePray = () => {
       },
       onSuccess: (res) => {
         console.log(res);
+        refetchPrayList(tabType);
       },
       retry: (cnt) => {
         return cnt < 3;

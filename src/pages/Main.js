@@ -12,7 +12,7 @@ import { usePray } from "../hooks/usePray";
 import Locker from "./Locker";
 
 const Main = () => {
-  const [tab, setTab] = useState("personal");
+  const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
   const [inputValue, setInputValue] = useState("");
   const [showCategorySetting, setShowCategorySetting] = useState(false);
@@ -22,8 +22,6 @@ const Main = () => {
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
-
-  const { refetchPrayList, createPray } = usePray();
   const [dotIconClicked, setDotIconClicked] = useState(false);
   const [clickedCategoryData, setClickedCategoryData] = useState({});
   const tabType = tab === "내가 쓴" ? "personal" : "shared";
@@ -31,8 +29,15 @@ const Main = () => {
   const categoryState = useCategory(tabType);
   const prayState = usePray(tabType);
 
-  const { categoryList, firstCategoryIndex } = categoryState;
-  const { refetchCategoryList } = categoryState;
+  const {
+    categoryList,
+    firstCategoryIndex,
+    refetchCategoryList,
+    createCategory,
+    changeCategory,
+    deleteCategory,
+  } = categoryState;
+  const { refetchPrayList, createPray } = prayState;
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
 
@@ -49,14 +54,12 @@ const Main = () => {
 
   useEffect(() => {
     if (ColorList.includes(clickedCategoryData.color)) {
-        setSelectedColor(clickedCategoryData.color);
+      setSelectedColor(clickedCategoryData.color);
     } else {
-        setSelectedColor(ColorList[0]);
+      setSelectedColor(ColorList[0]);
     }
-}, [clickedCategoryData]);
+  }, [clickedCategoryData]);
 
-  const { createCategory, changeCategory, deleteCategory} = useCategory(tabType);
-  
   const createCategoryHandler = async (categoryData) => {
     try {
       await createCategory(categoryData);
@@ -92,8 +95,7 @@ const Main = () => {
 
   useEffect(() => {
     refetchCategoryList();
-    console.log(tabType);
-    refetchPrayList(tabType);
+    refetchPrayList();
   }, [tab]);
 
   useEffect(() => {
@@ -147,8 +149,6 @@ const Main = () => {
   const onDotIconClicked = () => {
     setDotIconClicked(true);
   };
-
-
 
   useEffect(() => {
     if (categoryList.length > 0) {
@@ -285,11 +285,9 @@ const Main = () => {
           />
           <FixedButtonContainer onClick={handleInnerClick}>
             <ButtonV2
-                buttonTheme={ButtonTheme.OUTLINED}
-                handler={() =>
-                  deleteCategoryHandler(clickedCategoryData.id)
-                }
-              >
+              buttonTheme={ButtonTheme.OUTLINED}
+              handler={() => deleteCategoryHandler(clickedCategoryData.id)}
+            >
               카테고리 삭제
             </ButtonV2>
             <ButtonV2
@@ -302,8 +300,7 @@ const Main = () => {
                   type: tabType,
                 })
               }
-            >
-            </ButtonV2>
+            ></ButtonV2>
           </FixedButtonContainer>
           <ColorPalette>
             {ColorList.map((color) => (

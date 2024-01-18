@@ -19,7 +19,7 @@ const MainContent = ({
   refetchPrayList,
   tabType,
   onDotIconClicked,
-  setClickedCategoryData
+  setClickedCategoryData,
 }) => {
   const [selectedTitleIndex, setSelectedTitleIndex] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -70,18 +70,19 @@ const MainContent = ({
         />
       </TopWrapper>
       <Content>
-        {prayList && prayList.map((category, index) => (
-          <Category
-            key={index}
-            categoryId={category.categoryId}
-            title={category.categoryName}
-            prays={category.prays}
-            color={category.categoryColor}
-            setSelectedTitleIndex={setSelectedTitleIndex}
-            onDotIconClicked={onDotIconClicked}
-            setClickedCategoryData={setClickedCategoryData}
-          />
-        ))}
+        {prayList &&
+          prayList.map((category, index) => (
+            <Category
+              key={index}
+              categoryId={category.categoryId}
+              title={category.categoryName}
+              prays={category.prays}
+              color={category.categoryColor}
+              setSelectedTitleIndex={setSelectedTitleIndex}
+              onDotIconClicked={onDotIconClicked}
+              setClickedCategoryData={setClickedCategoryData}
+            />
+          ))}
       </Content>
       <BottomSetWrapper selectedTitleIndex={selectedTitleIndex}>
         <BottomButtonWrapper>
@@ -95,7 +96,6 @@ const MainContent = ({
                 theme: ToastTheme.SUCCESS,
               });
               setSelectedTitleIndex(null);
-              refetchPrayList();
             }}
           >
             완료하기
