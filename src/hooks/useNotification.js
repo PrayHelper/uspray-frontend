@@ -44,7 +44,7 @@ export const useNotification = () => {
     }
   );
 
-  const isNotifiedData = data?.data.data;
+  const isNotifiedData = data?.data.data || {};
 
   return {
     isNotifiedData,
