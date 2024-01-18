@@ -14,7 +14,7 @@ import Locker from "./Locker";
 const Main = () => {
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
-  const [inputValue, setInputValue] = useState("");
+
   const [showCategorySetting, setShowCategorySetting] = useState(false);
 
   const [showSubModal, setShowSubModal] = useState(false);
@@ -24,6 +24,7 @@ const Main = () => {
   const [categoryInputValue, setCategoryInputValue] = useState(0);
   const [dotIconClicked, setDotIconClicked] = useState(false);
   const [clickedCategoryData, setClickedCategoryData] = useState({});
+  const [inputValue, setInputValue] = useState("");
   const tabType = tab === "내가 쓴" ? "personal" : "shared";
   const [isOverlayOn, setIsOverlayOn] = useState(false);
   const categoryState = useCategory(tabType);
@@ -51,6 +52,10 @@ const Main = () => {
     "#507247",
   ];
   const [selectedColor, setSelectedColor] = useState(ColorList[0]);
+
+  useEffect(() => {
+    setInputValue(clickedCategoryData.name);
+  }, [clickedCategoryData]);
 
   useEffect(() => {
     if (ColorList.includes(clickedCategoryData.color)) {
@@ -279,7 +284,6 @@ const Main = () => {
           <Input
             type="text"
             value={inputValue}
-            placeholder={clickedCategoryData.name}
             onChange={handleInputChange}
             onClick={handleInnerClick}
           />
@@ -300,7 +304,7 @@ const Main = () => {
                   type: tabType,
                 })
               }
-            ></ButtonV2>
+            >카테고리 수정</ButtonV2>
           </FixedButtonContainer>
           <ColorPalette>
             {ColorList.map((color) => (
