@@ -4,8 +4,8 @@ import useApi from './useApi';
 export const useNotification = () => {
   const { getFetcher, postFetcher } = useApi();
 
-  const { data, refetch: refetchNotification } = useQuery(
-    ['groupList'],
+  const { data, refetch: refetchIsNotifiedData } = useQuery(
+    ['FetchNotifications'],
     async () => {
       return await getFetcher(`/member/notification-setting`)
     },
@@ -34,7 +34,7 @@ export const useNotification = () => {
       },
       onSuccess: (res) => {
         console.log(res);
-        refetchNotification();
+        refetchIsNotifiedData();
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -44,11 +44,11 @@ export const useNotification = () => {
     }
   );
 
-  const isNotifiedData = data?.data.data || [];
+  const isNotifiedData = data?.data.data;
 
   return {
     isNotifiedData,
-    refetchNotification,
+    refetchIsNotifiedData,
     setNotification
   };
 }
