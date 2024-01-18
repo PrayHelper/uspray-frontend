@@ -29,18 +29,18 @@ const Category = ({ categoryId, title, color, setSelectedTitleIndex, prays, onDo
     <CategoryContainer>
       <Title color={color}>{title}<img src="/images/ic_dot.svg" alt="dot_icon" onClick={handleCategoryTitleClick}/></Title>
       <ItemList>
-        {prays.map((pray, prayId) => (
-          <Item key={prayId}>
+        {prays.map((pray, index) => (
+          <Item key={pray.prayId}>
             <ItemText
-              selected={selected[prayId]}
-              onClick={(e) => titleClick(e, prayId)}
+              selected={selected[pray.prayId]}
+              onClick={(e) => titleClick(e, pray.prayId)}
             >
               {pray.content}
             </ItemText>
             <img
-              src={selected[prayId] ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
+              src={selected[pray.prayId] ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
               alt="heart_icon"
-              onClick={(e) => handleClick(e, prayId)}
+              onClick={(e) => handleClick(e, pray.prayId)}
             />
           </Item>
         ))}

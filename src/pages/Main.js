@@ -8,12 +8,10 @@ import Modal from "../components/Modal/Modal";
 import Overlay from "../components/Overlay/Overlay";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../hooks/useCategory";
-import { useSendPrayItem } from "../hooks/useSendPrayItem";
 import { usePray } from "../hooks/usePray";
 import Locker from "./Locker";
 
 const Main = () => {
-  const { mutate: mutateSendPrayItem } = useSendPrayItem();
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
   const [inputValue, setInputValue] = useState("");
@@ -30,10 +28,16 @@ const Main = () => {
   const [isOverlayOn, setIsOverlayOn] = useState(false);
   const categoryState = useCategory(tabType);
   const prayState = usePray(tabType);
-
-  const { categoryList, firstCategoryIndex } = categoryState;
   const { refetchCategoryList } = categoryState;
+  const {
+    categoryList,
+    firstCategoryIndex,
+    createCategory,
+    changeCategory,
+    deleteCategory,
+  } = categoryState;
   const { refetchPrayList } = prayState;
+  const { prayList, createPray } = prayState;
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
 
@@ -50,14 +54,12 @@ const Main = () => {
 
   useEffect(() => {
     if (ColorList.includes(clickedCategoryData.color)) {
-        setSelectedColor(clickedCategoryData.color);
+      setSelectedColor(clickedCategoryData.color);
     } else {
-        setSelectedColor(ColorList[0]);
+      setSelectedColor(ColorList[0]);
     }
-}, [clickedCategoryData]);
+  }, [clickedCategoryData]);
 
-  const { createCategory, changeCategory, deleteCategory} = useCategory(tabType);
-  
   const createCategoryHandler = async (categoryData) => {
     try {
       await createCategory(categoryData);
@@ -89,10 +91,11 @@ const Main = () => {
       setDotIconClicked(false);
       setInputValue("");
     }
-  }
+  };
 
   useEffect(() => {
     refetchCategoryList();
+    refetchPrayList();
   }, [tab]);
 
   useEffect(() => {
@@ -122,7 +125,7 @@ const Main = () => {
 
   // 기도를 추가하는 함수
   const onInsert = async (text, deadline, categoryId) => {
-    mutateSendPrayItem(
+    createPray(
       { content: text, deadline: deadline, categoryId: categoryId },
       {
         onSuccess: () => {
@@ -130,7 +133,6 @@ const Main = () => {
           setPrayInputValue("");
           setDateInputValue(null);
           setSelectedCategoryIndex(categoryId);
-          refetchPrayList();
         },
       }
     );
@@ -147,8 +149,6 @@ const Main = () => {
   const onDotIconClicked = () => {
     setDotIconClicked(true);
   };
-
-
 
   useEffect(() => {
     if (categoryList.length > 0) {
@@ -231,6 +231,7 @@ const Main = () => {
         setShowCategorySetting={setShowCategorySetting}
         selectedCategoryIndex={selectedCategoryIndex}
         setSelectedCategoryIndex={setSelectedCategoryIndex}
+        tabType={tabType}
         refetchPrayList={refetchPrayList}
         onDotIconClicked={onDotIconClicked}
         setClickedCategoryData={setClickedCategoryData}
@@ -284,11 +285,9 @@ const Main = () => {
           />
           <FixedButtonContainer onClick={handleInnerClick}>
             <ButtonV2
-                buttonTheme={ButtonTheme.OUTLINED}
-                handler={() =>
-                  deleteCategoryHandler(clickedCategoryData.id)
-                }
-              >
+              buttonTheme={ButtonTheme.OUTLINED}
+              handler={() => deleteCategoryHandler(clickedCategoryData.id)}
+            >
               카테고리 삭제
             </ButtonV2>
             <ButtonV2
@@ -301,9 +300,7 @@ const Main = () => {
                   type: tabType,
                 })
               }
-            >
-              카테고리 수정
-            </ButtonV2>
+            ></ButtonV2>
           </FixedButtonContainer>
           <ColorPalette>
             {ColorList.map((color) => (
