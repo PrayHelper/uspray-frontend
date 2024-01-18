@@ -6,8 +6,6 @@ import BlackScreen from "../components/BlackScreen/BlackScreen";
 import { useNavigate } from "react-router-dom";
 import { tokenState } from "../recoil/auth";
 import { useSetRecoilState } from "recoil";
-import { useFetchNotifications } from "../hooks/useFetchNotifications";
-import { useEffect } from "react";
 import useAuthToken from "../hooks/useAuthToken";
 import { setRef } from "@mui/material";
 import useAuthorized from "../hooks/useAuthorized";
