@@ -54,8 +54,11 @@ const Main = () => {
   const [selectedColor, setSelectedColor] = useState(ColorList[0]);
 
   useEffect(() => {
-    setInputValue(clickedCategoryData.name);
-  }, [clickedCategoryData]);
+    if (dotIconClicked)
+      setInputValue(clickedCategoryData.name);
+    else
+      setInputValue("");
+  }, [clickedCategoryData, dotIconClicked]);
 
   useEffect(() => {
     if (ColorList.includes(clickedCategoryData.color)) {
