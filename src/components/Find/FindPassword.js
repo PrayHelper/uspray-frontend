@@ -115,7 +115,7 @@ const FindPassword = () => {
   };
 
   const findPassword = async () => {
-    const api = "/auth/check-pw";
+    const api = "/auth/find-pw";
     const data = {
       userId: userInfo.id,
       phone: userInfo.phoneNumber.replace(/-/g, ""),
