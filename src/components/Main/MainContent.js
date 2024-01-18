@@ -16,8 +16,6 @@ const MainContent = ({
   setShowCategorySetting,
   selectedCategoryIndex,
   setSelectedCategoryIndex,
-  refetchPrayList,
-  tabType,
   onDotIconClicked,
   setClickedCategoryData,
 }) => {
@@ -51,7 +49,6 @@ const MainContent = ({
                 onSuccess: () => {
                   setShowModal(false);
                   setSelectedTitleIndex(null);
-                  refetchPrayList();
                 },
               });
             }}

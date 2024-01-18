@@ -26,8 +26,6 @@ const Main = () => {
   const [clickedCategoryData, setClickedCategoryData] = useState({});
   const tabType = tab === "내가 쓴" ? "personal" : "shared";
   const [isOverlayOn, setIsOverlayOn] = useState(false);
-  const categoryState = useCategory(tabType);
-  const prayState = usePray(tabType);
 
   const {
     categoryList,
@@ -36,8 +34,8 @@ const Main = () => {
     createCategory,
     changeCategory,
     deleteCategory,
-  } = categoryState;
-  const { refetchPrayList, createPray } = prayState;
+  } = useCategory(tabType);
+  const { refetchPrayList, createPray } = usePray(tabType);
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
 
