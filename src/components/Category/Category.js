@@ -4,7 +4,16 @@ import styled from "styled-components";
 const ICON_HEART_FILLED = "images/ic_filled_heart.svg";
 const ICON_HEART_EMPTY = "images/ic_empty_heart.svg";
 
-const Category = ({ categoryId, title, color, setSelectedTitleIndex, prays, onDotIconClicked, setClickedCategoryData }) => {
+const Category = ({
+  categoryId,
+  title,
+  color,
+  setSelectedPrayInfo,
+  prays,
+  onDotIconClicked,
+  setClickedCategoryData,
+  setShowSubModal,
+}) => {
   const [selected, setSelected] = useState([]);
 
   const handleClick = (e, prayId) => {
@@ -16,24 +25,37 @@ const Category = ({ categoryId, title, color, setSelectedTitleIndex, prays, onDo
     });
   };
 
-  const titleClick = (e, prayId) => {
-    setSelectedTitleIndex(prayId);
+  const titleClick = (pray) => {
+    setSelectedPrayInfo({
+      categoryId: pray.categoryId,
+      content: pray.content,
+      deadline: pray.deadline,
+      isShared: pray.isShared,
+      prayId: pray.prayId,
+    });
   };
 
   const handleCategoryTitleClick = () => {
     onDotIconClicked();
-    setClickedCategoryData({id: categoryId, color: color, name: title});
-  }
+    setClickedCategoryData({ id: categoryId, color: color, name: title });
+  };
 
   return (
     <CategoryContainer>
-      <Title color={color}>{title}<img src="/images/ic_dot.svg" alt="dot_icon" onClick={handleCategoryTitleClick}/></Title>
+      <Title color={color}>
+        {title}
+        <img
+          src="/images/ic_dot.svg"
+          alt="dot_icon"
+          onClick={handleCategoryTitleClick}
+        />
+      </Title>
       <ItemList>
         {prays.map((pray, index) => (
           <Item key={pray.prayId}>
             <ItemText
               selected={selected[pray.prayId]}
-              onClick={(e) => titleClick(e, pray.prayId)}
+              onClick={(e) => titleClick(pray)}
             >
               {pray.content}
             </ItemText>
