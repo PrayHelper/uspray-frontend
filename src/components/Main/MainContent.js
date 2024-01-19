@@ -38,14 +38,12 @@ const MainContent = ({
   };
 
   useEffect(() => {
-    if (modifyPrayInfo === null) {
-      console.log("modifyPrayInfo", modifyPrayInfo);
-      return;
+    if (modifyPrayInfo !== null) {
+      setPrayInputValue(modifyPrayInfo.content);
+      setDateInputValue(modifyPrayInfo.deadline);
+      setCategoryInputValue(modifyPrayInfo.categoryId);
+      setShowSubModal(true);
     }
-    setPrayInputValue(modifyPrayInfo.content);
-    setDateInputValue(modifyPrayInfo.deadline);
-    setCategoryInputValue(modifyPrayInfo.categoryId);
-    setShowSubModal(true);
   }, [modifyPrayInfo]);
 
   // 기도를 수정하는 함수
