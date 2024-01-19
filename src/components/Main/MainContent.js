@@ -38,7 +38,7 @@ const MainContent = ({
   };
 
   useEffect(() => {
-    if (modifyPrayInfo !== null) {
+    if (modifyPrayInfo) {
       setPrayInputValue(modifyPrayInfo.content);
       setDateInputValue(modifyPrayInfo.deadline);
       setCategoryInputValue(modifyPrayInfo.categoryId);
