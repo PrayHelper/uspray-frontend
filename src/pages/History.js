@@ -4,7 +4,7 @@ import HisContent from "../components/History/HisContent";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
-import { useFetchHistory } from "../hooks/useFetchHistory";
+import { useHistoryList } from "../hooks/useHistoryList";
 import { useHistoryModify } from "../hooks/useHistoryModify";
 import { useCategory } from "../hooks/useCategory";
 import Lottie from "react-lottie";
@@ -23,11 +23,11 @@ const History = () => {
   const [currentId, setCurrentId] = useState();
   const [updateDate, setUpdateDate] = useState(null);
   const [updateCategory, setUpdateCategory] = useState(0);
-  const [pageMy, setPageMy] = useState(0);
-  const [pageShared, setPageShared] = useState(0);
-  const [dataMy, setDataMy] = useState([]);
-  const [dataShared, setDataShared] = useState([]);
-  const [myScrollPos, setMyScrollPos] = useState(0);
+  const [personalPage, setPersonalPage] = useState(0);
+  const [sharedPage, setSharedPage] = useState();
+  const [personalHistoryList, setPersonalHistoryList] = useState([]);
+  const [sharedHistoryList, setSharedHistoryList] = useState([]);
+  const [personalScrollPos, setPersonalScrollPos] = useState(0);
   const [sharedScrollPos, setSharedScrollPos] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [ref, inView] = useInView({});
@@ -38,15 +38,15 @@ const History = () => {
   const [deletedItemIds, setDeletedItemIds] = useState([]);
   const [isOverlayOn, setIsOverlayOn] = useState(false);
 
-  const { data: myPrayData, refetch: refetchMyData } = useFetchHistory({
+  const { data: myPrayData, refetch: refetchMyData } = useHistoryList({
     type: "personal",
-    page: pageMy,
+    page: personalPage,
     size: 15,
   });
 
-  const { data: sharedPrayData, refetch: refetchSharedData } = useFetchHistory({
+  const { data: sharedPrayData, refetch: refetchSharedData } = useHistoryList({
     type: "shared",
-    page: pageShared,
+    page: sharedPage,
     size: 15,
   });
   const { showToast } = useToast({
@@ -77,7 +77,7 @@ const History = () => {
 
   const onClickToggle = (e) => {
     tab === "personal"
-      ? setMyScrollPos(window.scrollY)
+      ? setPersonalScrollPos(window.scrollY)
       : setSharedScrollPos(window.scrollY);
     setTab(e.currentTarget.id);
   };
@@ -85,22 +85,22 @@ const History = () => {
   useEffect(() => {
     // 카테고리가 변경될 때 스크롤 위치 복원
     tab === "personal"
-      ? window.scrollTo(0, myScrollPos)
+      ? window.scrollTo(0, personalScrollPos)
       : window.scrollTo(0, sharedScrollPos);
-  }, [tab, myScrollPos, sharedScrollPos]);
+  }, [tab, personalScrollPos, sharedScrollPos]);
 
   const fetchMyData = async () => {
     const newData = await myPrayData.data.data.historyList;
     const filteredData = newData.filter(
       (newItem) =>
-        !dataMy.some(
+        !personalHistoryList.some(
           (existingItem) => existingItem.historyId === newItem.historyId
         )
     );
-    const tmpData = [...dataMy, ...filteredData].filter(
+    const tmpData = [...personalHistoryList, ...filteredData].filter(
       (item) => !deletedItemIds.some((tmpItem) => tmpItem === item.historyId)
     );
-    setDataMy(tmpData);
+    setPersonalHistoryList(tmpData);
     if (newData.length === 0) {
       setHasMore(false);
     }
@@ -110,14 +110,14 @@ const History = () => {
     const newData = await sharedPrayData.data.data.historyList;
     const filteredData = newData.filter(
       (newItem) =>
-        !dataShared.some(
+        !sharedHistoryList.some(
           (existingItem) => existingItem.historyId === newItem.historyId
         )
     );
-    const tmpData = [...dataShared, ...filteredData].filter(
+    const tmpData = [...sharedHistoryList, ...filteredData].filter(
       (item) => !deletedItemIds.some((tmpItem) => tmpItem === item.historyId)
     );
-    setDataShared(tmpData);
+    setSharedHistoryList(tmpData);
     if (newData.length === 0) {
       setHasMore(false);
     }
@@ -147,8 +147,8 @@ const History = () => {
     const id = e.currentTarget.id;
     const currentData =
       tab === "personal"
-        ? dataMy.find((item) => item.id === Number(id))
-        : dataShared.find((item) => item.id === Number(id));
+        ? personalHistoryList.find((item) => item.id === Number(id))
+        : sharedHistoryList.find((item) => item.id === Number(id));
     setCurrentData(currentData);
     setCurrentId(Number(id));
   };
@@ -172,8 +172,8 @@ const History = () => {
   useEffect(() => {
     if (inView && hasMore && !loading) {
       tab === "personal"
-        ? setPageMy((prev) => prev + 1)
-        : setPageShared((prev) => prev + 1);
+        ? setPersonalPage((prev) => prev + 1)
+        : setSharedPage((prev) => prev + 1);
     }
   }, [hasMore, inView]);
 
@@ -197,7 +197,7 @@ const History = () => {
           />
         </LottieWrapper>
       )}
-      {!loading && isEmptyData(dataMy) && (
+      {!loading && isEmptyData(personalHistoryList) && (
         <NoDataWrapper>
           <NoDataTitle>완료된 기도제목이 없네요.</NoDataTitle>
           <NoDataContent>기간이 지나면 히스토리에 저장됩니다!</NoDataContent>
@@ -205,7 +205,7 @@ const History = () => {
       )}
       <div>
         <BlackScreen isModalOn={showModal} />
-        {!isEmptyData(dataMy) && showModal && (
+        {!isEmptyData(personalHistoryList) && showModal && (
           <PrayDetailModal
             showSubModal={showSubModal}
             currentData={currentData}
@@ -230,7 +230,7 @@ const History = () => {
       {tab === "personal" && (
         <div style={{ paddingTop: "115px" }}>
           {/* <div> */}
-          {dataMy.map((el) => (
+          {personalHistoryList.map((el) => (
             <div
               onClick={(e) => onClickHistoryItem(e, tab)}
               key={el.historyId}
@@ -248,7 +248,7 @@ const History = () => {
       )}
       {tab === "shared" && (
         <div style={{ paddingTop: "115px" }}>
-          {dataShared.map((el) => (
+          {sharedHistoryList.map((el) => (
             <div
               onClick={(e) => onClickHistoryItem(e, tab)}
               key={el.historyId}
