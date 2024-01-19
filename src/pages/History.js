@@ -7,6 +7,7 @@ import BlackScreen from "../components/BlackScreen/BlackScreen";
 import { useHistoryList } from "../hooks/useHistoryList";
 import { useHistoryModify } from "../hooks/useHistoryModify";
 import { useCategory } from "../hooks/useCategory";
+import { useHistoryDetail } from "../hooks/useHistoryDetail";
 import Lottie from "react-lottie";
 import LottieData from "../json/lottie.json";
 import useToast from "../hooks/useToast";
@@ -19,7 +20,6 @@ const History = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showSubModal, setShowSubModal] = useState(false);
-  const [currentData, setCurrentData] = useState({});
   const [currentId, setCurrentId] = useState();
   const [updateDate, setUpdateDate] = useState(null);
   const [updateCategory, setUpdateCategory] = useState(0);
@@ -37,6 +37,7 @@ const History = () => {
   const { categoryList, firstCategoryIndex } = categoryState;
   const [deletedItemIds, setDeletedItemIds] = useState([]);
   const [isOverlayOn, setIsOverlayOn] = useState(false);
+  const [selectedHistoryId, setSelectedHistoryId] = useState(null);
 
   const { data: myPrayData, refetch: refetchMyData } = useHistoryList({
     type: "personal",
@@ -49,6 +50,9 @@ const History = () => {
     page: sharedPage,
     size: 15,
   });
+
+  const { historyDetail } = useHistoryDetail(selectedHistoryId);
+
   const { showToast } = useToast({
     initialMessage: "기도제목이 오늘의 기도에 추가되었어요.",
   });
@@ -142,16 +146,9 @@ const History = () => {
     );
   };
 
-  const onClickHistoryItem = async (e, tab) => {
-    setShowModal(true);
-    const id = e.currentTarget.id;
-    const currentData =
-      tab === "personal"
-        ? personalHistoryList.find((item) => item.id === Number(id))
-        : sharedHistoryList.find((item) => item.id === Number(id));
-    setCurrentData(currentData);
-    setCurrentId(Number(id));
-  };
+  useEffect(() => {
+    console.log("historyDetail", historyDetail);
+  }, [selectedHistoryId]);
 
   useEffect(() => {
     setLoading(true);
@@ -208,7 +205,7 @@ const History = () => {
         {!isEmptyData(personalHistoryList) && showModal && (
           <PrayDetailModal
             showSubModal={showSubModal}
-            currentData={currentData}
+            //historyD={prayDetail}
             onClickSubModal={onClickSubModal}
             onClickExitModal={onClickExitModal}
           />
@@ -232,7 +229,7 @@ const History = () => {
           {/* <div> */}
           {personalHistoryList.map((el) => (
             <div
-              onClick={(e) => onClickHistoryItem(e, tab)}
+              onClick={() => setSelectedHistoryId(el.historyId)}
               key={el.historyId}
               id={el.historyId}
             >
@@ -250,7 +247,7 @@ const History = () => {
         <div style={{ paddingTop: "115px" }}>
           {sharedHistoryList.map((el) => (
             <div
-              onClick={(e) => onClickHistoryItem(e, tab)}
+              onClick={() => setSelectedHistoryId(el.HistoryId)}
               key={el.historyId}
               id={el.historyId}
             >
@@ -271,7 +268,6 @@ const History = () => {
             setIsOverlayOn={setIsOverlayOn}
             ref={ref}
             HisContent={HisContent}
-            onClickHistoryItem={onClickHistoryItem}
             onClickModify={onClickModify}
             setUpdateCategory={setUpdateCategory}
             setUpdateDate={setUpdateDate}

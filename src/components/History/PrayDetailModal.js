@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const PrayDetailModal = ({
   showSubModal,
-  currentData,
+  prayDetail,
   onClickSubModal,
   onClickExitModal,
 }) => {
@@ -11,19 +11,18 @@ const PrayDetailModal = ({
       <ModalHeader>
         <ModalTitleWrapper>
           <ModalTitle>
-            <ModalTarget>{currentData.target}</ModalTarget>의 기도제목
+            <ModalTarget>{prayDetail.target}</ModalTarget>의 기도제목
           </ModalTitle>
           <ModalDate>
-            {currentData?.created_at?.split(" ")[0].replace(/-/g, ".")} ~{" "}
-            {currentData.deadline.replace(/-/g, ".")}, {currentData.pray_cnt}회
+            {prayDetail?.created_at?.split(" ")[0].replace(/-/g, ".")} ~{" "}
+            {prayDetail.deadline.replace(/-/g, ".")}, {prayDetail.pray_cnt}회
             기도
           </ModalDate>
         </ModalTitleWrapper>
       </ModalHeader>
-      <ModalContent>{currentData.title}</ModalContent>
+      <ModalContent>{prayDetail.title}</ModalContent>
       <ModalWriter>
-        {currentData.writer} {currentData?.origin_created_at?.split(" ")[0]}{" "}
-        작성
+        {prayDetail.writer} {prayDetail?.origin_created_at?.split(" ")[0]} 작성
       </ModalWriter>
       <ModalButtonWrapper>
         <ModalButton1 showSubModal={showSubModal} onClick={onClickSubModal}>
