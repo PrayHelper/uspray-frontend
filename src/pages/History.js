@@ -15,6 +15,7 @@ import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateC
 import HistoryDetailModal from "../components/History/HistoryDetailModal";
 import Overlay from "../components/Overlay/Overlay";
 import HistorySearch from "./HistorySearch";
+import { useHistory } from "../hooks/useHistory";
 
 const History = () => {
   const [loading, setLoading] = useState(true);
@@ -38,6 +39,11 @@ const History = () => {
   const [deletedItemIds, setDeletedItemIds] = useState([]);
   const [isOverlayOn, setIsOverlayOn] = useState(false);
   const [selectedHistoryId, setSelectedHistoryId] = useState(null);
+  const [prayInputValue, setPrayInputValue] = useState("");
+  const [dateInputValue, setDateInputValue] = useState(null);
+  const [categoryInputValue, setCategoryInputValue] = useState(0);
+  const [selectedCategoryIndex, setSelectedCategoryIndex] =
+    useState(firstCategoryIndex);
 
   const { data: myPrayData, refetch: refetchMyData } = useHistoryList({
     type: "personal",
@@ -52,6 +58,7 @@ const History = () => {
   });
 
   const { historyDetail } = useHistoryDetail(selectedHistoryId);
+  const { oneMorePray } = useHistory();
 
   const { showToast } = useToast({
     initialMessage: "기도제목이 오늘의 기도에 추가되었어요.",
@@ -72,7 +79,6 @@ const History = () => {
 
   const onClickExitModal = () => {
     setShowModal(false);
-    setShowSubModal(false);
     setSelectedHistoryId(null);
   };
 
@@ -147,6 +153,31 @@ const History = () => {
     );
   };
 
+  const resetInputData = () => {
+    setPrayInputValue("");
+    setDateInputValue(null);
+    setSelectedCategoryIndex(firstCategoryIndex);
+  };
+
+  // 또 기도하기 함수
+  const onOneMorePray = async (text, deadline, categoryId) => {
+    oneMorePray(
+      {
+        content: text,
+        deadline: deadline,
+        categoryId: categoryId,
+        historyId: historyDetail.historyId,
+      },
+      {
+        onSuccess: () => {
+          setShowSubModal(false);
+          setShowModal(false);
+          resetInputData();
+        },
+      }
+    );
+  };
+
   useEffect(() => {
     if (selectedHistoryId) {
       console.log("historyDetail", historyDetail);
@@ -184,6 +215,10 @@ const History = () => {
     }
   }, [hasMore, inView]);
 
+  useEffect(() => {
+    showSubModal ? setPrayInputValue(historyDetail.content) : resetInputData();
+  }, [showSubModal]);
+
   return (
     <HistoryWrapper>
       <Header
@@ -212,7 +247,7 @@ const History = () => {
       )}
       <div>
         <BlackScreen isModalOn={showModal} />
-        {!isEmptyData(personalHistoryList) && showModal && (
+        {historyDetail && showModal && (
           <HistoryDetailModal
             showSubModal={showSubModal}
             historyDetail={historyDetail}
@@ -220,19 +255,28 @@ const History = () => {
             onClickExitModal={onClickExitModal}
           />
         )}
-        <PrayDateCategoryInput
-          categoryList={categoryList}
-          showSubModal={showSubModal}
-          setShowSubModal={setShowSubModal}
-          isDefault={true}
-          isShowWordCount={false}
-          value=""
-          category={firstCategoryIndex}
-          setUpdateDate={setUpdateDate}
-          setUpdateCategory={setUpdateCategory}
-          onClickFunc={() => onClickModify(tab)}
-          buttonText="오늘의 기도에 추가"
-        />
+        {historyDetail && showSubModal && (
+          <PrayDateCategoryInput
+            categoryList={categoryList}
+            showSubModal={showSubModal}
+            setShowSubModal={setShowSubModal}
+            inputPlaceHodler={historyDetail.content}
+            maxrow={3}
+            maxlen={75}
+            isShowWordCount={historyDetail.canEdit}
+            isDefault={!historyDetail.canEdit}
+            setUpdateValue={setPrayInputValue}
+            setUpdateDate={setDateInputValue}
+            setUpdateCategory={setCategoryInputValue}
+            buttonText="오늘의 기도에 추가"
+            value={prayInputValue}
+            data={historyDetail.deadline}
+            category={historyDetail.categoryId}
+            onClickFunc={() =>
+              onOneMorePray(prayInputValue, dateInputValue, categoryInputValue)
+            }
+          />
+        )}
       </div>
       {tab === "personal" && (
         <div style={{ paddingTop: "115px" }}>
