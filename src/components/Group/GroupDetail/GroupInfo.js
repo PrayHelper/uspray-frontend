@@ -7,7 +7,7 @@ import { useCategory } from "../../../hooks/useCategory";
 import { useGroupPray } from "../../../hooks/useGroupPray";
 
 const GroupInfo = ({ group, isData }) => {
-  const { categoryList, firstCategoryIndex } = useCategory();
+  const { categoryList, firstCategoryIndex } = useCategory("personal");
   const { addGroupPray, groupHeartCount } = useGroupPray(group.id);
   const [showSubModal, setShowSubModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
