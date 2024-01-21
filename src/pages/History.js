@@ -83,6 +83,7 @@ const History = () => {
   };
 
   const onClickSubModal = () => {
+    showSubModal ? resetInputData() : setPrayInputValue(historyDetail.content);
     setShowSubModal(!showSubModal);
   };
 
@@ -214,10 +215,6 @@ const History = () => {
         : setSharedPage((prev) => prev + 1);
     }
   }, [hasMore, inView]);
-
-  useEffect(() => {
-    showSubModal ? setPrayInputValue(historyDetail.content) : resetInputData();
-  }, [showSubModal]);
 
   return (
     <HistoryWrapper>
