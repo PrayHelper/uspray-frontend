@@ -12,7 +12,7 @@ import Lottie from "react-lottie";
 import LottieData from "../json/lottie.json";
 import useToast from "../hooks/useToast";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
-import PrayDetailModal from "../components/History/PrayDetailModal";
+import HistoryDetailModal from "../components/History/HistoryDetailModal";
 import Overlay from "../components/Overlay/Overlay";
 import HistorySearch from "./HistorySearch";
 
@@ -73,6 +73,7 @@ const History = () => {
   const onClickExitModal = () => {
     setShowModal(false);
     setShowSubModal(false);
+    setSelectedHistoryId(null);
   };
 
   const onClickSubModal = () => {
@@ -147,8 +148,17 @@ const History = () => {
   };
 
   useEffect(() => {
-    console.log("historyDetail", historyDetail);
+    if (selectedHistoryId) {
+      console.log("historyDetail", historyDetail);
+      setShowModal(true);
+    }
   }, [selectedHistoryId]);
+
+  useEffect(() => {
+    if (historyDetail) {
+      setShowModal(true);
+    }
+  }, [historyDetail]);
 
   useEffect(() => {
     setLoading(true);
@@ -203,9 +213,9 @@ const History = () => {
       <div>
         <BlackScreen isModalOn={showModal} />
         {!isEmptyData(personalHistoryList) && showModal && (
-          <PrayDetailModal
+          <HistoryDetailModal
             showSubModal={showSubModal}
-            //historyD={prayDetail}
+            historyDetail={historyDetail}
             onClickSubModal={onClickSubModal}
             onClickExitModal={onClickExitModal}
           />
@@ -278,7 +288,7 @@ const History = () => {
             PrayDateCategoryInput={PrayDateCategoryInput}
             onClickExitModal={onClickExitModal}
             onClickSubModal={onClickSubModal}
-            PrayDetailModal={PrayDetailModal}
+            HistoryDetailModal={HistoryDetailModal}
             showModal={showModal}
             isEmptyData={isEmptyData}
             NoDataWrapper={NoDataWrapper}

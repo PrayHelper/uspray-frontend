@@ -10,8 +10,8 @@ export const useHistoryDetail = (historyId) => {
       if (historyId !== null) {
         return await getFetcher(`/history/detail/${historyId}`);
       } else {
-        // historyId가 null이면 데이터를 호출하지 않고 빈 객체를 반환
-        return {};
+        // historyId가 null이면 데이터를 호출하지 않고 null을 반환
+        return null;
       }
     },
     {
@@ -29,7 +29,7 @@ export const useHistoryDetail = (historyId) => {
     }
   );
 
-  const historyDetail = data?.data.data || {};
+  const historyDetail = data?.data?.data || null;
 
   return {
     historyDetail,
