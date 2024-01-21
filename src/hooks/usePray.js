@@ -107,6 +107,30 @@ export const usePray = (tabType) => {
     }
   );
 
+  const { mutate: modifyPray } = useMutation(
+    async (data) => {
+      return await putFetcher(`/pray/${data.prayId}`, data);
+    },
+    {
+      onError: async (e) => {
+        console.log(e);
+        showToast({
+          message: e.response.data.message,
+          theme: ToastTheme.ERROR,
+        });
+      },
+      onSuccess: (res) => {
+        console.log(res);
+        refetchPrayList(tabType);
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
+
   const prayList = data?.data.data || [];
 
   return {
@@ -115,5 +139,6 @@ export const usePray = (tabType) => {
     createPray,
     deletePray,
     completePray,
+    modifyPray,
   };
 };
