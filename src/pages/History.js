@@ -218,13 +218,15 @@ const History = () => {
 
   return (
     <HistoryWrapper>
-      <Header
-        tab={tab}
-        onClickToggle={onClickToggle}
-        setIsOverlayOn={setIsOverlayOn}
-      >
-        히스토리
-      </Header>
+      <div style={{ marginBottom: "24px" }}>
+        <Header
+          tab={tab}
+          onClickToggle={onClickToggle}
+          setIsOverlayOn={setIsOverlayOn}
+        >
+          히스토리
+        </Header>
+      </div>
       {loading && (
         <LottieWrapper>
           <Lottie

@@ -9,7 +9,7 @@ import {
 
 const Header = (props) => {
   return (
-    <div style={{ width: "100%", marginBottom: "24px" }}>
+    <div style={{ width: "100%" }}>
       <HeaderWrapper>
         <HeaderCont>
           <div>{props.children}</div>
