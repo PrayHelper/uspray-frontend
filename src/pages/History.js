@@ -28,8 +28,8 @@ const History = () => {
   const [sharedPage, setSharedPage] = useState();
   const [personalHistoryList, setPersonalHistoryList] = useState([]);
   const [sharedHistoryList, setSharedHistoryList] = useState([]);
-  const [personalScrollPos, setPersonalScrollPos] = useState(0);
-  const [sharedScrollPos, setSharedScrollPos] = useState(0);
+  const [personalPos, setPersonalPos] = useState(0); // Pos = Position of Scroll (Personal Section)
+  const [sharedPos, setSharedPos] = useState(0); // Pos = Position of Scroll (Shared Section)
   const [hasMore, setHasMore] = useState(true);
   const [ref, inView] = useInView({});
   const [tab, setTab] = useState("personal");
@@ -89,17 +89,17 @@ const History = () => {
 
   const onClickToggle = (e) => {
     tab === "personal"
-      ? setPersonalScrollPos(window.scrollY)
-      : setSharedScrollPos(window.scrollY);
+      ? setPersonalPos(window.scrollY)
+      : setSharedPos(window.scrollY);
     setTab(e.currentTarget.id);
   };
 
   useEffect(() => {
     // 카테고리가 변경될 때 스크롤 위치 복원
     tab === "personal"
-      ? window.scrollTo(0, personalScrollPos)
-      : window.scrollTo(0, sharedScrollPos);
-  }, [tab, personalScrollPos, sharedScrollPos]);
+      ? window.scrollTo(0, personalPos)
+      : window.scrollTo(0, sharedPos);
+  }, [tab, personalPos, sharedPos]);
 
   const fetchMyData = async () => {
     const newData = await myPrayData.data.data.historyList;
