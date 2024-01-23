@@ -79,6 +79,7 @@ const History = () => {
 
   const onClickExitModal = () => {
     setShowModal(false);
+    setShowSubModal(false);
     setSelectedHistoryId(null);
   };
 
@@ -144,11 +145,10 @@ const History = () => {
         deadline: updateDate,
       },
       {
-        onSuccess: (res) => {
+        onSuccess: () => {
           showToast({});
-          setDeletedItemIds((prev) => [...prev, res.data.id]);
           onClickExitModal();
-          tab === "personal" ? refetchMyData() : refetchSharedData();
+          tab === "personal" ? fetchMyData() : fetchSharedData();
         },
       }
     );
@@ -173,7 +173,10 @@ const History = () => {
         onSuccess: () => {
           setShowSubModal(false);
           setShowModal(false);
+          setDeletedItemIds((prev) => [...prev, historyDetail.historyId]);
+          tab === "personal" ? fetchMyData() : fetchSharedData();
           resetInputData();
+          showToast({});
         },
       }
     );
@@ -181,10 +184,13 @@ const History = () => {
 
   useEffect(() => {
     if (selectedHistoryId) {
-      console.log("historyDetail", historyDetail);
       setShowModal(true);
     }
   }, [selectedHistoryId]);
+
+  useEffect(() => {
+    console.log("deletedItemIds", deletedItemIds);
+  }, [deletedItemIds]);
 
   useEffect(() => {
     if (historyDetail) {
