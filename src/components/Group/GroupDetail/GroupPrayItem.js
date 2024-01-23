@@ -8,6 +8,8 @@ import Modal from "../../Modal/Modal";
 import { useGroupPray } from "../../../hooks/useGroupPray";
 import PrayDateCategoryInput from "../../PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../../../hooks/useCategory";
+import { ToastTheme } from "../../Toast/Toast";
+import useToast from "../../../hooks/useToast";
 
 const GroupPrayItem = ({ groupId, pray }) => {
   const [showModal, setShowModal] = useState(false);
@@ -37,6 +39,10 @@ const GroupPrayItem = ({ groupId, pray }) => {
           setPrayInputValue("");
           setDateInputValue(null);
           setScrap(true);
+          showToast({
+            message: "기도제목이 저장되었어요.",
+            theme: ToastTheme.SUCCESS,
+          });
         },
       }
     );
