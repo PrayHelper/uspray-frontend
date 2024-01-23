@@ -1,5 +1,5 @@
-import { useState } from "react";
 import styled from "styled-components";
+import { usePray } from "../../hooks/usePray";
 
 const ICON_HEART_FILLED = "images/ic_filled_heart.svg";
 const ICON_HEART_EMPTY = "images/ic_empty_heart.svg";
@@ -12,17 +12,17 @@ const Category = ({
   prays,
   onDotIconClicked,
   setClickedCategoryData,
-  setShowSubModal,
+  tabType,
 }) => {
-  const [selected, setSelected] = useState([]);
+  const {todayPray, cancelPray }= usePray(tabType);
 
-  const handleClick = (e, prayId) => {
+  const handleClick = (e, pray) => {
     e.stopPropagation();
-    setSelected((prev) => {
-      const newSelected = [...prev];
-      newSelected[prayId] = !newSelected[prayId];
-      return newSelected;
-    });
+    if (pray.isPrayedToday) {
+      cancelPray(pray.prayId);
+    } else {
+      todayPray(pray.prayId);
+    }
   };
 
   const titleClick = (pray) => {
@@ -51,18 +51,18 @@ const Category = ({
         />
       </Title>
       <ItemList>
-        {prays.map((pray, index) => (
+        {prays.map((pray) => (
           <Item key={pray.prayId}>
             <ItemText
-              selected={selected[pray.prayId]}
+              selected={pray.isPrayedToday}
               onClick={(e) => titleClick(pray)}
             >
               {pray.content}
             </ItemText>
             <img
-              src={selected[pray.prayId] ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
+              src={pray.isPrayedToday ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
               alt="heart_icon"
-              onClick={(e) => handleClick(e, pray.prayId)}
+              onClick={(e) => handleClick(e, pray)}
             />
           </Item>
         ))}

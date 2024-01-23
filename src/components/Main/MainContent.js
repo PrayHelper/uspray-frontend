@@ -133,7 +133,7 @@ const MainContent = ({
               setSelectedPrayInfo={setSelectedPrayInfo}
               onDotIconClicked={onDotIconClicked}
               setClickedCategoryData={setClickedCategoryData}
-              setShowSubModal={setShowSubModal}
+              tabType={tabType}
             />
           ))}
       </Content>
