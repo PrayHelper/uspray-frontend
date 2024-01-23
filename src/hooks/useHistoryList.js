@@ -1,12 +1,12 @@
 import { useQuery } from "react-query";
-import useApi from './useApi';
+import useApi from "./useApi";
 
-export const useFetchHistory = (params) => {
+export const useHistoryList = (options) => {
   const { getFetcher } = useApi();
   return useQuery(
-    ["History", params],
+    ["History", options],
     async () => {
-      return await getFetcher("/history", params);
+      return await getFetcher("/history", options);
     },
     {
       onError: (e) => {

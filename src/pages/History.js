@@ -4,31 +4,32 @@ import HisContent from "../components/History/HisContent";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
-import { useFetchHistory } from "../hooks/useFetchHistory";
+import { useHistoryList } from "../hooks/useHistoryList";
 import { useHistoryModify } from "../hooks/useHistoryModify";
 import { useCategory } from "../hooks/useCategory";
+import { useHistoryDetail } from "../hooks/useHistoryDetail";
 import Lottie from "react-lottie";
 import LottieData from "../json/lottie.json";
 import useToast from "../hooks/useToast";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
-import PrayDetailModal from "../components/History/PrayDetailModal";
+import HistoryDetailModal from "../components/History/HistoryDetailModal";
 import Overlay from "../components/Overlay/Overlay";
 import HistorySearch from "./HistorySearch";
+import { useHistory } from "../hooks/useHistory";
 
 const History = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showSubModal, setShowSubModal] = useState(false);
-  const [currentData, setCurrentData] = useState({});
   const [currentId, setCurrentId] = useState();
   const [updateDate, setUpdateDate] = useState(null);
   const [updateCategory, setUpdateCategory] = useState(0);
-  const [pageMy, setPageMy] = useState(0);
-  const [pageShared, setPageShared] = useState(0);
-  const [dataMy, setDataMy] = useState([]);
-  const [dataShared, setDataShared] = useState([]);
-  const [myScrollPos, setMyScrollPos] = useState(0);
-  const [sharedScrollPos, setSharedScrollPos] = useState(0);
+  const [personalPage, setPersonalPage] = useState(0);
+  const [sharedPage, setSharedPage] = useState();
+  const [personalHistoryList, setPersonalHistoryList] = useState([]);
+  const [sharedHistoryList, setSharedHistoryList] = useState([]);
+  const [personalPos, setPersonalPos] = useState(0); // Pos = Position of Scroll (Personal Section)
+  const [sharedPos, setSharedPos] = useState(0); // Pos = Position of Scroll (Shared Section)
   const [hasMore, setHasMore] = useState(true);
   const [ref, inView] = useInView({});
   const [tab, setTab] = useState("personal");
@@ -37,18 +38,28 @@ const History = () => {
   const { categoryList, firstCategoryIndex } = categoryState;
   const [deletedItemIds, setDeletedItemIds] = useState([]);
   const [isOverlayOn, setIsOverlayOn] = useState(false);
+  const [selectedHistoryId, setSelectedHistoryId] = useState(null);
+  const [prayInputValue, setPrayInputValue] = useState("");
+  const [dateInputValue, setDateInputValue] = useState(null);
+  const [categoryInputValue, setCategoryInputValue] = useState(0);
+  const [selectedCategoryIndex, setSelectedCategoryIndex] =
+    useState(firstCategoryIndex);
 
-  const { data: myPrayData, refetch: refetchMyData } = useFetchHistory({
+  const { data: myPrayData, refetch: refetchMyData } = useHistoryList({
     type: "personal",
-    page: pageMy,
+    page: personalPage,
     size: 15,
   });
 
-  const { data: sharedPrayData, refetch: refetchSharedData } = useFetchHistory({
+  const { data: sharedPrayData, refetch: refetchSharedData } = useHistoryList({
     type: "shared",
-    page: pageShared,
+    page: sharedPage,
     size: 15,
   });
+
+  const { historyDetail } = useHistoryDetail(selectedHistoryId);
+  const { oneMorePray } = useHistory();
+
   const { showToast } = useToast({
     initialMessage: "기도제목이 오늘의 기도에 추가되었어요.",
   });
@@ -68,39 +79,40 @@ const History = () => {
 
   const onClickExitModal = () => {
     setShowModal(false);
-    setShowSubModal(false);
+    setSelectedHistoryId(null);
   };
 
   const onClickSubModal = () => {
+    showSubModal ? resetInputData() : setPrayInputValue(historyDetail.content);
     setShowSubModal(!showSubModal);
   };
 
   const onClickToggle = (e) => {
     tab === "personal"
-      ? setMyScrollPos(window.scrollY)
-      : setSharedScrollPos(window.scrollY);
+      ? setPersonalPos(window.scrollY)
+      : setSharedPos(window.scrollY);
     setTab(e.currentTarget.id);
   };
 
   useEffect(() => {
     // 카테고리가 변경될 때 스크롤 위치 복원
     tab === "personal"
-      ? window.scrollTo(0, myScrollPos)
-      : window.scrollTo(0, sharedScrollPos);
-  }, [tab, myScrollPos, sharedScrollPos]);
+      ? window.scrollTo(0, personalPos)
+      : window.scrollTo(0, sharedPos);
+  }, [tab, personalPos, sharedPos]);
 
   const fetchMyData = async () => {
     const newData = await myPrayData.data.data.historyList;
     const filteredData = newData.filter(
       (newItem) =>
-        !dataMy.some(
+        !personalHistoryList.some(
           (existingItem) => existingItem.historyId === newItem.historyId
         )
     );
-    const tmpData = [...dataMy, ...filteredData].filter(
+    const tmpData = [...personalHistoryList, ...filteredData].filter(
       (item) => !deletedItemIds.some((tmpItem) => tmpItem === item.historyId)
     );
-    setDataMy(tmpData);
+    setPersonalHistoryList(tmpData);
     if (newData.length === 0) {
       setHasMore(false);
     }
@@ -110,14 +122,14 @@ const History = () => {
     const newData = await sharedPrayData.data.data.historyList;
     const filteredData = newData.filter(
       (newItem) =>
-        !dataShared.some(
+        !sharedHistoryList.some(
           (existingItem) => existingItem.historyId === newItem.historyId
         )
     );
-    const tmpData = [...dataShared, ...filteredData].filter(
+    const tmpData = [...sharedHistoryList, ...filteredData].filter(
       (item) => !deletedItemIds.some((tmpItem) => tmpItem === item.historyId)
     );
-    setDataShared(tmpData);
+    setSharedHistoryList(tmpData);
     if (newData.length === 0) {
       setHasMore(false);
     }
@@ -142,16 +154,43 @@ const History = () => {
     );
   };
 
-  const onClickHistoryItem = async (e, tab) => {
-    setShowModal(true);
-    const id = e.currentTarget.id;
-    const currentData =
-      tab === "personal"
-        ? dataMy.find((item) => item.id === Number(id))
-        : dataShared.find((item) => item.id === Number(id));
-    setCurrentData(currentData);
-    setCurrentId(Number(id));
+  const resetInputData = () => {
+    setPrayInputValue("");
+    setDateInputValue(null);
+    setSelectedCategoryIndex(firstCategoryIndex);
   };
+
+  // 또 기도하기 함수
+  const onOneMorePray = async (text, deadline, categoryId) => {
+    oneMorePray(
+      {
+        content: text,
+        deadline: deadline,
+        categoryId: categoryId,
+        historyId: historyDetail.historyId,
+      },
+      {
+        onSuccess: () => {
+          setShowSubModal(false);
+          setShowModal(false);
+          resetInputData();
+        },
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (selectedHistoryId) {
+      console.log("historyDetail", historyDetail);
+      setShowModal(true);
+    }
+  }, [selectedHistoryId]);
+
+  useEffect(() => {
+    if (historyDetail) {
+      setShowModal(true);
+    }
+  }, [historyDetail]);
 
   useEffect(() => {
     setLoading(true);
@@ -172,20 +211,22 @@ const History = () => {
   useEffect(() => {
     if (inView && hasMore && !loading) {
       tab === "personal"
-        ? setPageMy((prev) => prev + 1)
-        : setPageShared((prev) => prev + 1);
+        ? setPersonalPage((prev) => prev + 1)
+        : setSharedPage((prev) => prev + 1);
     }
   }, [hasMore, inView]);
 
   return (
     <HistoryWrapper>
-      <Header
-        tab={tab}
-        onClickToggle={onClickToggle}
-        setIsOverlayOn={setIsOverlayOn}
-      >
-        히스토리
-      </Header>
+      <div style={{ marginBottom: "24px" }}>
+        <Header
+          tab={tab}
+          onClickToggle={onClickToggle}
+          setIsOverlayOn={setIsOverlayOn}
+        >
+          히스토리
+        </Header>
+      </div>
       {loading && (
         <LottieWrapper>
           <Lottie
@@ -197,7 +238,7 @@ const History = () => {
           />
         </LottieWrapper>
       )}
-      {!loading && isEmptyData(dataMy) && (
+      {!loading && isEmptyData(personalHistoryList) && (
         <NoDataWrapper>
           <NoDataTitle>완료된 기도제목이 없네요.</NoDataTitle>
           <NoDataContent>기간이 지나면 히스토리에 저장됩니다!</NoDataContent>
@@ -205,34 +246,43 @@ const History = () => {
       )}
       <div>
         <BlackScreen isModalOn={showModal} />
-        {!isEmptyData(dataMy) && showModal && (
-          <PrayDetailModal
+        {historyDetail && showModal && (
+          <HistoryDetailModal
             showSubModal={showSubModal}
-            currentData={currentData}
+            historyDetail={historyDetail}
             onClickSubModal={onClickSubModal}
             onClickExitModal={onClickExitModal}
           />
         )}
-        <PrayDateCategoryInput
-          categoryList={categoryList}
-          showSubModal={showSubModal}
-          setShowSubModal={setShowSubModal}
-          isDefault={true}
-          isShowWordCount={false}
-          value=""
-          category={firstCategoryIndex}
-          setUpdateDate={setUpdateDate}
-          setUpdateCategory={setUpdateCategory}
-          onClickFunc={() => onClickModify(tab)}
-          buttonText="오늘의 기도에 추가"
-        />
+        {historyDetail && showSubModal && (
+          <PrayDateCategoryInput
+            categoryList={categoryList}
+            showSubModal={showSubModal}
+            setShowSubModal={setShowSubModal}
+            inputPlaceHodler={historyDetail.content}
+            maxrow={3}
+            maxlen={75}
+            isShowWordCount={historyDetail.canEdit}
+            isDefault={!historyDetail.canEdit}
+            setUpdateValue={setPrayInputValue}
+            setUpdateDate={setDateInputValue}
+            setUpdateCategory={setCategoryInputValue}
+            buttonText="오늘의 기도에 추가"
+            value={prayInputValue}
+            data={historyDetail.deadline}
+            category={historyDetail.categoryId}
+            onClickFunc={() =>
+              onOneMorePray(prayInputValue, dateInputValue, categoryInputValue)
+            }
+          />
+        )}
       </div>
       {tab === "personal" && (
         <div style={{ paddingTop: "115px" }}>
           {/* <div> */}
-          {dataMy.map((el) => (
+          {personalHistoryList.map((el) => (
             <div
-              onClick={(e) => onClickHistoryItem(e, tab)}
+              onClick={() => setSelectedHistoryId(el.historyId)}
               key={el.historyId}
               id={el.historyId}
             >
@@ -248,9 +298,9 @@ const History = () => {
       )}
       {tab === "shared" && (
         <div style={{ paddingTop: "115px" }}>
-          {dataShared.map((el) => (
+          {sharedHistoryList.map((el) => (
             <div
-              onClick={(e) => onClickHistoryItem(e, tab)}
+              onClick={() => setSelectedHistoryId(el.HistoryId)}
               key={el.historyId}
               id={el.historyId}
             >
@@ -271,7 +321,6 @@ const History = () => {
             setIsOverlayOn={setIsOverlayOn}
             ref={ref}
             HisContent={HisContent}
-            onClickHistoryItem={onClickHistoryItem}
             onClickModify={onClickModify}
             setUpdateCategory={setUpdateCategory}
             setUpdateDate={setUpdateDate}
@@ -282,7 +331,7 @@ const History = () => {
             PrayDateCategoryInput={PrayDateCategoryInput}
             onClickExitModal={onClickExitModal}
             onClickSubModal={onClickSubModal}
-            PrayDetailModal={PrayDetailModal}
+            HistoryDetailModal={HistoryDetailModal}
             showModal={showModal}
             isEmptyData={isEmptyData}
             NoDataWrapper={NoDataWrapper}
