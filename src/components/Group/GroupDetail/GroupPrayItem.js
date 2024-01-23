@@ -7,7 +7,6 @@ import BlackScreen from "../../BlackScreen/index";
 import Modal from "../../Modal/Modal";
 import { useGroupPray } from "../../../hooks/useGroupPray";
 import PrayDateCategoryInput from "../../PrayDateCategoryInput/PrayDateCategoryInput";
-import useToast from "../../../hooks/useToast";
 
 const GroupPrayItem = ({ groupId, pray }) => {
   const [showModal, setShowModal] = useState(false);
