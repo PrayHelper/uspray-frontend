@@ -7,8 +7,6 @@ import BlackScreen from "../../BlackScreen/index";
 import Modal from "../../Modal/Modal";
 import { useGroupPray } from "../../../hooks/useGroupPray";
 import PrayDateCategoryInput from "../../PrayDateCategoryInput/PrayDateCategoryInput";
-import { useCategory } from "../../../hooks/useCategory";
-import { ToastTheme } from "../../Toast/Toast";
 import useToast from "../../../hooks/useToast";
 
 const GroupPrayItem = ({ groupId, pray }) => {
