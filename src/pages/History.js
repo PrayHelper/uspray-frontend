@@ -196,6 +196,10 @@ const History = () => {
   useEffect(() => {}, [deletedItemIds]);
 
   useEffect(() => {
+    console.log("deletedItemIds", deletedItemIds);
+  }, [deletedItemIds]);
+
+  useEffect(() => {
     if (historyDetail) {
       setShowModal(true);
     }
