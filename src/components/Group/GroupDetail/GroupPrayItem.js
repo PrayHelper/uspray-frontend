@@ -1,23 +1,59 @@
-import React from 'react';
-import styled from 'styled-components';
-import { useState } from 'react';
-import { ToastTheme } from '../../Toast/Toast';
-import useToast from '../../../hooks/useToast';
-import BlackScreen from '../../BlackScreen/index';
-import Modal from '../../Modal/Modal';
-import { useGroupPray } from '../../../hooks/useGroupPray';
+import React from "react";
+import styled from "styled-components";
+import { useState } from "react";
+import { ToastTheme } from "../../Toast/Toast";
+import useToast from "../../../hooks/useToast";
+import BlackScreen from "../../BlackScreen/index";
+import Modal from "../../Modal/Modal";
+import { useGroupPray } from "../../../hooks/useGroupPray";
+import { useCategory } from "../../../hooks/useCategory";
+import PrayDateCategoryInput from "../../PrayDateCategoryInput/PrayDateCategoryInput";
 
-const GroupPrayItem = ({groupId, pray}) => {
+const GroupPrayItem = ({ groupId, pray }) => {
   const [showModal, setShowModal] = useState(false);
   const { showToast } = useToast({});
+  const [showSubModal, setShowSubModal] = useState(false);
   const [heart, setHeart] = useState(pray.heart);
   const [scrap, setScrap] = useState(pray.scrap);
-  const { deleteGroupPray, likeGroupPray, scrapGroupPray } = useGroupPray(groupId);
+  const { deleteGroupPray, likeGroupPray, scrapGroupPray } =
+    useGroupPray(groupId);
+  // 스크랩할 때 아래 기도 정보 사용
+  const [prayInputValue, setPrayInputValue] = useState("");
+  const [dateInputValue, setDateInputValue] = useState(null);
+  const [categoryInputValue, setCategoryInputValue] = useState(0);
+  const { categoryList, firstCategoryIndex } = useCategory("shared");
+
+  // 기도를 스크랩하는 함수
+  const onScrap = async (deadline, categoryId) => {
+    scrapGroupPray(
+      {
+        groupPrayId: pray.groupPrayId,
+        deadline: deadline,
+        categoryId: categoryId,
+      },
+      {
+        onSuccess: () => {
+          setShowSubModal(false);
+          setPrayInputValue("");
+          setDateInputValue(null);
+          setScrap(true);
+          showToast({
+            message: "기도제목이 저장되었어요.",
+            theme: ToastTheme.SUCCESS,
+          });
+        },
+      }
+    );
+  };
+
   return (
     <Wrapper>
       {showModal && (
         <>
-          <BlackScreen isModalOn={showModal} onClick={() => setShowModal(false)} />
+          <BlackScreen
+            isModalOn={showModal}
+            onClick={() => setShowModal(false)}
+          />
           <Modal
             isModalOn={showModal}
             iconSrc={"images/ic_group_pray_delete.svg"}
@@ -39,19 +75,47 @@ const GroupPrayItem = ({groupId, pray}) => {
           />
         </>
       )}
+      {showSubModal && (
+        <PrayDateCategoryInput
+          categoryList={categoryList}
+          showSubModal={showSubModal}
+          setShowSubModal={setShowSubModal}
+          inputPlaceHodler={pray.content}
+          maxrow={3}
+          maxlen={75}
+          isShowWordCount={false}
+          isDefault={true}
+          setUpdateValue={setPrayInputValue}
+          setUpdateDate={setDateInputValue}
+          setUpdateCategory={setCategoryInputValue}
+          buttonText="내 기도수첩에 저장하기"
+          value={pray.content}
+          category={firstCategoryIndex}
+          onClickFunc={() => onScrap(dateInputValue, categoryInputValue)}
+        />
+      )}
       <PrayItem>
         <PrayContent onClick={() => setShowModal(true)}>
-          <div style={{fontSize: "14px", color: "var(--color-green)"}}>{pray.authorName}</div>
-          <div style={{fontSize: "12px", color: "var(--color-group-pray-content)"}}>
+          <div style={{ fontSize: "14px", color: "var(--color-green)" }}>
+            {pray.authorName}
+          </div>
+          <div
+            style={{
+              fontSize: "12px",
+              color: "var(--color-group-pray-content)",
+            }}
+          >
             {pray.content}
           </div>
         </PrayContent>
-        {
-          !pray.owner &&
+        {!pray.owner && (
           <PrayButton>
-            {
-              heart ? 
-              <img src="images/ic_group_heart_filled.svg" alt="filled_heart_icon" /> :
+            {heart ? (
+              <img
+                src="images/ic_group_heart_filled.svg"
+                alt="filled_heart_icon"
+              />
+            ) : (
               <img
                 onClick={() => {
                   setHeart(true);
@@ -60,20 +124,24 @@ const GroupPrayItem = ({groupId, pray}) => {
                 src="images/ic_group_heart.svg"
                 alt="heart_icon"
               />
-            } 
-            {
-              scrap ?
-              <img src="images/ic_group_bookmark_filled.svg" alt="filled_bookmark_icon" /> :
+            )}
+            {scrap ? (
+              <img
+                src="images/ic_group_bookmark_filled.svg"
+                alt="filled_bookmark_icon"
+              />
+            ) : (
               <img
                 onClick={() => {
-                  setScrap(true);
+                  setCategoryInputValue(firstCategoryIndex);
+                  setShowSubModal(true);
                 }}
                 src="images/ic_group_bookmark.svg"
                 alt="bookmark_icon"
               />
-            }
+            )}
           </PrayButton>
-        }
+        )}
       </PrayItem>
     </Wrapper>
   );
@@ -82,8 +150,8 @@ const GroupPrayItem = ({groupId, pray}) => {
 const Wrapper = styled.div`
   display: flex;
   width: 100%;
-  border-bottom: 1px solid #0000001A;
-`
+  border-bottom: 1px solid #0000001a;
+`;
 
 const PrayContent = styled.div`
   display: flex;
@@ -91,7 +159,7 @@ const PrayContent = styled.div`
   gap: 8px;
   width: 100%;
   word-break: break-all;
-`
+`;
 
 const PrayButton = styled.div`
   display: flex;
@@ -101,7 +169,7 @@ const PrayButton = styled.div`
   border-radius: 16px;
   height: fit-content;
   background-color: var(--color-group-pray-button-background);
-`
+`;
 
 const PrayItem = styled.div`
   padding: 12px 16px;
@@ -110,6 +178,6 @@ const PrayItem = styled.div`
   width: 100%;
   justify-content: space-between;
   box-sizing: border-box;
-`
+`;
 
 export default GroupPrayItem;
