@@ -20,6 +20,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Decrypt environment variables
+        run: |
+          echo "${{ secrets.ENV }}" base64 -d > .env        
+
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
@@ -54,6 +59,7 @@ jobs:
             docker run -d --name uspray-client-prod -p 4003:3000 --env-file .env registry.uspray.kr/uspray-client-prod:latest
 
       - name: Release Lock
+        if: always()
         uses: appleboy/ssh-action@master
         with:
           host: ${{ env.HOST }}
