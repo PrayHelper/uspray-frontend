@@ -45,7 +45,7 @@ jobs:
 
       - name: Decrypt environment variables
         run: |
-          echo "${{ secrets.ENV }}" base64 -d > .env
+          echo "${{ secrets.TEST_ENV }}" base64 -d > .env
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
