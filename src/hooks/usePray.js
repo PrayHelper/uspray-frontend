@@ -131,6 +131,54 @@ export const usePray = (tabType) => {
     }
   );
 
+  const { mutate: todayPray } = useMutation(
+    async (prayId) => {
+      return await putFetcher(`/pray/${prayId}/today`);
+    },
+    {
+      onError: async (e) => {
+        console.log(e);
+        showToast({
+          message: e.response.data.message,
+          theme: ToastTheme.ERROR,
+        });
+      },
+      onSuccess: (res) => {
+        console.log(res);
+        refetchPrayList(tabType);
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const { mutate: cancelPray } = useMutation(
+    async (prayId) => {
+      return await putFetcher(`/pray/${prayId}/cancel`);
+    },
+    {
+      onError: async (e) => {
+        console.log(e);
+        showToast({
+          message: e.response.data.message,
+          theme: ToastTheme.ERROR,
+        });
+      },
+      onSuccess: (res) => {
+        console.log(res);
+        refetchPrayList(tabType);
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
+
   const prayList = data?.data.data || [];
 
   return {
@@ -140,5 +188,7 @@ export const usePray = (tabType) => {
     deletePray,
     completePray,
     modifyPray,
+    todayPray,
+    cancelPray,
   };
 };
