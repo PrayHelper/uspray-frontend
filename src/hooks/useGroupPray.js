@@ -116,10 +116,12 @@ export const useGroupPray = (groupId) => {
   const groupHeartCount = data?.data.data?.heartCount;
   const groupPrayList =
     Object.keys(groupPrayData).length === 0 ? {} : groupPrayData;
+  const groupNotification = data?.data.data?.notificationAgree;
 
   return {
     groupPrayList,
     groupHeartCount,
+    groupNotification,
     refetchGroupPrayList,
     addGroupPray,
     deleteGroupPray,
