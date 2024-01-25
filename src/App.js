@@ -41,6 +41,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import useAuthorized from "./hooks/useAuthorized";
 import GlobalStyle from "./styles/GlobalStyle";
 import useToast from "./hooks/useToast";
+import TagManager from 'react-gtm-module'
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -85,6 +86,11 @@ const CommonRoute = () => {
 function App() {
   const { renderToast } = useToast({});
 
+  useEffect(() => {
+    TagManager.initialize({
+      gtmId: `${process.env.REACT_PUBLIC_GTM_ID}`,
+    })
+  }, [])
   return (
     <BrowserRouter>
       <ContainerWrapper>
