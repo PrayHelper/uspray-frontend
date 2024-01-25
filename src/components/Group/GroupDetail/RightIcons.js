@@ -2,11 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useGroup } from '../../../hooks/useGroup';
 
 const RightIcons = ({group, setShow, groupNoti}) => {
   const navigate = useNavigate();
   const [noticeOn, setNoticeOn] = useState(groupNoti);
   const isLeader = group.leader;
+  const { setGroupNotification } = useGroup();
   return (
     <Wrapper>
       <div onClick={() => setNoticeOn(prev => !prev)}>
@@ -16,6 +18,7 @@ const RightIcons = ({group, setShow, groupNoti}) => {
               src='images/ic_group_notice_on.svg'
               alt='group_notice_on_icon'
               onClick={() => {
+                setGroupNotification(group.id);
               }}
             />
             :
@@ -23,6 +26,7 @@ const RightIcons = ({group, setShow, groupNoti}) => {
               src='images/ic_group_notice_off.svg'
               alt='group_notice_off_icon'
               onClick={() => {
+                setGroupNotification(group.id);
               }}
             />
         }
