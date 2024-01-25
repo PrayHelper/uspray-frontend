@@ -11,7 +11,7 @@ import useFlutterWebview from '../../../hooks/useFlutterWebview';
 
 const GroupDetail = ({group, setShowGroupDetail}) => {
   const [showGroupSetting, setShowGroupSetting] = useState(false);
-  const { groupPrayList } = useGroupPray(group.id);
+  const { groupPrayList, groupNotification } = useGroupPray(group.id);
   const isData = Object.keys(groupPrayList).length !== 0
   const { shareLink, isMobile } = useFlutterWebview();
   const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
@@ -45,7 +45,7 @@ const GroupDetail = ({group, setShowGroupDetail}) => {
       {showGroupSetting && <GroupSetting group={group} setShowGroupSetting={setShowGroupSetting}/>}
       <UserHeader
         rightIcons={() => {
-          return <RightIcons group={group} setShow={setShowGroupSetting}/>;
+          return <RightIcons group={group} setShow={setShowGroupSetting} groupNoti={groupNotification}/>;
         }}
         back={() => setShowGroupDetail(prev => !prev)}
       >
