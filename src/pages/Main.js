@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import MainContent from "../components/Main/MainContent";
 import { useState } from "react";
@@ -41,6 +41,16 @@ const Main = () => {
   const { prayList, createPray } = prayState;
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
+
+  const [categoryRefIndex, setCategoryRefIndex] = useState(0);
+  const categoryRef = useRef([]);
+
+  useEffect(()=>{
+    if (categoryRef.current[categoryRefIndex])
+    {
+      categoryRef.current[categoryRefIndex].scrollIntoView({behavior: "smooth", block: "start"});
+    }
+  }, [categoryRef, categoryRefIndex]);
 
   const ColorList = [
     "#D0E8CB",
@@ -243,6 +253,8 @@ const Main = () => {
         refetchPrayList={refetchPrayList}
         onDotIconClicked={onDotIconClicked}
         setClickedCategoryData={setClickedCategoryData}
+        categoryRef={categoryRef}
+        setCategoryRefIndex={setCategoryRefIndex}
       />
       {showCategorySetting && (
         <CategorySetting onClick={() => setShowCategorySetting(false)}>
