@@ -48,7 +48,7 @@ const Main = () => {
   useEffect(()=>{
     if (categoryRef.current[categoryRefIndex])
     {
-      categoryRef.current[categoryRefIndex].scrollIntoView({behavior: "smooth", block: "start"});
+      categoryRef.current[categoryRefIndex].scrollIntoView({behavior: "smooth", block: "center"});
     }
   }, [categoryRef, categoryRefIndex]);
 
