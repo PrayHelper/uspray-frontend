@@ -13,6 +13,8 @@ const Category = ({
   onDotIconClicked,
   setClickedCategoryData,
   tabType,
+  categoryRef,
+  refIndex
 }) => {
   const {todayPray, cancelPray }= usePray(tabType);
 
@@ -41,7 +43,7 @@ const Category = ({
   };
 
   return (
-    <CategoryContainer>
+    <CategoryContainer ref={(el)=>categoryRef.current[refIndex]=el}>
       <Title color={color}>
         {title}
         <img

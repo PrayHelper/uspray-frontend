@@ -7,9 +7,11 @@ const CategoryTag = ({
   setSelectedCategoryIndex,
   setShowCategorySetting,
   canAdd,
+  setCategoryRefIndex
 }) => {
-  const handleCategoryClick = (categoryId) => {
+  const handleCategoryClick = (categoryId, index) => {
     setSelectedCategoryIndex(categoryId);
+    setCategoryRefIndex(index);
   };
 
   return (
@@ -20,7 +22,7 @@ const CategoryTag = ({
             key={category.id}
             selected={category.id === selectedCategoryIndex}
             color={category.color}
-            onClick={() => handleCategoryClick(category.id)}
+            onClick={() => handleCategoryClick(category.id, index)}
           >
             {category.name}
           </CategoryBox>

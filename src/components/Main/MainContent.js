@@ -20,6 +20,8 @@ const MainContent = ({
   tabType,
   onDotIconClicked,
   setClickedCategoryData,
+  categoryRef,
+  setCategoryRefIndex
 }) => {
   const [selectedPrayInfo, setSelectedPrayInfo] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -119,6 +121,7 @@ const MainContent = ({
           setSelectedCategoryIndex={setSelectedCategoryIndex}
           setShowCategorySetting={setShowCategorySetting}
           canAdd={true}
+          setCategoryRefIndex={setCategoryRefIndex}
         />
       </TopWrapper>
       <Content>
@@ -134,6 +137,8 @@ const MainContent = ({
               onDotIconClicked={onDotIconClicked}
               setClickedCategoryData={setClickedCategoryData}
               tabType={tabType}
+              categoryRef={categoryRef}
+              refIndex={index}
             />
           ))}
       </Content>
