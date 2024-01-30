@@ -1,32 +1,119 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Category from "../Category/Category";
 import CategoryTag from "../CategoryTag/CategoryTag";
 import completeImage from "../../images/check_img.svg";
 import deleteImage from "../../images/delete_img.svg";
 import modifyImage from "../../images/modify_img.svg";
+import { usePray } from "../../hooks/usePray";
+import { ToastTheme } from "../../components/Toast/Toast";
+import BlackScreen from "../BlackScreen";
+import Modal from "../Modal/Modal";
+import useToast from "../../hooks/useToast";
+import PrayDateCategoryInput from "../PrayDateCategoryInput/PrayDateCategoryInput";
 
 const MainContent = ({
   categoryList,
   setShowCategorySetting,
   selectedCategoryIndex,
   setSelectedCategoryIndex,
+  tabType,
+  onDotIconClicked,
+  setClickedCategoryData,
+  categoryRef,
+  setCategoryRefIndex
 }) => {
-  const [selectedTitleIndex, setSelectedTitleIndex] = useState(null);
-
-  const prayComplete = () => {
-    // 기도 완료하는 api
-  };
+  const [selectedPrayInfo, setSelectedPrayInfo] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [showSubModal, setShowSubModal] = useState(false);
+  // 기도제목 수정할 때 아래 기도 정보 사용
+  const [modifyPrayInfo, setModifyPrayInfo] = useState(null);
+  const [prayInputValue, setPrayInputValue] = useState("");
+  const [dateInputValue, setDateInputValue] = useState(null);
+  const [categoryInputValue, setCategoryInputValue] = useState(0);
+  const { prayList, deletePray, completePray, modifyPray } = usePray(tabType);
+  const { showToast } = useToast({});
 
   const prayModify = () => {
-    // 기도 수정하는 api
+    setModifyPrayInfo(selectedPrayInfo);
+    setSelectedPrayInfo(null);
   };
 
-  const prayDeleted = () => {
-    // 기도 삭제하는 api
+  useEffect(() => {
+    if (modifyPrayInfo) {
+      setPrayInputValue(modifyPrayInfo.content);
+      setDateInputValue(modifyPrayInfo.deadline);
+      setCategoryInputValue(modifyPrayInfo.categoryId);
+      setShowSubModal(true);
+    }
+  }, [modifyPrayInfo]);
+
+  // 기도를 수정하는 함수
+  const onModify = async (text, deadline, categoryId) => {
+    modifyPray(
+      { content: text, deadline: deadline, categoryId: categoryId },
+      {
+        onSuccess: () => {
+          setShowSubModal(false);
+          setPrayInputValue("");
+          setDateInputValue(null);
+          setSelectedCategoryIndex(categoryId);
+        },
+      }
+    );
   };
+
   return (
     <MainContentWrapper>
+      {showModal && (
+        <>
+          <BlackScreen
+            isModalOn={showModal}
+            onClick={() => setShowModal(false)}
+          />
+          <Modal
+            isModalOn={showModal}
+            iconSrc={"images/ic_group_pray_delete.svg"}
+            iconAlt={"group_pray_delete"}
+            mainContent={"정말 삭제하시겠습니까?"}
+            subContent={"선택한 기도제목이 삭제됩니다."}
+            btnContent={"삭제"}
+            btnContent2={"취소"}
+            onClickBtn={() => {
+              deletePray(selectedPrayInfo.prayId, {
+                onSuccess: () => {
+                  setShowModal(false);
+                  setSelectedPrayInfo(null);
+                },
+              });
+            }}
+            onClickBtn2={() => setShowModal(false)}
+            modalTheme={2}
+          />
+        </>
+      )}
+      {showSubModal && (
+        <PrayDateCategoryInput
+          categoryList={categoryList}
+          showSubModal={showSubModal}
+          setShowSubModal={setShowSubModal}
+          inputPlaceHodler={modifyPrayInfo.content}
+          maxrow={3}
+          maxlen={75}
+          isShowWordCount={true}
+          isDefault={modifyPrayInfo.isShared}
+          setUpdateValue={setPrayInputValue}
+          setUpdateDate={setDateInputValue}
+          setUpdateCategory={setCategoryInputValue}
+          buttonText="기도제목 수정"
+          value={prayInputValue}
+          data={modifyPrayInfo.deadline}
+          category={modifyPrayInfo.categoryId}
+          onClickFunc={() =>
+            onModify(prayInputValue, dateInputValue, categoryInputValue)
+          }
+        />
+      )}
       <TopWrapper>
         <CategoryTag
           categoryList={categoryList}
@@ -34,43 +121,63 @@ const MainContent = ({
           setSelectedCategoryIndex={setSelectedCategoryIndex}
           setShowCategorySetting={setShowCategorySetting}
           canAdd={true}
+          setCategoryRefIndex={setCategoryRefIndex}
         />
       </TopWrapper>
       <Content>
-        <Category
-          title="테스트"
-          color="#75BD62"
-          setSelectedTitleIndex={setSelectedTitleIndex}
-        />
-        <Category
-          title="테스트2"
-          color="#AEDBA5"
-          setSelectedTitleIndex={setSelectedTitleIndex}
-        />
+        {prayList &&
+          prayList.map((category, index) => (
+            <Category
+              key={index}
+              categoryId={category.categoryId}
+              title={category.categoryName}
+              prays={category.prays}
+              color={category.categoryColor}
+              setSelectedPrayInfo={setSelectedPrayInfo}
+              onDotIconClicked={onDotIconClicked}
+              setClickedCategoryData={setClickedCategoryData}
+              tabType={tabType}
+              categoryRef={categoryRef}
+              refIndex={index}
+            />
+          ))}
       </Content>
-      <BottomSetWrapper selectedTitleIndex={selectedTitleIndex}>
+      <BottomSetWrapper selectedPrayInfo={selectedPrayInfo}>
         <BottomButtonWrapper>
           <img src={completeImage} />
-          <BottomButtonText color={"green"} onClick={() => prayComplete()}>
+          <BottomButtonText
+            color={"green"}
+            onClick={() => {
+              completePray(selectedPrayInfo.prayId);
+              showToast({
+                message: "기도제목을 완료했어요.",
+                theme: ToastTheme.SUCCESS,
+              });
+              setSelectedPrayInfo(null);
+            }}
+          >
             완료하기
           </BottomButtonText>
         </BottomButtonWrapper>
         <BottomButtonWrapper>
           <img src={modifyImage} />
-          <BottomButtonText color={"blue"} onClick={() => prayModify()}>
+          <BottomButtonText
+            color={"blue"}
+            onClick={() => prayModify(selectedPrayInfo)}
+          >
             수정하기
           </BottomButtonText>
         </BottomButtonWrapper>
         <BottomButtonWrapper>
           <img src={deleteImage} />
-          <BottomButtonText color={"red"} onClick={() => prayDeleted()}>
+          <BottomButtonText color={"red"} onClick={() => setShowModal(true)}>
             삭제하기
           </BottomButtonText>
         </BottomButtonWrapper>
       </BottomSetWrapper>
       <BlackBackground
-        selectedTitleIndex={selectedTitleIndex}
-        onClick={() => setSelectedTitleIndex(null)}
+        selectedPrayInfo={selectedPrayInfo}
+        onClick={() => setSelectedPrayInfo(null)}
       />
     </MainContentWrapper>
   );
@@ -122,7 +229,7 @@ const BottomSetWrapper = styled.div`
   width: 100%;
   padding: 37px 24px;
   transition: all 0.3s ease-in-out;
-  bottom: ${(props) => (props.selectedTitleIndex == null ? "-100%" : "0px")};
+  bottom: ${(props) => (props.selectedPrayInfo == null ? "-100%" : "0px")};
   z-index: 101;
   border-radius: 24px 24px 0px 0px;
   background: #fff;
@@ -158,9 +265,9 @@ const BlackBackground = styled.div`
   right: 0;
   left: 0;
   bottom: 0;
-  z-index: ${(props) => (props.selectedTitleIndex !== null ? 100 : 0)};
-  opacity: ${(props) => (props.selectedTitleIndex !== null ? 1 : 0)};
+  z-index: ${(props) => (props.selectedPrayInfo !== null ? 100 : 0)};
+  opacity: ${(props) => (props.selectedPrayInfo !== null ? 1 : 0)};
   backdrop-filter: blur(4px);
   pointer-events: ${(props) =>
-    props.selectedTitleIndex !== null ? "auto" : "none"};
+    props.selectedPrayInfo !== null ? "auto" : "none"};
 `;

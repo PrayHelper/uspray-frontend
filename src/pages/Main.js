@@ -1,30 +1,132 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import MainContent from "../components/Main/MainContent";
 import { useState } from "react";
 import ButtonV2, { ButtonTheme } from "../components/ButtonV2/ButtonV2";
+import BlackScreen from "../components/BlackScreen/BlackScreen";
+import Modal from "../components/Modal/Modal";
+import Overlay from "../components/Overlay/Overlay";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../hooks/useCategory";
-import { useSendPrayItem } from "../hooks/useSendPrayItem";
+import { usePray } from "../hooks/usePray";
+import Locker from "./Locker";
 
 const Main = () => {
-  const { categoryList, firstCategoryIndex } = useCategory();
-  const { mutate: mutateSendPrayItem } = useSendPrayItem();
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
-  const [inputValue, setInputValue] = useState("");
+
   const [showCategorySetting, setShowCategorySetting] = useState(false);
-  const [selectedColor, setSelectedColor] = useState("#D0E8CB");
+
   const [showSubModal, setShowSubModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
+  const [dotIconClicked, setDotIconClicked] = useState(false);
+  const [clickedCategoryData, setClickedCategoryData] = useState({});
+  const [inputValue, setInputValue] = useState("");
+  const tabType = tab === "내가 쓴" ? "personal" : "shared";
+  const [isOverlayOn, setIsOverlayOn] = useState(false);
+  const categoryState = useCategory(tabType);
+  const prayState = usePray(tabType);
+  const { refetchCategoryList } = categoryState;
+  const {
+    categoryList,
+    firstCategoryIndex,
+    createCategory,
+    changeCategory,
+    deleteCategory,
+  } = categoryState;
+  const { refetchPrayList } = prayState;
+  const { prayList, createPray } = prayState;
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
+
+  const [categoryRefIndex, setCategoryRefIndex] = useState(0);
+  const categoryRef = useRef([]);
+
+  useEffect(()=>{
+    if (categoryRef.current[categoryRefIndex])
+    {
+      categoryRef.current[categoryRefIndex].scrollIntoView({behavior: "smooth", block: "center"});
+    }
+  }, [categoryRef, categoryRefIndex]);
+
+  const ColorList = [
+    "#D0E8CB",
+    "#AEDBA5",
+    "#9BD88A",
+    "#75BD62",
+    "#649D55",
+    "#58834D",
+    "#507247",
+  ];
+  const [selectedColor, setSelectedColor] = useState(ColorList[0]);
+
+  useEffect(() => {
+    if (dotIconClicked)
+      setInputValue(clickedCategoryData.name);
+    else
+      setInputValue("");
+  }, [clickedCategoryData, dotIconClicked]);
+
+  useEffect(() => {
+    if (ColorList.includes(clickedCategoryData.color)) {
+      setSelectedColor(clickedCategoryData.color);
+    } else {
+      setSelectedColor(ColorList[0]);
+    }
+  }, [clickedCategoryData]);
+
+  const createCategoryHandler = async (categoryData) => {
+    try {
+      await createCategory(categoryData);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setShowCategorySetting(false);
+      setInputValue("");
+    }
+  };
+
+  const changeCategoryHandler = async (data) => {
+    try {
+      await changeCategory(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setDotIconClicked(false);
+      setInputValue("");
+    }
+  };
+
+  const deleteCategoryHandler = async (categoryId) => {
+    try {
+      await deleteCategory(categoryId);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setDotIconClicked(false);
+      setInputValue("");
+    }
+  };
+
+  useEffect(() => {
+    refetchCategoryList();
+    refetchPrayList();
+  }, [tab]);
+
+  useEffect(() => {
+    refetchPrayList();
+  }, [categoryList]);
 
   const handleTabChange = (newTab) => {
     setTab(newTab);
     setBgColor(newTab === "내가 쓴" ? "#7BAB6E" : "#3D5537");
+  };
+
+  const clickLocker = () => {
+    setIsOverlayOn(true);
   };
 
   const handleInputChange = (e) => {
@@ -35,9 +137,13 @@ const Main = () => {
     e.stopPropagation();
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   // 기도를 추가하는 함수
   const onInsert = async (text, deadline, categoryId) => {
-    mutateSendPrayItem(
+    createPray(
       { content: text, deadline: deadline, categoryId: categoryId },
       {
         onSuccess: () => {
@@ -52,21 +158,15 @@ const Main = () => {
 
   const onClickPrayInput = () => {
     if (categoryList.length === 0) {
-      console.log("카테고리를 추가해주세요");
+      setShowModal(true);
     } else {
       setShowSubModal(!showSubModal);
     }
   };
 
-  const ColorList = [
-    "#D0E8CB",
-    "#AEDBA5",
-    "#9BD88A",
-    "#75BD62",
-    "#649D55",
-    "#58834D",
-    "#507247",
-  ];
+  const onDotIconClicked = () => {
+    setDotIconClicked(true);
+  };
 
   useEffect(() => {
     if (categoryList.length > 0) {
@@ -76,6 +176,16 @@ const Main = () => {
 
   return (
     <MainWrapper style={{ backgroundColor: bgColor }}>
+      <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
+      <Modal
+        isModalOn={showModal}
+        iconSrc={"images/icon_notice.svg"}
+        iconAlt={"icon_notice"}
+        mainContent={"카테고리를 먼저 추가해주세요!"}
+        subContent={"기도제목은 카테고리 안에서 생성됩니다."}
+        btnContent={"네, 그렇게 할게요."}
+        onClickBtn={handleCloseModal}
+      />
       <TopContainer>
         <TopBox>
           <TabContainer>
@@ -128,7 +238,7 @@ const Main = () => {
               />
             )
           ) : (
-            <MoveToLockerButton>
+            <MoveToLockerButton onClick={() => clickLocker()}>
               보관함에 3개의 기도제목이 있어요
             </MoveToLockerButton>
           )}
@@ -139,18 +249,36 @@ const Main = () => {
         setShowCategorySetting={setShowCategorySetting}
         selectedCategoryIndex={selectedCategoryIndex}
         setSelectedCategoryIndex={setSelectedCategoryIndex}
+        tabType={tabType}
+        refetchPrayList={refetchPrayList}
+        onDotIconClicked={onDotIconClicked}
+        setClickedCategoryData={setClickedCategoryData}
+        categoryRef={categoryRef}
+        setCategoryRefIndex={setCategoryRefIndex}
       />
       {showCategorySetting && (
         <CategorySetting onClick={() => setShowCategorySetting(false)}>
           <Input
             type="text"
             value={inputValue}
-            placeholder="카테고리를 입력해주세요"
+            placeholder={"카테고리를 입력해주세요"}
             onChange={handleInputChange}
             onClick={handleInnerClick}
           />
           <FixedButtonContainer onClick={handleInnerClick}>
-            <ButtonV2 buttonTheme={ButtonTheme.FILLED}>카테고리 추가</ButtonV2>
+            <ButtonV2
+              buttonTheme={ButtonTheme.FILLED}
+              disabled={!inputValue}
+              handler={() =>
+                createCategoryHandler({
+                  name: inputValue,
+                  color: selectedColor,
+                  type: tabType,
+                })
+              }
+            >
+              카테고리 추가
+            </ButtonV2>
           </FixedButtonContainer>
           <ColorPalette>
             {ColorList.map((color) => (
@@ -166,6 +294,53 @@ const Main = () => {
             ))}
           </ColorPalette>
         </CategorySetting>
+      )}
+      {dotIconClicked && (
+        <CategorySetting onClick={() => setDotIconClicked(false)}>
+          <Input
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            onClick={handleInnerClick}
+          />
+          <FixedButtonContainer onClick={handleInnerClick}>
+            <ButtonV2
+              buttonTheme={ButtonTheme.OUTLINED}
+              handler={() => deleteCategoryHandler(clickedCategoryData.id)}
+            >
+              카테고리 삭제
+            </ButtonV2>
+            <ButtonV2
+              buttonTheme={ButtonTheme.FILLED}
+              handler={() =>
+                changeCategoryHandler({
+                  id: clickedCategoryData.id,
+                  name: inputValue,
+                  color: selectedColor,
+                  type: tabType,
+                })
+              }
+            >카테고리 수정</ButtonV2>
+          </FixedButtonContainer>
+          <ColorPalette>
+            {ColorList.map((color) => (
+              <ColorDrop
+                color={color}
+                selectedColor={selectedColor}
+                onClick={(event) => {
+                  setSelectedColor(color);
+                  event.stopPropagation();
+                }}
+                key={color}
+              />
+            ))}
+          </ColorPalette>
+        </CategorySetting>
+      )}
+      {isOverlayOn && (
+        <Overlay isOverlayOn={isOverlayOn}>
+          <Locker setIsOverlayOn={setIsOverlayOn} />
+        </Overlay>
       )}
     </MainWrapper>
   );
@@ -250,6 +425,13 @@ const MoveToLockerButton = styled.div`
     background-image: url("/images/ic_right_arrow.svg");
     background-size: contain;
   }
+
+  &:active {
+    transition: all 0.2s ease-in-out;
+    filter: ${(props) =>
+      props.disabled ? "brightness(1)" : "brightness(0.9)"};
+    scale: ${(props) => (props.disabled ? "1" : "0.98")};
+  }
 `;
 
 const CategorySetting = styled.div`
@@ -278,6 +460,9 @@ const FixedButtonContainer = styled.div`
   bottom: 64px;
   width: calc(100% - 32px);
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 const ColorDrop = styled.div`

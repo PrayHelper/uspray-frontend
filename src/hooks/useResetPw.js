@@ -2,9 +2,9 @@ import { useMutation } from "react-query";
 import useApi from './useApi';
 
 export const useResetPw = (data) => {
-  const { putFetcher } = useApi();
+  const { postFetcher } = useApi();
   return useMutation(async () => {
-    return await putFetcher('/user/reset/password', data)
+    return await postFetcher('/member/change-pw', data)
   }, {
     onError: (e) => {
       console.log(e);

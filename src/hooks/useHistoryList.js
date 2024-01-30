@@ -1,13 +1,15 @@
-import { useQuery } from 'react-query';
-import useApi from './useApi';
+import { useQuery } from "react-query";
+import useApi from "./useApi";
 
-export const usePrayList = (sort_by) => {
+export const useHistoryList = (options) => {
   const { getFetcher } = useApi();
-  return useQuery(['prayList','sort_by'],
+  return useQuery(
+    ["History", options],
     async () => {
-      return await getFetcher(`/pray?sort_by=${sort_by}`)},
+      return await getFetcher("/history", options);
+    },
     {
-      onError: async (e) => {
+      onError: (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
@@ -18,5 +20,6 @@ export const usePrayList = (sort_by) => {
       },
       retryDelay: 300,
       refetchOnWindowFocus: false,
-    })
-}
+    }
+  );
+};

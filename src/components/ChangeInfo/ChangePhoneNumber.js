@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import publicapi from "../api/publicapi";
-import Button, { ButtonSize, ButtonTheme } from "../components/Button/Button";
-import Input from "../components/Input/Input";
-import UserHeader from "../components/UserHeader";
+import publicapi from "../../api/publicapi";
+import Button, { ButtonSize, ButtonTheme } from "../Button/Button";
+import Input from "../Input/Input";
+import UserHeader from "../UserHeader";
 import styled from 'styled-components';
-import BlackScreen from "../components/BlackScreen/BlackScreen";
-import { useResetPhoneNumber } from "../hooks/useResetPhoneNumber";
-import useToast from "../hooks/useToast";
-import { ToastTheme } from "../components/Toast/Toast";
-import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
-import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
+import BlackScreen from "../BlackScreen/BlackScreen";
+import { useResetPhoneNumber } from "../../hooks/useResetPhoneNumber";
+import useToast from "../../hooks/useToast";
+import { ToastTheme } from "../Toast/Toast";
+import { ReactComponent as NextArrowGray } from "../../images/ic_next_arrow_gray.svg";
+import { ReactComponent as NextArrowWhite } from "../../images/ic_next_arrow_white.svg";
 
 
 
@@ -43,7 +43,7 @@ const ModalButton1 = styled.button`
   font-size: 18px;
 `;
 
-const ChangePhoneNumber = () => {
+const ChangePhoneNumber = ({setShowChangePhoneNumber}) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [certificateNumber, setCertificateNumber] = useState("");
   const [isCetrificated, setIsCertificated] = useState(false);
@@ -173,15 +173,7 @@ const ChangePhoneNumber = () => {
   };
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100vh",
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}>
+    <Wrapper>
       {showModal && (
         <>
           <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
@@ -219,7 +211,7 @@ const ChangePhoneNumber = () => {
           </ModalContent>
         </>
       )}
-      <UserHeader>전화번호 변경</UserHeader>
+      <UserHeader back={() => setShowChangePhoneNumber(false)}>전화번호 변경</UserHeader>
       <div
         style={{
           width: "100%",
@@ -331,8 +323,23 @@ const ChangePhoneNumber = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  z-index: 101;
+`
 
 export default ChangePhoneNumber;
