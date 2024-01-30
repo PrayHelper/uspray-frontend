@@ -5,7 +5,7 @@ import useToast from '../hooks/useToast';
 import { ToastTheme } from '../components/Toast/Toast';
 
 export const useGroup = () => {
-  const { getFetcher, postFetcher, deleteFetcher } = useApi();
+  const { getFetcher, postFetcher, putFetcher, deleteFetcher } = useApi();
   const navigate = useNavigate();
   const { showToast } = useToast({});
 
@@ -107,6 +107,25 @@ export const useGroup = () => {
     }
   );
 
+  const { mutate: setGroupNotification }  = useMutation(
+    async (groupId) => {
+      return await putFetcher(`/group/${groupId}/notification`)
+    },
+    {
+      onError: async (e) => {
+        console.log(e);
+      },
+      onSuccess: (res) => {
+        console.log(res);
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
+
   const groupList = data?.data.data.groupList || [];
 
   return {
@@ -115,5 +134,6 @@ export const useGroup = () => {
     createGroup,
     joinGroup,
     leaveGroup,
+    setGroupNotification,
   };
 }
