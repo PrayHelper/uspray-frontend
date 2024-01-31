@@ -88,7 +88,7 @@ function App() {
 
   useEffect(() => {
     TagManager.initialize({
-      gtmId: `${process.env.REACT_PUBLIC_GTM_ID}`,
+      gtmId: `${process.env.REACT_APP_GTM_ID}`,
     })
   }, [])
   return (
