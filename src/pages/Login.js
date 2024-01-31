@@ -3,7 +3,6 @@ import SocialLoginLongButton from "../components/SocialLogin/SocialLoginLongButt
 import styled from "styled-components";
 import LogoSVG from "../images/logo_image.svg";
 import { Link } from "react-router-dom";
-import AppleLogin from "react-apple-login";
 
 const S = {
   SocialLoginWrapper: styled.div`
