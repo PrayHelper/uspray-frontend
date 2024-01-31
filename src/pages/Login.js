@@ -3,6 +3,7 @@ import SocialLoginLongButton from "../components/SocialLogin/SocialLoginLongButt
 import styled from "styled-components";
 import LogoSVG from "../images/logo_image.svg";
 import { Link } from "react-router-dom";
+import AppleLogin from "react-apple-login";
 
 const S = {
   SocialLoginWrapper: styled.div`
@@ -96,8 +97,19 @@ const SocialLogin = () => {
     window.location.href =
       "https://spring.dev.uspray.kr/oauth2/authorization/naver";
   };
-  const continueWithApple = () => {
-    console.log("continueWithApple");
+  const continueWithApple = async () => {
+    const config = {
+      client_id: "uspray.uspray.com",
+      redirect_uri: `${process.env.REACT_APP_WEB_ORIGIN}/apple-redirecting`,
+      response_type: "code",
+      m: 11,
+      v: "1.5.4",
+    };
+    const queryString = Object.entries(config)
+      .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+      .join("&");
+
+    window.location.href = `https://appleid.apple.com/auth/authorize?${queryString}`;
   };
 
   return (

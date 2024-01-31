@@ -48,6 +48,7 @@ import CreateGroup from "./pages/CreateGroup";
 import LeaveGroup from "./pages/LeaveGroup";
 import SocialLoginNameInput from "./pages/SocialLoginNameInput";
 import SocialRedirecting from "./pages/SocialRedirecting";
+import AppleRedirecting from "./pages/AppleRedirecting";
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -130,6 +131,10 @@ function App() {
                 <Route
                   path="/social-redirecting"
                   element={<SocialRedirecting />}
+                />
+                <Route
+                  path="/apple-redirecting"
+                  element={<AppleRedirecting />}
                 />
                 <Route path="/findAccount" element={<Find />} />
                 <Route path="/findID" element={<FindId />}></Route>
