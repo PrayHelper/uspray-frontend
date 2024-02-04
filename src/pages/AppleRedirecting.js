@@ -6,7 +6,7 @@ const AppleRedirecting = () => {
   const code = searchParams.get("code");
 
   useEffect(() => {
-    console.log(code);
+    fetch(`${process.env.REACT_APP_API_ORIGIN}/apple/login`, { body: code });
   }, [code]);
 
   return null;
