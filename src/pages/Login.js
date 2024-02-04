@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import SocialLoginLongButton from "../components/SocialLogin/SocialLoginLongButton";
 import styled from "styled-components";
+import SocialLoginLongButton from "../components/SocialLogin/SocialLoginLongButton";
 import LogoSVG from "../images/logo_image.svg";
 import { Link } from "react-router-dom";
 
