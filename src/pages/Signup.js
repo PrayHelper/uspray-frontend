@@ -473,4 +473,5 @@ export default Signup;
 
 const SignupPageWrapper = styled.div`
   width: 100%;
+  background-color: var(--color-white);
 `;

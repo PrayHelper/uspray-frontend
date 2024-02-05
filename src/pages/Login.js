@@ -12,6 +12,7 @@ const S = {
     justify-content: space-between;
     height: 100vh;
     width: 100%;
+    background-color: var(--color-white);
   `,
   LogoWrapper: styled.div`
     display: flex;
