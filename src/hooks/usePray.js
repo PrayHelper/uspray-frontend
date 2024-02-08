@@ -109,7 +109,11 @@ export const usePray = (tabType) => {
 
   const { mutate: modifyPray } = useMutation(
     async (data) => {
-      return await putFetcher(`/pray/${data.prayId}`, data);
+      return await putFetcher(`/pray/${data.prayId}`, {
+        content: data.content,
+        deadline: data.deadline,
+        categoryId: data.categoryId,
+      });
     },
     {
       onError: async (e) => {
@@ -121,6 +125,10 @@ export const usePray = (tabType) => {
       },
       onSuccess: (res) => {
         console.log(res);
+        showToast({
+          message: "기도제목이 수정되었어요.",
+          theme: ToastTheme.SUCCESS,
+        });
         refetchPrayList(tabType);
       },
       retry: (cnt) => {

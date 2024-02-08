@@ -60,7 +60,12 @@ const MainContent = ({
   // 기도를 수정하는 함수
   const onModify = async (text, deadline, categoryId) => {
     modifyPray(
-      { content: text, deadline: deadline, categoryId: categoryId },
+      {
+        prayId: modifyPrayInfo.prayId,
+        content: text,
+        deadline: deadline,
+        categoryId: categoryId,
+      },
       {
         onSuccess: () => {
           setShowSubModal(false);
