@@ -21,10 +21,6 @@ const SelectDate = (props) => {
       // 넘겨받은 date가 있으면
       const dateObject = new Date(props.date);
       props.setUpdateDate(props.date);
-      console.log(
-        "dateWithDayOfWeek(props.date)",
-        dateWithDayOfWeek(props.date)
-      );
       onChangeDate(dateObject);
       setDesignedDate(dateWithDayOfWeek(props.date));
       setSelectedBtn();
@@ -46,7 +42,6 @@ const SelectDate = (props) => {
   };
 
   const onChangeDate = (date) => {
-    console.log("date", date);
     if (typeof date == "number" || date === "") {
       const today = new Date();
       const targetDate = new Date(today.getTime() + date * 24 * 60 * 60 * 1000);
