@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import MainContent from "../components/Main/MainContent";
 import { useState } from "react";
 import ButtonV2, { ButtonTheme } from "../components/ButtonV2/ButtonV2";
@@ -9,51 +8,117 @@ import Modal from "../components/Modal/Modal";
 import Overlay from "../components/Overlay/Overlay";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../hooks/useCategory";
-import { useSendPrayItem } from "../hooks/useSendPrayItem";
 import { usePray } from "../hooks/usePray";
 import Locker from "./Locker";
 
 const Main = () => {
-  const { mutate: mutateSendPrayItem } = useSendPrayItem();
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
-  const [inputValue, setInputValue] = useState("");
+
   const [showCategorySetting, setShowCategorySetting] = useState(false);
-  const [selectedColor, setSelectedColor] = useState("#D0E8CB");
+
   const [showSubModal, setShowSubModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
+  const [dotIconClicked, setDotIconClicked] = useState(false);
+  const [clickedCategoryData, setClickedCategoryData] = useState({});
+  const [inputValue, setInputValue] = useState("");
+  const tabType = tab === "내가 쓴" ? "personal" : "shared";
   const [isOverlayOn, setIsOverlayOn] = useState(false);
-  const tabType = tab === "내가 쓴" ? 'PERSONAL' : 'SHARED';
   const categoryState = useCategory(tabType);
   const prayState = usePray(tabType);
-
-  const { categoryList, firstCategoryIndex } = categoryState;
   const { refetchCategoryList } = categoryState;
+  const {
+    categoryList,
+    firstCategoryIndex,
+    createCategory,
+    changeCategory,
+    deleteCategory,
+  } = categoryState;
   const { refetchPrayList } = prayState;
+  const { prayList, createPray } = prayState;
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
 
-  const { createCategory } = useCategory(tabType);
+  const [categoryRefIndex, setCategoryRefIndex] = useState(0);
+  const categoryRef = useRef([]);
 
-  const createCategoryHandler = async(categoryData) =>{
+  useEffect(()=>{
+    if (categoryRef.current[categoryRefIndex])
+    {
+      categoryRef.current[categoryRefIndex].scrollIntoView({behavior: "smooth", block: "center"});
+    }
+  }, [categoryRef, categoryRefIndex]);
+
+  const ColorList = [
+    "#D0E8CB",
+    "#AEDBA5",
+    "#9BD88A",
+    "#75BD62",
+    "#649D55",
+    "#58834D",
+    "#507247",
+  ];
+  const [selectedColor, setSelectedColor] = useState(ColorList[0]);
+
+  useEffect(() => {
+    if (dotIconClicked)
+      setInputValue(clickedCategoryData.name);
+    else
+      setInputValue("");
+  }, [clickedCategoryData, dotIconClicked]);
+
+  useEffect(() => {
+    if (ColorList.includes(clickedCategoryData.color)) {
+      setSelectedColor(clickedCategoryData.color);
+    } else {
+      setSelectedColor(ColorList[0]);
+    }
+  }, [clickedCategoryData]);
+
+  const createCategoryHandler = async (categoryData) => {
     try {
       await createCategory(categoryData);
     } catch (error) {
       console.error(error);
     } finally {
       setShowCategorySetting(false);
+      setInputValue("");
     }
-  }
+  };
+
+  const changeCategoryHandler = async (data) => {
+    try {
+      await changeCategory(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setDotIconClicked(false);
+      setInputValue("");
+    }
+  };
+
+  const deleteCategoryHandler = async (categoryId) => {
+    try {
+      await deleteCategory(categoryId);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setDotIconClicked(false);
+      setInputValue("");
+    }
+  };
 
   useEffect(() => {
     refetchCategoryList();
     refetchPrayList();
   }, [tab]);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    refetchPrayList();
+  }, [categoryList]);
 
   const handleTabChange = (newTab) => {
     setTab(newTab);
@@ -78,7 +143,7 @@ const Main = () => {
 
   // 기도를 추가하는 함수
   const onInsert = async (text, deadline, categoryId) => {
-    mutateSendPrayItem(
+    createPray(
       { content: text, deadline: deadline, categoryId: categoryId },
       {
         onSuccess: () => {
@@ -86,7 +151,6 @@ const Main = () => {
           setPrayInputValue("");
           setDateInputValue(null);
           setSelectedCategoryIndex(categoryId);
-          refetchPrayList();
         },
       }
     );
@@ -100,15 +164,9 @@ const Main = () => {
     }
   };
 
-  const ColorList = [
-    "#D0E8CB",
-    "#AEDBA5",
-    "#9BD88A",
-    "#75BD62",
-    "#649D55",
-    "#58834D",
-    "#507247",
-  ];
+  const onDotIconClicked = () => {
+    setDotIconClicked(true);
+  };
 
   useEffect(() => {
     if (categoryList.length > 0) {
@@ -191,19 +249,78 @@ const Main = () => {
         setShowCategorySetting={setShowCategorySetting}
         selectedCategoryIndex={selectedCategoryIndex}
         setSelectedCategoryIndex={setSelectedCategoryIndex}
+        tabType={tabType}
         refetchPrayList={refetchPrayList}
+        onDotIconClicked={onDotIconClicked}
+        setClickedCategoryData={setClickedCategoryData}
+        categoryRef={categoryRef}
+        setCategoryRefIndex={setCategoryRefIndex}
       />
       {showCategorySetting && (
         <CategorySetting onClick={() => setShowCategorySetting(false)}>
           <Input
             type="text"
             value={inputValue}
-            placeholder="카테고리를 입력해주세요"
+            placeholder={"카테고리를 입력해주세요"}
             onChange={handleInputChange}
             onClick={handleInnerClick}
           />
           <FixedButtonContainer onClick={handleInnerClick}>
-            <ButtonV2 buttonTheme={ButtonTheme.FILLED} handler={() => createCategoryHandler({name: inputValue, color: selectedColor, type: tabType})}>카테고리 추가</ButtonV2>
+            <ButtonV2
+              buttonTheme={ButtonTheme.FILLED}
+              disabled={!inputValue}
+              handler={() =>
+                createCategoryHandler({
+                  name: inputValue,
+                  color: selectedColor,
+                  type: tabType,
+                })
+              }
+            >
+              카테고리 추가
+            </ButtonV2>
+          </FixedButtonContainer>
+          <ColorPalette>
+            {ColorList.map((color) => (
+              <ColorDrop
+                color={color}
+                selectedColor={selectedColor}
+                onClick={(event) => {
+                  setSelectedColor(color);
+                  event.stopPropagation();
+                }}
+                key={color}
+              />
+            ))}
+          </ColorPalette>
+        </CategorySetting>
+      )}
+      {dotIconClicked && (
+        <CategorySetting onClick={() => setDotIconClicked(false)}>
+          <Input
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            onClick={handleInnerClick}
+          />
+          <FixedButtonContainer onClick={handleInnerClick}>
+            <ButtonV2
+              buttonTheme={ButtonTheme.OUTLINED}
+              handler={() => deleteCategoryHandler(clickedCategoryData.id)}
+            >
+              카테고리 삭제
+            </ButtonV2>
+            <ButtonV2
+              buttonTheme={ButtonTheme.FILLED}
+              handler={() =>
+                changeCategoryHandler({
+                  id: clickedCategoryData.id,
+                  name: inputValue,
+                  color: selectedColor,
+                  type: tabType,
+                })
+              }
+            >카테고리 수정</ButtonV2>
           </FixedButtonContainer>
           <ColorPalette>
             {ColorList.map((color) => (
@@ -343,6 +460,9 @@ const FixedButtonContainer = styled.div`
   bottom: 64px;
   width: calc(100% - 32px);
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 const ColorDrop = styled.div`

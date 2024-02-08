@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
-const PrayDetailModal = ({
+const HistoryDetailModal = ({
   showSubModal,
-  currentData,
+  historyDetail,
   onClickSubModal,
   onClickExitModal,
 }) => {
@@ -11,19 +11,27 @@ const PrayDetailModal = ({
       <ModalHeader>
         <ModalTitleWrapper>
           <ModalTitle>
-            <ModalTarget>{currentData.target}</ModalTarget>의 기도제목
+            <ModalTarget>{historyDetail.name}</ModalTarget>의 기도제목
           </ModalTitle>
-          <ModalDate>
-            {currentData?.created_at?.split(" ")[0].replace(/-/g, ".")} ~{" "}
-            {currentData.deadline.replace(/-/g, ".")}, {currentData.pray_cnt}회
-            기도
-          </ModalDate>
+          <ModalCountWrapper>
+            <ModalCount>
+              <img src="images/ic_history_modal_green_heart.svg" alt="heart" />
+              내가 한 기도 {historyDetail.personal_count}회
+            </ModalCount>
+            <ModalCount>
+              <img
+                src="images/ic_history_modal_green_person.svg"
+                alt="person"
+              />
+              함께 한 기도 {historyDetail.total_count}회
+            </ModalCount>
+          </ModalCountWrapper>
         </ModalTitleWrapper>
       </ModalHeader>
-      <ModalContent>{currentData.title}</ModalContent>
+      <ModalContent>{historyDetail.content}</ModalContent>
       <ModalWriter>
-        {currentData.writer} {currentData?.origin_created_at?.split(" ")[0]}{" "}
-        작성
+        {historyDetail?.createdAt?.split(" ")[0].replace(/-/g, ".")} ~{" "}
+        {historyDetail.deadline.replace(/-/g, ".")}
       </ModalWriter>
       <ModalButtonWrapper>
         <ModalButton1 showSubModal={showSubModal} onClick={onClickSubModal}>
@@ -35,7 +43,7 @@ const PrayDetailModal = ({
   );
 };
 
-export default PrayDetailModal;
+export default HistoryDetailModal;
 
 const ModalWrapper = styled.div`
   position: fixed;
@@ -57,7 +65,9 @@ const ModalWrapper = styled.div`
 const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 28px 0px 8px 28px;
+  padding: 28px 0px 12px 28px;
+  flex-direction: column;
+  gap: 4px;
 `;
 
 const ModalTitleWrapper = styled.div``;
@@ -75,9 +85,19 @@ const ModalTarget = styled.span`
   font-size: 20px;
 `;
 
-const ModalDate = styled.div`
+const ModalCountWrapper = styled.div`
   color: var(--color-dark-green);
   font-size: 12px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+`;
+
+const ModalCount = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: flex-end;
 `;
 
 const ModalContent = styled.div`

@@ -16,6 +16,7 @@ const PrayDateCategoryInput = ({
   isDefault, // 디폴트 값 존재하는지
   isShowWordCount, // 글자수 유무
   value, // 이전 화면에서 기도제목 입력 내용
+  date, // 이전 화면에서 날짜 선택 내용
   category, // 이전 화면에서 카테고리 선택ID
   setUpdateValue, // api 호출용 기도제목 내용 데이터 저장 함수
   setUpdateDate, // api 호출용 날짜 데이터 저장 함수
@@ -89,6 +90,7 @@ const PrayDateCategoryInput = ({
             <SelectDate
               setUpdateDate={setUpdateDate}
               showSubModal={showSubModal}
+              date={date}
             />
           </SubModalTop>
           <SubModalCategory>

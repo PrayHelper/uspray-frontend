@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import Calender from "../components/Calender/Calender";
 import Checkbox, { CheckboxTheme } from "../components/Checkbox/Checkbox";
-import { useHistorySearch } from "../hooks/useHistorySearch";
+import { useHistory } from "../hooks/useHistory";
 import {
   CheckboxWrapper,
   DateBox,
@@ -54,7 +54,7 @@ const HistorySearch = ({
   const [page, setPage] = useState(0);
   const [isPersonal, setIsPersonal] = useState(true);
   const [isShared, setIsShared] = useState(true);
-  const { searchHistory } = useHistorySearch();
+  const { searchHistory } = useHistory();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const navigate = useNavigate();

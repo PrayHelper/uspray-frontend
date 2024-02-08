@@ -1,41 +1,70 @@
-import { useState } from "react";
 import styled from "styled-components";
+import { usePray } from "../../hooks/usePray";
 
 const ICON_HEART_FILLED = "images/ic_filled_heart.svg";
 const ICON_HEART_EMPTY = "images/ic_empty_heart.svg";
 
-const Category = ({ title, color, setSelectedTitleIndex, prays }) => {
-  const [selected, setSelected] = useState([]);
+const Category = ({
+  categoryId,
+  title,
+  color,
+  setSelectedPrayInfo,
+  prays,
+  onDotIconClicked,
+  setClickedCategoryData,
+  tabType,
+  categoryRef,
+  refIndex
+}) => {
+  const {todayPray, cancelPray }= usePray(tabType);
 
-  const handleClick = (e, prayId) => {
+  const handleClick = (e, pray) => {
     e.stopPropagation();
-    setSelected((prev) => {
-      const newSelected = [...prev];
-      newSelected[prayId] = !newSelected[prayId];
-      return newSelected;
+    if (pray.isPrayedToday) {
+      cancelPray(pray.prayId);
+    } else {
+      todayPray(pray.prayId);
+    }
+  };
+
+  const titleClick = (pray) => {
+    setSelectedPrayInfo({
+      categoryId: pray.categoryId,
+      content: pray.content,
+      deadline: pray.deadline,
+      isShared: pray.isShared,
+      prayId: pray.prayId,
     });
   };
 
-  const titleClick = (e, prayId) => {
-    setSelectedTitleIndex(prayId);
+  const handleCategoryTitleClick = () => {
+    onDotIconClicked();
+    setClickedCategoryData({ id: categoryId, color: color, name: title });
   };
 
   return (
-    <CategoryContainer>
-      <Title color={color}>{title}</Title>
+    <CategoryContainer ref={(el)=>categoryRef.current[refIndex]=el}>
+      <Title color={color}>
+        {title}
+        <img
+          src="/images/ic_dot.svg"
+          alt="dot_icon"
+          onClick={handleCategoryTitleClick}
+        />
+      </Title>
       <ItemList>
-        {prays.map((pray, prayId) => (
-          <Item key={prayId}>
+        {prays.map((pray) => (
+          <Item key={pray.prayId}>
             <ItemText
-              selected={selected[prayId]}
-              onClick={(e) => titleClick(e, prayId)}
+              selected={pray.isPrayedToday}
+              onClick={(e) => titleClick(pray)}
             >
               {pray.content}
             </ItemText>
             <img
-              src={selected[prayId] ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
+              src={pray.isPrayedToday ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
               alt="heart_icon"
-              onClick={(e) => handleClick(e, prayId)}
+              onClick={(e) => handleClick(e, pray)}
             />
           </Item>
         ))}
@@ -61,6 +90,9 @@ const Title = styled.div`
   padding: 12px 16px;
   color: #ffffff;
   font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const ItemList = styled.div`

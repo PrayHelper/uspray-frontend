@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { ButtonTheme } from "./ButtonV2";
 
-export const ButtonStyle = styled.div`
+export const ButtonStyle = styled.button`
   background: ${(props) =>
     props.buttonTheme === ButtonTheme.OUTLINED
       ? "transparent"

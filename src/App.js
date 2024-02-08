@@ -44,6 +44,7 @@ import CreateGroup from "./pages/CreateGroup";
 import LeaveGroup from "./pages/LeaveGroup";
 import SocialLoginNameInput from "./pages/SocialLoginNameInput";
 import DeleteUser from "./pages/DeleteUser";
+import ChangeCategoryOrder from "./pages/ChangeCategoryOrder";
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -108,7 +109,10 @@ function App() {
                 <Route path="/checkInfo" element={<CheckInfo />} />
                 <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                 <Route path="/social" element={<SocialLogin />} />
-                <Route path="/deleteUser" element={<DeleteUser />} />
+                <Route
+                  path="/change-category-order/:categoryType"
+                  element={<ChangeCategoryOrder />}
+                />
               </Route>
               <Route element={<Outlet />}>
                 <Route path="/" element={<Login />} />

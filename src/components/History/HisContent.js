@@ -25,6 +25,8 @@ const Hline = styled.hr`
   opacity: 0.5;
   border-right: 0;
   border-left: 0;
+  padding: 0;
+  margin: 12px 0px;
 `;
 
 const Vline = styled.div`
@@ -34,7 +36,6 @@ const Vline = styled.div`
 `;
 
 const ContentWrapper = styled.div`
-  margin-top: 12px;
   display: flex;
   flex-direction: column;
 `;
@@ -73,5 +74,5 @@ const Date = styled.div`
   flex-direction: row-reverse;
   color: var(--color-dark-green);
   font-size: 12px;
-  margin: 8px 16px 12px 0px;
+  margin: 8px 16px 0px 0px;
 `;

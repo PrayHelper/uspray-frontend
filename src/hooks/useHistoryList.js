@@ -1,12 +1,12 @@
 import { useQuery } from "react-query";
-import useApi from './useApi';
+import useApi from "./useApi";
 
-export const useFetchNotifications = () => {
+export const useHistoryList = (options) => {
   const { getFetcher } = useApi();
   return useQuery(
-    ["FetchNotifications"],
+    ["History", options],
     async () => {
-      return await getFetcher("/user/notifications");
+      return await getFetcher("/history", options);
     },
     {
       onError: (e) => {

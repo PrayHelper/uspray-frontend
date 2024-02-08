@@ -19,6 +19,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Decrypt environment variables
+        run: |
+          echo "${{ secrets.DEV_ENV }}" base64 -d > .env
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
@@ -39,6 +43,7 @@ jobs:
             touch ~/SEMAPHORE
 
       - name: Deploy
+        if: always()
         uses: appleboy/ssh-action@master
         with:
           host: ${{ env.HOST }}
