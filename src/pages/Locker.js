@@ -13,7 +13,7 @@ import { useCategory } from "../hooks/useCategory";
 import { useNavigate } from "react-router-dom";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 
-const Locker = ({ setIsOverlayOn }) => {
+const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
   const [data, setData] = useState([]);
   const { categoryList, firstCategoryIndex } = useCategory("shared");
   const [isClicked, setIsClicked] = useState([]);
@@ -156,6 +156,7 @@ const Locker = ({ setIsOverlayOn }) => {
               message: "기도제목이 저장되었습니다.",
               theme: ToastTheme.SUCCESS,
             });
+            refetchPrayList();
             setDateInputValue(null);
             refetchSharedListData();
             setSelectedID([]);
