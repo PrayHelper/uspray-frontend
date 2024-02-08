@@ -238,9 +238,9 @@ const Locker = ({ setIsOverlayOn }) => {
           setUpdateDate={setDateInputValue}
           setUpdateCategory={setCategoryInputValue}
           buttonText="내 기도수첩에 저장하기"
-          value={`기도제목 ${selectedID.length}개 선택`}
           category={firstCategoryIndex}
           onClickFunc={() => onClickSave()}
+          lockerCount={selectedID.length}
         />
       )}
       <BottomButton onClick={() => setIsOverlayOn(false)}>
