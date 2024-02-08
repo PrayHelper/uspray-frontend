@@ -76,8 +76,8 @@ const MainContent = ({
     setShareMode(false);
   };
 
-  return (<>
-    <MainContentWrapper shareMode={shareMode}>
+  return (
+    <MainContentWrapper>
       {showModal && (
         <>
           <BlackScreen
@@ -160,8 +160,7 @@ const MainContent = ({
             />
           ))}
       </Content>
-    </MainContentWrapper>
-    <BottomSetWrapper selectedPrayInfo={selectedPrayInfo}>
+      <BottomSetWrapper selectedPrayInfo={selectedPrayInfo}>
         <BottomButtonWrapper>
           <img src={completeImage} />
           <BottomButtonText
@@ -226,15 +225,16 @@ const MainContent = ({
           )}
         </ShareButtonContainer>
       </BottomShareWrapper>
-    <BlackBackground
-    selectedPrayInfo={selectedPrayInfo}
-    shareMode={shareMode}
-    onClick={() => {
-      if (!shareMode) {
-        setSelectedPrayInfo(null);
-      }
-    }}
-  /></>
+      <BlackBackground
+        selectedPrayInfo={selectedPrayInfo}
+        shareMode={shareMode}
+        onClick={() => {
+          if (!shareMode) {
+            setSelectedPrayInfo(null);
+          }
+        }}
+      />
+    </>
   );
 };
 
@@ -244,7 +244,7 @@ export default MainContent;
 const MainContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc( 100vh - 139px );
+  height: calc(100vh - 139px);
   width: 100%;
   position: fixed;
   top: 139px;
@@ -272,8 +272,8 @@ const TopWrapper = styled.div`
   backdrop-filter: blur(12px);
   border: ${(props) =>
     props.shareMode ? "1px solid rgba(0, 0, 0, 0.1)" : "none"};
-    box-shadow: ${(props) =>
-      props.shareMode ? "0px 0px 4px rgba(0, 0, 0, 0.1)" : "none"};
+  box-shadow: ${(props) =>
+    props.shareMode ? "0px 0px 4px rgba(0, 0, 0, 0.1)" : "none"};
 `;
 
 // 카테고리 박스
@@ -340,7 +340,7 @@ const BottomShareWrapper = styled.div`
   visibility: ${(props) => (props.shareMode ? "visible" : "hidden")};
   transform: ${(props) =>
     props.shareMode ? "translateY(0%)" : "translateY(100%)"};
-    border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 // BottomShareWrapper의 버튼 컨테이너

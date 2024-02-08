@@ -17,8 +17,22 @@ const SelectDate = (props) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
-    if (props.date !== null) {
+    if (props.date) {
+      // 넘겨받은 date가 있으면
+      const dateObject = new Date(props.date);
       props.setUpdateDate(props.date);
+      console.log(
+        "dateWithDayOfWeek(props.date)",
+        dateWithDayOfWeek(props.date)
+      );
+      onChangeDate(dateObject);
+      setDesignedDate(dateWithDayOfWeek(props.date));
+      setSelectedBtn();
+      setSelectedDate(dateObject);
+    } else {
+      // 넘겨받은 date가 없으면
+      onChangeDate(7);
+      setSelectedDate();
     }
   }, []);
 
@@ -32,6 +46,7 @@ const SelectDate = (props) => {
   };
 
   const onChangeDate = (date) => {
+    console.log("date", date);
     if (typeof date == "number" || date === "") {
       const today = new Date();
       const targetDate = new Date(today.getTime() + date * 24 * 60 * 60 * 1000);
@@ -58,12 +73,15 @@ const SelectDate = (props) => {
     props.setUpdateDate(formattedDate);
   };
 
-  useEffect(() => {
-    if (props.showSubModal) {
-      onChangeDate(7);
-      setSelectedDate();
-    }
-  }, [props.showSubModal]);
+  const dateWithDayOfWeek = (inputDate) => {
+    const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
+    const [year, month, day] = inputDate.split("-").map(Number);
+    const formattedDate = new Date(year, month - 1, day); // month는 0부터 시작하므로 1을 빼줍니다.
+    const dayOfWeekIndex = formattedDate.getDay();
+    const dayOfWeek = daysOfWeek[dayOfWeekIndex];
+
+    return `${inputDate} ${dayOfWeek}`;
+  };
 
   return (
     <SelectDateWrapper>
