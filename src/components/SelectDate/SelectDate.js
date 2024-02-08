@@ -71,7 +71,7 @@ const SelectDate = (props) => {
   const dateWithDayOfWeek = (inputDate) => {
     const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
     const [year, month, day] = inputDate.split("-").map(Number);
-    const formattedDate = new Date(year, month - 1, day); // month는 0부터 시작하므로 1을 빼줍니다.
+    const formattedDate = new Date(year, month - 1, day);
     const dayOfWeekIndex = formattedDate.getDay();
     const dayOfWeek = daysOfWeek[dayOfWeekIndex];
 
