@@ -147,6 +147,7 @@ const Locker = ({ setIsOverlayOn }) => {
       updateListData(
         {
           sharedPrayIds: prayIdList,
+          deadline: dateInputValue,
           categoryId: categoryInputValue,
         },
         {
@@ -155,6 +156,7 @@ const Locker = ({ setIsOverlayOn }) => {
               message: "기도제목이 저장되었습니다.",
               theme: ToastTheme.SUCCESS,
             });
+            setDateInputValue(null);
             refetchSharedListData();
             setSelectedID([]);
             setShowSubModal(false);
@@ -176,11 +178,6 @@ const Locker = ({ setIsOverlayOn }) => {
       setIsLoading(false);
     }
   }, [sharedListData]);
-  // useEffect(() => {
-  //   if (sharedListData) {
-  //     fetchSharedList();
-  //   }
-  // }, [sharedListData]);
 
   return (
     <LockerWrapper>
@@ -212,10 +209,7 @@ const Locker = ({ setIsOverlayOn }) => {
         <LockerList>
           <div style={{ paddingTop: "65px", width: "100%" }}>
             {data.map((item, index) => (
-              <div
-                // style={{ width: "100%" }}
-                onClick={() => onClickContent(index, item.sharedPrayId)}
-              >
+              <div onClick={() => onClickContent(index, item.sharedPrayId)}>
                 <LockerContent
                   isClicked={isClicked[index]}
                   title={item.content}
@@ -239,7 +233,7 @@ const Locker = ({ setIsOverlayOn }) => {
           setUpdateCategory={setCategoryInputValue}
           buttonText="내 기도수첩에 저장하기"
           category={firstCategoryIndex}
-          onClickFunc={() => onClickSave()}
+          onClickFunc={() => saveSharedList(dateInputValue, categoryInputValue)}
           lockerCount={selectedID.length}
         />
       )}
@@ -253,7 +247,6 @@ const Locker = ({ setIsOverlayOn }) => {
 export default Locker;
 
 const LockerWrapper = styled.div`
-  /* padding-top: 65px; */
   display: flex;
   flex-direction: column;
   height: 100vh;
