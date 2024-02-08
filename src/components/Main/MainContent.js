@@ -21,7 +21,7 @@ const MainContent = ({
   onDotIconClicked,
   setClickedCategoryData,
   categoryRef,
-  setCategoryRefIndex
+  setCategoryRefIndex,
 }) => {
   const [selectedPrayInfo, setSelectedPrayInfo] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -107,7 +107,7 @@ const MainContent = ({
           setUpdateCategory={setCategoryInputValue}
           buttonText="기도제목 수정"
           value={prayInputValue}
-          data={modifyPrayInfo.deadline}
+          date={modifyPrayInfo.deadline}
           category={modifyPrayInfo.categoryId}
           onClickFunc={() =>
             onModify(prayInputValue, dateInputValue, categoryInputValue)

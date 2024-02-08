@@ -45,10 +45,12 @@ const Main = () => {
   const [categoryRefIndex, setCategoryRefIndex] = useState(0);
   const categoryRef = useRef([]);
 
-  useEffect(()=>{
-    if (categoryRef.current[categoryRefIndex])
-    {
-      categoryRef.current[categoryRefIndex].scrollIntoView({behavior: "smooth", block: "center"});
+  useEffect(() => {
+    if (categoryRef.current[categoryRefIndex]) {
+      categoryRef.current[categoryRefIndex].scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }
   }, [categoryRef, categoryRefIndex]);
 
@@ -64,10 +66,8 @@ const Main = () => {
   const [selectedColor, setSelectedColor] = useState(ColorList[0]);
 
   useEffect(() => {
-    if (dotIconClicked)
-      setInputValue(clickedCategoryData.name);
-    else
-      setInputValue("");
+    if (dotIconClicked) setInputValue(clickedCategoryData.name);
+    else setInputValue("");
   }, [clickedCategoryData, dotIconClicked]);
 
   useEffect(() => {
@@ -220,6 +220,7 @@ const Main = () => {
                 setUpdateCategory={setCategoryInputValue}
                 buttonText="기도제목 작성"
                 value={prayInputValue}
+                date={null}
                 category={selectedCategoryIndex}
                 onClickFunc={() =>
                   onInsert(prayInputValue, dateInputValue, categoryInputValue)
@@ -320,7 +321,9 @@ const Main = () => {
                   type: tabType,
                 })
               }
-            >카테고리 수정</ButtonV2>
+            >
+              카테고리 수정
+            </ButtonV2>
           </FixedButtonContainer>
           <ColorPalette>
             {ColorList.map((color) => (
