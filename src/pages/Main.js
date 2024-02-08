@@ -286,6 +286,7 @@ const Main = () => {
                 setUpdateCategory={setCategoryInputValue}
                 buttonText="기도제목 작성"
                 value={prayInputValue}
+                date={null}
                 category={selectedCategoryIndex}
                 onClickFunc={() =>
                   onInsert(prayInputValue, dateInputValue, categoryInputValue)
