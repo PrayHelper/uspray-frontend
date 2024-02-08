@@ -9,6 +9,8 @@ import { useUpdateSharedList } from "../hooks/useUpdateSharedList";
 import Lottie from "react-lottie";
 import LottieData from "../json/lottie.json";
 import useToast from "../hooks/useToast";
+import BlackScreen from "../components/BlackScreen";
+import Modal from "../components/Modal/Modal";
 import { useCategory } from "../hooks/useCategory";
 import { useNavigate } from "react-router-dom";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
@@ -20,6 +22,7 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
   const [selectedID, setSelectedID] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [showSubModal, setShowSubModal] = useState(false);
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
@@ -86,7 +89,11 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
   };
 
   const onClickSave = () => {
-    setShowSubModal(true);
+    if (categoryList.length === 0) {
+      setShowModal(true);
+    } else {
+      setShowSubModal(true);
+    }
   };
 
   // 공유 리스트 읽기
@@ -180,8 +187,22 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
     }
   }, [sharedListData]);
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <LockerWrapper>
+      <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
+      <Modal
+        isModalOn={showModal}
+        iconSrc={"images/icon_notice.svg"}
+        iconAlt={"icon_notice"}
+        mainContent={"카테고리를 먼저 추가해주세요!"}
+        subContent={"메인 화면에서 생성할 수 있습니다."}
+        btnContent={"네, 그렇게 할게요."}
+        onClickBtn={handleCloseModal}
+      />
       <LockerHeader
         isEmptyData={isEmptyData(data)}
         isClicked={isClicked.some((clicked) => clicked)}
