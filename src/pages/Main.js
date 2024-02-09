@@ -45,10 +45,12 @@ const Main = () => {
   const [categoryRefIndex, setCategoryRefIndex] = useState(0);
   const categoryRef = useRef([]);
 
-  useEffect(()=>{
-    if (categoryRef.current[categoryRefIndex])
-    {
-      categoryRef.current[categoryRefIndex].scrollIntoView({behavior: "smooth", block: "center"});
+  useEffect(() => {
+    if (categoryRef.current[categoryRefIndex]) {
+      categoryRef.current[categoryRefIndex].scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }
   }, [categoryRef, categoryRefIndex]);
 
@@ -64,10 +66,8 @@ const Main = () => {
   const [selectedColor, setSelectedColor] = useState(ColorList[0]);
 
   useEffect(() => {
-    if (dotIconClicked)
-      setInputValue(clickedCategoryData.name);
-    else
-      setInputValue("");
+    if (dotIconClicked) setInputValue(clickedCategoryData.name);
+    else setInputValue("");
   }, [clickedCategoryData, dotIconClicked]);
 
   useEffect(() => {
@@ -320,7 +320,9 @@ const Main = () => {
                   type: tabType,
                 })
               }
-            >카테고리 수정</ButtonV2>
+            >
+              카테고리 수정
+            </ButtonV2>
           </FixedButtonContainer>
           <ColorPalette>
             {ColorList.map((color) => (
@@ -342,6 +344,11 @@ const Main = () => {
           <Locker setIsOverlayOn={setIsOverlayOn} />
         </Overlay>
       )}
+      <OptionBtn
+        src="images/ic_main_option.svg"
+        alt="main_option_icon"
+        ///onClick={() => navigate("/createGroup")}
+      />
     </MainWrapper>
   );
 };
@@ -487,4 +494,10 @@ const ColorDrop = styled.div`
     display: ${(props) =>
       props.color === props.selectedColor ? "block" : "none"};
   }
+`;
+
+const OptionBtn = styled.img`
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
 `;
