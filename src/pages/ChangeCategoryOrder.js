@@ -21,7 +21,8 @@ const CategoryItem = ({ categoryItem, index }) => {
           bgColor={categoryItem.color}
           ref={provided.innerRef}
           {...provided.draggableProps}
-          {...provided.dragHandleProps}>
+          {...provided.dragHandleProps}
+        >
           <S.CategoryItemText>{categoryItem.name}</S.CategoryItemText>
           <Hamburger />
         </S.CategoryItemContainer>
@@ -30,7 +31,7 @@ const CategoryItem = ({ categoryItem, index }) => {
   );
 };
 
-const ChangeCategoryOrder = () => {
+const ChangeCategoryOrder = ({ setIsOverlayOn }) => {
   const { categoryType } = useParams(); // "personal" or "shared"
   const { categoryList, updateCategoryOrder } = useCategoryTemp_by_limeojin({
     categoryType,
@@ -52,14 +53,17 @@ const ChangeCategoryOrder = () => {
 
   return (
     <S.PageRoot>
-      <UserHeader>카테고리 순서 변경</UserHeader>
+      <UserHeader overlay={true} setIsOverlayOn={setIsOverlayOn}>
+        카테고리 순서 변경
+      </UserHeader>
       {categoryList && (
         <DragDropContext onDragEnd={onDragEnd}>
           <StrictModeDroppable droppableId="droppable">
             {(provided) => (
               <S.CategoryList
                 ref={provided.innerRef}
-                {...provided.droppableProps}>
+                {...provided.droppableProps}
+              >
                 {categoryList.map((categoryItem, index) => (
                   <CategoryItem
                     index={index}
