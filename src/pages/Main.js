@@ -10,6 +10,7 @@ import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateC
 import { useCategory } from "../hooks/useCategory";
 import { usePray } from "../hooks/usePray";
 import Locker from "./Locker";
+import ChangeCategoryOrder from "./ChangeCategoryOrder";
 
 const Main = () => {
   const [tab, setTab] = useState("내가 쓴");
@@ -350,7 +351,7 @@ const Main = () => {
       )}
       {isOrderOverlayOn && (
         <Overlay isOverlayOn={isOrderOverlayOn}>
-          <Locker setIsOverlayOn={setIsOrderOverlayOn} />
+          <ChangeCategoryOrder setIsOverlayOn={setIsOrderOverlayOn} />
         </Overlay>
       )}
       <OptionBtn
@@ -368,16 +369,6 @@ const Main = () => {
         movingDistance={0}
       />
       <OptionBtn
-        src="images/ic_main_share.svg"
-        alt="main_share_icon"
-        onClick={() => {
-          setShareMode(true);
-          setShowOption(false);
-        }}
-        isVisible={showOption}
-        movingDistance={72}
-      />
-      <OptionBtn
         src="images/ic_main_order.svg"
         alt="main_order_icon"
         onClick={() => {
@@ -385,8 +376,20 @@ const Main = () => {
           setShowOption(false);
         }}
         isVisible={showOption}
-        movingDistance={144}
+        movingDistance={72}
       />
+      {tab === "내가 쓴" ? (
+        <OptionBtn
+          src="images/ic_main_share.svg"
+          alt="main_share_icon"
+          onClick={() => {
+            setShareMode(true);
+            setShowOption(false);
+          }}
+          isVisible={showOption}
+          movingDistance={144}
+        />
+      ) : null}
     </MainWrapper>
   );
 };
