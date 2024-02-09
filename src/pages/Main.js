@@ -19,6 +19,10 @@ const Main = () => {
 
   const [showSubModal, setShowSubModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showOption, setShowOption] = useState(false);
+  const [shareMode, setShareMode] = useState(false);
+  const [isLockerOverlayOn, setIsLockerOverlayOn] = useState(false);
+  const [isOrderOverlayOn, setIsOrderOverlayOn] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
@@ -26,7 +30,7 @@ const Main = () => {
   const [clickedCategoryData, setClickedCategoryData] = useState({});
   const [inputValue, setInputValue] = useState("");
   const tabType = tab === "내가 쓴" ? "personal" : "shared";
-  const [isOverlayOn, setIsOverlayOn] = useState(false);
+
   const categoryState = useCategory(tabType);
   const prayState = usePray(tabType);
   const { refetchCategoryList } = categoryState;
@@ -126,7 +130,7 @@ const Main = () => {
   };
 
   const clickLocker = () => {
-    setIsOverlayOn(true);
+    setIsLockerOverlayOn(true);
   };
 
   const handleInputChange = (e) => {
@@ -339,15 +343,49 @@ const Main = () => {
           </ColorPalette>
         </CategorySetting>
       )}
-      {isOverlayOn && (
-        <Overlay isOverlayOn={isOverlayOn}>
-          <Locker setIsOverlayOn={setIsOverlayOn} />
+      {isLockerOverlayOn && (
+        <Overlay isOverlayOn={isLockerOverlayOn}>
+          <Locker setIsOverlayOn={setIsLockerOverlayOn} />
+        </Overlay>
+      )}
+      {isOrderOverlayOn && (
+        <Overlay isOverlayOn={isOrderOverlayOn}>
+          <Locker setIsOverlayOn={setIsOrderOverlayOn} />
         </Overlay>
       )}
       <OptionBtn
         src="images/ic_main_option.svg"
         alt="main_option_icon"
-        ///onClick={() => navigate("/createGroup")}
+        onClick={() => setShowOption(true)}
+        isVisible={!showOption}
+        movingDistance={0}
+      />
+      <OptionBtn
+        src="images/ic_main_option_close.svg"
+        alt="main_option_close_icon"
+        onClick={() => setShowOption(false)}
+        isVisible={showOption}
+        movingDistance={0}
+      />
+      <OptionBtn
+        src="images/ic_main_share.svg"
+        alt="main_share_icon"
+        onClick={() => {
+          setShareMode(true);
+          setShowOption(false);
+        }}
+        isVisible={showOption}
+        movingDistance={72}
+      />
+      <OptionBtn
+        src="images/ic_main_order.svg"
+        alt="main_order_icon"
+        onClick={() => {
+          setIsOrderOverlayOn(true);
+          setShowOption(false);
+        }}
+        isVisible={showOption}
+        movingDistance={144}
       />
     </MainWrapper>
   );
@@ -497,7 +535,12 @@ const ColorDrop = styled.div`
 `;
 
 const OptionBtn = styled.img`
+  opacity: ${(props) => (props.isVisible ? 1 : 0)};
+  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
   position: fixed;
-  bottom: 80px;
+  position: fixed;
+  bottom: ${(props) =>
+    props.isVisible ? `calc(80px + ${props.movingDistance}px)` : "80px"};
   right: 20px;
+  transition: all 0.2s ease;
 `;
