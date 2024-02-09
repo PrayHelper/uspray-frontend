@@ -53,7 +53,7 @@ const ChangeCategoryOrder = ({ setIsOverlayOn }) => {
 
   return (
     <S.PageRoot>
-      <UserHeader setIsOverlayOn={setIsOverlayOn}>
+      <UserHeader overlay={true} setIsOverlayOn={setIsOverlayOn}>
         카테고리 순서 변경
       </UserHeader>
       {categoryList && (
