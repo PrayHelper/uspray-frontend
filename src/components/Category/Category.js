@@ -17,6 +17,8 @@ const Category = ({
   categoryRef,
   refIndex,
   shareMode,
+  setCheckedList,
+  checkedList,
 }) => {
   const { todayPray, cancelPray } = usePray(tabType);
 
@@ -38,6 +40,16 @@ const Category = ({
       isShared: pray.isShared,
       prayId: pray.prayId,
     });
+  };
+
+  const handleCheck = (e, prayId) => {
+    if (e.target.checked) {
+      // 체크되었을 때의 로직
+      setCheckedList([...checkedList, prayId]);
+    } else {
+      // 체크 해제되었을 때의 로직
+      setCheckedList(checkedList.filter((id) => id !== prayId));
+    }
   };
 
   const handleCategoryTitleClick = () => {
@@ -65,7 +77,10 @@ const Category = ({
               {pray.content}
             </ItemText>
             {shareMode ? (
-              <GreenCheckbox id={pray.prayId} />
+              <GreenCheckbox
+                id={pray.prayId}
+                handler={(e) => handleCheck(e, pray.prayId)}
+              />
             ) : (
               <img
                 src={pray.isPrayedToday ? ICON_HEART_FILLED : ICON_HEART_EMPTY}

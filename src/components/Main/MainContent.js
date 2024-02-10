@@ -33,9 +33,9 @@ const MainContent = ({
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
+  const [checkedList, setCheckedList] = useState([]);
   const { prayList, deletePray, completePray, modifyPray } = usePray(tabType);
   const { showToast } = useToast({});
-  const shareLength = 0;
 
   const prayModify = () => {
     setModifyPrayInfo(selectedPrayInfo);
@@ -68,10 +68,7 @@ const MainContent = ({
 
   const onCancle = () => {
     setShareMode(false);
-    /*onMove();
-    if (isShare) {
-      onCheck();
-    }*/
+    setCheckedList([]);
   };
 
   return (
@@ -151,6 +148,8 @@ const MainContent = ({
               categoryRef={categoryRef}
               refIndex={index}
               shareMode={shareMode}
+              setCheckedList={setCheckedList}
+              checkedList={checkedList}
             />
           ))}
       </Content>
@@ -192,13 +191,13 @@ const MainContent = ({
         onClick={() => setSelectedPrayInfo(null)}
       />
       <BottomShareWrapper shareMode={shareMode}>
-        <ShareNumberText>{shareLength + "개 선택"}</ShareNumberText>
+        <ShareNumberText>{checkedList.length + "개 선택"}</ShareNumberText>
         <ShareSubContainer>
           <BottomShareButton onClick={() => onCancle()}>
             취소하기
-            <ShareClickLogo src="image/ic_share_cancel.svg" />
+            <ShareClickLogo src="images/ic_share_cancel.svg" />
           </BottomShareButton>
-          {shareLength === 0 ? (
+          {checkedList.length === 0 ? (
             <BottomShareButton
               style={{
                 backgroundColor: "var(--color-light-green)",
@@ -207,7 +206,7 @@ const MainContent = ({
               }}
             >
               공유하기
-              <ShareClickLogo src="image/ic_share_move.svg" />
+              <ShareClickLogo src="images/ic_share_move.svg" />
             </BottomShareButton>
           ) : (
             <BottomShareButton
@@ -215,10 +214,12 @@ const MainContent = ({
                 background: "var(--color-dark-green)",
                 color: "#FFFFFF",
               }}
-              onClick={() => setShareMode(false)}
+              onClick={() => {
+                console.log(checkedList);
+              }}
             >
               공유하기
-              <ShareClickLogo src="image/ic_share_move.svg" />
+              <ShareClickLogo src="images/ic_share_move.svg" />
             </BottomShareButton>
           )}
         </ShareSubContainer>
