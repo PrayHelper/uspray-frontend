@@ -11,6 +11,7 @@ import { useCategory } from "../hooks/useCategory";
 import { usePray } from "../hooks/usePray";
 import { useLocation } from "react-router-dom";
 import useFlutterWebview from "../hooks/useFlutterWebview";
+import { useShare } from "../hooks/useShare";
 import Locker from "./Locker";
 import ChangeCategoryOrder from "./ChangeCategoryOrder";
 
@@ -51,6 +52,7 @@ const Main = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const shareIdsData = query.getAll("share");
+  const { mutate: receivePrays } = useShare();
 
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
@@ -169,6 +171,17 @@ const Main = () => {
     );
   };
 
+  const onShareReceive = async (prayIds) => {
+    receivePrays(
+      { prayIds: prayIds },
+      {
+        onSuccess: () => {
+          setIsLockerOverlayOn(true);
+        },
+      }
+    );
+  };
+
   const onShare = async (checkedPrayIds) => {
     setShareMode(false);
     const stringPrayIds = checkedPrayIds.join(",");
@@ -209,8 +222,11 @@ const Main = () => {
   useEffect(() => {
     if (shareIdsData.length === 1) {
       const decodedPrayIds = window.atob(shareIdsData[0]).split(",");
-      console.log(decodedPrayIds);
-    } else if (categoryList.length > 0) {
+      console.log(decodedPrayIds); // dev.uspray.kr 에서 테스트 후, 삭제
+      onShareReceive(decodedPrayIds);
+      handleTabChange("공유 받은");
+    }
+    if (categoryList.length > 0) {
       setSelectedCategoryIndex(firstCategoryIndex);
     }
   }, []);
