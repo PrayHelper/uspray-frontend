@@ -16,6 +16,7 @@ const Category = ({
   tabType,
   categoryRef,
   refIndex,
+  setShowOption,
   shareMode,
   setCheckedList,
   checkedList,
@@ -33,6 +34,7 @@ const Category = ({
 
   const titleClick = (pray) => {
     if (shareMode) return;
+    setShowOption(false);
     setSelectedPrayInfo({
       categoryId: pray.categoryId,
       content: pray.content,

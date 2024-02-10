@@ -313,6 +313,7 @@ const Main = () => {
         categoryRef={categoryRef}
         setCategoryRefIndex={setCategoryRefIndex}
         shareMode={shareMode}
+        setShowOption={setShowOption}
         setShareMode={setShareMode}
         listHandler={onShare}
       />

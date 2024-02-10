@@ -23,6 +23,7 @@ const MainContent = ({
   categoryRef,
   setCategoryRefIndex,
   shareMode,
+  setShowOption,
   setShareMode,
   listHandler,
 }) => {
@@ -76,7 +77,7 @@ const MainContent = ({
   };
 
   return (
-    <MainContentWrapper>
+    <MainContentWrapper shareMode={shareMode}>
       {showModal && (
         <>
           <BlackScreen
@@ -126,13 +127,22 @@ const MainContent = ({
           }
         />
       )}
-      <TopWrapper>
+      <BlackBackground
+        selectedPrayInfo={selectedPrayInfo}
+        shareMode={shareMode}
+        onClick={() => {
+          if (!shareMode) {
+            setSelectedPrayInfo(null);
+          }
+        }}
+      />
+      <TopWrapper shareMode={shareMode}>
         <CategoryTag
           categoryList={categoryList}
           selectedCategoryIndex={selectedCategoryIndex}
           setSelectedCategoryIndex={setSelectedCategoryIndex}
           setShowCategorySetting={setShowCategorySetting}
-          canAdd={true}
+          canAdd={!shareMode}
           setCategoryRefIndex={setCategoryRefIndex}
         />
       </TopWrapper>
@@ -152,6 +162,7 @@ const MainContent = ({
               categoryRef={categoryRef}
               refIndex={index}
               shareMode={shareMode}
+              setShowOption={setShowOption}
               setCheckedList={setCheckedList}
               checkedList={checkedList}
             />
@@ -190,19 +201,16 @@ const MainContent = ({
           </BottomButtonText>
         </BottomButtonWrapper>
       </BottomSetWrapper>
-      <BlackBackground
-        selectedPrayInfo={selectedPrayInfo}
-        onClick={() => setSelectedPrayInfo(null)}
-      />
+
       <BottomShareWrapper shareMode={shareMode}>
         <ShareNumberText>{checkedList.length + "개 선택"}</ShareNumberText>
-        <ShareSubContainer>
-          <BottomShareButton onClick={() => onCancle()}>
+        <ShareButtonContainer>
+          <ShareButtonWrapper onClick={() => onCancle()}>
             취소하기
-            <ShareClickLogo src="images/ic_share_cancel.svg" />
-          </BottomShareButton>
+            <ShareButtonImage src="images/ic_share_cancel.svg" />
+          </ShareButtonWrapper>
           {checkedList.length === 0 ? (
-            <BottomShareButton
+            <ShareButtonWrapper
               style={{
                 backgroundColor: "var(--color-light-green)",
                 color: "#FFFFFF",
@@ -210,10 +218,10 @@ const MainContent = ({
               }}
             >
               공유하기
-              <ShareClickLogo src="images/ic_share_move.svg" />
-            </BottomShareButton>
+              <ShareButtonImage src="images/ic_share_move.svg" />
+            </ShareButtonWrapper>
           ) : (
-            <BottomShareButton
+            <ShareButtonWrapper
               style={{
                 background: "var(--color-dark-green)",
                 color: "#FFFFFF",
@@ -221,10 +229,10 @@ const MainContent = ({
               onClick={() => listHandler(checkedList)}
             >
               공유하기
-              <ShareClickLogo src="images/ic_share_move.svg" />
-            </BottomShareButton>
+              <ShareButtonImage src="images/ic_share_move.svg" />
+            </ShareButtonWrapper>
           )}
-        </ShareSubContainer>
+        </ShareButtonContainer>
       </BottomShareWrapper>
     </MainContentWrapper>
   );
@@ -232,6 +240,7 @@ const MainContent = ({
 
 export default MainContent;
 
+// 전체 흰색 박스(카테고리 목록 ~ 기도제목 목록)
 const MainContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -242,6 +251,7 @@ const MainContentWrapper = styled.div`
   border-radius: 32px 32px 0px 0px;
   box-sizing: border-box;
   overflow-y: auto;
+  z-index: ${(props) => (props.shareMode ? 101 : "auto")};
   &::-webkit-scrollbar {
     display: none;
   }
@@ -249,6 +259,7 @@ const MainContentWrapper = styled.div`
   -ms-overflow-style: none;
 `;
 
+// 카테고리 덮개
 const TopWrapper = styled.div`
   display: flex;
   padding: 24px 16px 16px;
@@ -256,10 +267,11 @@ const TopWrapper = styled.div`
   top: 0;
   background-color: rgba(255, 255, 255, 0.85);
   border-radius: 24px 24px 0 0;
-  z-index: 50;
+  z-index: ${(props) => (props.shareMode ? 102 : 50)};
   backdrop-filter: blur(12px);
 `;
 
+// 카테고리 박스
 const Content = styled.div`
   display: flex;
   flex-direction: column;
@@ -267,6 +279,7 @@ const Content = styled.div`
   padding: 8px 16px 60px;
 `;
 
+// 기도제목 눌렀을 때 아래에서 나오는 옵션 박스
 const BottomSetWrapper = styled.div`
   display: flex;
   position: fixed;
@@ -282,6 +295,16 @@ const BottomSetWrapper = styled.div`
   background: #fff;
 `;
 
+// BottomSetWrapper의 버튼
+const BottomButtonWrapper = styled.button`
+  flex-grow: 1;
+  padding: 12px 28px;
+  border-radius: 16px;
+  background: #f8f8f8;
+  border: none;
+`;
+
+// BottomSetWrapper의 Text
 const BottomButtonText = styled.div`
   font-size: 16px;
   font-style: normal;
@@ -295,31 +318,40 @@ const BottomButtonText = styled.div`
       : "#FF4F4F"};
 `;
 
-const BottomButtonWrapper = styled.button`
-  flex-grow: 1;
-  padding: 12px 28px;
-  border-radius: 16px;
-  background: #f8f8f8;
-  border: none;
-`;
-
-const BlackBackground = styled.div`
-  transition: all 0.3s ease-in-out;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
+// ShareMode일 때 아래에서 나오는 옵션 박스
+const BottomShareWrapper = styled.div`
+  width: 100%;
   position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
+  top: 1;
   bottom: 0;
-  z-index: ${(props) => (props.selectedPrayInfo !== null ? 100 : 0)};
-  opacity: ${(props) => (props.selectedPrayInfo !== null ? 1 : 0)};
-  backdrop-filter: blur(4px);
-  pointer-events: ${(props) =>
-    props.selectedPrayInfo !== null ? "auto" : "none"};
+  heigth: 128px;
+  border: none;
+  background-color: white;
+  border-radius: 24px 24px 0px 0px;
+  z-index: 104;
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
+  opacity: ${(props) => (props.shareMode ? 1 : 0)};
+  visibility: ${(props) => (props.shareMode ? "visible" : "hidden")};
+  transform: ${(props) =>
+    props.shareMode ? "translateY(0%)" : "translateY(100%)"};
 `;
 
-const BottomShareButton = styled.div`
+// BottomShareWrapper의 버튼 컨테이너
+const ShareButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  heigth: 75px;
+  border: none;
+  gap: 14px;
+  margin-top: 8px;
+  padding: 0px 24px 12px 24px;
+  box-sizing: border-box;
+`;
+
+// BottomShareWrapper의 버튼
+const ShareButtonWrapper = styled.div`
   flex-grow: 1;
   display: flex;
   align-items: center;
@@ -332,36 +364,14 @@ const BottomShareButton = styled.div`
   font-size: 16px;
 `;
 
-const BottomShareWrapper = styled.div`
-  width: 100%;
-  position: fixed;
-  top: 1;
-  bottom: 0;
-  heigth: 128px;
-  border: none;
-  background-color: white;
-  border-radius: 24px 24px 0px 0px;
-  z-index: 103;
-  box-sizing: border-box;
-  transition: all 0.3s ease-in-out;
-  opacity: ${(props) => (props.shareMode ? 1 : 0)};
-  visibility: ${(props) => (props.shareMode ? "visible" : "hidden")};
-  transform: ${(props) =>
-    props.shareMode ? "translateY(0%)" : "translateY(100%)"};
+// BottomShareWrapper의 버튼의 이미지
+const ShareButtonImage = styled.img`
+  height: 16px;
+  width: 16px;
+  margin-left: 20px;
 `;
 
-const ShareSubContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  heigth: 75px;
-  border: none;
-  z-index: 101;
-  gap: 14px;
-  margin-top: 8px;
-  padding: 0px 24px 12px 24px;
-  box-sizing: border-box;
-`;
+// BottomShareWrapper의 글자(ㅇ개 선택)
 const ShareNumberText = styled.div`
   height: 17px;
   display: flex;
@@ -372,8 +382,22 @@ const ShareNumberText = styled.div`
   margin-top: 12px;
   flex-direction: row-reverse;
 `;
-const ShareClickLogo = styled.img`
-  height: 16px;
-  width: 16px;
-  margin-left: 20px;
+
+// BottomSetWrapper와 BottomShareWrapper의 Background
+const BlackBackground = styled.div`
+  transition: all 0.3s ease-in-out;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: ${(props) =>
+    props.selectedPrayInfo !== null ? 100 : props.shareMode ? 99 : 0};
+  opacity: ${(props) =>
+    props.selectedPrayInfo !== null || props.shareMode ? 1 : 0};
+  backdrop-filter: blur(4px);
+  pointer-events: ${(props) =>
+    props.selectedPrayInfo !== null || props.shareMode ? "auto" : "none"};
 `;
