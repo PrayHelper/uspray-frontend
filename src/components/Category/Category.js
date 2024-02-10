@@ -44,10 +44,8 @@ const Category = ({
 
   const handleCheck = (e, prayId) => {
     if (e.target.checked) {
-      // 체크되었을 때의 로직
       setCheckedList([...checkedList, prayId]);
     } else {
-      // 체크 해제되었을 때의 로직
       setCheckedList(checkedList.filter((id) => id !== prayId));
     }
   };
