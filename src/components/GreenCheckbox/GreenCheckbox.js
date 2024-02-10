@@ -8,7 +8,7 @@ const GreenCheckbox = ({ id, checked, handler }) => {
         id={id}
         name={id}
         checked={checked}
-        onClick={() => handler}
+        onClick={handler}
       ></CheckboxStyle>
     </CheckboxWrapper>
   );
