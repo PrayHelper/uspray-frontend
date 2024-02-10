@@ -52,6 +52,10 @@ const MainContent = ({
     }
   }, [modifyPrayInfo]);
 
+  useEffect(() => {
+    if (!shareMode) setCheckedList([]);
+  }, [shareMode]);
+
   // 기도를 수정하는 함수
   const onModify = async (text, deadline, categoryId) => {
     modifyPray(
@@ -69,7 +73,6 @@ const MainContent = ({
 
   const onCancle = () => {
     setShareMode(false);
-    setCheckedList([]);
   };
 
   return (

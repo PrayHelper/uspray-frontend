@@ -9,6 +9,7 @@ import Overlay from "../components/Overlay/Overlay";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../hooks/useCategory";
 import { usePray } from "../hooks/usePray";
+import { useLocation } from "react-router-dom";
 import useFlutterWebview from "../hooks/useFlutterWebview";
 import Locker from "./Locker";
 import ChangeCategoryOrder from "./ChangeCategoryOrder";
@@ -47,6 +48,9 @@ const Main = () => {
   const { prayList, createPray } = prayState;
   const { shareLink, isMobile } = useFlutterWebview();
   const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const shareIdsData = query.getAll("share");
 
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
@@ -166,6 +170,7 @@ const Main = () => {
   };
 
   const onShare = async (checkedPrayIds) => {
+    setShareMode(false);
     const stringPrayIds = checkedPrayIds.join(",");
     var encodePrayIds = window.btoa(stringPrayIds.toString());
     if (isMobile()) {
@@ -187,11 +192,6 @@ const Main = () => {
       }
     }
     console.log(`${WEB_ORIGIN}/main?share=` + encodePrayIds);
-
-    /* 변환
-    const decodedPrayIds = atob(encodePrayIds).split(",");
-    console.log(decodedPrayIds);
-    */
   };
 
   const onClickPrayInput = () => {
@@ -207,7 +207,10 @@ const Main = () => {
   };
 
   useEffect(() => {
-    if (categoryList.length > 0) {
+    if (shareIdsData.length === 1) {
+      const decodedPrayIds = window.atob(shareIdsData[0]).split(",");
+      console.log(decodedPrayIds);
+    } else if (categoryList.length > 0) {
       setSelectedCategoryIndex(firstCategoryIndex);
     }
   }, []);
