@@ -9,6 +9,7 @@ import Overlay from "../components/Overlay/Overlay";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../hooks/useCategory";
 import { usePray } from "../hooks/usePray";
+import useFlutterWebview from "../hooks/useFlutterWebview";
 import Locker from "./Locker";
 import ChangeCategoryOrder from "./ChangeCategoryOrder";
 
@@ -44,6 +45,9 @@ const Main = () => {
   } = categoryState;
   const { refetchPrayList } = prayState;
   const { prayList, createPray } = prayState;
+  const { shareLink, isMobile } = useFlutterWebview();
+  const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
+
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
 
@@ -161,6 +165,35 @@ const Main = () => {
     );
   };
 
+  const onShare = async (checkedPrayIds) => {
+    const stringPrayIds = checkedPrayIds.join(",");
+    var encodePrayIds = window.btoa(stringPrayIds.toString());
+    if (isMobile()) {
+      if (/android/i.test(navigator.userAgent)) {
+        shareLink({
+          title: "Web_invite",
+          url: `${WEB_ORIGIN}/main?share=` + encodePrayIds,
+        });
+      } else if (
+        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        navigator.share
+      ) {
+        navigator.share({
+          title: "Web_invite",
+          url: `${WEB_ORIGIN}/main?share=` + encodePrayIds,
+        });
+      } else {
+        alert("공유하기가 지원되지 않는 환경 입니다.");
+      }
+    }
+    console.log(`${WEB_ORIGIN}/main?share=` + encodePrayIds);
+
+    /* 변환
+    const decodedPrayIds = atob(encodePrayIds).split(",");
+    console.log(decodedPrayIds);
+    */
+  };
+
   const onClickPrayInput = () => {
     if (categoryList.length === 0) {
       setShowModal(true);
@@ -262,6 +295,7 @@ const Main = () => {
         setCategoryRefIndex={setCategoryRefIndex}
         shareMode={shareMode}
         setShareMode={setShareMode}
+        listHandler={onShare}
       />
       {showCategorySetting && (
         <CategorySetting onClick={() => setShowCategorySetting(false)}>

@@ -24,6 +24,7 @@ const MainContent = ({
   setCategoryRefIndex,
   shareMode,
   setShareMode,
+  listHandler,
 }) => {
   const [selectedPrayInfo, setSelectedPrayInfo] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -214,9 +215,7 @@ const MainContent = ({
                 background: "var(--color-dark-green)",
                 color: "#FFFFFF",
               }}
-              onClick={() => {
-                console.log(checkedList);
-              }}
+              onClick={() => listHandler(checkedList)}
             >
               공유하기
               <ShareClickLogo src="images/ic_share_move.svg" />
