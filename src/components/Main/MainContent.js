@@ -21,7 +21,9 @@ const MainContent = ({
   onDotIconClicked,
   setClickedCategoryData,
   categoryRef,
-  setCategoryRefIndex
+  setCategoryRefIndex,
+  shareMode,
+  setShareMode,
 }) => {
   const [selectedPrayInfo, setSelectedPrayInfo] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -33,6 +35,7 @@ const MainContent = ({
   const [categoryInputValue, setCategoryInputValue] = useState(0);
   const { prayList, deletePray, completePray, modifyPray } = usePray(tabType);
   const { showToast } = useToast({});
+  const shareLength = 0;
 
   const prayModify = () => {
     setModifyPrayInfo(selectedPrayInfo);
@@ -61,6 +64,14 @@ const MainContent = ({
         },
       }
     );
+  };
+
+  const onCancle = () => {
+    setShareMode(false);
+    /*onMove();
+    if (isShare) {
+      onCheck();
+    }*/
   };
 
   return (
@@ -139,6 +150,7 @@ const MainContent = ({
               tabType={tabType}
               categoryRef={categoryRef}
               refIndex={index}
+              shareMode={shareMode}
             />
           ))}
       </Content>
@@ -179,6 +191,38 @@ const MainContent = ({
         selectedPrayInfo={selectedPrayInfo}
         onClick={() => setSelectedPrayInfo(null)}
       />
+      <BottomShareWrapper shareMode={shareMode}>
+        <ShareNumberText>{shareLength + "개 선택"}</ShareNumberText>
+        <ShareSubContainer>
+          <BottomShareButton onClick={() => onCancle()}>
+            취소하기
+            <ShareClickLogo src="image/ic_share_cancel.svg" />
+          </BottomShareButton>
+          {shareLength === 0 ? (
+            <BottomShareButton
+              style={{
+                backgroundColor: "var(--color-light-green)",
+                color: "#FFFFFF",
+                border: "1px solid #FFFFFF",
+              }}
+            >
+              공유하기
+              <ShareClickLogo src="image/ic_share_move.svg" />
+            </BottomShareButton>
+          ) : (
+            <BottomShareButton
+              style={{
+                background: "var(--color-dark-green)",
+                color: "#FFFFFF",
+              }}
+              onClick={() => setShareMode(false)}
+            >
+              공유하기
+              <ShareClickLogo src="image/ic_share_move.svg" />
+            </BottomShareButton>
+          )}
+        </ShareSubContainer>
+      </BottomShareWrapper>
     </MainContentWrapper>
   );
 };
@@ -270,4 +314,63 @@ const BlackBackground = styled.div`
   backdrop-filter: blur(4px);
   pointer-events: ${(props) =>
     props.selectedPrayInfo !== null ? "auto" : "none"};
+`;
+
+const BottomShareButton = styled.div`
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 12px;
+  border: 1px solid var(--color-dark-green);
+  border-radius: 16px;
+  color: var(--color-dark-green);
+  font-weight: 700;
+  font-size: 16px;
+`;
+
+const BottomShareWrapper = styled.div`
+  width: 100%;
+  position: fixed;
+  top: 1;
+  bottom: 0;
+  heigth: 128px;
+  border: none;
+  background-color: white;
+  border-radius: 24px 24px 0px 0px;
+  z-index: 103;
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
+  opacity: ${(props) => (props.shareMode ? 1 : 0)};
+  visibility: ${(props) => (props.shareMode ? "visible" : "hidden")};
+  transform: ${(props) =>
+    props.shareMode ? "translateY(0%)" : "translateY(100%)"};
+`;
+
+const ShareSubContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  heigth: 75px;
+  border: none;
+  z-index: 101;
+  gap: 14px;
+  margin-top: 8px;
+  padding: 0px 24px 12px 24px;
+  box-sizing: border-box;
+`;
+const ShareNumberText = styled.div`
+  height: 17px;
+  display: flex;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--color-dark-green);
+  margin-right: 26px;
+  margin-top: 12px;
+  flex-direction: row-reverse;
+`;
+const ShareClickLogo = styled.img`
+  height: 16px;
+  width: 16px;
+  margin-left: 20px;
 `;

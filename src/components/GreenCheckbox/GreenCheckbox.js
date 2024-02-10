@@ -1,6 +1,6 @@
-import { CheckboxStyle, CheckboxWrapper, StyledLabel } from "./style";
+import { CheckboxStyle, CheckboxWrapper } from "./style";
 
-const GreenCheckbox = ({ id, label, checked, handler }) => {
+const GreenCheckbox = ({ id, checked, handler }) => {
   return (
     <CheckboxWrapper>
       <CheckboxStyle
@@ -10,7 +10,6 @@ const GreenCheckbox = ({ id, label, checked, handler }) => {
         checked={checked}
         onClick={() => handler}
       ></CheckboxStyle>
-      <StyledLabel htmlFor={id}>{label}</StyledLabel>
     </CheckboxWrapper>
   );
 };

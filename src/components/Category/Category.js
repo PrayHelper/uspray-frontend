@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { usePray } from "../../hooks/usePray";
+import GreenCheckbox from "../GreenCheckbox/GreenCheckbox";
 
 const ICON_HEART_FILLED = "images/ic_filled_heart.svg";
 const ICON_HEART_EMPTY = "images/ic_empty_heart.svg";
@@ -14,9 +15,10 @@ const Category = ({
   setClickedCategoryData,
   tabType,
   categoryRef,
-  refIndex
+  refIndex,
+  shareMode,
 }) => {
-  const {todayPray, cancelPray }= usePray(tabType);
+  const { todayPray, cancelPray } = usePray(tabType);
 
   const handleClick = (e, pray) => {
     e.stopPropagation();
@@ -28,6 +30,7 @@ const Category = ({
   };
 
   const titleClick = (pray) => {
+    if (shareMode) return;
     setSelectedPrayInfo({
       categoryId: pray.categoryId,
       content: pray.content,
@@ -43,7 +46,7 @@ const Category = ({
   };
 
   return (
-    <CategoryContainer ref={(el)=>categoryRef.current[refIndex]=el}>
+    <CategoryContainer ref={(el) => (categoryRef.current[refIndex] = el)}>
       <Title color={color}>
         {title}
         <img
@@ -61,11 +64,15 @@ const Category = ({
             >
               {pray.content}
             </ItemText>
-            <img
-              src={pray.isPrayedToday ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
-              alt="heart_icon"
-              onClick={(e) => handleClick(e, pray)}
-            />
+            {shareMode ? (
+              <GreenCheckbox id={pray.prayId} />
+            ) : (
+              <img
+                src={pray.isPrayedToday ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
+                alt="heart_icon"
+                onClick={(e) => handleClick(e, pray)}
+              />
+            )}
           </Item>
         ))}
       </ItemList>

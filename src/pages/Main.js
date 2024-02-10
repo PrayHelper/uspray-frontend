@@ -260,6 +260,8 @@ const Main = () => {
         setClickedCategoryData={setClickedCategoryData}
         categoryRef={categoryRef}
         setCategoryRefIndex={setCategoryRefIndex}
+        shareMode={shareMode}
+        setShareMode={setShareMode}
       />
       {showCategorySetting && (
         <CategorySetting onClick={() => setShowCategorySetting(false)}>
@@ -354,30 +356,34 @@ const Main = () => {
           <ChangeCategoryOrder setIsOverlayOn={setIsOrderOverlayOn} />
         </Overlay>
       )}
-      <OptionBtn
-        src="images/ic_main_option.svg"
-        alt="main_option_icon"
-        onClick={() => setShowOption(true)}
-        isVisible={!showOption}
-        movingDistance={0}
-      />
-      <OptionBtn
-        src="images/ic_main_option_close.svg"
-        alt="main_option_close_icon"
-        onClick={() => setShowOption(false)}
-        isVisible={showOption}
-        movingDistance={0}
-      />
-      <OptionBtn
-        src="images/ic_main_order.svg"
-        alt="main_order_icon"
-        onClick={() => {
-          setIsOrderOverlayOn(true);
-          setShowOption(false);
-        }}
-        isVisible={showOption}
-        movingDistance={72}
-      />
+      {!shareMode && (
+        <>
+          <OptionBtn
+            src="images/ic_main_option.svg"
+            alt="main_option_icon"
+            onClick={() => setShowOption(true)}
+            isVisible={!showOption}
+            movingDistance={0}
+          />
+          <OptionBtn
+            src="images/ic_main_option_close.svg"
+            alt="main_option_close_icon"
+            onClick={() => setShowOption(false)}
+            isVisible={showOption}
+            movingDistance={0}
+          />
+          <OptionBtn
+            src="images/ic_main_order.svg"
+            alt="main_order_icon"
+            onClick={() => {
+              setIsOrderOverlayOn(true);
+              setShowOption(false);
+            }}
+            isVisible={showOption}
+            movingDistance={72}
+          />
+        </>
+      )}
       {tab === "내가 쓴" ? (
         <OptionBtn
           src="images/ic_main_share.svg"
