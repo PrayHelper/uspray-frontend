@@ -47,58 +47,53 @@ const AppleRedirecting = () => {
     useAuthToken();
 
   useEffect(() => {
-    (async () => {
-      await fetch(`${process.env.REACT_APP_API_ORIGIN}/apple/login`, {
-        method: "POST",
-        body: code,
-      });
-    })();
-  }, [code]);
+    const login = async () => {
+      const api = `/apple/login`;
+      const data = code;
 
-  const login = async () => {
-    const api = `/apple/login`;
-    const data = code;
+      try {
+        const res = await publicapi.post(api, data);
+        if (res.status === 200) {
+          if (isMobile()) {
+            const deviceToken = await getDeviceToken();
 
-    try {
-      const res = await publicapi.post(api, data);
-      if (res.status === 200) {
-        if (isMobile()) {
-          const deviceToken = await getDeviceToken();
+            sendDeviceToken(
+              {
+                device_token: deviceToken,
+              },
+              {
+                onSuccess: (res) => alert(res.status),
+                onError: (e) => alert(e.response.status),
+              }
+            );
+          } else {
+            showToast({
+              message: "푸쉬 알림은 모바일에서만 받을 수 있습니다.",
+              theme: ToastTheme.ERROR,
+            });
+          }
 
-          sendDeviceToken(
-            {
-              device_token: deviceToken,
-            },
-            {
-              onSuccess: (res) => alert(res.status),
-              onError: (e) => alert(e.response.status),
-            }
-          );
-        } else {
+          navigate("/main");
+          setAutorized();
+
+          setAccessToken(res.data.data.accessToken);
+          await setRefreshToken(res.data.data.refreshToken);
+        }
+      } catch (e) {
+        console.log(e);
+        if (e.response.status === 401) {
           showToast({
-            message: "푸쉬 알림은 모바일에서만 받을 수 있습니다.",
+            message: "회원정보가 일치하지 않습니다.",
             theme: ToastTheme.ERROR,
           });
+
+          navigate("/");
         }
-
-        navigate("/main");
-        setAutorized();
-
-        setAccessToken(res.data.data.accessToken);
-        await setRefreshToken(res.data.data.refreshToken);
       }
-    } catch (e) {
-      console.log(e);
-      if (e.response.status === 401) {
-        showToast({
-          message: "회원정보가 일치하지 않습니다.",
-          theme: ToastTheme.ERROR,
-        });
+    };
 
-        navigate("/");
-      }
-    }
-  };
+    login();
+  }, [code]);
 
   return null;
 };
