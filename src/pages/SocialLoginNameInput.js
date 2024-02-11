@@ -97,9 +97,6 @@ const SocialLoginNameInput = () => {
 
         setAccessToken(res.data.data.accessToken);
         await setRefreshToken(res.data.data.refreshToken);
-
-        console.log("access: ", getAccessToken());
-        console.log("refresh: ", await getRefreshToken());
       }
     } catch (e) {
       console.log(e);
