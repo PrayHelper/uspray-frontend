@@ -27,13 +27,13 @@ const useApi = () => {
   };
 
   // put 방식의 axios 호출
-  const putFetcher = async (url, data) => {
+  const putFetcher = async (url, data, headers) => {
     const response = await serverapi.put(
       url,
       { ...data },
       {
         responseType: "json",
-        headers: { "Content-Type": "application/json" },
+        headers: { ...headers, "Content-Type": "application/json" },
       }
     );
     return response;

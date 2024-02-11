@@ -43,6 +43,7 @@ import GroupDetail from "./components/Group/GroupDetail/GroupDetail";
 import CreateGroup from "./pages/CreateGroup";
 import LeaveGroup from "./pages/LeaveGroup";
 import SocialLoginNameInput from "./pages/SocialLoginNameInput";
+import SocialRedirecting from "./pages/SocialRedirecting";
 import DeleteUser from "./pages/DeleteUser";
 import ChangeCategoryOrder from "./pages/ChangeCategoryOrder";
 
@@ -121,14 +122,17 @@ function App() {
                   path="/socialLoginNameInput"
                   element={<SocialLoginNameInput />}
                 />
+                <Route
+                  path="/social-redirecting"
+                  element={<SocialRedirecting />}
+                />
                 <Route path="/findAccount" element={<Find />} />
                 <Route path="/findID" element={<FindId />}></Route>
                 <Route path="/findIDResult" element={<FindIdResult />}></Route>
                 <Route path="/findPW" element={<FindPassword />}></Route>
                 <Route
                   path="/findPWResult"
-                  element={<FindPasswordResult />}
-                ></Route>
+                  element={<FindPasswordResult />}></Route>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/loading" element={<SplashScreen />} />
                 <Route path="*" element={<NotFound />} />
