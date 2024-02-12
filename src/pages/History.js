@@ -174,7 +174,7 @@ const History = () => {
           setShowSubModal(false);
           setShowModal(false);
           setDeletedItemIds((prev) => [...prev, historyDetail.historyId]);
-          tab === "personal" ? fetchMyData() : fetchSharedData();
+          tab === "personal" ? refetchMyData() : refetchSharedData();
           resetInputData();
           showToast({});
         },
@@ -188,9 +188,7 @@ const History = () => {
     }
   }, [selectedHistoryId]);
 
-  useEffect(() => {
-    console.log("deletedItemIds", deletedItemIds);
-  }, [deletedItemIds]);
+  useEffect(() => {}, [deletedItemIds]);
 
   useEffect(() => {
     if (historyDetail) {
