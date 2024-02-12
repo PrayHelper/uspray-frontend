@@ -61,11 +61,13 @@ const Category = ({
     <CategoryContainer ref={(el) => (categoryRef.current[refIndex] = el)}>
       <Title color={color}>
         {title}
-        <img
-          src="/images/ic_dot.svg"
-          alt="dot_icon"
-          onClick={handleCategoryTitleClick}
-        />
+        {!shareMode && (
+          <img
+            src="/images/ic_dot.svg"
+            alt="dot_icon"
+            onClick={handleCategoryTitleClick}
+          />
+        )}
       </Title>
       <ItemList>
         {prays.map((pray) => (

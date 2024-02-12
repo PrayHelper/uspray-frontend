@@ -1,11 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 import GroupPrayItem from "./GroupPrayItem";
-import { useCategory } from "../../../hooks/useCategory";
 
-const GroupPrayList = ({ group, groupPrayList, isData }) => {
-  const { categoryList, firstCategoryIndex } = useCategory("shared");
-
+const GroupPrayList = ({
+  group,
+  groupPrayList,
+  isData,
+  categoryList,
+  firstCategoryIndex,
+  setTab,
+}) => {
   const groupedData = Object.keys(groupPrayList).map((date) => {
     return {
       date,
@@ -26,6 +30,7 @@ const GroupPrayList = ({ group, groupPrayList, isData }) => {
                     pray={pray}
                     categoryList={categoryList}
                     firstCategoryIndex={firstCategoryIndex}
+                    setTab={setTab}
                   />
                 ))}
               </PrayContent>
