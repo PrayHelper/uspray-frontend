@@ -246,12 +246,13 @@ const MainContentWrapper = styled.div`
   flex-direction: column;
   height: 100vh;
   width: 100%;
-  position: relative;
+  position: fixed;
+  top: 139px;
   background-color: var(--color-white);
   border-radius: 32px 32px 0px 0px;
   box-sizing: border-box;
   overflow-y: auto;
-  z-index: ${(props) => (props.shareMode ? 101 : "auto")};
+  z-index: ${(props) => (props.shareMode ? 200 : "auto")};
   &::-webkit-scrollbar {
     display: none;
   }
@@ -267,7 +268,7 @@ const TopWrapper = styled.div`
   top: 0;
   background-color: rgba(255, 255, 255, 0.85);
   border-radius: 24px 24px 0 0;
-  z-index: ${(props) => (props.shareMode ? 102 : 50)};
+  z-index: ${(props) => (props.shareMode ? 201 : 50)};
   backdrop-filter: blur(12px);
 `;
 
@@ -328,7 +329,7 @@ const BottomShareWrapper = styled.div`
   border: none;
   background-color: white;
   border-radius: 24px 24px 0px 0px;
-  z-index: 104;
+  z-index: 202;
   box-sizing: border-box;
   transition: all 0.3s ease-in-out;
   opacity: ${(props) => (props.shareMode ? 1 : 0)};
@@ -394,7 +395,7 @@ const BlackBackground = styled.div`
   left: 0;
   bottom: 0;
   z-index: ${(props) =>
-    props.selectedPrayInfo !== null ? 100 : props.shareMode ? 99 : 0};
+    props.selectedPrayInfo !== null ? 100 : props.shareMode ? 199 : 0};
   opacity: ${(props) =>
     props.selectedPrayInfo !== null || props.shareMode ? 1 : 0};
   backdrop-filter: blur(4px);
