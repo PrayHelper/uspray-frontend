@@ -12,6 +12,7 @@ const S = {
     justify-content: space-between;
     height: 100vh;
     width: 100%;
+    background-color: var(--color-white);
   `,
   LogoWrapper: styled.div`
     display: flex;
@@ -89,10 +90,12 @@ const SocialLogin = () => {
   }, []);
 
   const continueWithKakao = () => {
-    console.log("continueWithKakao");
+    window.location.href =
+      "https://spring.dev.uspray.kr/oauth2/authorization/kakao";
   };
   const continueWithNaver = () => {
-    console.log("continueWithNaver");
+    window.location.href =
+      "https://spring.dev.uspray.kr/oauth2/authorization/naver";
   };
   const continueWithApple = () => {
     console.log("continueWithApple");
@@ -119,8 +122,7 @@ const SocialLogin = () => {
           <S.BottomLink
             onClick={() => {
               console.log("!");
-            }}
-          >
+            }}>
             문의하기
           </S.BottomLink>
         </S.BottomLinks>

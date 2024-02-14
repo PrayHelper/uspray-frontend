@@ -182,6 +182,7 @@ const S = {
     justify-content: space-between;
     height: 100vh;
     width: 100%;
+    background-color: var(--color-white);
   `,
   TopArea: styled.div`
     margin-top: 80px;
