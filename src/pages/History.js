@@ -293,7 +293,9 @@ const History = () => {
               <HisContent
                 name={el.name}
                 content={el.content}
-                date={`${el.createdAt.split("T")[0]} ~ ${el.deadline}`}
+                date={`${el.createdAt
+                  .split("T")[0]
+                  .replace(/-/g, ".")} ~ ${el.deadline.replace(/-/g, ".")}`}
               />
               <div ref={ref}></div>
             </div>
@@ -311,7 +313,9 @@ const History = () => {
               <HisContent
                 name={el.name}
                 content={el.content}
-                date={`${el.createdAt.split("T")[0]} ~ ${el.deadline}`}
+                date={`${el.createdAt.split("T")[0].replace(/-/g, ".")} ~ ${
+                  el.deadline
+                }.replace(/-/g, ".")`}
               />
               <div ref={ref}></div>
             </div>
