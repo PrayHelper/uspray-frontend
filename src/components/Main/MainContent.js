@@ -160,7 +160,8 @@ const MainContent = ({
             />
           ))}
       </Content>
-      <BottomSetWrapper selectedPrayInfo={selectedPrayInfo}>
+    </MainContentWrapper>
+    <BottomSetWrapper selectedPrayInfo={selectedPrayInfo}>
         <BottomButtonWrapper>
           <img src={completeImage} />
           <BottomButtonText
@@ -193,7 +194,6 @@ const MainContent = ({
           </BottomButtonText>
         </BottomButtonWrapper>
       </BottomSetWrapper>
-
       <BottomShareWrapper shareMode={shareMode}>
         <ShareNumberText>{checkedList.length + "개 선택"}</ShareNumberText>
         <ShareButtonContainer>
@@ -226,8 +226,6 @@ const MainContent = ({
           )}
         </ShareButtonContainer>
       </BottomShareWrapper>
-      
-    </MainContentWrapper>
     <BlackBackground
     selectedPrayInfo={selectedPrayInfo}
     shareMode={shareMode}
@@ -292,8 +290,8 @@ const BottomSetWrapper = styled.div`
   width: 100%;
   padding: 37px 24px;
   transition: all 0.3s ease-in-out;
-  bottom: ${(props) => (props.selectedPrayInfo == null ? "-100%" : "0px")};
-  z-index: 101;
+  bottom: ${(props) => (props.selectedPrayInfo === null ? "-100%" : "0px")};
+  z-index: 202;
   border-radius: 24px 24px 0px 0px;
   background: #fff;
 `;
