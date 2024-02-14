@@ -14,7 +14,7 @@ import { useCategory } from "../../../hooks/useCategory";
 
 const GroupDetail = ({ group, setShowGroupDetail }) => {
   const [showGroupSetting, setShowGroupSetting] = useState(false);
-  const { groupPrayList, groupNotification } = useGroupPray(group.id);
+  const { groupPrayList, groupNotification, importPray } = useGroupPray(group.id);
   const isData = Object.keys(groupPrayList).length !== 0;
   const { shareLink, isMobile } = useFlutterWebview();
   const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
@@ -57,7 +57,17 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
   };
 
   const onGroupPray = async (checkedPrayIds) => {
-    console.log("checkedPrayIds", checkedPrayIds);
+    importPray(
+      {
+        groupId: group.id,
+        prayId: checkedPrayIds,
+      },
+      {
+        onSuccess: () => {
+          setShareMode(false);
+        },
+      }
+    );
   };
 
   return (

@@ -11,7 +11,6 @@ const GroupInfo = ({
   categoryList,
   firstCategoryIndex,
   setShareMode,
-  setTab,
 }) => {
   const { addGroupPray, groupHeartCount } = useGroupPray(group.id);
   const [showSubModal, setShowSubModal] = useState(false);
@@ -121,7 +120,6 @@ const GroupInfo = ({
         )}
         <LoadButton
           onClick={() => {
-            setTab("personal");
             setShareMode(true);
           }}
         >
