@@ -430,6 +430,7 @@ const Main = () => {
             src="images/ic_main_order.svg"
             alt="main_order_icon"
             onClick={() => {
+              if (categoryList.length === 0) {setShowModal(true); return;}
               setIsOrderOverlayOn(true);
               setShowOption(false);
             }}
