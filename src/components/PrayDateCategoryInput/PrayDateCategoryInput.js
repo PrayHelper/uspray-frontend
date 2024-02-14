@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import styled from "styled-components";
 import BlackScreen from "../BlackScreen/BlackScreen";
 import CategoryTag from "../CategoryTag/CategoryTag";
+import ButtonV2, { ButtonTheme } from "../ButtonV2/ButtonV2";
 
 const PrayDateCategoryInput = ({
   categoryList, // 메인의 카테고리 목록
@@ -102,7 +103,15 @@ const PrayDateCategoryInput = ({
             />
           </SubModalCategory>
         </div>
-        <SubModalBottom onClick={onClickFunc}>{buttonText}</SubModalBottom>
+        <FixedButtonContainer>
+          <ButtonV2
+            buttonTheme={ButtonTheme.FILLED}
+            disabled={inputCount === 0}
+            handler={onClickFunc}
+          >
+            {buttonText}
+          </ButtonV2>
+        </FixedButtonContainer>
       </SubModalWrapper>
     </>
   );
@@ -177,19 +186,13 @@ const Countwords = styled.span`
   color: var(--color-secondary-grey);
 `;
 
-const SubModalBottom = styled.div`
-  background: var(--color-dark-green);
-  border-radius: 16px;
-  font-weight: 500;
-  font-size: 16px;
-  text-align: center;
-  color: var(--color-white);
-  padding: 20px 0px;
-  &:active {
-    transition: all 0.2s ease-in-out;
-    filter: ${(props) =>
-      props.disabled ? "brightness(1)" : "brightness(0.9)"};
-  }
+const FixedButtonContainer = styled.div`
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
 `;
 
 const LockerCountText = styled.span`
