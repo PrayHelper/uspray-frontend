@@ -13,6 +13,7 @@ import { useLocation } from "react-router-dom";
 import useFlutterWebview from "../hooks/useFlutterWebview";
 import { useShare } from "../hooks/useShare";
 import Locker from "./Locker";
+import ChangeCategoryOrder from "./ChangeCategoryOrder";
 
 const Main = () => {
   const [tab, setTab] = useState("내가 쓴");
@@ -22,6 +23,10 @@ const Main = () => {
 
   const [showSubModal, setShowSubModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showOption, setShowOption] = useState(false);
+  const [shareMode, setShareMode] = useState(false);
+  const [isLockerOverlayOn, setIsLockerOverlayOn] = useState(false);
+  const [isOrderOverlayOn, setIsOrderOverlayOn] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
@@ -29,8 +34,6 @@ const Main = () => {
   const [clickedCategoryData, setClickedCategoryData] = useState({});
   const [inputValue, setInputValue] = useState("");
   const tabType = tab === "내가 쓴" ? "personal" : "shared";
-  const [isLockerOverlayOn, setIsLockerOverlayOn] = useState(false);
-  const [isOrderOverlayOn, setIsOrderOverlayOn] = useState(false);
   const categoryState = useCategory(tabType);
   const prayState = usePray(tabType);
   const { refetchCategoryList } = categoryState;
@@ -137,7 +140,7 @@ const Main = () => {
   };
 
   const clickLocker = () => {
-    setIsOverlayOn(true);
+    setIsLockerOverlayOn(true);
   };
 
   const handleInputChange = (e) => {
@@ -590,4 +593,15 @@ const ColorDrop = styled.div`
     display: ${(props) =>
       props.color === props.selectedColor ? "block" : "none"};
   }
+`;
+
+const OptionBtn = styled.img`
+  opacity: ${(props) => (props.isVisible ? 1 : 0)};
+  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
+  position: fixed;
+  position: fixed;
+  bottom: ${(props) =>
+    props.isVisible ? `calc(80px + ${props.movingDistance}px)` : "80px"};
+  right: 20px;
+  transition: all 0.2s ease;
 `;
