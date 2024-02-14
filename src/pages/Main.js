@@ -38,7 +38,7 @@ const Main = () => {
     deleteCategory,
   } = categoryState;
   const { refetchPrayList } = prayState;
-  const { prayList, createPray } = prayState;
+  const { createPray } = prayState;
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
 
@@ -118,6 +118,7 @@ const Main = () => {
 
   useEffect(() => {
     refetchPrayList();
+    setSelectedCategoryIndex(firstCategoryIndex);
   }, [categoryList]);
 
   const handleTabChange = (newTab) => {
