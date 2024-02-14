@@ -244,7 +244,7 @@ export default MainContent;
 const MainContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc( 100vh - 139px );
   width: 100%;
   position: fixed;
   top: 139px;
@@ -267,9 +267,13 @@ const TopWrapper = styled.div`
   position: sticky;
   top: 0;
   background-color: rgba(255, 255, 255, 0.85);
-  border-radius: 24px 24px 0 0;
+  border-radius: 24px;
   z-index: ${(props) => (props.shareMode ? 201 : 50)};
   backdrop-filter: blur(12px);
+  border: ${(props) =>
+    props.shareMode ? "1px solid rgba(0, 0, 0, 0.1)" : "none"};
+    box-shadow: ${(props) =>
+      props.shareMode ? "0px 0px 4px rgba(0, 0, 0, 0.1)" : "none"};
 `;
 
 // 카테고리 박스
@@ -277,7 +281,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding: 8px 16px 60px;
+  padding: 8px 16px 124px;
 `;
 
 // 기도제목 눌렀을 때 아래에서 나오는 옵션 박스
@@ -336,6 +340,7 @@ const BottomShareWrapper = styled.div`
   visibility: ${(props) => (props.shareMode ? "visible" : "hidden")};
   transform: ${(props) =>
     props.shareMode ? "translateY(0%)" : "translateY(100%)"};
+    border: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 // BottomShareWrapper의 버튼 컨테이너
