@@ -76,7 +76,7 @@ const MainContent = ({
     setShareMode(false);
   };
 
-  return (
+  return (<>
     <MainContentWrapper shareMode={shareMode}>
       {showModal && (
         <>
@@ -127,15 +127,7 @@ const MainContent = ({
           }
         />
       )}
-      <BlackBackground
-        selectedPrayInfo={selectedPrayInfo}
-        shareMode={shareMode}
-        onClick={() => {
-          if (!shareMode) {
-            setSelectedPrayInfo(null);
-          }
-        }}
-      />
+      
       <TopWrapper shareMode={shareMode}>
         <CategoryTag
           categoryList={categoryList}
@@ -234,7 +226,17 @@ const MainContent = ({
           )}
         </ShareButtonContainer>
       </BottomShareWrapper>
+      
     </MainContentWrapper>
+    <BlackBackground
+    selectedPrayInfo={selectedPrayInfo}
+    shareMode={shareMode}
+    onClick={() => {
+      if (!shareMode) {
+        setSelectedPrayInfo(null);
+      }
+    }}
+  /></>
   );
 };
 
@@ -395,7 +397,7 @@ const BlackBackground = styled.div`
   left: 0;
   bottom: 0;
   z-index: ${(props) =>
-    props.selectedPrayInfo !== null ? 100 : props.shareMode ? 199 : 0};
+    props.selectedPrayInfo !== null ? 100 : props.shareMode ? 198 : 0};
   opacity: ${(props) =>
     props.selectedPrayInfo !== null || props.shareMode ? 1 : 0};
   backdrop-filter: blur(4px);
