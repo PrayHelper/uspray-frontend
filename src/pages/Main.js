@@ -24,6 +24,10 @@ const Main = () => {
 
   const [showSubModal, setShowSubModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showOption, setShowOption] = useState(false);
+  const [shareMode, setShareMode] = useState(false);
+  const [isLockerOverlayOn, setIsLockerOverlayOn] = useState(false);
+  const [isOrderOverlayOn, setIsOrderOverlayOn] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
@@ -146,7 +150,7 @@ const Main = () => {
   };
 
   const clickLocker = () => {
-    setIsOverlayOn(true);
+    setIsLockerOverlayOn(true);
   };
 
   const handleInputChange = (e) => {

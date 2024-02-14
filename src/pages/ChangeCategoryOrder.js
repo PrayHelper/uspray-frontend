@@ -31,7 +31,7 @@ const CategoryItem = ({ categoryItem, index }) => {
   );
 };
 
-const ChangeCategoryOrder = () => {
+const ChangeCategoryOrder = ({ setIsOverlayOn }) => {
   const { categoryType } = useParams(); // "personal" or "shared"
   const { categoryList, updateCategoryOrder } = useCategoryTemp_by_limeojin({
     categoryType,
