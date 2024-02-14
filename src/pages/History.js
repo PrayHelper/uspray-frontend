@@ -283,7 +283,6 @@ const History = () => {
       </div>
       {tab === "personal" && (
         <div style={{ paddingTop: "115px" }}>
-          {/* <div> */}
           {personalHistoryList.map((el) => (
             <div
               onClick={() => setSelectedHistoryId(el.historyId)}
@@ -313,9 +312,9 @@ const History = () => {
               <HisContent
                 name={el.name}
                 content={el.content}
-                date={`${el.createdAt.split("T")[0].replace(/-/g, ".")} ~ ${
-                  el.deadline
-                }.replace(/-/g, ".")`}
+                date={`${el.createdAt
+                  .split("T")[0]
+                  .replace(/-/g, ".")} ~ ${el.deadline.replace(/-/g, ".")}`}
               />
               <div ref={ref}></div>
             </div>
