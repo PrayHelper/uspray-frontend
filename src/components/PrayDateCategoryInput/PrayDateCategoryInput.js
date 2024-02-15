@@ -195,7 +195,7 @@ const SubModalBottom = styled.div`
 const LockerCountText = styled.span`
   font-size: 16px;
   color: var(--color-green);
-  padding: 0px 2px 4px 2px;
+  padding: 0px 2px 4px;
   height: 23px;
   border-bottom: 1px solid var(--color-white-green);
   margin-bottom: 12px;
