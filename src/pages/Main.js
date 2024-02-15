@@ -607,7 +607,6 @@ const OptionBtn = styled.img`
   opacity: ${(props) => (props.isVisible ? 1 : 0)};
   visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
   position: fixed;
-  position: fixed;
   bottom: ${(props) =>
     props.isVisible ? `calc(80px + ${props.movingDistance}px)` : "80px"};
   right: 20px;
