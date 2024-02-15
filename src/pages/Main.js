@@ -59,10 +59,12 @@ const Main = () => {
   const [categoryRefIndex, setCategoryRefIndex] = useState(0);
   const categoryRef = useRef([]);
 
-  useEffect(()=>{
-    if (categoryRef.current[categoryRefIndex])
-    {
-      categoryRef.current[categoryRefIndex].scrollIntoView({behavior: "smooth", block: "center"});
+  useEffect(() => {
+    if (categoryRef.current[categoryRefIndex]) {
+      categoryRef.current[categoryRefIndex].scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }
   }, [categoryRef, categoryRefIndex]);
 
@@ -78,10 +80,8 @@ const Main = () => {
   const [selectedColor, setSelectedColor] = useState(ColorList[0]);
 
   useEffect(() => {
-    if (dotIconClicked)
-      setInputValue(clickedCategoryData.name);
-    else
-      setInputValue("");
+    if (dotIconClicked) setInputValue(clickedCategoryData.name);
+    else setInputValue("");
   }, [clickedCategoryData, dotIconClicked]);
 
   useEffect(() => {
@@ -380,7 +380,9 @@ const Main = () => {
                   type: tabType,
                 })
               }
-            >카테고리 수정</ButtonV2>
+            >
+              카테고리 수정
+            </ButtonV2>
           </FixedButtonContainer>
           <ColorPalette>
             {ColorList.map((color) => (
@@ -398,8 +400,11 @@ const Main = () => {
         </CategorySetting>
       )}
       {isLockerOverlayOn && (
-        <Overlay isLockerOverlayOn={isLockerOverlayOn}>
-          <Locker setIsLockerOverlayOn={setIsLockerOverlayOn} />
+        <Overlay isOverlayOn={isLockerOverlayOn}>
+          <Locker
+            setIsOverlayOn={setIsLockerOverlayOn}
+            refetchPrayList={refetchPrayList}
+          />
         </Overlay>
       )}
       {isOrderOverlayOn && (
@@ -427,7 +432,10 @@ const Main = () => {
             src="images/ic_main_order.svg"
             alt="main_order_icon"
             onClick={() => {
-              if (categoryList.length === 0) {setShowModal(true); return;}
+              if (categoryList.length === 0) {
+                setShowModal(true);
+                return;
+              }
               setIsOrderOverlayOn(true);
               setShowOption(false);
             }}
