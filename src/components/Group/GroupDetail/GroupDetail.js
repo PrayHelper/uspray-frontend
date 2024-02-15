@@ -17,7 +17,7 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
   const { groupPrayList, groupNotification, takePersonalPray } = useGroupPray(
     group.id
   );
-  const isData = Object.keys(groupPrayList).length !== 0;
+  const isGroupPrayListData = Object.keys(groupPrayList).length !== 0;
   const { shareLink, isMobile } = useFlutterWebview();
   const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
 
@@ -94,7 +94,7 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
       <GroupWrapper>
         <GroupInfo
           group={group}
-          isData={isData}
+          isData={isGroupPrayListData}
           categoryList={categoryList}
           firstCategoryIndex={firstCategoryIndex}
           setShareMode={setShareMode}
@@ -103,7 +103,7 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
         <GroupPrayList
           group={group}
           groupPrayList={groupPrayList}
-          isData={isData}
+          isData={isGroupPrayListData}
           categoryList={categoryList}
           firstCategoryIndex={firstCategoryIndex}
           setTab={setTab}
