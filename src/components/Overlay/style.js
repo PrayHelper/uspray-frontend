@@ -8,7 +8,7 @@ export const OverlayWrapper = styled.div`
   width: 100%;
   height: 100%;
   background-color: white;
-  z-index: 1000;
+  z-index: 104;
   opacity: ${(props) => (props.isOverlayOn ? "1" : "0")};
   pointer-events: ${(props) => (props.isOverlayOn ? "auto" : "none")};
   overflow-y: auto;

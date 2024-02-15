@@ -341,7 +341,10 @@ const Main = () => {
       )}
       {isOverlayOn && (
         <Overlay isOverlayOn={isOverlayOn}>
-          <Locker setIsOverlayOn={setIsOverlayOn} />
+          <Locker
+            setIsOverlayOn={setIsOverlayOn}
+            refetchPrayList={refetchPrayList}
+          />
         </Overlay>
       )}
     </MainWrapper>

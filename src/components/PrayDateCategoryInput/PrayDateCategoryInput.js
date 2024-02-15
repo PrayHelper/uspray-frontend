@@ -23,6 +23,7 @@ const PrayDateCategoryInput = ({
   setUpdateCategory, // api 호출용 카테고리 데이터 저장 함수
   onClickFunc, // 버튼 눌렀을 때 이벤트 함수
   buttonText, // 버튼 text
+  lockerCount, // [보관함에서만 사용] 선택된 기도제목 개수
 }) => {
   const outside = useRef();
   const modalInputRef = useRef(null);
@@ -60,26 +61,32 @@ const PrayDateCategoryInput = ({
       >
         <div style={{ display: "flex", gap: "16px", flexDirection: "column" }}>
           <SubModalTop>
-            <ModalInputWrapper>
-              <ModalInput
-                placeholder={inputPlaceHolder}
-                maxRows={maxrow}
-                minRows={1}
-                cacheMeasurements
-                maxLength={maxlen}
-                onChange={onInputHandler}
-                disabled={isDefault ? true : false}
-                value={value}
-                ref={modalInputRef}
-              />
-              {isShowWordCount && (
-                <Countwords>
-                  <p>
-                    {inputCount}자 / {maxlen}자
-                  </p>
-                </Countwords>
-              )}
-            </ModalInputWrapper>
+            {lockerCount === 0 ? (
+              <ModalInputWrapper>
+                <ModalInput
+                  placeholder={inputPlaceHolder}
+                  maxRows={maxrow}
+                  minRows={1}
+                  cacheMeasurements
+                  maxLength={maxlen}
+                  onChange={onInputHandler}
+                  disabled={isDefault ? true : false}
+                  value={value}
+                  ref={modalInputRef}
+                />
+                {isShowWordCount && (
+                  <Countwords>
+                    <p>
+                      {inputCount}자 / {maxlen}자
+                    </p>
+                  </Countwords>
+                )}
+              </ModalInputWrapper>
+            ) : (
+              <LockerCountText>
+                {lockerCount}개의 기도제목을 선택했어요
+              </LockerCountText>
+            )}
             <SelectDate
               setUpdateDate={setUpdateDate}
               showSubModal={showSubModal}
@@ -107,6 +114,7 @@ PrayDateCategoryInput.defaultProps = {
   maxrow: 3,
   isShowWordCount: true,
   isDefault: false,
+  lockerCount: 0,
 };
 
 export default PrayDateCategoryInput;
@@ -182,4 +190,13 @@ const SubModalBottom = styled.div`
     filter: ${(props) =>
       props.disabled ? "brightness(1)" : "brightness(0.9)"};
   }
+`;
+
+const LockerCountText = styled.span`
+  font-size: 16px;
+  color: var(--color-green);
+  padding: 0px 2px 4px;
+  height: 23px;
+  border-bottom: 1px solid var(--color-white-green);
+  margin-bottom: 12px;
 `;
