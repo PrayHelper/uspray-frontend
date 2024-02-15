@@ -111,7 +111,7 @@ export const useGroupPray = (groupId) => {
     }
   );
 
-  const { mutate: importPray } = useMutation(
+  const { mutate: takePersonalPray } = useMutation(
     async (data) => {
       return await postFetcher("/pray/pray-to-grouppray", data);
     },
@@ -135,7 +135,6 @@ export const useGroupPray = (groupId) => {
     }
   );
 
-
   const groupPrayData = data?.data.data?.groupPray || {};
   const groupHeartCount = data?.data.data?.heartCount;
   const groupPrayList =
@@ -151,6 +150,6 @@ export const useGroupPray = (groupId) => {
     deleteGroupPray,
     likeGroupPray,
     scrapGroupPray,
-    importPray,
+    takePersonalPray,
   };
 };
