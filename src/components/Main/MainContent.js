@@ -21,7 +21,7 @@ const MainContent = ({
   onDotIconClicked,
   setClickedCategoryData,
   categoryRef,
-  setCategoryRefIndex
+  setCategoryRefIndex,
 }) => {
   const [selectedPrayInfo, setSelectedPrayInfo] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -51,7 +51,12 @@ const MainContent = ({
   // 기도를 수정하는 함수
   const onModify = async (text, deadline, categoryId) => {
     modifyPray(
-      { content: text, deadline: deadline, categoryId: categoryId },
+      {
+        prayId: modifyPrayInfo.prayId,
+        content: text,
+        deadline: deadline,
+        categoryId: categoryId,
+      },
       {
         onSuccess: () => {
           setShowSubModal(false);
@@ -107,7 +112,7 @@ const MainContent = ({
           setUpdateCategory={setCategoryInputValue}
           buttonText="기도제목 수정"
           value={prayInputValue}
-          data={modifyPrayInfo.deadline}
+          date={modifyPrayInfo.deadline}
           category={modifyPrayInfo.categoryId}
           onClickFunc={() =>
             onModify(prayInputValue, dateInputValue, categoryInputValue)
