@@ -81,6 +81,11 @@ const MainContent = ({
     setShareMode(false);
   };
 
+  const clickShareButton = () => {
+    if (checkedList.length !== 0) {
+      listHandler(checkedList);
+    }
+  };
   return (
     <MainContentWrapper>
       {showModal && (
@@ -201,33 +206,22 @@ const MainContent = ({
       <BottomShareWrapper shareMode={shareMode}>
         <ShareNumberText>{checkedList.length + "개 선택"}</ShareNumberText>
         <ShareButtonContainer>
-          <ShareButtonWrapper onClick={() => onCancle()}>
+          <ShareButtonWrapper
+            disabled={true}
+            color={"white"}
+            onClick={onCancle}
+          >
             취소하기
             <ShareButtonImage src="images/ic_share_cancel.svg" />
           </ShareButtonWrapper>
-          {checkedList.length === 0 ? (
-            <ShareButtonWrapper
-              style={{
-                backgroundColor: "var(--color-light-green)",
-                color: "#FFFFFF",
-                border: "1px solid #FFFFFF",
-              }}
-            >
-              공유하기
-              <ShareButtonImage src="images/ic_share_move.svg" />
-            </ShareButtonWrapper>
-          ) : (
-            <ShareButtonWrapper
-              style={{
-                background: "var(--color-dark-green)",
-                color: "#FFFFFF",
-              }}
-              onClick={() => listHandler(checkedList)}
-            >
-              공유하기
-              <ShareButtonImage src="images/ic_share_move.svg" />
-            </ShareButtonWrapper>
-          )}
+          <ShareButtonWrapper
+            disabled={checkedList.length === 0}
+            color={"green"}
+            onClick={clickShareButton}
+          >
+            공유하기
+            <ShareButtonImage src="images/ic_share_move.svg" />
+          </ShareButtonWrapper>
         </ShareButtonContainer>
       </BottomShareWrapper>
       <BlackBackground
@@ -368,9 +362,17 @@ const ShareButtonWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 20px 12px;
-  border: 1px solid var(--color-dark-green);
+  border: ${(props) =>
+    props.color === "white" ? "1px solid var(--color-dark-green)" : "none"};
+  background-color: ${(props) =>
+    props.color === "white"
+      ? "var(--color-white)"
+      : props.disabled
+      ? "var(--color-light-green)"
+      : "var(--color-dark-green)"};
+  color: ${(props) =>
+    props.color === "white" ? "var(--color-dark-green)" : "var(--color-white)"};
   border-radius: 16px;
-  color: var(--color-dark-green);
   font-weight: 700;
   font-size: 16px;
 `;
