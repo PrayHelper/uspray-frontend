@@ -8,7 +8,6 @@ import { useState } from "react";
 import GroupSetting from "../GroupSetting/GroupSetting";
 import { useGroupPray } from "../../../hooks/useGroupPray";
 import useFlutterWebview from "../../../hooks/useFlutterWebview";
-import { usePray } from "../../../hooks/usePray";
 import MainContent from "../../Main/MainContent";
 import { useCategory } from "../../../hooks/useCategory";
 
@@ -112,7 +111,7 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
       <InviteBtn
         src="images/ic_group_invite.svg"
         alt="group_invite_icon"
-        onClick={() => onInvite()}
+        onClick={onInvite}
       />
       {shareMode && (
         <MainContent
