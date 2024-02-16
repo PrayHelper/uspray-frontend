@@ -86,6 +86,13 @@ const MainContent = ({
       listHandler(checkedList);
     }
   };
+
+  const clickBlackBackground = () => {
+    if (!shareMode) {
+      setSelectedPrayInfo(null);
+    }
+  };
+
   return (
     <>
       <MainContentWrapper shareMode={shareMode}>
@@ -229,11 +236,7 @@ const MainContent = ({
       <BlackBackground
         selectedPrayInfo={selectedPrayInfo}
         shareMode={shareMode}
-        onClick={() => {
-          if (!shareMode) {
-            setSelectedPrayInfo(null);
-          }
-        }}
+        onClick={clickBlackBackground}
       />
     </>
   );
