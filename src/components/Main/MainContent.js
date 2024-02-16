@@ -112,6 +112,11 @@ const MainContent = ({
     }
   };
 
+  const clickShareButton = () => {
+    if (checkedList.length !== 0) {
+      listHandler(checkedList);
+    }
+  };
   return (
     <>
       <MainContentWrapper shareMode={shareMode}>
