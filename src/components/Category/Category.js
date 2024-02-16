@@ -35,13 +35,9 @@ const Category = ({
   const titleClick = (pray) => {
     if (shareMode) return;
     setShowOption(false);
-    setSelectedPrayInfo({
-      categoryId: pray.categoryId,
-      content: pray.content,
-      deadline: pray.deadline,
-      isShared: pray.isShared,
-      prayId: pray.prayId,
-    });
+    const { name, categoryName, isPrayedToday, ...selectedPrayInfoSubset } =
+      pray;
+    setSelectedPrayInfo(selectedPrayInfoSubset);
   };
 
   const handleCheck = (e, prayId) => {
