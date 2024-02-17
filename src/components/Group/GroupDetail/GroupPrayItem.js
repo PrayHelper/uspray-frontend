@@ -95,7 +95,7 @@ const GroupPrayItem = ({ groupId, pray }) => {
         />
       )}
       <PrayItem>
-        <PrayContent onClick={() => setShowModal(true)}>
+        <PrayContent onClick={() => pray.owner && setShowModal(true)}>
           <div style={{ fontSize: "14px", color: "var(--color-green)" }}>
             {pray.authorName}
           </div>
