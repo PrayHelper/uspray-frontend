@@ -14,9 +14,9 @@ const Category = ({
   setClickedCategoryData,
   tabType,
   categoryRef,
-  refIndex
+  refIndex,
 }) => {
-  const {todayPray, cancelPray }= usePray(tabType);
+  const { todayPray, cancelPray } = usePray(tabType);
 
   const handleClick = (e, pray) => {
     e.stopPropagation();
@@ -43,7 +43,7 @@ const Category = ({
   };
 
   return (
-    <CategoryContainer ref={(el)=>categoryRef.current[refIndex]=el}>
+    <CategoryContainer ref={(el) => (categoryRef.current[refIndex] = el)}>
       <Title color={color}>
         {title}
         <img
@@ -88,7 +88,7 @@ const Title = styled.div`
   background-color: ${(props) => props.color};
   border-radius: 16px 16px 0px 0px;
   padding: 12px 16px;
-  color: #ffffff;
+  color: ${(props) => (props.color === "#D0E8CB" ? "#A0A0A0" : "#FFFFFF")};
   font-weight: 700;
   display: flex;
   justify-content: space-between;
