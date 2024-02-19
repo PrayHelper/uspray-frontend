@@ -14,6 +14,7 @@ import useFlutterWebview from "../hooks/useFlutterWebview";
 import { useShare } from "../hooks/useShare";
 import Locker from "./Locker";
 import ChangeCategoryOrder from "./ChangeCategoryOrder";
+import { useFetchSharedList } from "../hooks/useFetchSharedList";
 
 const Main = () => {
   const [tab, setTab] = useState("내가 쓴");
@@ -52,6 +53,7 @@ const Main = () => {
   const query = new URLSearchParams(location.search);
   const shareIdsData = query.getAll("share");
   const { mutate: receivePrays } = useShare();
+  const { sharedDataLength, refetchSharedListData } = useFetchSharedList();
 
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
@@ -128,6 +130,7 @@ const Main = () => {
   useEffect(() => {
     refetchCategoryList();
     refetchPrayList();
+    refetchSharedListData();
   }, [tab]);
 
   useEffect(() => {
@@ -295,7 +298,7 @@ const Main = () => {
             )
           ) : (
             <MoveToLockerButton onClick={() => clickLocker()}>
-              보관함에 3개의 기도제목이 있어요
+              보관함에 {sharedDataLength}개의 기도제목이 있어요
             </MoveToLockerButton>
           )}
         </FlexContainer>
