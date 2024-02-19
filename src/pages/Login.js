@@ -89,12 +89,10 @@ const SocialLogin = () => {
   }, []);
 
   const continueWithKakao = () => {
-    window.location.href =
-      "https://spring.dev.uspray.kr/oauth2/authorization/kakao";
+    window.location.href = `${process.env.REACT_APP_API_ORIGIN}/oauth2/authorization/kakao`;
   };
   const continueWithNaver = () => {
-    window.location.href =
-      "https://spring.dev.uspray.kr/oauth2/authorization/naver";
+    window.location.href = `${process.env.REACT_APP_API_ORIGIN}/oauth2/authorization/naver`;
   };
   const continueWithApple = async () => {
     const config = {
@@ -129,12 +127,7 @@ const SocialLogin = () => {
           <S.Bar />
           <S.BottomLink to="/login">로그인하기</S.BottomLink>
           <S.Bar />
-          <S.BottomLink
-            onClick={() => {
-              console.log("!");
-            }}>
-            문의하기
-          </S.BottomLink>
+          <S.BottomLink>문의하기</S.BottomLink>
         </S.BottomLinks>
       </S.BottomWrapper>
     </S.SocialLoginWrapper>
