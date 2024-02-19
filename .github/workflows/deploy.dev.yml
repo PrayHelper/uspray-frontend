@@ -17,6 +17,7 @@ env:
   PORT: ${{ secrets.PORT }}
   IMAGE_NAME: registry.uspray.kr/uspray-client-dev:latest
   PROJECT_NAME: uspray-client-dev
+  DOMAIN_HOST: www.dev.uspray.kr
 
 jobs:
   deliver:
@@ -50,8 +51,8 @@ jobs:
 
       - name: Deploy Docker image
         env:
-          SERVICE_NAME: uspray-client-dev
-          DOMAIN_HOST: www.dev.uspray.kr
+          SERVICE_NAME: ${{ env.PROJECT_NAME }}
+          DOMAIN_HOST: ${{ env.DOMAIN_HOST }}
           IMAGE_NAME: ${{ env.IMAGE_NAME }}
         run: |
           if [ ! -z "$(docker ps -q -f name=${{env.PROJECT_NAME}})" ]; then
@@ -59,4 +60,4 @@ jobs:
             docker rm ${{env.PROJECT_NAME}}
             docker rmi ${{env.IMAGE_NAME}}
           fi
-          docker compose up -f ./deploy/docker-compose.yml -d
+          docker compose -f ./deploy/docker-compose.yml up -d
