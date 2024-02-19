@@ -46,6 +46,7 @@ import SocialLoginNameInput from "./pages/SocialLoginNameInput";
 import SocialRedirecting from "./pages/SocialRedirecting";
 import DeleteUser from "./pages/DeleteUser";
 import ChangeCategoryOrder from "./pages/ChangeCategoryOrder";
+import ChangeInfoSocial from "./components/ChangeInfo/ChangeInfoSocial";
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -114,6 +115,8 @@ function App() {
                   path="/change-category-order/:categoryType"
                   element={<ChangeCategoryOrder />}
                 />
+                <Route path="/changeInfoSocial" element={<ChangeInfoSocial />} />
+                <Route path="/deleteUser" element={<DeleteUser />} />
               </Route>
               <Route element={<Outlet />}>
                 <Route path="/" element={<Login />} />
