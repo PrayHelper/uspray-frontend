@@ -24,10 +24,4 @@ export const ButtonStyle = styled.button`
       ? `rgba(255,255,255,0.3)`
       : "var(--color-white)"};
   padding: 20px 0px;
-
-  &:active {
-    transition: all 0.1s ease-in-out;
-    filter: ${(props) =>
-      props.disabled ? "brightness(1)" : "brightness(0.9)"};
-  }
 `;
