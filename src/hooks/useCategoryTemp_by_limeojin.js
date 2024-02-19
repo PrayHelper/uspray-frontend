@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import useApi from "./useApi";
 import useToast from "./useToast";
 import { ToastTheme } from "../components/Toast/Toast";
-import { usePray } from "./usePray";
 
 export const categoryTypeConfig = {
   personal: "personal",
@@ -13,7 +12,6 @@ export const useCategoryTemp_by_limeojin = ({ categoryType }) => {
   const { getFetcher, postFetcher, putFetcher } = useApi();
   const { showToast } = useToast({});
 
-  const { refetchPrayList } = usePray(categoryType);
   const queryClient = useQueryClient();
 
   const { data: fetchedData, refetch } = useQuery(
