@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - deploy/v2-workflow
 
 permissions:
   contents: read
