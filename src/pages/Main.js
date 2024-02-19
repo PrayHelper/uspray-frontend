@@ -135,6 +135,7 @@ const Main = () => {
 
   useEffect(() => {
     refetchPrayList();
+    setSelectedCategoryIndex(firstCategoryIndex);
   }, [categoryList]);
 
   const handleTabChange = (newTab) => {
