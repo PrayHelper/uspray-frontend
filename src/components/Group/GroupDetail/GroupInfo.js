@@ -3,11 +3,15 @@ import styled from "styled-components";
 import PrayDateCategoryInput from "../../PrayDateCategoryInput/PrayDateCategoryInput";
 import BlackScreen from "../../BlackScreen/BlackScreen";
 import Modal from "../../../components/Modal/Modal";
-import { useCategory } from "../../../hooks/useCategory";
 import { useGroupPray } from "../../../hooks/useGroupPray";
 
-const GroupInfo = ({ group, isData }) => {
-  const { categoryList, firstCategoryIndex } = useCategory("personal");
+const GroupInfo = ({
+  group,
+  isData,
+  categoryList,
+  firstCategoryIndex,
+  setShareMode,
+}) => {
   const { addGroupPray, groupHeartCount } = useGroupPray(group.id);
   const [showSubModal, setShowSubModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -114,7 +118,11 @@ const GroupInfo = ({ group, isData }) => {
             readOnly
           />
         )}
-        <LoadButton>
+        <LoadButton
+          onClick={() => {
+            setShareMode(true);
+          }}
+        >
           <img src="images/ic_group_load.svg" alt="group_load_icon" />
           <div>불러오기</div>
         </LoadButton>
