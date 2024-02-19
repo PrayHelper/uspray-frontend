@@ -1,70 +1,84 @@
-name: Deploy frontend on Production Server
+name: Release Frontend on Production Environment
 
 on:
+  workflow_dispatch:
   release:
     types:
       - published
 
+permissions:
+  contents: read
+
 env:
-  HOST:     ${{ secrets.HOST }}
+  HOST: ${{ secrets.HOST }}
   USERNAME: ${{ secrets.USERNAME }}
-  KEY:      ${{ secrets.SSH_KEY }}
-  PORT:     ${{ secrets.PORT }}
+  KEY: ${{ secrets.SSH_KEY }}
+  PORT: ${{ secrets.PORT }}
+  IMAGE_NAME: registry.uspray.kr/uspray-client-prod:latest
+  PROJECT_NAME: uspray-client-prod
+  DOMAIN_HOST: www.uspray.kr
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 19
+
+    - name: Install dependencies
+      run: |
+        npm config set legacy-peer-deps true
+        npm ci
+
+    - name: Run tests
+      run: |
+        CI=false
+        npm test
+
+  deliver:
+    needs: test
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Decrypt environment variables
         run: |
-          echo "${{ secrets.PROD_ENV }}" base64 -d > .env        
+          echo "${{ secrets.PROD_ENV }}" base64 -d > .env
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-      - name: Build and push Docker image
+      - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .
           file: ./deploy/Dockerfile
           push: true
-          tags: registry.uspray.kr/uspray-client-prod:latest
+          tags: ${{ env.IMAGE_NAME }}
+          platforms: linux/amd64
 
-      - name: Aquire Lock
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.HOST }}
-          username: ${{ env.USERNAME }}
-          key: ${{ env.KEY }}
-          port: ${{ env.PORT }}
-          script: |
-            while [ -f ~/SEMAPHORE ]; do sleep 10; done
-            touch ~/SEMAPHORE
+  deploy:
+    needs: deliver
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.HOST }}
-          username: ${{ env.USERNAME }}
-          key: ${{ env.KEY }}
-          port: ${{ env.PORT }}
-          script: |
-            cd ~/frontend-prod
-            docker stop uspray-client-prod
-            docker rm uspray-client-prod
-            docker rmi registry.uspray.kr/uspray-client-prod:latest
-            docker run -d --name uspray-client-prod -p 4003:3000 --env-file .env registry.uspray.kr/uspray-client-prod:latest
-
-      - name: Release Lock
-        if: always()
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.HOST }}
-          username: ${{ env.USERNAME }}
-          key: ${{ env.KEY }}
-          port: ${{ env.PORT }}
-          script: |
-            rm ~/SEMAPHORE
+      - name: Deploy Docker image
+        env:
+          SERVICE_NAME: ${{ env.PROJECT_NAME }}
+          DOMAIN_HOST: ${{ env.DOMAIN_HOST }}
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+        run: |
+          if [ ! -z "$(docker ps -q -f name=${{env.PROJECT_NAME}})" ]; then
+            docker stop ${{env.PROJECT_NAME}}
+            docker rm ${{env.PROJECT_NAME}}
+            docker rmi ${{env.IMAGE_NAME}}
+          fi
+          docker compose up -f ./deploy/docker-compose.yml -d

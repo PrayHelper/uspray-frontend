@@ -3,7 +3,6 @@ services:
     image: ${IMAGE_NAME}
     ports:
       - "3000"
-    command: ["serve", "-s", "build"]
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${DOMAIN_HOST}`)"
