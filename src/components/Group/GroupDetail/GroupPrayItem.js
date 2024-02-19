@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useState } from "react";
 import { ToastTheme } from "../../Toast/Toast";
@@ -6,10 +6,16 @@ import useToast from "../../../hooks/useToast";
 import BlackScreen from "../../BlackScreen/index";
 import Modal from "../../Modal/Modal";
 import { useGroupPray } from "../../../hooks/useGroupPray";
-import { useCategory } from "../../../hooks/useCategory";
 import PrayDateCategoryInput from "../../PrayDateCategoryInput/PrayDateCategoryInput";
 
-const GroupPrayItem = ({ groupId, pray }) => {
+const GroupPrayItem = ({
+  groupId,
+  pray,
+  categoryList,
+  firstCategoryIndex,
+  setTab,
+  tab,
+}) => {
   const [showModal, setShowModal] = useState(false);
   const { showToast } = useToast({});
   const [showSubModal, setShowSubModal] = useState(false);
@@ -21,7 +27,6 @@ const GroupPrayItem = ({ groupId, pray }) => {
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
-  const { categoryList, firstCategoryIndex } = useCategory("shared");
 
   // 기도를 스크랩하는 함수
   const onScrap = async (deadline, categoryId) => {
@@ -45,6 +50,19 @@ const GroupPrayItem = ({ groupId, pray }) => {
       }
     );
   };
+
+  useEffect(() => {
+    if (tab === "shared") {
+      setCategoryInputValue(firstCategoryIndex);
+      setShowSubModal(true);
+    }
+  }, [categoryList]);
+
+  useEffect(() => {
+    if (!showSubModal) {
+      setTab("personal");
+    }
+  }, [showSubModal]);
 
   return (
     <Wrapper>
@@ -95,7 +113,7 @@ const GroupPrayItem = ({ groupId, pray }) => {
         />
       )}
       <PrayItem>
-        <PrayContent onClick={() => setShowModal(true)}>
+        <PrayContent onClick={() => pray.owner && setShowModal(true)}>
           <div style={{ fontSize: "14px", color: "var(--color-green)" }}>
             {pray.authorName}
           </div>
@@ -133,8 +151,7 @@ const GroupPrayItem = ({ groupId, pray }) => {
             ) : (
               <img
                 onClick={() => {
-                  setCategoryInputValue(firstCategoryIndex);
-                  setShowSubModal(true);
+                  setTab("shared");
                 }}
                 src="images/ic_group_bookmark.svg"
                 alt="bookmark_icon"

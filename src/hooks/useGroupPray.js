@@ -111,6 +111,29 @@ export const useGroupPray = (groupId) => {
     }
   );
 
+  const { mutate: takePersonalPray } = useMutation(
+    async (data) => {
+      return await postFetcher("/pray/pray-to-grouppray", data);
+    },
+    {
+      onError: async (e) => {
+        console.log(e);
+      },
+      onSuccess: (res) => {
+        console.log(res);
+        refetchGroupPrayList();
+        showToast({
+          message: "기도제목이 모임원들에게 공유되었어요.",
+          theme: ToastTheme.SUCCESS,
+        });
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const groupPrayData = data?.data.data?.groupPray || {};
   const groupHeartCount = data?.data.data?.heartCount;
@@ -127,5 +150,6 @@ export const useGroupPray = (groupId) => {
     deleteGroupPray,
     likeGroupPray,
     scrapGroupPray,
+    takePersonalPray,
   };
 };
