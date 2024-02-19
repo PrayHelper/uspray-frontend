@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import useApi from "./useApi";
 import useToast from "./useToast";
 import { ToastTheme } from "../components/Toast/Toast";
+import { usePray } from "./usePray";
 
 export const categoryTypeConfig = {
   personal: "personal",
@@ -11,6 +12,9 @@ export const categoryTypeConfig = {
 export const useCategoryTemp_by_limeojin = ({ categoryType }) => {
   const { getFetcher, postFetcher, putFetcher } = useApi();
   const { showToast } = useToast({});
+
+  const { refetchPrayList } = usePray(categoryType);
+  const queryClient = useQueryClient();
 
   const { data: fetchedData, refetch } = useQuery(
     ["categoryList"],
@@ -56,8 +60,6 @@ export const useCategoryTemp_by_limeojin = ({ categoryType }) => {
     }
   );
 
-  const queryClient = useQueryClient();
-
   const { mutate: updateCategoryOrder } = useMutation(
     async ({ srcIndex, destIndex }) => {
       let prevArrayData;
@@ -102,10 +104,11 @@ export const useCategoryTemp_by_limeojin = ({ categoryType }) => {
           theme: ToastTheme.ERROR,
         });
       },
-      onSuccess: () => {
+      onSuccess: async () => {
         showToast({ message: "카테고리 순서를 변경했어요." });
 
-        refetch();
+        await refetch();
+        await queryClient.refetchQueries({ queryKey: ["prayList"] });
       },
       retry: (cnt) => {
         return cnt < 3;
