@@ -1,68 +1,62 @@
-name: Deploy Frontend on Development Server
+name: Deploy Frontend on Development Environment
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
 
+permissions:
+  contents: read
+
 env:
-  HOST:     ${{ secrets.HOST }}
+  HOST: ${{ secrets.HOST }}
   USERNAME: ${{ secrets.USERNAME }}
-  KEY:      ${{ secrets.SSH_KEY }}
-  PORT:     ${{ secrets.PORT }}
+  KEY: ${{ secrets.SSH_KEY }}
+  PORT: ${{ secrets.PORT }}
+  IMAGE_NAME: registry.uspray.kr/uspray-client-dev:latest
+  PROJECT_NAME: uspray-client-dev
+  DOMAIN_HOST: www.dev.uspray.kr
 
 jobs:
-  deploy:
+  deliver:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Decrypt environment variables
         run: |
           echo "${{ secrets.DEV_ENV }}" base64 -d > .env
 
-      - name: Build and push Docker image
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .
           file: ./deploy/Dockerfile
           push: true
-          tags: registry.uspray.kr/uspray-client-dev:latest
+          tags: ${{ env.IMAGE_NAME }}
+          platforms: linux/amd64
 
-      - name: Aquire Lock
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.HOST }}
-          username: ${{ env.USERNAME }}
-          key: ${{ env.KEY }}
-          port: ${{ env.PORT }}
-          script: |
-            while [ -f ~/SEMAPHORE ]; do sleep 10; done
-            touch ~/SEMAPHORE
+  deploy:
+    needs: deliver
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Deploy
-        if: always()
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.HOST }}
-          username: ${{ env.USERNAME }}
-          key: ${{ env.KEY }}
-          port: ${{ env.PORT }}
-          script: |
-            cd ~/frontend-dev
-            docker stop uspray-client-dev
-            docker rm uspray-client-dev
-            docker rmi registry.uspray.kr/uspray-client-dev:latest
-            docker run -d --name uspray-client-dev -p 4001:3000 --env-file .env registry.uspray.kr/uspray-client-dev:latest
-
-      - name: Release Lock
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.HOST }}
-          username: ${{ env.USERNAME }}
-          key: ${{ env.KEY }}
-          port: ${{ env.PORT }}
-          script: |
-            rm ~/SEMAPHORE
+      - name: Deploy Docker image
+        env:
+          SERVICE_NAME: ${{ env.PROJECT_NAME }}
+          DOMAIN_HOST: ${{ env.DOMAIN_HOST }}
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+        run: |
+          if [ ! -z "$(docker ps -q -f name=${{env.PROJECT_NAME}})" ]; then
+            docker stop ${{env.PROJECT_NAME}}
+            docker rm ${{env.PROJECT_NAME}}
+            docker rmi ${{env.IMAGE_NAME}}
+          fi
+          docker compose -f ./deploy/docker-compose.yml up -d
