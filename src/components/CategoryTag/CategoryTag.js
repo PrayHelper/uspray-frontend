@@ -7,7 +7,7 @@ const CategoryTag = ({
   setSelectedCategoryIndex,
   setShowCategorySetting,
   canAdd,
-  setCategoryRefIndex
+  setCategoryRefIndex,
 }) => {
   const handleCategoryClick = (categoryId, index) => {
     setSelectedCategoryIndex(categoryId);
@@ -61,7 +61,12 @@ const Container = styled.div`
 
 const CategoryBox = styled.div`
   background-color: ${(props) => (props.selected ? props.color : "#EEEEEE")};
-  color: ${(props) => (props.selected ? "#FFFFFF" : "#CECECE")};
+  color: ${(props) =>
+    props.selected
+      ? props.color === "#D0E8CB"
+        ? "#A0A0A0"
+        : "#FFFFFF"
+      : "#CECECE"};
   border-radius: 24px;
   padding: 16px;
   font-size: 16px;

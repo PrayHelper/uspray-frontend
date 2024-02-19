@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import useApi from './useApi';
+import useApi from "./useApi";
 
 export const useFetchSharedList = () => {
   const { getFetcher } = useApi();
@@ -25,9 +25,11 @@ export const useFetchSharedList = () => {
   );
 
   const sharedListData = data?.data.data || [];
+  const sharedDataLength = data?.data.data.length;
 
   return {
     sharedListData,
     refetchSharedListData,
-  }
+    sharedDataLength,
+  };
 };
