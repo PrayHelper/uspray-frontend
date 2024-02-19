@@ -173,12 +173,15 @@ const FindPassword = () => {
     try {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
+        showToast({
+          message: "인증에 성공하였습니다.",
+          theme: ToastTheme.SUCCESS,
+        });
         setIsCertificated(true);
         return true;
       }
     } catch (e) {
-      if (e.response.status === 400)
-      {
+      if (e.response.status === 400) {
         showToast({ message: e.response.data.message , theme: ToastTheme.ERROR });
         setIsCertificated(false);
       }
@@ -290,12 +293,7 @@ const FindPassword = () => {
                 }
                 handler={() => {
                   setIsCertificateButtonClicked(true);
-                  if (isCertificationNumberValid(userInfo.certificateNumber)) {
-                    showToast({
-                      message: "인증에 성공하였습니다.",
-                      theme: ToastTheme.SUCCESS,
-                    });
-                  }
+                  isCertificationNumberValid(userInfo.certificateNumber);
                 }}>
                 {isCertificated || isCertificateButtonClicked ? "완료" : "확인"}
               </Button>

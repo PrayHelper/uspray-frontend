@@ -43,7 +43,7 @@ const Signup = () => {
     useState(false);
   const [
     isPhoneNumVerficationButtonClicked,
-    setIsPhoneNumVerficationButtonClickClick,
+    setIsPhoneNumVerficationButtonClicked,
   ] = useState(false);
   const userInfoForCheck = { ...userInfo };
   delete userInfoForCheck.year;
@@ -253,16 +253,19 @@ const Signup = () => {
     try {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
-        if (res.data.data === true) {
-          setIsCertificated(true);
-          return true;
-        } else if (res.data.data === false) {
-          setIsCertificated(false);
-          return false;
-        }
+        showToast({
+          message: "인증에 성공하였습니다.",
+          theme: ToastTheme.SUCCESS,
+        });
+        setIsCertificated(true);
+        return true;
       }
     } catch (e) {
-      showToast({ message: "error occured", theme: ToastTheme.ERROR });
+      if (e.response.status === 400) {
+        showToast({ message: e.response.data.message , theme: ToastTheme.ERROR });
+        setIsCertificated(false);
+      }
+      return false;
     }
   };
 
@@ -389,7 +392,7 @@ const Signup = () => {
                 setIsCertificated(false);
                 setIsCertificateButtonClicked(false);
                 setUserInfo({ ...userInfo, certificateNumber: "" });
-                setIsPhoneNumVerficationButtonClickClick(true);
+                setIsPhoneNumVerficationButtonClicked(true);
               }}
             >
               {time ? "진행 중" : "전송"}
@@ -428,23 +431,12 @@ const Signup = () => {
                 disabled={
                   (isCetrificated && isCertificateButtonClicked) ||
                   time === 0 ||
-                  !isPhoneNumVerficationButtonClicked
+                  !isPhoneNumVerficationButtonClicked ||
+                  !certificateNumberCheck(userInfo.certificateNumber)
                 }
                 handler={() => {
-                  console.log(isCetrificated && isCertificateButtonClicked);
-                  console.log(time === 0);
                   setIsCertificateButtonClicked(true);
-                  if (isCertificationNumberValid(userInfo.certificateNumber)) {
-                    showToast({
-                      message: "인증에 성공하였습니다.",
-                      theme: ToastTheme.SUCCESS,
-                    });
-                  } else {
-                    showToast({
-                      message: "인증번호가 일치하지 않습니다.",
-                      theme: ToastTheme.ERROR,
-                    });
-                  }
+                  isCertificationNumberValid(userInfo.certificateNumber);
                 }}
               >
                 {isCetrificated || isCertificateButtonClicked ? "완료" : "확인"}
