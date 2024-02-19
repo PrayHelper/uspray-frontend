@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { usePray } from "../../hooks/usePray";
+import GreenCheckbox from "../GreenCheckbox/GreenCheckbox";
 
 const ICON_HEART_FILLED = "images/ic_filled_heart.svg";
 const ICON_HEART_EMPTY = "images/ic_empty_heart.svg";
@@ -14,9 +15,13 @@ const Category = ({
   setClickedCategoryData,
   tabType,
   categoryRef,
-  refIndex
+  refIndex,
+  setShowOption,
+  shareMode,
+  setCheckedList,
+  checkedList,
 }) => {
-  const {todayPray, cancelPray }= usePray(tabType);
+  const { todayPray, cancelPray } = usePray(tabType);
 
   const handleClick = (e, pray) => {
     e.stopPropagation();
@@ -28,13 +33,19 @@ const Category = ({
   };
 
   const titleClick = (pray) => {
-    setSelectedPrayInfo({
-      categoryId: pray.categoryId,
-      content: pray.content,
-      deadline: pray.deadline,
-      isShared: pray.isShared,
-      prayId: pray.prayId,
-    });
+    if (shareMode) return;
+    setShowOption(false);
+    const { name, categoryName, isPrayedToday, ...selectedPrayInfoSubset } =
+      pray;
+    setSelectedPrayInfo(selectedPrayInfoSubset);
+  };
+
+  const handleCheck = (e, prayId) => {
+    if (e.target.checked) {
+      setCheckedList([...checkedList, prayId]);
+    } else {
+      setCheckedList(checkedList.filter((id) => id !== prayId));
+    }
   };
 
   const handleCategoryTitleClick = () => {
@@ -43,14 +54,16 @@ const Category = ({
   };
 
   return (
-    <CategoryContainer ref={(el)=>categoryRef.current[refIndex]=el}>
+    <CategoryContainer ref={(el) => (categoryRef.current[refIndex] = el)}>
       <Title color={color}>
         {title}
-        <img
-          src="/images/ic_dot.svg"
-          alt="dot_icon"
-          onClick={handleCategoryTitleClick}
-        />
+        {!shareMode && (
+          <img
+            src="/images/ic_dot.svg"
+            alt="dot_icon"
+            onClick={handleCategoryTitleClick}
+          />
+        )}
       </Title>
       <ItemList>
         {prays.map((pray) => (
@@ -61,11 +74,18 @@ const Category = ({
             >
               {pray.content}
             </ItemText>
-            <img
-              src={pray.isPrayedToday ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
-              alt="heart_icon"
-              onClick={(e) => handleClick(e, pray)}
-            />
+            {shareMode ? (
+              <GreenCheckbox
+                id={pray.prayId}
+                handler={(e) => handleCheck(e, pray.prayId)}
+              />
+            ) : (
+              <img
+                src={pray.isPrayedToday ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
+                alt="heart_icon"
+                onClick={(e) => handleClick(e, pray)}
+              />
+            )}
           </Item>
         ))}
       </ItemList>
