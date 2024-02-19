@@ -15,6 +15,8 @@ import Overlay from "../components/Overlay/Overlay";
 import ToS from "./ToS";
 import PrivacyPolicy from "./PrivacyPolicy";
 import { useNotification } from "../hooks/useNotification";
+import { useCheckLogin } from "../hooks/useCheckLogin";
+import ChangeInfoSocial from "../components/ChangeInfo/ChangeInfoSocial";
 
 
 const Container = styled.div`
@@ -121,6 +123,7 @@ const Settings = () => {
   const { setRefreshToken } = useAuthToken();
   const { isNotifiedData } = useNotification();
   const navigate = useNavigate();
+  const { isSocialLogin } = useCheckLogin();
 
   const openModalHandler = () => {
     setShowModal(true);
@@ -131,7 +134,10 @@ const Settings = () => {
   };
 
   const movePageHandler = () => {
-    navigate("/checkInfo");
+    if (isSocialLogin.social)
+      navigate("/changeInfoSocial")
+    else
+      navigate("/checkInfo");
   };
 
   const logout = async () => {
