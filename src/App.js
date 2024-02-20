@@ -47,6 +47,7 @@ import SocialRedirecting from "./pages/SocialRedirecting";
 import DeleteUser from "./pages/DeleteUser";
 import ChangeCategoryOrder from "./pages/ChangeCategoryOrder";
 import ChangeInfoSocial from "./components/ChangeInfo/ChangeInfoSocial";
+import AppleRedirecting from "./pages/AppleRedirecting";
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -115,7 +116,10 @@ function App() {
                   path="/change-category-order/:categoryType"
                   element={<ChangeCategoryOrder />}
                 />
-                <Route path="/changeInfoSocial" element={<ChangeInfoSocial />} />
+                <Route
+                  path="/changeInfoSocial"
+                  element={<ChangeInfoSocial />}
+                />
                 <Route path="/deleteUser" element={<DeleteUser />} />
               </Route>
               <Route element={<Outlet />}>
@@ -128,6 +132,10 @@ function App() {
                 <Route
                   path="/social-redirecting"
                   element={<SocialRedirecting />}
+                />
+                <Route
+                  path="/apple-redirecting"
+                  element={<AppleRedirecting />}
                 />
                 <Route path="/findAccount" element={<Find />} />
                 <Route path="/findID" element={<FindId />}></Route>

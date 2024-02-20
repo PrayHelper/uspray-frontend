@@ -1,4 +1,4 @@
-// 소셜 로그인(기존 가입자) 진행 도중 토큰을 저장하고 홈으로 redirect시키기 위한 페이지(without any UI)
+// 카카오, 네이버 로그인(기존 가입자) 진행 도중 토큰을 저장하고 홈으로 redirect시키기 위한 페이지(without any UI)
 
 import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
