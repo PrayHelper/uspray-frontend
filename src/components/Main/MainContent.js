@@ -67,6 +67,16 @@ const MainContent = ({
   }, [showSubModal, showModal]);
 
   useEffect(() => {
+    if (showModal) {
+      setIsPraySelected(true);
+      setIsVisible(false);
+    } else {
+      setIsPraySelected(false);
+      setIsVisible(true);
+    }
+  }, [showModal]);
+
+  useEffect(() => {
     if (!shareMode) setCheckedList([]);
   }, [shareMode]);
 
@@ -94,6 +104,11 @@ const MainContent = ({
     setShareMode(false);
     setShowModal(false);
     setSelectedPrayInfo(null);
+  };
+
+  const onDelete = () => {
+    setSelectedPrayInfo(null);
+    setShowModal(true);
   };
 
   const clickShareButton = () => {
@@ -225,7 +240,7 @@ const MainContent = ({
         </BottomButtonWrapper>
         <BottomButtonWrapper>
           <img src={deleteImage} />
-          <BottomButtonText color={"red"} onClick={() => setShowModal(true)}>
+          <BottomButtonText color={"red"} onClick={() => onDelete()}>
             삭제하기
           </BottomButtonText>
         </BottomButtonWrapper>
