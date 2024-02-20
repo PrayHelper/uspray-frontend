@@ -137,6 +137,7 @@ const Main = () => {
     refetchCategoryList();
     refetchPrayList();
     refetchSharedListData();
+    setShowOption(false);
   }, [tab]);
 
   useEffect(() => {
