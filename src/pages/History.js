@@ -309,7 +309,7 @@ const History = () => {
         <div style={{ paddingTop: "115px" }}>
           {sharedHistoryList.map((el) => (
             <div
-              onClick={() => setSelectedHistoryId(el.HistoryId)}
+              onClick={() => setSelectedHistoryId(el.historyId)}
               key={el.historyId}
               id={el.historyId}
             >
