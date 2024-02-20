@@ -55,6 +55,7 @@ const Main = () => {
   const shareIdsData = query.getAll("share");
   const { mutate: receivePrays } = useShare();
   const { sharedDataLength, refetchSharedListData } = useFetchSharedList();
+  const [isPraySelected, setIsPraySelected] = useState(false);
 
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
@@ -86,6 +87,10 @@ const Main = () => {
     if (dotIconClicked) setInputValue(clickedCategoryData.name);
     else setInputValue("");
   }, [clickedCategoryData, dotIconClicked]);
+
+  useEffect(() => {
+    setShowOption(false);
+  }, [isPraySelected]);
 
   useEffect(() => {
     if (ColorList.includes(clickedCategoryData.color)) {
@@ -320,6 +325,7 @@ const Main = () => {
         setShowOption={setShowOption}
         setShareMode={setShareMode}
         listHandler={onShare}
+        setIsPraySelected={setIsPraySelected}
       />
       {showCategorySetting && (
         <CategorySetting onClick={() => setShowCategorySetting(false)}>
@@ -417,7 +423,7 @@ const Main = () => {
           <ChangeCategoryOrder setIsOverlayOn={setIsOrderOverlayOn} />
         </Overlay>
       )}
-      {!shareMode && (
+      {!shareMode && !isPraySelected && (
         <>
           <OptionBtn
             src="images/ic_main_option.svg"
