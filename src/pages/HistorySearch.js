@@ -265,7 +265,7 @@ const HistorySearch = ({
             <div>
               <img src="../images/ic_search_history.svg" alt="icon_searchbar" />
             </div>
-            <NoDataContent>{NoDataText}</NoDataContent>;
+            <NoDataContent>{NoDataText}</NoDataContent>
           </NoDataWrapper>
         )}
         <div>
