@@ -566,11 +566,12 @@ const CategorySetting = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   flex-direction: column;
   padding: 16px;
   box-sizing: border-box;
+  backdrop-filter: blur(8px);
 `;
 
 const ColorPalette = styled.div`
