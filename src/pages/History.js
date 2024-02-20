@@ -185,7 +185,6 @@ const History = () => {
 
   useEffect(() => {
     if (selectedHistoryId) {
-      console.log("historyDetail", historyDetail);
       setShowModal(true);
     }
   }, [selectedHistoryId]);
@@ -283,7 +282,6 @@ const History = () => {
       </div>
       {tab === "personal" && (
         <div style={{ paddingTop: "115px" }}>
-          {/* <div> */}
           {personalHistoryList.map((el) => (
             <div
               onClick={() => setSelectedHistoryId(el.historyId)}
@@ -304,7 +302,7 @@ const History = () => {
         <div style={{ paddingTop: "115px" }}>
           {sharedHistoryList.map((el) => (
             <div
-              onClick={() => setSelectedHistoryId(el.HistoryId)}
+              onClick={() => setSelectedHistoryId(el.historyId)}
               key={el.historyId}
               id={el.historyId}
             >
