@@ -57,14 +57,14 @@ const MainContent = ({
   }, [modifyPrayInfo]);
 
   useEffect(() => {
-    if (showSubModal) {
+    if (showSubModal || showModal) {
       setIsPraySelected(true);
       setIsVisible(false);
     } else {
       setIsPraySelected(false);
       setIsVisible(true);
     }
-  }, [showSubModal]);
+  }, [showSubModal, showModal]);
 
   useEffect(() => {
     if (!shareMode) setCheckedList([]);
@@ -92,6 +92,8 @@ const MainContent = ({
 
   const onCancle = () => {
     setShareMode(false);
+    setShowModal(false);
+    setSelectedPrayInfo(null);
   };
 
   const clickShareButton = () => {
@@ -248,6 +250,7 @@ const MainContent = ({
         selectedPrayInfo={selectedPrayInfo}
         shareMode={shareMode}
         onClick={clickBlackBackground}
+        showModal={showModal}
       />
     </>
   );
@@ -309,7 +312,8 @@ const BottomSetWrapper = styled.div`
   width: 100%;
   padding: 37px 24px;
   transition: all 0.3s ease-in-out;
-  bottom: ${(props) => (props.selectedPrayInfo === null ? "-100%" : "0px")};
+  bottom: ${(props) =>
+    props.selectedPrayInfo === null || props.showModal ? "-100%" : "0px"};
   z-index: 202;
   border-radius: 24px 24px 0px 0px;
   background: #fff;
@@ -416,7 +420,7 @@ const ShareNumberText = styled.div`
 const BlackBackground = styled.div`
   transition: all 0.3s ease-in-out;
   background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
+  display: ${(props) => (!props.showModal ? "flex" : "none")};
   position: fixed;
   top: 0;
   right: 0;
