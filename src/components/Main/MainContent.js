@@ -107,7 +107,6 @@ const MainContent = ({
   };
 
   const onDelete = () => {
-    setSelectedPrayInfo(null);
     setShowModal(true);
   };
 
