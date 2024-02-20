@@ -106,7 +106,7 @@ const PrayDateCategoryInput = ({
         <FixedButtonContainer>
           <ButtonV2
             buttonTheme={ButtonTheme.FILLED}
-            disabled={inputCount === 0}
+            disabled={inputCount === 0 && lockerCount === 0}
             handler={onClickFunc}
           >
             {buttonText}
