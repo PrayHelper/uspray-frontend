@@ -67,16 +67,6 @@ const MainContent = ({
   }, [showSubModal, showModal]);
 
   useEffect(() => {
-    if (showModal) {
-      setIsPraySelected(true);
-      setIsVisible(false);
-    } else {
-      setIsPraySelected(false);
-      setIsVisible(true);
-    }
-  }, [showModal]);
-
-  useEffect(() => {
     if (!shareMode) setCheckedList([]);
   }, [shareMode]);
 
@@ -100,7 +90,7 @@ const MainContent = ({
     );
   };
 
-  const onCancle = () => {
+  const onCancel = () => {
     setShareMode(false);
     setShowModal(false);
     setSelectedPrayInfo(null);
@@ -147,7 +137,7 @@ const MainContent = ({
                   },
                 });
               }}
-              onClickBtn2={onCancle}
+              onClickBtn2={onCancel}
               modalTheme={2}
             />
           </>
@@ -250,7 +240,7 @@ const MainContent = ({
           <ShareButtonWrapper
             disabled={true}
             color={"white"}
-            onClick={onCancle}
+            onClick={onCancel}
           >
             취소하기
             <ShareButtonImage src="images/ic_share_cancel.svg" />
