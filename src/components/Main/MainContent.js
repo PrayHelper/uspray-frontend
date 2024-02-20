@@ -11,6 +11,7 @@ import BlackScreen from "../BlackScreen";
 import Modal from "../Modal/Modal";
 import useToast from "../../hooks/useToast";
 import PrayDateCategoryInput from "../PrayDateCategoryInput/PrayDateCategoryInput";
+import useBottomNav from "../../hooks/useBottomNav";
 
 const MainContent = ({
   categoryList,
@@ -39,6 +40,7 @@ const MainContent = ({
   const [checkedList, setCheckedList] = useState([]);
   const { prayList, deletePray, completePray, modifyPray } = usePray(tabType);
   const { showToast } = useToast({});
+  const { setIsVisible } = useBottomNav();
 
   const prayModify = () => {
     setModifyPrayInfo(selectedPrayInfo);
@@ -55,8 +57,13 @@ const MainContent = ({
   }, [modifyPrayInfo]);
 
   useEffect(() => {
-    if (showSubModal) setIsPraySelected(true);
-    else setIsPraySelected(false);
+    if (showSubModal) {
+      setIsPraySelected(true);
+      setIsVisible(false);
+    } else {
+      setIsPraySelected(false);
+      setIsVisible(true);
+    }
   }, [showSubModal]);
 
   useEffect(() => {
