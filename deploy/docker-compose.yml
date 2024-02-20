@@ -1,5 +1,6 @@
 services:
   web:
+    container_name: ${SERVICE_NAME}
     image: ${IMAGE_NAME}
     ports:
       - "3000"
