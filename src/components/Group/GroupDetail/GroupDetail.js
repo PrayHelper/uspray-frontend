@@ -106,6 +106,7 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
           categoryList={categoryList}
           firstCategoryIndex={firstCategoryIndex}
           setTab={setTab}
+          tab={tab}
         />
       </GroupWrapper>
       <InviteBtn
