@@ -20,7 +20,6 @@ const GroupPrayItem = ({
   setShowSubModal,
   showSubModal,
   setScrapPrayInfo,
-  scrapPrayInfo,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const { showToast } = useToast({});
