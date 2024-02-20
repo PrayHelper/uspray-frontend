@@ -623,4 +623,6 @@ const OptionBtn = styled.img`
     props.isVisible ? `calc(80px + ${props.movingDistance}px)` : "80px"};
   right: 20px;
   transition: all 0.2s ease;
+  filter: ${(props) =>
+    props.isVisible ? "drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.3))" : "none"};
 `;
