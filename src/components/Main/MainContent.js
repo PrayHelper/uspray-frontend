@@ -67,16 +67,6 @@ const MainContent = ({
   }, [showSubModal, showModal]);
 
   useEffect(() => {
-    if (showModal) {
-      setIsPraySelected(true);
-      setIsVisible(false);
-    } else {
-      setIsPraySelected(false);
-      setIsVisible(true);
-    }
-  }, [showModal]);
-
-  useEffect(() => {
     if (!shareMode) setCheckedList([]);
   }, [shareMode]);
 
