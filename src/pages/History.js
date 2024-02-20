@@ -77,6 +77,10 @@ const History = () => {
     return data.length === 0 ? true : false;
   };
 
+  const isDataLengthZero =
+    (tab === "personal" && isEmptyData(personalHistoryList)) ||
+    (tab === "shared" && isEmptyData(sharedHistoryList));
+
   const onClickExitModal = () => {
     setShowModal(false);
     setSelectedHistoryId(null);
@@ -238,7 +242,7 @@ const History = () => {
           />
         </LottieWrapper>
       )}
-      {!loading && isEmptyData(personalHistoryList) && (
+      {!loading && isDataLengthZero && (
         <NoDataWrapper>
           <NoDataTitle>완료된 기도제목이 없네요.</NoDataTitle>
           <NoDataContent>기간이 지나면 히스토리에 저장됩니다!</NoDataContent>
