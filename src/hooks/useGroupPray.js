@@ -71,15 +71,85 @@ export const useGroupPray = (groupId) => {
     }
   );
 
+  const { mutate: likeGroupPray } = useMutation(
+    async (groupPrayId) => {
+      return await postFetcher(`/grouppray/${groupPrayId}/like`);
+    },
+    {
+      onError: async (e) => {
+        console.log(e);
+      },
+      onSuccess: (res) => {
+        console.log(res);
+        refetchGroupPrayList();
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
 
-  const groupPrayData = data?.data.data || {};
+  const { mutate: scrapGroupPray } = useMutation(
+    async (data) => {
+      return await postFetcher(`/grouppray/scrap`, data);
+    },
+    {
+      onError: async (e) => {
+        console.log(e);
+      },
+      onSuccess: (res) => {
+        console.log(res);
+        refetchGroupPrayList();
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const { mutate: takePersonalPray } = useMutation(
+    async (data) => {
+      return await postFetcher("/pray/pray-to-grouppray", data);
+    },
+    {
+      onError: async (e) => {
+        console.log(e);
+      },
+      onSuccess: (res) => {
+        console.log(res);
+        refetchGroupPrayList();
+        showToast({
+          message: "기도제목이 모임원들에게 공유되었어요.",
+          theme: ToastTheme.SUCCESS,
+        });
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const groupPrayData = data?.data.data?.groupPray || {};
+  const groupHeartCount = data?.data.data?.heartCount;
   const groupPrayList =
-    Object.keys(groupPrayData).length === 0 ? [] : groupPrayData;
+    Object.keys(groupPrayData).length === 0 ? {} : groupPrayData;
+  const groupNotification = data?.data.data?.notificationAgree;
 
   return {
     groupPrayList,
+    groupHeartCount,
+    groupNotification,
     refetchGroupPrayList,
     addGroupPray,
     deleteGroupPray,
+    likeGroupPray,
+    scrapGroupPray,
+    takePersonalPray,
   };
 };

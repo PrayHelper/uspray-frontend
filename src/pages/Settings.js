@@ -6,8 +6,6 @@ import BlackScreen from "../components/BlackScreen/BlackScreen";
 import { useNavigate } from "react-router-dom";
 import { tokenState } from "../recoil/auth";
 import { useSetRecoilState } from "recoil";
-import { useFetchNotifications } from "../hooks/useFetchNotifications";
-import { useEffect } from "react";
 import useAuthToken from "../hooks/useAuthToken";
 import { setRef } from "@mui/material";
 import useAuthorized from "../hooks/useAuthorized";
@@ -16,8 +14,10 @@ import Modal from "../components/Modal/Modal";
 import Overlay from "../components/Overlay/Overlay";
 import ToS from "./ToS";
 import PrivacyPolicy from "./PrivacyPolicy";
+import { useNotification } from "../hooks/useNotification";
+import { useCheckLogin } from "../hooks/useCheckLogin";
+import ChangeInfoSocial from "../components/ChangeInfo/ChangeInfoSocial";
 
-// import { useNotificationEnable } from "../hooks/useNotificationEnable";
 
 const Container = styled.div`
   width: 100%;
@@ -118,11 +118,12 @@ const ModalButton2 = styled.button`
 
 const Settings = () => {
   const [showModal, setShowModal] = useState(false);
-  const [isAbledData, setIsAbledData] = useState([]);
   const [isOverlayOn, setIsOverlayOn] = useState(false);
   const [information, setInformation] = useState(null);
   const { setRefreshToken } = useAuthToken();
+  const { isNotifiedData } = useNotification();
   const navigate = useNavigate();
+  const { isSocialLogin } = useCheckLogin();
 
   const openModalHandler = () => {
     setShowModal(true);
@@ -133,7 +134,10 @@ const Settings = () => {
   };
 
   const movePageHandler = () => {
-    navigate("/checkInfo");
+    if (isSocialLogin.social)
+      navigate("/changeInfoSocial")
+    else
+      navigate("/checkInfo");
   };
 
   const logout = async () => {
@@ -161,23 +165,6 @@ const Settings = () => {
   const moveToPrivacyPolicy = () => {
     showInformation(<PrivacyPolicy setIsOverlayOn={setIsOverlayOn} />);
   };
-
-  const { data: isNotifiedData, refetch: refetchIsNotifiedData } =
-    useFetchNotifications();
-
-  const fetchNotifications = async () => {
-    try {
-      const sortedData = isNotifiedData.data.sort((a, b) => a.id - b.id);
-      const enabledData = sortedData.map((item) => item.is_enabled);
-      setIsAbledData(enabledData);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  useEffect(() => {
-    fetchNotifications();
-  }, [isNotifiedData]);
 
   return (
     <Container>
@@ -214,18 +201,23 @@ const Settings = () => {
         <WhiteBox>
           <SubTitle>알림</SubTitle>
           <StyledItem noActive={true}>
+            <div>기도 시간 - 오전 8시</div>
+            <SettingToggle
+              isAbledData={isNotifiedData.firstNotiAgree}
+              id={0}
+            ></SettingToggle>
+          </StyledItem>
+          <StyledItem noActive={true}>
             <div>다른 사람이 내 기도제목을 기도 했을 때</div>
             <SettingToggle
-              refetchIsNotifiedData={refetchIsNotifiedData}
-              isAbledData={isAbledData[0]}
+              isAbledData={isNotifiedData.secondNotiAgree}
               id={1}
             ></SettingToggle>
           </StyledItem>
           <StyledItem noActive={true}>
             <div>다른 사람이 내 기도제목을 공유 받았을 때</div>
             <SettingToggle
-              refetchIsNotifiedData={refetchIsNotifiedData}
-              isAbledData={isAbledData[1]}
+              isAbledData={isNotifiedData.thirdNotiAgree}
               id={2}
             ></SettingToggle>
           </StyledItem>

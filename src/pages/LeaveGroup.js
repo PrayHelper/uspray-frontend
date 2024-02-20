@@ -4,14 +4,13 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import Modal from '../components/Modal/Modal';
-import useToast from '../hooks/useToast';
-import { ToastTheme } from '../components/Toast/Toast';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useGroup } from '../hooks/useGroup';
 
 const LeaveGroup = () => {
   const [showModal, setShowModal] = useState(false);
-  const navigate = useNavigate();
-  const { showToast } = useToast({});
+  const { leaveGroup } = useGroup();
+  const { groupId } = useLocation().state;
 
   const closeModal = () => {
     setShowModal(false);
@@ -31,11 +30,7 @@ const LeaveGroup = () => {
             btnContent2={"취소"}
             onClickBtn={() => {
               closeModal();
-              showToast({
-                message: "모임에서 나갔어요.",
-                theme: ToastTheme.SUCCESS,
-              });
-              navigate('/group');
+              leaveGroup(groupId);
             }}
             onClickBtn2={closeModal}
             modalTheme={2}

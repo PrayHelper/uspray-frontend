@@ -1,18 +1,16 @@
 import { useQuery, useMutation } from "react-query";
 import useApi from "./useApi";
-import { useNavigate } from "react-router-dom";
 import useToast from "../hooks/useToast";
 import { ToastTheme } from "../components/Toast/Toast";
 
-export const useCategory = () => {
-  const { getFetcher, postFetcher } = useApi();
-  const navigate = useNavigate();
+export const useCategory = (categoryType) => {
+  const { getFetcher, postFetcher, putFetcher, deleteFetcher } = useApi();
   const { showToast } = useToast({});
 
-  const { data, refetch } = useQuery(
+  const { data, refetch: refetchCategoryList } = useQuery(
     ["categoryList"],
     async () => {
-      return await getFetcher(`/category`);
+      return await getFetcher(`/category/?categoryType=${categoryType}`);
     },
     {
       onError: async (e) => {
@@ -39,10 +37,58 @@ export const useCategory = () => {
       },
       onSuccess: (res) => {
         console.log(res);
-        refetch();
+        refetchCategoryList();
         showToast({
           message: "카테고리를 생성했어요.",
           theme: ToastTheme.SUCCESS,
+        });
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const { mutate: changeCategory }  = useMutation(
+    async (data) => {
+      return await putFetcher(`/category/${data.id}`, {name: data.name, color: data.color, type: data.type})
+    },
+    {
+      onError: async (e) => {
+        console.log(e);
+      },
+      onSuccess: (res) => {
+        console.log(res);
+        refetchCategoryList();
+        showToast({
+          message: "카테고리를 수정했어요.",
+          theme: ToastTheme.SUCCESS,
+        });
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const { mutate: deleteCategory }  = useMutation(
+    async (categoryId) => {
+      return await deleteFetcher(`/category/${categoryId}`)
+    },
+    {
+      onError: async (e) => {
+        console.log(e);
+      },
+      onSuccess: (res) => {
+        console.log(res);
+        refetchCategoryList();
+        showToast({
+          message: "카테고리를 삭제했어요.",
+          theme: ToastTheme.ERROR,
         });
       },
       retry: (cnt) => {
@@ -59,7 +105,10 @@ export const useCategory = () => {
 
   return {
     categoryList,
+    refetchCategoryList,
     createCategory,
     firstCategoryIndex,
+    changeCategory,
+    deleteCategory
   };
 };

@@ -100,9 +100,9 @@ const LoginPage = () => {
       }
     } catch (e) {
       console.log(e);
-      if (e.response.status === 401) {
+      if (e.response.status === 400) {
         showToast({
-          message: "회원정보가 일치하지 않습니다.",
+          message: e.response.data.message,
           theme: ToastTheme.ERROR,
         });
       }
@@ -182,6 +182,7 @@ const S = {
     justify-content: space-between;
     height: 100vh;
     width: 100%;
+    background-color: var(--color-white);
   `,
   TopArea: styled.div`
     margin-top: 80px;

@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import styled from "styled-components";
 import BlackScreen from "../BlackScreen/BlackScreen";
 import CategoryTag from "../CategoryTag/CategoryTag";
+import ButtonV2, { ButtonTheme } from "../ButtonV2/ButtonV2";
 
 const PrayDateCategoryInput = ({
   categoryList, // 메인의 카테고리 목록
@@ -16,12 +17,14 @@ const PrayDateCategoryInput = ({
   isDefault, // 디폴트 값 존재하는지
   isShowWordCount, // 글자수 유무
   value, // 이전 화면에서 기도제목 입력 내용
+  date, // 이전 화면에서 날짜 선택 내용
   category, // 이전 화면에서 카테고리 선택ID
   setUpdateValue, // api 호출용 기도제목 내용 데이터 저장 함수
   setUpdateDate, // api 호출용 날짜 데이터 저장 함수
   setUpdateCategory, // api 호출용 카테고리 데이터 저장 함수
   onClickFunc, // 버튼 눌렀을 때 이벤트 함수
   buttonText, // 버튼 text
+  lockerCount, // [보관함에서만 사용] 선택된 기도제목 개수
 }) => {
   const outside = useRef();
   const modalInputRef = useRef(null);
@@ -59,29 +62,36 @@ const PrayDateCategoryInput = ({
       >
         <div style={{ display: "flex", gap: "16px", flexDirection: "column" }}>
           <SubModalTop>
-            <ModalInputWrapper>
-              <ModalInput
-                placeholder={inputPlaceHolder}
-                maxRows={maxrow}
-                minRows={1}
-                cacheMeasurements
-                maxLength={maxlen}
-                onChange={onInputHandler}
-                disabled={isDefault ? true : false}
-                value={isDefault ? "기도제목을 입력하였습니다." : value}
-                ref={modalInputRef}
-              />
-              {isShowWordCount && (
-                <Countwords>
-                  <p>
-                    {inputCount}자 / {maxlen}자
-                  </p>
-                </Countwords>
-              )}
-            </ModalInputWrapper>
+            {lockerCount === 0 ? (
+              <ModalInputWrapper>
+                <ModalInput
+                  placeholder={inputPlaceHolder}
+                  maxRows={maxrow}
+                  minRows={1}
+                  cacheMeasurements
+                  maxLength={maxlen}
+                  onChange={onInputHandler}
+                  disabled={isDefault ? true : false}
+                  value={value}
+                  ref={modalInputRef}
+                />
+                {isShowWordCount && (
+                  <Countwords>
+                    <p>
+                      {inputCount}자 / {maxlen}자
+                    </p>
+                  </Countwords>
+                )}
+              </ModalInputWrapper>
+            ) : (
+              <LockerCountText>
+                {lockerCount}개의 기도제목을 선택했어요
+              </LockerCountText>
+            )}
             <SelectDate
               setUpdateDate={setUpdateDate}
               showSubModal={showSubModal}
+              date={date}
             />
           </SubModalTop>
           <SubModalCategory>
@@ -93,7 +103,15 @@ const PrayDateCategoryInput = ({
             />
           </SubModalCategory>
         </div>
-        <SubModalBottom onClick={onClickFunc}>{buttonText}</SubModalBottom>
+        <FixedButtonContainer>
+          <ButtonV2
+            buttonTheme={ButtonTheme.FILLED}
+            disabled={inputCount === 0}
+            handler={onClickFunc}
+          >
+            {buttonText}
+          </ButtonV2>
+        </FixedButtonContainer>
       </SubModalWrapper>
     </>
   );
@@ -105,6 +123,7 @@ PrayDateCategoryInput.defaultProps = {
   maxrow: 3,
   isShowWordCount: true,
   isDefault: false,
+  lockerCount: 0,
 };
 
 export default PrayDateCategoryInput;
@@ -167,17 +186,20 @@ const Countwords = styled.span`
   color: var(--color-secondary-grey);
 `;
 
-const SubModalBottom = styled.div`
-  background: var(--color-dark-green);
-  border-radius: 16px;
-  font-weight: 500;
+const FixedButtonContainer = styled.div`
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+`;
+
+const LockerCountText = styled.span`
   font-size: 16px;
-  text-align: center;
-  color: var(--color-white);
-  padding: 20px 0px;
-  &:active {
-    transition: all 0.2s ease-in-out;
-    filter: ${(props) =>
-      props.disabled ? "brightness(1)" : "brightness(0.9)"};
-  }
+  color: var(--color-green);
+  padding: 0px 2px 4px;
+  height: 23px;
+  border-bottom: 1px solid var(--color-white-green);
+  margin-bottom: 12px;
 `;

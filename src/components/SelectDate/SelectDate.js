@@ -6,6 +6,7 @@ import Calender from "../Calender/Calender";
   props 넘겨받을 목록 (History.js 파일 참고하기)
   1. setUpdateDate 변수 (api 호출용 날짜 데이터 저장)
   2. showSubModal 변수 (현재 컴포넌트 창 켜져있는지)
+  3. date 변수 (기존 선택되어야 하는 날짜)
 */
 
 const SelectDate = (props) => {
@@ -14,6 +15,22 @@ const SelectDate = (props) => {
   const [designedDate, setDesignedDate] = useState(null); // yyyy-mm-dd (요일) 형태
   const [selectedDate, setSelectedDate] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  useEffect(() => {
+    if (props.date) {
+      // 넘겨받은 date가 있으면
+      const dateObject = new Date(props.date);
+      props.setUpdateDate(props.date);
+      onChangeDate(dateObject);
+      setDesignedDate(dateWithDayOfWeek(props.date));
+      setSelectedBtn();
+      setSelectedDate(dateObject);
+    } else {
+      // 넘겨받은 date가 없으면
+      onChangeDate(7);
+      setSelectedDate();
+    }
+  }, []);
 
   const onClickCalendar = () => {
     if (selectedBtn === "calendar") {
@@ -51,12 +68,15 @@ const SelectDate = (props) => {
     props.setUpdateDate(formattedDate);
   };
 
-  useEffect(() => {
-    if (props.showSubModal) {
-      onChangeDate(7);
-      setSelectedDate();
-    }
-  }, [props.showSubModal]);
+  const dateWithDayOfWeek = (inputDate) => {
+    const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
+    const [year, month, day] = inputDate.split("-").map(Number);
+    const formattedDate = new Date(year, month - 1, day);
+    const dayOfWeekIndex = formattedDate.getDay();
+    const dayOfWeek = daysOfWeek[dayOfWeekIndex];
+
+    return `${inputDate} ${dayOfWeek}`;
+  };
 
   return (
     <SelectDateWrapper>

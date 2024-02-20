@@ -1,43 +1,91 @@
-import { useState } from "react";
 import styled from "styled-components";
+import { usePray } from "../../hooks/usePray";
+import GreenCheckbox from "../GreenCheckbox/GreenCheckbox";
 
 const ICON_HEART_FILLED = "images/ic_filled_heart.svg";
 const ICON_HEART_EMPTY = "images/ic_empty_heart.svg";
 
-const Category = ({ title, color, setSelectedTitleIndex }) => {
-  const [selected, setSelected] = useState([]);
-  const titles = ["기도제목1", "기도제목2", "기도제목3"];
+const Category = ({
+  categoryId,
+  title,
+  color,
+  setSelectedPrayInfo,
+  prays,
+  onDotIconClicked,
+  setClickedCategoryData,
+  tabType,
+  categoryRef,
+  refIndex,
+  setShowOption,
+  shareMode,
+  setCheckedList,
+  checkedList,
+}) => {
+  const { todayPray, cancelPray } = usePray(tabType);
 
-  const handleClick = (e, index) => {
+  const handleClick = (e, pray) => {
     e.stopPropagation();
-    setSelected((prev) => {
-      const newSelected = [...prev];
-      newSelected[index] = !newSelected[index];
-      return newSelected;
-    });
+    if (pray.isPrayedToday) {
+      cancelPray(pray.prayId);
+    } else {
+      todayPray(pray.prayId);
+    }
   };
 
-  const titleClick = (e, index) => {
-    setSelectedTitleIndex(index);
+  const titleClick = (pray) => {
+    if (shareMode) return;
+    setShowOption(false);
+    const { name, categoryName, isPrayedToday, ...selectedPrayInfoSubset } =
+      pray;
+    setSelectedPrayInfo(selectedPrayInfoSubset);
+  };
+
+  const handleCheck = (e, prayId) => {
+    if (e.target.checked) {
+      setCheckedList([...checkedList, prayId]);
+    } else {
+      setCheckedList(checkedList.filter((id) => id !== prayId));
+    }
+  };
+
+  const handleCategoryTitleClick = () => {
+    onDotIconClicked();
+    setClickedCategoryData({ id: categoryId, color: color, name: title });
   };
 
   return (
-    <CategoryContainer>
-      <Title color={color}>{title}</Title>
+    <CategoryContainer ref={(el) => (categoryRef.current[refIndex] = el)}>
+      <Title color={color}>
+        {title}
+        {!shareMode && (
+          <img
+            src="/images/ic_dot.svg"
+            alt="dot_icon"
+            onClick={handleCategoryTitleClick}
+          />
+        )}
+      </Title>
       <ItemList>
-        {titles.map((title, index) => (
-          <Item key={index}>
+        {prays.map((pray) => (
+          <Item key={pray.prayId}>
             <ItemText
-              selected={selected[index]}
-              onClick={(e) => titleClick(e, index)}
+              selected={pray.isPrayedToday}
+              onClick={(e) => titleClick(pray)}
             >
-              {title}
+              {pray.content}
             </ItemText>
-            <img
-              src={selected[index] ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
-              alt="heart_icon"
-              onClick={(e) => handleClick(e, index)}
-            />
+            {shareMode ? (
+              <GreenCheckbox
+                id={pray.prayId}
+                handler={(e) => handleCheck(e, pray.prayId)}
+              />
+            ) : (
+              <img
+                src={pray.isPrayedToday ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
+                alt="heart_icon"
+                onClick={(e) => handleClick(e, pray)}
+              />
+            )}
           </Item>
         ))}
       </ItemList>
@@ -60,8 +108,11 @@ const Title = styled.div`
   background-color: ${(props) => props.color};
   border-radius: 16px 16px 0px 0px;
   padding: 12px 16px;
-  color: #ffffff;
+  color: ${(props) => (props.color === "#D0E8CB" ? "#A0A0A0" : "#FFFFFF")};
   font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const ItemList = styled.div`

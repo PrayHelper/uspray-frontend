@@ -1,15 +1,16 @@
-import { useQuery } from "react-query";
+import { useQuery } from 'react-query';
 import useApi from './useApi';
 
-export const useFetchNotifications = () => {
+export const useCheckLogin = () => {
   const { getFetcher } = useApi();
-  return useQuery(
-    ["FetchNotifications"],
+
+  const { data } = useQuery(
+    ['CheckLogin'],
     async () => {
-      return await getFetcher("/user/notifications");
+      return await getFetcher(`/auth/login-check`)
     },
     {
-      onError: (e) => {
+      onError: async (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
@@ -22,4 +23,10 @@ export const useFetchNotifications = () => {
       refetchOnWindowFocus: false,
     }
   );
-};
+
+  const isSocialLogin = data?.data.data || {};
+
+  return {
+    isSocialLogin
+  };
+}

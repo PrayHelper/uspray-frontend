@@ -1,8 +1,15 @@
-import React from 'react';
-import styled from 'styled-components';
-import GroupPrayItem from './GroupPrayItem';
+import React from "react";
+import styled from "styled-components";
+import GroupPrayItem from "./GroupPrayItem";
 
-const GroupPrayList = ({group, groupPrayList, isData}) => {
+const GroupPrayList = ({
+  group,
+  groupPrayList,
+  isData,
+  categoryList,
+  firstCategoryIndex,
+  setTab,
+}) => {
   const groupedData = Object.keys(groupPrayList).map((date) => {
     return {
       date,
@@ -11,26 +18,31 @@ const GroupPrayList = ({group, groupPrayList, isData}) => {
   });
   return (
     <Wrapper>
-      {
-        isData ?
-          <PrayList>
-            {
-              groupedData.map((data) => {
-                return (
-                  <PrayContent>
-                    <DateDiv>{data.date}</DateDiv>
-                    {data.pray.map((pray) => <GroupPrayItem groupId={group.id} pray={pray}/>)}
-                  </PrayContent>
-                )
-              })
-            }
-          </PrayList>
-          :
-          <NoDataWrapper>
-            <div>{group.name} 모임원에게</div>
-            <div>기도제목을 공유해보세요.</div>
-          </NoDataWrapper>
-      }
+      {isData ? (
+        <PrayList>
+          {groupedData.map((data) => {
+            return (
+              <PrayContent>
+                <DateDiv>{data.date}</DateDiv>
+                {data.pray.map((pray) => (
+                  <GroupPrayItem
+                    groupId={group.id}
+                    pray={pray}
+                    categoryList={categoryList}
+                    firstCategoryIndex={firstCategoryIndex}
+                    setTab={setTab}
+                  />
+                ))}
+              </PrayContent>
+            );
+          })}
+        </PrayList>
+      ) : (
+        <NoDataWrapper>
+          <div>{group.name} 모임원에게</div>
+          <div>기도제목을 공유해보세요.</div>
+        </NoDataWrapper>
+      )}
     </Wrapper>
   );
 };
@@ -61,7 +73,7 @@ const PrayList = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`
+`;
 
 const PrayContent = styled.div`
   width: 100%;
@@ -70,7 +82,7 @@ const PrayContent = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 16px;
-`
+`;
 
 const DateDiv = styled.div`
   padding: 4px 8px;
@@ -79,6 +91,6 @@ const DateDiv = styled.div`
   border-radius: 10px;
   width: fit-content;
   background-color: var(--color-green);
-`
+`;
 
 export default GroupPrayList;

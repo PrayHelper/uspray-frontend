@@ -6,7 +6,7 @@ export const WrapperStyle = styled.div`
     ${(props) => (props.isError ? "#FF6B6B" : "#7BAB6E")};
   border-radius: 15px;
   margin: ${(props) => (props.isFocused ? "-1px" : "0px")};
-
+  background-color: var(--color-white);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -27,9 +27,9 @@ export const LabelStyle = styled.span`
   font-size: ${(props) => (props.isFocused ? "12px" : "16px")};
   color: ${(props) => (props.isError ? "#FF6B6B" : "#7BAB6E")};
   padding: 0px 5px;
-  z-index: ${(props) => (props.isFocused ? "0" : "-1")};
+  /* z-index: ${(props) => (props.isFocused ? "1" : "0")}; */
 
-  background-color: ${(props) => (props.isFocused ? "#FFFFFFFF" : "#FFFFFF00")};
+  background-color: ${(props) => (props.isFocused ? "#FFFFFFFF" : "#FFFFFFFF")};
   transition: all 0.2s;
   border-radius: 8px;
 `;

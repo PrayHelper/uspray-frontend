@@ -1,30 +1,150 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import MainContent from "../components/Main/MainContent";
 import { useState } from "react";
 import ButtonV2, { ButtonTheme } from "../components/ButtonV2/ButtonV2";
+import BlackScreen from "../components/BlackScreen/BlackScreen";
+import Modal from "../components/Modal/Modal";
+import Overlay from "../components/Overlay/Overlay";
 import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../hooks/useCategory";
-import { useSendPrayItem } from "../hooks/useSendPrayItem";
+import { usePray } from "../hooks/usePray";
+import { useLocation } from "react-router-dom";
+import useFlutterWebview from "../hooks/useFlutterWebview";
+import { useShare } from "../hooks/useShare";
+import Locker from "./Locker";
+import ChangeCategoryOrder from "./ChangeCategoryOrder";
+import { useFetchSharedList } from "../hooks/useFetchSharedList";
 
 const Main = () => {
-  const { categoryList, firstCategoryIndex } = useCategory();
-  const { mutate: mutateSendPrayItem } = useSendPrayItem();
   const [tab, setTab] = useState("내가 쓴");
   const [bgColor, setBgColor] = useState("#7BAB6E");
-  const [inputValue, setInputValue] = useState("");
+
   const [showCategorySetting, setShowCategorySetting] = useState(false);
-  const [selectedColor, setSelectedColor] = useState("#D0E8CB");
+
   const [showSubModal, setShowSubModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showOption, setShowOption] = useState(false);
+  const [shareMode, setShareMode] = useState(false);
+  const [isLockerOverlayOn, setIsLockerOverlayOn] = useState(false);
+  const [isOrderOverlayOn, setIsOrderOverlayOn] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
+  const [dotIconClicked, setDotIconClicked] = useState(false);
+  const [clickedCategoryData, setClickedCategoryData] = useState({});
+  const [inputValue, setInputValue] = useState("");
+  const tabType = tab === "내가 쓴" ? "personal" : "shared";
+  const categoryState = useCategory(tabType);
+  const prayState = usePray(tabType);
+  const { refetchCategoryList } = categoryState;
+  const {
+    categoryList,
+    firstCategoryIndex,
+    createCategory,
+    changeCategory,
+    deleteCategory,
+  } = categoryState;
+  const { refetchPrayList } = prayState;
+  const { prayList, createPray } = prayState;
+  const { shareLink, isMobile } = useFlutterWebview();
+  const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const shareIdsData = query.getAll("share");
+  const { mutate: receivePrays } = useShare();
+  const { sharedDataLength, refetchSharedListData } = useFetchSharedList();
+
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
+
+  const [categoryRefIndex, setCategoryRefIndex] = useState(0);
+  const categoryRef = useRef([]);
+
+  useEffect(() => {
+    if (categoryRef.current[categoryRefIndex]) {
+      categoryRef.current[categoryRefIndex].scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [categoryRef, categoryRefIndex]);
+
+  const ColorList = [
+    "#D0E8CB",
+    "#AEDBA5",
+    "#9BD88A",
+    "#75BD62",
+    "#649D55",
+    "#58834D",
+    "#507247",
+  ];
+  const [selectedColor, setSelectedColor] = useState(ColorList[0]);
+
+  useEffect(() => {
+    if (dotIconClicked) setInputValue(clickedCategoryData.name);
+    else setInputValue("");
+  }, [clickedCategoryData, dotIconClicked]);
+
+  useEffect(() => {
+    if (ColorList.includes(clickedCategoryData.color)) {
+      setSelectedColor(clickedCategoryData.color);
+    } else {
+      setSelectedColor(ColorList[0]);
+    }
+  }, [clickedCategoryData]);
+
+  const createCategoryHandler = async (categoryData) => {
+    try {
+      await createCategory(categoryData);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setShowCategorySetting(false);
+      setInputValue("");
+    }
+  };
+
+  const changeCategoryHandler = async (data) => {
+    try {
+      await changeCategory(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setDotIconClicked(false);
+      setInputValue("");
+    }
+  };
+
+  const deleteCategoryHandler = async (categoryId) => {
+    try {
+      await deleteCategory(categoryId);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setDotIconClicked(false);
+      setInputValue("");
+    }
+  };
+
+  useEffect(() => {
+    refetchCategoryList();
+    refetchPrayList();
+    refetchSharedListData();
+  }, [tab]);
+
+  useEffect(() => {
+    refetchPrayList();
+    setSelectedCategoryIndex(firstCategoryIndex);
+  }, [categoryList]);
 
   const handleTabChange = (newTab) => {
     setTab(newTab);
     setBgColor(newTab === "내가 쓴" ? "#7BAB6E" : "#3D5537");
+  };
+
+  const clickLocker = () => {
+    setIsLockerOverlayOn(true);
   };
 
   const handleInputChange = (e) => {
@@ -35,9 +155,13 @@ const Main = () => {
     e.stopPropagation();
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   // 기도를 추가하는 함수
   const onInsert = async (text, deadline, categoryId) => {
-    mutateSendPrayItem(
+    createPray(
       { content: text, deadline: deadline, categoryId: categoryId },
       {
         onSuccess: () => {
@@ -50,25 +174,61 @@ const Main = () => {
     );
   };
 
+  const onShareReceive = async (prayIds) => {
+    receivePrays(
+      { prayIds: prayIds },
+      {
+        onSuccess: () => {
+          setIsLockerOverlayOn(true);
+        },
+      }
+    );
+  };
+
+  const onShare = async (checkedPrayIds) => {
+    setShareMode(false);
+    const stringPrayIds = checkedPrayIds.join(",");
+    var encodePrayIds = window.btoa(stringPrayIds.toString());
+    if (isMobile()) {
+      if (/android/i.test(navigator.userAgent)) {
+        shareLink({
+          title: "Web_invite",
+          url: `${WEB_ORIGIN}/main?share=` + encodePrayIds,
+        });
+      } else if (
+        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        navigator.share
+      ) {
+        navigator.share({
+          title: "Web_invite",
+          url: `${WEB_ORIGIN}/main?share=` + encodePrayIds,
+        });
+      } else {
+        alert("공유하기가 지원되지 않는 환경 입니다.");
+      }
+    }
+    console.log(`${WEB_ORIGIN}/main?share=` + encodePrayIds);
+  };
+
   const onClickPrayInput = () => {
     if (categoryList.length === 0) {
-      console.log("카테고리를 추가해주세요");
+      setShowModal(true);
     } else {
       setShowSubModal(!showSubModal);
     }
   };
 
-  const ColorList = [
-    "#D0E8CB",
-    "#AEDBA5",
-    "#9BD88A",
-    "#75BD62",
-    "#649D55",
-    "#58834D",
-    "#507247",
-  ];
+  const onDotIconClicked = () => {
+    setDotIconClicked(true);
+  };
 
   useEffect(() => {
+    if (shareIdsData.length === 1) {
+      const decodedPrayIds = window.atob(shareIdsData[0]).split(",");
+      console.log(decodedPrayIds); // dev.uspray.kr 에서 테스트 후, 삭제
+      onShareReceive(decodedPrayIds);
+      handleTabChange("공유 받은");
+    }
     if (categoryList.length > 0) {
       setSelectedCategoryIndex(firstCategoryIndex);
     }
@@ -76,6 +236,16 @@ const Main = () => {
 
   return (
     <MainWrapper style={{ backgroundColor: bgColor }}>
+      <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
+      <Modal
+        isModalOn={showModal}
+        iconSrc={"images/icon_notice.svg"}
+        iconAlt={"icon_notice"}
+        mainContent={"카테고리를 먼저 추가해주세요!"}
+        subContent={"기도제목은 카테고리 안에서 생성됩니다."}
+        btnContent={"네, 그렇게 할게요."}
+        onClickBtn={handleCloseModal}
+      />
       <TopContainer>
         <TopBox>
           <TabContainer>
@@ -128,8 +298,8 @@ const Main = () => {
               />
             )
           ) : (
-            <MoveToLockerButton>
-              보관함에 3개의 기도제목이 있어요
+            <MoveToLockerButton onClick={() => clickLocker()}>
+              보관함에 {sharedDataLength}개의 기도제목이 있어요
             </MoveToLockerButton>
           )}
         </FlexContainer>
@@ -139,18 +309,40 @@ const Main = () => {
         setShowCategorySetting={setShowCategorySetting}
         selectedCategoryIndex={selectedCategoryIndex}
         setSelectedCategoryIndex={setSelectedCategoryIndex}
+        tabType={tabType}
+        refetchPrayList={refetchPrayList}
+        onDotIconClicked={onDotIconClicked}
+        setClickedCategoryData={setClickedCategoryData}
+        categoryRef={categoryRef}
+        setCategoryRefIndex={setCategoryRefIndex}
+        shareMode={shareMode}
+        setShowOption={setShowOption}
+        setShareMode={setShareMode}
+        listHandler={onShare}
       />
       {showCategorySetting && (
         <CategorySetting onClick={() => setShowCategorySetting(false)}>
           <Input
             type="text"
             value={inputValue}
-            placeholder="카테고리를 입력해주세요"
+            placeholder={"카테고리를 입력해주세요"}
             onChange={handleInputChange}
             onClick={handleInnerClick}
           />
           <FixedButtonContainer onClick={handleInnerClick}>
-            <ButtonV2 buttonTheme={ButtonTheme.FILLED}>카테고리 추가</ButtonV2>
+            <ButtonV2
+              buttonTheme={ButtonTheme.FILLED}
+              disabled={!inputValue}
+              handler={() =>
+                createCategoryHandler({
+                  name: inputValue,
+                  color: selectedColor,
+                  type: tabType,
+                })
+              }
+            >
+              카테고리 추가
+            </ButtonV2>
           </FixedButtonContainer>
           <ColorPalette>
             {ColorList.map((color) => (
@@ -167,6 +359,107 @@ const Main = () => {
           </ColorPalette>
         </CategorySetting>
       )}
+      {dotIconClicked && (
+        <CategorySetting onClick={() => setDotIconClicked(false)}>
+          <Input
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            onClick={handleInnerClick}
+          />
+          <FixedButtonContainer onClick={handleInnerClick}>
+            <ButtonV2
+              buttonTheme={ButtonTheme.OUTLINED}
+              handler={() => deleteCategoryHandler(clickedCategoryData.id)}
+            >
+              카테고리 삭제
+            </ButtonV2>
+            <ButtonV2
+              buttonTheme={ButtonTheme.FILLED}
+              handler={() =>
+                changeCategoryHandler({
+                  id: clickedCategoryData.id,
+                  name: inputValue,
+                  color: selectedColor,
+                  type: tabType,
+                })
+              }
+            >
+              카테고리 수정
+            </ButtonV2>
+          </FixedButtonContainer>
+          <ColorPalette>
+            {ColorList.map((color) => (
+              <ColorDrop
+                color={color}
+                selectedColor={selectedColor}
+                onClick={(event) => {
+                  setSelectedColor(color);
+                  event.stopPropagation();
+                }}
+                key={color}
+              />
+            ))}
+          </ColorPalette>
+        </CategorySetting>
+      )}
+      {isLockerOverlayOn && (
+        <Overlay isOverlayOn={isLockerOverlayOn}>
+          <Locker
+            setIsOverlayOn={setIsLockerOverlayOn}
+            refetchPrayList={refetchPrayList}
+          />
+        </Overlay>
+      )}
+      {isOrderOverlayOn && (
+        <Overlay isOverlayOn={isOrderOverlayOn}>
+          <ChangeCategoryOrder setIsOverlayOn={setIsOrderOverlayOn} />
+        </Overlay>
+      )}
+      {!shareMode && (
+        <>
+          <OptionBtn
+            src="images/ic_main_option.svg"
+            alt="main_option_icon"
+            onClick={() => setShowOption(true)}
+            isVisible={!showOption}
+            movingDistance={0}
+          />
+          <OptionBtn
+            src="images/ic_main_option_close.svg"
+            alt="main_option_close_icon"
+            onClick={() => setShowOption(false)}
+            isVisible={showOption}
+            movingDistance={0}
+          />
+          <OptionBtn
+            src="images/ic_main_order.svg"
+            alt="main_order_icon"
+            onClick={() => {
+              if (categoryList.length === 0) {
+                setShowModal(true);
+                return;
+              }
+              setIsOrderOverlayOn(true);
+              setShowOption(false);
+            }}
+            isVisible={showOption}
+            movingDistance={72}
+          />
+        </>
+      )}
+      {tab === "내가 쓴" ? (
+        <OptionBtn
+          src="images/ic_main_share.svg"
+          alt="main_share_icon"
+          onClick={() => {
+            setShareMode(true);
+            setShowOption(false);
+          }}
+          isVisible={showOption}
+          movingDistance={144}
+        />
+      ) : null}
     </MainWrapper>
   );
 };
@@ -250,6 +543,13 @@ const MoveToLockerButton = styled.div`
     background-image: url("/images/ic_right_arrow.svg");
     background-size: contain;
   }
+
+  &:active {
+    transition: all 0.2s ease-in-out;
+    filter: ${(props) =>
+      props.disabled ? "brightness(1)" : "brightness(0.9)"};
+    scale: ${(props) => (props.disabled ? "1" : "0.98")};
+  }
 `;
 
 const CategorySetting = styled.div`
@@ -278,6 +578,9 @@ const FixedButtonContainer = styled.div`
   bottom: 64px;
   width: calc(100% - 32px);
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 const ColorDrop = styled.div`
@@ -302,4 +605,14 @@ const ColorDrop = styled.div`
     display: ${(props) =>
       props.color === props.selectedColor ? "block" : "none"};
   }
+`;
+
+const OptionBtn = styled.img`
+  opacity: ${(props) => (props.isVisible ? 1 : 0)};
+  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
+  position: fixed;
+  bottom: ${(props) =>
+    props.isVisible ? `calc(80px + ${props.movingDistance}px)` : "80px"};
+  right: 20px;
+  transition: all 0.2s ease;
 `;

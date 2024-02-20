@@ -15,7 +15,6 @@ import NotFound from "./pages/NotFound";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Main from "./pages/Main";
-import Locker from "./pages/Locker";
 import Group from "./pages/Group";
 import LoginPage from "./components/Login/LoginPage";
 import Settings from "./pages/Settings";
@@ -30,9 +29,6 @@ import FindIdResult from "./components/Find/IdResult";
 import FindPassword from "./components/Find/FindPassword";
 import FindPasswordResult from "./components/Find/PwResult";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
-import ChangeInfo from "./pages/ChangeInfo";
-import ChangePw from "./pages/ChangePw";
-import ChangePhoneNumber from "./pages/ChangePhoneNumber";
 import SocialLogin from "./pages/SocialLogin";
 import useAuthToken from "./hooks/useAuthToken";
 import useRefresh from "./hooks/useRefresh";
@@ -48,6 +44,9 @@ import CreateGroup from "./pages/CreateGroup";
 import LeaveGroup from "./pages/LeaveGroup";
 import SocialLoginNameInput from "./pages/SocialLoginNameInput";
 import SocialRedirecting from "./pages/SocialRedirecting";
+import DeleteUser from "./pages/DeleteUser";
+import ChangeCategoryOrder from "./pages/ChangeCategoryOrder";
+import ChangeInfoSocial from "./components/ChangeInfo/ChangeInfoSocial";
 import AppleRedirecting from "./pages/AppleRedirecting";
 
 const ContainerWrapper = styled.div`
@@ -108,18 +107,20 @@ function App() {
                   <Route path="/group" element={<Group />} />
                   <Route path="/settings" element={<Settings />} />
                 </Route>
-                <Route path="/locker" element={<Locker />} />
                 <Route path="/leaveGroup" element={<LeaveGroup />} />
                 <Route path="/createGroup" element={<CreateGroup />} />
                 <Route path="/checkInfo" element={<CheckInfo />} />
-                <Route path="/changeInfo" element={<ChangeInfo />} />
-                <Route path="/changePw" element={<ChangePw />} />
-                <Route
-                  path="/changePhoneNumber"
-                  element={<ChangePhoneNumber />}
-                />
                 <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                 <Route path="/social" element={<SocialLogin />} />
+                <Route
+                  path="/change-category-order/:categoryType"
+                  element={<ChangeCategoryOrder />}
+                />
+                <Route
+                  path="/changeInfoSocial"
+                  element={<ChangeInfoSocial />}
+                />
+                <Route path="/deleteUser" element={<DeleteUser />} />
               </Route>
               <Route element={<Outlet />}>
                 <Route path="/" element={<Login />} />

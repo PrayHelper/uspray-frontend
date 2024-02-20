@@ -61,7 +61,7 @@ const UserHeader = ({
       <FixedStyledHeader>
         <BackButton
           onClick={goBack}
-          src="images/back_button.svg"
+          src="/images/back_button.svg"
           alt="back_button"
         />
         <Title>{children}</Title>
@@ -73,7 +73,7 @@ const UserHeader = ({
     <StyledHeader>
       <BackButton
         onClick={back ? back : goBack}
-        src="images/back_button.svg"
+        src="/images/back_button.svg"
         alt="back_button"
       />
       <Title>{children}</Title>
