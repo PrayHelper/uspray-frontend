@@ -26,6 +26,8 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
     useCategory(tab);
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
+  const [isPraySelected, setIsPraySelected] = useState(false);
+
   const [categoryRefIndex, setCategoryRefIndex] = useState(0);
   const categoryRef = useRef([]);
 
@@ -125,6 +127,7 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
           shareMode={shareMode}
           setShareMode={setShareMode}
           listHandler={onGroupPray}
+          setIsPraySelected={setIsPraySelected}
         />
       )}
     </Wrapper>
