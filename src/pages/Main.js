@@ -383,6 +383,7 @@ const Main = () => {
             </ButtonV2>
             <ButtonV2
               buttonTheme={ButtonTheme.FILLED}
+              disabled={!inputValue}
               handler={() =>
                 changeCategoryHandler({
                   id: clickedCategoryData.id,
