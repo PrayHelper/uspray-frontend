@@ -26,6 +26,7 @@ const MainContent = ({
   setShowOption,
   setShareMode,
   listHandler,
+  setIsPraySelected,
 }) => {
   const [selectedPrayInfo, setSelectedPrayInfo] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -52,6 +53,11 @@ const MainContent = ({
       setShowSubModal(true);
     }
   }, [modifyPrayInfo]);
+
+  useEffect(() => {
+    if (showSubModal) setIsPraySelected(true);
+    else setIsPraySelected(false);
+  }, [showSubModal]);
 
   useEffect(() => {
     if (!shareMode) setCheckedList([]);
