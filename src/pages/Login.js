@@ -3,6 +3,8 @@ import styled from "styled-components";
 import SocialLoginLongButton from "../components/SocialLogin/SocialLoginLongButton";
 import LogoSVG from "../images/logo_image.svg";
 import { Link } from "react-router-dom";
+import BlackScreen from "../components/BlackScreen";
+import Modal from "../components/Modal/Modal";
 
 const S = {
   SocialLoginWrapper: styled.div`
@@ -75,6 +77,7 @@ const S = {
 
 const SocialLogin = () => {
   const [isSmallViewport, setIsSmallViewport] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -88,6 +91,10 @@ const SocialLogin = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  const tempModal = () => {
+    setShowModal(true);
+  };
 
   const continueWithKakao = () => {
     window.location.href = `${process.env.REACT_APP_API_ORIGIN}/oauth2/authorization/kakao`;
@@ -112,6 +119,23 @@ const SocialLogin = () => {
 
   return (
     <S.SocialLoginWrapper>
+      {showModal && (
+        <>
+          <BlackScreen
+            isModalOn={showModal}
+            onClick={() => setShowModal(false)}
+          />
+          <Modal
+            isModalOn={showModal}
+            iconSrc={"images/icon_notice.svg"}
+            iconAlt={"icon_notice"}
+            mainContent={"기능이 곧 완성돼요!"}
+            subContent={"아이디 로그인을 이용해주세요"}
+            btnContent={"네, 그렇게 할게요."}
+            onClickBtn={() => setShowModal(false)}
+          />
+        </>
+      )}
       <S.LogoWrapper isViewportSmall={isSmallViewport}>
         <S.LogoImg src={LogoSVG} alt="logo" />
         <S.LogoTitle>Uspray</S.LogoTitle>
@@ -119,9 +143,9 @@ const SocialLogin = () => {
       </S.LogoWrapper>
       <S.BottomWrapper>
         <S.BtnWrapper>
-          <SocialLoginLongButton theme={"kakao"} onClick={continueWithKakao} />
-          <SocialLoginLongButton theme={"naver"} onClick={continueWithNaver} />
-          <SocialLoginLongButton theme={"apple"} onClick={continueWithApple} />
+          <SocialLoginLongButton theme={"kakao"} onClick={tempModal} />
+          <SocialLoginLongButton theme={"naver"} onClick={tempModal} />
+          <SocialLoginLongButton theme={"apple"} onClick={tempModal} />
         </S.BtnWrapper>
         <S.BottomLinks>
           <S.BottomLink to="/signup">회원가입하기</S.BottomLink>

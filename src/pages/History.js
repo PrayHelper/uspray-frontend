@@ -77,6 +77,10 @@ const History = () => {
     return data.length === 0 ? true : false;
   };
 
+  const isDataLengthZero =
+    (tab === "personal" && isEmptyData(personalHistoryList)) ||
+    (tab === "shared" && isEmptyData(sharedHistoryList));
+
   const onClickExitModal = () => {
     setShowModal(false);
     setSelectedHistoryId(null);
@@ -181,7 +185,6 @@ const History = () => {
 
   useEffect(() => {
     if (selectedHistoryId) {
-      console.log("historyDetail", historyDetail);
       setShowModal(true);
     }
   }, [selectedHistoryId]);
@@ -238,7 +241,7 @@ const History = () => {
           />
         </LottieWrapper>
       )}
-      {!loading && isEmptyData(personalHistoryList) && (
+      {!loading && isDataLengthZero && (
         <NoDataWrapper>
           <NoDataTitle>완료된 기도제목이 없네요.</NoDataTitle>
           <NoDataContent>기간이 지나면 히스토리에 저장됩니다!</NoDataContent>
@@ -279,7 +282,6 @@ const History = () => {
       </div>
       {tab === "personal" && (
         <div style={{ paddingTop: "115px" }}>
-          {/* <div> */}
           {personalHistoryList.map((el) => (
             <div
               onClick={() => setSelectedHistoryId(el.historyId)}
@@ -300,7 +302,7 @@ const History = () => {
         <div style={{ paddingTop: "115px" }}>
           {sharedHistoryList.map((el) => (
             <div
-              onClick={() => setSelectedHistoryId(el.HistoryId)}
+              onClick={() => setSelectedHistoryId(el.historyId)}
               key={el.historyId}
               id={el.historyId}
             >

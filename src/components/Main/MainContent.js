@@ -11,6 +11,7 @@ import BlackScreen from "../BlackScreen";
 import Modal from "../Modal/Modal";
 import useToast from "../../hooks/useToast";
 import PrayDateCategoryInput from "../PrayDateCategoryInput/PrayDateCategoryInput";
+import useBottomNav from "../../hooks/useBottomNav";
 
 const MainContent = ({
   categoryList,
@@ -26,6 +27,7 @@ const MainContent = ({
   setShowOption,
   setShareMode,
   listHandler,
+  setIsPraySelected,
 }) => {
   const [selectedPrayInfo, setSelectedPrayInfo] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -38,6 +40,7 @@ const MainContent = ({
   const [checkedList, setCheckedList] = useState([]);
   const { prayList, deletePray, completePray, modifyPray } = usePray(tabType);
   const { showToast } = useToast({});
+  const { setIsVisible } = useBottomNav();
 
   const prayModify = () => {
     setModifyPrayInfo(selectedPrayInfo);
@@ -52,6 +55,16 @@ const MainContent = ({
       setShowSubModal(true);
     }
   }, [modifyPrayInfo]);
+
+  useEffect(() => {
+    if (showSubModal || showModal) {
+      setIsPraySelected(true);
+      setIsVisible(false);
+    } else {
+      setIsPraySelected(false);
+      setIsVisible(true);
+    }
+  }, [showSubModal, showModal]);
 
   useEffect(() => {
     if (!shareMode) setCheckedList([]);
@@ -77,8 +90,14 @@ const MainContent = ({
     );
   };
 
-  const onCancle = () => {
+  const onCancel = () => {
     setShareMode(false);
+    setShowModal(false);
+    setSelectedPrayInfo(null);
+  };
+
+  const onDelete = () => {
+    setShowModal(true);
   };
 
   const clickShareButton = () => {
@@ -118,7 +137,7 @@ const MainContent = ({
                   },
                 });
               }}
-              onClickBtn2={() => setShowModal(false)}
+              onClickBtn2={onCancel}
               modalTheme={2}
             />
           </>
@@ -179,7 +198,10 @@ const MainContent = ({
             ))}
         </Content>
       </MainContentWrapper>
-      <BottomSetWrapper selectedPrayInfo={selectedPrayInfo}>
+      <BottomSetWrapper
+        selectedPrayInfo={selectedPrayInfo}
+        showModal={showModal}
+      >
         <BottomButtonWrapper>
           <img src={completeImage} />
           <BottomButtonText
@@ -207,7 +229,7 @@ const MainContent = ({
         </BottomButtonWrapper>
         <BottomButtonWrapper>
           <img src={deleteImage} />
-          <BottomButtonText color={"red"} onClick={() => setShowModal(true)}>
+          <BottomButtonText color={"red"} onClick={() => onDelete()}>
             삭제하기
           </BottomButtonText>
         </BottomButtonWrapper>
@@ -218,7 +240,7 @@ const MainContent = ({
           <ShareButtonWrapper
             disabled={true}
             color={"white"}
-            onClick={onCancle}
+            onClick={onCancel}
           >
             취소하기
             <ShareButtonImage src="images/ic_share_cancel.svg" />
@@ -237,6 +259,7 @@ const MainContent = ({
         selectedPrayInfo={selectedPrayInfo}
         shareMode={shareMode}
         onClick={clickBlackBackground}
+        showModal={showModal}
       />
     </>
   );
@@ -298,7 +321,8 @@ const BottomSetWrapper = styled.div`
   width: 100%;
   padding: 37px 24px;
   transition: all 0.3s ease-in-out;
-  bottom: ${(props) => (props.selectedPrayInfo === null ? "-100%" : "0px")};
+  bottom: ${(props) =>
+    props.selectedPrayInfo === null || props.showModal ? "-100%" : "0px"};
   z-index: 202;
   border-radius: 24px 24px 0px 0px;
   background: #fff;
@@ -405,7 +429,7 @@ const ShareNumberText = styled.div`
 const BlackBackground = styled.div`
   transition: all 0.3s ease-in-out;
   background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
+  display: ${(props) => (!props.showModal ? "flex" : "none")};
   position: fixed;
   top: 0;
   right: 0;

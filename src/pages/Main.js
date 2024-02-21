@@ -54,6 +54,7 @@ const Main = () => {
   const shareIdsData = query.getAll("share");
   const { mutate: receivePrays } = useShare();
   const { sharedDataLength, refetchSharedListData } = useFetchSharedList();
+  const [isPraySelected, setIsPraySelected] = useState(false);
 
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
@@ -85,6 +86,10 @@ const Main = () => {
     if (dotIconClicked) setInputValue(clickedCategoryData.name);
     else setInputValue("");
   }, [clickedCategoryData, dotIconClicked]);
+
+  useEffect(() => {
+    setShowOption(false);
+  }, [isPraySelected]);
 
   useEffect(() => {
     if (ColorList.includes(clickedCategoryData.color)) {
@@ -131,6 +136,7 @@ const Main = () => {
     refetchCategoryList();
     refetchPrayList();
     refetchSharedListData();
+    setShowOption(false);
   }, [tab]);
 
   useEffect(() => {
@@ -319,6 +325,7 @@ const Main = () => {
         setShowOption={setShowOption}
         setShareMode={setShareMode}
         listHandler={onShare}
+        setIsPraySelected={setIsPraySelected}
       />
       {showCategorySetting && (
         <CategorySetting onClick={() => setShowCategorySetting(false)}>
@@ -376,6 +383,7 @@ const Main = () => {
             </ButtonV2>
             <ButtonV2
               buttonTheme={ButtonTheme.FILLED}
+              disabled={!inputValue}
               handler={() =>
                 changeCategoryHandler({
                   id: clickedCategoryData.id,
@@ -416,7 +424,7 @@ const Main = () => {
           <ChangeCategoryOrder setIsOverlayOn={setIsOrderOverlayOn} />
         </Overlay>
       )}
-      {!shareMode && (
+      {!shareMode && !isPraySelected && (
         <>
           <OptionBtn
             src="images/ic_main_option.svg"
@@ -559,11 +567,12 @@ const CategorySetting = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   flex-direction: column;
   padding: 16px;
   box-sizing: border-box;
+  backdrop-filter: blur(8px);
 `;
 
 const ColorPalette = styled.div`
@@ -615,4 +624,6 @@ const OptionBtn = styled.img`
     props.isVisible ? `calc(80px + ${props.movingDistance}px)` : "80px"};
   right: 20px;
   transition: all 0.2s ease;
+  filter: ${(props) =>
+    props.isVisible ? "drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.3))" : "none"};
 `;

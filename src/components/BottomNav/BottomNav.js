@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { BottomNavStyle } from "./style";
-import {Outlet} from "react-router";
+import { Outlet } from "react-router";
+import useBottomNav from "../../hooks/useBottomNav";
 
 const BottomNav = () => {
   const [activeNav, setActiveNav] = useState(1);
   const location = useLocation();
+  const { isVisible } = useBottomNav();
 
   useEffect(() => {
     let activeUrl = location.pathname;
@@ -30,7 +32,7 @@ const BottomNav = () => {
 
   return (
     <>
-      <BottomNavStyle>
+      <BottomNavStyle isVisible={isVisible}>
         <Link to="/main" onClick={() => setActiveNav(1)}>
           {activeNav === 1 ? (
             <img src="images/ic_main_filled.svg" alt="filled_main_icon" />
@@ -56,7 +58,10 @@ const BottomNav = () => {
           {activeNav === 4 ? (
             <img src="images/ic_setting_filled.svg" alt="filled_setting_icon" />
           ) : (
-            <img src={process.env.PUBLIC_URL + 'images/ic_setting.svg'} alt="setting_icon" />
+            <img
+              src={process.env.PUBLIC_URL + "images/ic_setting.svg"}
+              alt="setting_icon"
+            />
           )}
         </Link>
       </BottomNavStyle>

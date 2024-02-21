@@ -6,7 +6,6 @@ import useToast from "../../../hooks/useToast";
 import BlackScreen from "../../BlackScreen/index";
 import Modal from "../../Modal/Modal";
 import { useGroupPray } from "../../../hooks/useGroupPray";
-import PrayDateCategoryInput from "../../PrayDateCategoryInput/PrayDateCategoryInput";
 
 const GroupPrayItem = ({
   groupId,
@@ -15,41 +14,26 @@ const GroupPrayItem = ({
   firstCategoryIndex,
   setTab,
   tab,
+  scrapPrayId,
+  setScrapPrayId,
+  setCategoryInputValue,
+  setShowSubModal,
+  showSubModal,
+  setScrapPrayInfo,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const { showToast } = useToast({});
-  const [showSubModal, setShowSubModal] = useState(false);
   const [heart, setHeart] = useState(pray.heart);
   const [scrap, setScrap] = useState(pray.scrap);
-  const { deleteGroupPray, likeGroupPray, scrapGroupPray } =
-    useGroupPray(groupId);
-  // 스크랩할 때 아래 기도 정보 사용
-  const [prayInputValue, setPrayInputValue] = useState("");
-  const [dateInputValue, setDateInputValue] = useState(null);
-  const [categoryInputValue, setCategoryInputValue] = useState(0);
+  const { deleteGroupPray, likeGroupPray } = useGroupPray(groupId);
 
-  // 기도를 스크랩하는 함수
-  const onScrap = async (deadline, categoryId) => {
-    scrapGroupPray(
-      {
-        groupPrayId: pray.groupPrayId,
-        deadline: deadline,
-        categoryId: categoryId,
-      },
-      {
-        onSuccess: () => {
-          setShowSubModal(false);
-          setPrayInputValue("");
-          setDateInputValue(null);
-          setScrap(true);
-          showToast({
-            message: "기도제목이 저장되었어요.",
-            theme: ToastTheme.SUCCESS,
-          });
-        },
-      }
-    );
-  };
+  useEffect(() => {
+    if (scrapPrayId === pray.groupPrayId) {
+      setScrap(true);
+      setScrapPrayId(null);
+      setScrapPrayInfo(null);
+    }
+  }, [scrapPrayId]);
 
   useEffect(() => {
     if (tab === "shared") {
@@ -63,6 +47,13 @@ const GroupPrayItem = ({
       setTab("personal");
     }
   }, [showSubModal]);
+
+  const onClickScrap = (groupPrayId) => {
+    if (groupPrayId === pray.groupPrayId) {
+      setTab("shared");
+      setScrapPrayInfo(pray);
+    }
+  };
 
   return (
     <Wrapper>
@@ -93,25 +84,7 @@ const GroupPrayItem = ({
           />
         </>
       )}
-      {showSubModal && (
-        <PrayDateCategoryInput
-          categoryList={categoryList}
-          showSubModal={showSubModal}
-          setShowSubModal={setShowSubModal}
-          inputPlaceHodler={pray.content}
-          maxrow={3}
-          maxlen={75}
-          isShowWordCount={false}
-          isDefault={true}
-          setUpdateValue={setPrayInputValue}
-          setUpdateDate={setDateInputValue}
-          setUpdateCategory={setCategoryInputValue}
-          buttonText="내 기도수첩에 저장하기"
-          value={pray.content}
-          category={firstCategoryIndex}
-          onClickFunc={() => onScrap(dateInputValue, categoryInputValue)}
-        />
-      )}
+
       <PrayItem>
         <PrayContent onClick={() => pray.owner && setShowModal(true)}>
           <div style={{ fontSize: "14px", color: "var(--color-green)" }}>
@@ -151,7 +124,7 @@ const GroupPrayItem = ({
             ) : (
               <img
                 onClick={() => {
-                  setTab("shared");
+                  onClickScrap(pray.groupPrayId);
                 }}
                 src="images/ic_group_bookmark.svg"
                 alt="bookmark_icon"
