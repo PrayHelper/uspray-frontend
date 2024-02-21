@@ -16,6 +16,8 @@ import { ReactComponent as NextArrowGray } from "../../images/ic_next_arrow_gray
 import { ReactComponent as NextArrowWhite } from "../../images/ic_next_arrow_white.svg";
 import useApi from "../../hooks/useApi";
 import SocialLoginCircleButton from "../SocialLogin/SocialLoginCircleButton";
+import Modal from "../Modal/Modal";
+import BlackScreen from "../BlackScreen";
 
 const useSendDeviceToken = () => {
   const { postFetcher } = useApi();
@@ -44,6 +46,7 @@ const LoginPage = () => {
   const [pwdValue, setPwdValue] = useState("");
   const { setAccessToken, setRefreshToken, getAccessToken, getRefreshToken } =
     useAuthToken();
+  const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -114,8 +117,29 @@ const LoginPage = () => {
     login();
   };
 
+  const tempModal = () => {
+    setShowModal(true);
+  };
+
   return (
     <S.Root>
+      {showModal && (
+        <>
+          <BlackScreen
+            isModalOn={showModal}
+            onClick={() => setShowModal(false)}
+          />
+          <Modal
+            isModalOn={showModal}
+            iconSrc={"images/icon_notice.svg"}
+            iconAlt={"icon_notice"}
+            mainContent={"기능이 곧 완성돼요!"}
+            subContent={"아이디 로그인을 이용해주세요"}
+            btnContent={"네, 그렇게 할게요."}
+            onClickBtn={() => setShowModal(false)}
+          />
+        </>
+      )}
       <S.TopArea>
         <S.Logo src={LogoSVG} alt="logo" />
       </S.TopArea>
@@ -158,9 +182,9 @@ const LoginPage = () => {
             <S.SocialDividerLine />
           </S.SocialDividerContainer>
           <S.SocialButtons>
-            <SocialLoginCircleButton theme="kakao" />
-            <SocialLoginCircleButton theme="naver" />
-            <SocialLoginCircleButton theme="apple" />
+            <SocialLoginCircleButton theme="kakao" onClick={tempModal} />
+            <SocialLoginCircleButton theme="naver" onClick={tempModal} />
+            <SocialLoginCircleButton theme="apple" onClick={tempModal} />
           </S.SocialButtons>
           <S.SignupTextsContainer>
             <S.SignupText>아직 계정이 없으신가요?</S.SignupText>
