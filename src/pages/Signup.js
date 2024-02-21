@@ -146,7 +146,7 @@ const Signup = () => {
           message: "회원가입이 성공적으로 완료되었습니다.",
           theme: ToastTheme.SUCCESS,
         });
-        navigate("/");
+        navigate("/login");
       }
     } catch (e) {
       console.log(e);
@@ -262,7 +262,10 @@ const Signup = () => {
       }
     } catch (e) {
       if (e.response.status === 400) {
-        showToast({ message: e.response.data.message , theme: ToastTheme.ERROR });
+        showToast({
+          message: e.response.data.message,
+          theme: ToastTheme.ERROR,
+        });
         setIsCertificated(false);
       }
       return false;

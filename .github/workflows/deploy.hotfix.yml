@@ -43,7 +43,7 @@ jobs:
         
       - name: Decrypt environment variables
         run: |
-          echo "${{ secrets.HOTFIX_ENV }}" base64 -d > .env
+          echo "${{ secrets.HOTFIX_ENV }}" > .env
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2

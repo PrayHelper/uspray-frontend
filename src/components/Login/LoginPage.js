@@ -242,6 +242,7 @@ const S = {
     gap: 16px;
 
     width: 100%;
+    padding-bottom: 20px;
   `,
   SocialDividerContainer: styled.div`
     display: flex;
