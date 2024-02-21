@@ -68,13 +68,13 @@ const Category = ({
       <ItemList>
         {prays.map((pray) => (
           <Item key={pray.prayId}>
+            {tabType === "shared" ? (
+              <ItemName selected={pray.isPrayedToday}>{pray.name}</ItemName>
+            ) : null}
             <ItemText
               selected={pray.isPrayedToday}
               onClick={(e) => titleClick(pray)}
             >
-              {tabType === "shared" ? (
-                <ItemName selected={pray.isPrayedToday}>{pray.name}</ItemName>
-              ) : null}
               {pray.content}
             </ItemText>
             {shareMode ? (
@@ -124,8 +124,9 @@ const ItemList = styled.div`
 `;
 
 const ItemText = styled.div`
-  flex: 1 1 0%;
+  flex: 1;
   display: flex;
+  align-items: center;
   color: ${(props) => (props.selected ? "#49614380" : "#496143")};
   font-size: 12px;
 `;
