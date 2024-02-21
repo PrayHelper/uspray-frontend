@@ -135,7 +135,7 @@ const Signup = () => {
       phone: userInfo.phoneNumber.replace(/-/g, ""),
     };
 
-    if (gender) data.gender = gender;
+    if (gender) data.gender = gender === "여자" ? "female" : "male";
     if (userInfo.year && userInfo.month && userInfo.day)
       data.birth = userInfo.year + "-" + userInfo.month + "-" + userInfo.day;
 
