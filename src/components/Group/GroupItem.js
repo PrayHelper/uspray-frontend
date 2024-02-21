@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import styled from "styled-components";
 
 // group = {
@@ -10,10 +10,9 @@ import styled from "styled-components";
 //   updatedAt: "2023-11-24T10:06:06.136Z"
 // }
 
-const GroupItem = ({group, setGroup, setShowGroupDetail}) => {
+const GroupItem = ({ group, setGroup, setShowGroupDetail }) => {
   const formatUpdatedAt = (updatedAt) => {
-    if (updatedAt === null)
-      return null;
+    if (updatedAt === null) return null;
     const currentTime = new Date();
     const updateTime = new Date(updatedAt);
     const timeDifference = currentTime - updateTime;
@@ -44,7 +43,7 @@ const GroupItem = ({group, setGroup, setShowGroupDetail}) => {
   const formatLastPrayContent = () => {
     if (group.lastPrayContent === null)
       return (
-        <div style={{color: "var(--color-grey)", fontSize: "16px"}}>
+        <div style={{ color: "var(--color-grey)", fontSize: "16px" }}>
           기도제목을 이곳에 공유해보세요!
         </div>
       );
@@ -54,40 +53,58 @@ const GroupItem = ({group, setGroup, setShowGroupDetail}) => {
     const timeDifference = currentTime - updateTime;
     const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
+    const maxLength = 17;
+    const originalText = group.lastPrayContent;
+
     if (days < 1)
       return (
-        <div style={{color: "var(--color-grey)", fontSize: "16px"}}>
-          {group.lastPrayContent}
+        <div style={{ color: "var(--color-grey)", fontSize: "16px" }}>
+          {originalText.length > maxLength
+            ? originalText.slice(0, maxLength) + " ..."
+            : originalText}
         </div>
       );
     else
       return (
-        <div style={{color: "var(--color-secondary-green)", fontSize: "16px"}}>
+        <div
+          style={{ color: "var(--color-secondary-green)", fontSize: "16px" }}
+        >
           {1}개의 기도제목이 있어요!
         </div>
       ); // TODO: api 수정되면 바꾸기
-    
-  }
+  };
 
   return (
     <GroupItemWrapper
       onClick={() => {
         setGroup(group);
-        setShowGroupDetail(prev => !prev);
+        setShowGroupDetail((prev) => !prev);
       }}
     >
       <GroupTitle>
-        <div style={{color: "var(--color-green)", fontSize: "24px", fontWeight: "500"}}>
+        <div
+          style={{
+            color: "var(--color-green)",
+            fontSize: "24px",
+            fontWeight: "500",
+          }}
+        >
           {group.name}
         </div>
-        <div style={{display: "flex", justifyContent: "center", gap: "2px"}}>
+        <div style={{ display: "flex", justifyContent: "center", gap: "2px" }}>
           <img src="images/ic_group_count.svg" alt="group_count_icon" />
-          <div style={{color: "var(--color-secondary-grey)", fontSize: "12px"}}>{group.memberCount}명</div>
+          <div
+            style={{ color: "var(--color-secondary-grey)", fontSize: "12px" }}
+          >
+            {group.memberCount}명
+          </div>
         </div>
       </GroupTitle>
       <GroupContent>
         {formatLastPrayContent()}
-        <div style={{color: "var(--color-secondary-grey)", fontSize: "12px"}}>{formatUpdatedAt(group.updatedAt)}</div>
+        <div style={{ color: "var(--color-secondary-grey)", fontSize: "12px" }}>
+          {formatUpdatedAt(group.updatedAt)}
+        </div>
       </GroupContent>
     </GroupItemWrapper>
   );
@@ -99,7 +116,7 @@ const GroupItemWrapper = styled.div`
   background-color: white;
   padding: 16px;
   border-radius: 16px;
-  box-shadow: 0px 4px 24px 0px #0000001A;
+  box-shadow: 0px 4px 24px 0px #0000001a;
 `;
 
 const GroupTitle = styled.div`
