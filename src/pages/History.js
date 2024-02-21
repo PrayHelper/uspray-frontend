@@ -25,7 +25,7 @@ const History = () => {
   const [updateDate, setUpdateDate] = useState(null);
   const [updateCategory, setUpdateCategory] = useState(0);
   const [personalPage, setPersonalPage] = useState(0);
-  const [sharedPage, setSharedPage] = useState();
+  const [sharedPage, setSharedPage] = useState(0);
   const [personalHistoryList, setPersonalHistoryList] = useState([]);
   const [sharedHistoryList, setSharedHistoryList] = useState([]);
   const [personalPos, setPersonalPos] = useState(0); // Pos = Position of Scroll (Personal Section)
