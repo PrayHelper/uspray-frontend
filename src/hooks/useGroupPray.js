@@ -113,7 +113,7 @@ export const useGroupPray = (groupId) => {
 
   const { mutate: takePersonalPray } = useMutation(
     async (data) => {
-      return await postFetcher("/pray/pray-to-grouppray", data);
+      return await postFetcher("/grouppray/pray-to-grouppray", data);
     },
     {
       onError: async (e) => {
