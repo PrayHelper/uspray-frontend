@@ -35,6 +35,10 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
     refetchCategoryList();
   }, [tab]);
 
+  useEffect(() => {
+    setSelectedCategoryIndex(firstCategoryIndex);
+  }, [categoryList]);
+
   const onInvite = async () => {
     const groupId = group.id;
     var encodeGroupId = window.btoa(groupId.toString());
