@@ -53,7 +53,7 @@ const DeleteUserInProgressView = ({
               - Uspray 계정 삭제 후 7일간 재가입이 불가능합니다.
             </S.CautionInformation>
             <S.CautionInformation>
-              - Uspary 계정 삭제 시 계정의 모든 정보는 삭제되며 재가입 시에도
+              - Uspray 계정 삭제 시 계정의 모든 정보는 삭제되며 재가입 시에도
               복구할 수 없습니다.
             </S.CautionInformation>
           </S.Caution>
@@ -70,7 +70,8 @@ const DeleteUserInProgressView = ({
       </S.Content>
       <S.BottomButton
         isEnabled={isContinueBtnEnabled}
-        onClick={onClickContinueButton}>
+        onClick={onClickContinueButton}
+      >
         계속하기
       </S.BottomButton>
       <BlackScreen isModalOn={isModalOn} />
