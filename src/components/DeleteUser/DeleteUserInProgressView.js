@@ -4,6 +4,8 @@ import UserHeader from "../UserHeader";
 import BlackScreen from "../BlackScreen";
 import Modal from "../Modal/Modal";
 import Checkbox from "../Checkbox/Checkbox";
+import { useEffect } from "react";
+import { useUserName } from "../../hooks/useUserName";
 
 const DeleteUserInProgressView = ({
   isEtcChecked,
@@ -19,13 +21,19 @@ const DeleteUserInProgressView = ({
   mutateDeleteUser,
   closeModal,
 }) => {
+  const userName = useUserName();
+  useEffect(() => {
+    console.log(userName);
+  }, []);
   return (
     <S.Root>
       <UserHeader>계정 삭제</UserHeader>
       <S.Content>
         <S.TopTextsAndOptions>
           <S.TopTexts>
-            <S.TopTextCrying>홍길동님... 이대로 이별인가요?</S.TopTextCrying>
+            <S.TopTextCrying>
+              {userName.userName}님... 이대로 이별인가요?
+            </S.TopTextCrying>
             <S.TopTextWondering>
               계정을 삭제하려는 이유가 궁금해요.
             </S.TopTextWondering>
