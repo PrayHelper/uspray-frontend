@@ -235,7 +235,7 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
                 <LockerContent
                   isClicked={isClicked[index]}
                   title={item.content}
-                  target={item.userId}
+                  target={item.name}
                   dday={calculateDday(item.createdAt)}
                   key={item.prayId}
                 />

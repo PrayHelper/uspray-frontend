@@ -18,7 +18,7 @@ const ChangeGroupName = ({name, groupId, setCurrentPage, setShowGroupSetting}) =
   const {refetchGroupList} = useGroup();
 
   const groupNameCheck = (name) => {
-    const groupNameRegEx = /^\s*\S.{0,14}\S\s*$/;
+    const groupNameRegEx = /^\s*\S.{0,13}\S?\s*$/;
     return groupNameRegEx.test(name);
   };
 

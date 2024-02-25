@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useGroupPray } from "../../hooks/useGroupPray";
 
 // group = {
 //   id: 0,
@@ -11,6 +12,7 @@ import styled from "styled-components";
 // }
 
 const GroupItem = ({ group, setGroup, setShowGroupDetail }) => {
+  const { groupHeartCount } = useGroupPray(group.id);
   const formatUpdatedAt = (updatedAt) => {
     if (updatedAt === null) return null;
     const currentTime = new Date();
@@ -69,7 +71,7 @@ const GroupItem = ({ group, setGroup, setShowGroupDetail }) => {
         <div
           style={{ color: "var(--color-secondary-green)", fontSize: "16px" }}
         >
-          {1}개의 기도제목이 있어요!
+          {groupHeartCount}개의 기도제목이 있어요!
         </div>
       ); // TODO: api 수정되면 바꾸기
   };
