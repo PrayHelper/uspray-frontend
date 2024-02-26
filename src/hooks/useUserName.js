@@ -1,19 +1,19 @@
 import { useQuery } from "react-query";
 import useApi from "./useApi";
 
-export const useGetInfo = () => {
+export const useUserName = () => {
   const { getFetcher } = useApi();
-  return useQuery(
-    [],
+  const { data } = useQuery(
+    ["userName"],
     async () => {
-      return await getFetcher(`/user/info`);
+      return await getFetcher(`/auth/name`);
     },
     {
-      onError: (e) => {
+      onError: async (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        //   console.log(res);
+        console.log(res);
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -22,4 +22,8 @@ export const useGetInfo = () => {
       refetchOnWindowFocus: false,
     }
   );
+
+  const userName = data?.data.data.name || "";
+
+  return { userName };
 };

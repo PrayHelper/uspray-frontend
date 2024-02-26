@@ -4,6 +4,7 @@ import UserHeader from "../UserHeader";
 import BlackScreen from "../BlackScreen";
 import Modal from "../Modal/Modal";
 import Checkbox from "../Checkbox/Checkbox";
+import { useUserName } from "../../hooks/useUserName";
 
 const DeleteUserInProgressView = ({
   isEtcChecked,
@@ -19,13 +20,17 @@ const DeleteUserInProgressView = ({
   mutateDeleteUser,
   closeModal,
 }) => {
+  const { userName } = useUserName();
+
   return (
     <S.Root>
       <UserHeader>계정 삭제</UserHeader>
       <S.Content>
         <S.TopTextsAndOptions>
           <S.TopTexts>
-            <S.TopTextCrying>홍길동님... 이대로 이별인가요?</S.TopTextCrying>
+            <S.TopTextCrying>
+              {userName}님... 이대로 이별인가요?
+            </S.TopTextCrying>
             <S.TopTextWondering>
               계정을 삭제하려는 이유가 궁금해요.
             </S.TopTextWondering>
@@ -53,7 +58,7 @@ const DeleteUserInProgressView = ({
               - Uspray 계정 삭제 후 7일간 재가입이 불가능합니다.
             </S.CautionInformation>
             <S.CautionInformation>
-              - Uspary 계정 삭제 시 계정의 모든 정보는 삭제되며 재가입 시에도
+              - Uspray 계정 삭제 시 계정의 모든 정보는 삭제되며 재가입 시에도
               복구할 수 없습니다.
             </S.CautionInformation>
           </S.Caution>
@@ -70,7 +75,8 @@ const DeleteUserInProgressView = ({
       </S.Content>
       <S.BottomButton
         isEnabled={isContinueBtnEnabled}
-        onClick={onClickContinueButton}>
+        onClick={onClickContinueButton}
+      >
         계속하기
       </S.BottomButton>
       <BlackScreen isModalOn={isModalOn} />
