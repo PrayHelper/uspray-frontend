@@ -117,6 +117,10 @@ const SocialLogin = () => {
     window.location.href = `https://appleid.apple.com/auth/authorize?${queryString}`;
   };
 
+  const moveToKakao = () => {
+    window.open("https://pf.kakao.com/_UgxhYxj");
+  };
+
   return (
     <S.SocialLoginWrapper>
       {showModal && (
@@ -152,7 +156,7 @@ const SocialLogin = () => {
           <S.Bar />
           <S.BottomLink to="/login">로그인하기</S.BottomLink>
           <S.Bar />
-          <S.BottomLink>문의하기</S.BottomLink>
+          <S.BottomLink onClick={moveToKakao}>문의하기</S.BottomLink>
         </S.BottomLinks>
       </S.BottomWrapper>
     </S.SocialLoginWrapper>
