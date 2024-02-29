@@ -117,6 +117,10 @@ const SocialLogin = () => {
     window.location.href = `https://appleid.apple.com/auth/authorize?${queryString}`;
   };
 
+  const moveToKakao = () => {
+    window.open("https://pf.kakao.com/_UgxhYxj");
+  };
+
   return (
     <S.SocialLoginWrapper>
       {showModal && (
