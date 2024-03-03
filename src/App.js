@@ -48,6 +48,7 @@ import DeleteUser from "./pages/DeleteUser";
 import ChangeCategoryOrder from "./pages/ChangeCategoryOrder";
 import ChangeInfoSocial from "./components/ChangeInfo/ChangeInfoSocial";
 import AppleRedirecting from "./pages/AppleRedirecting";
+import TagManager from 'react-gtm-module'
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -91,6 +92,12 @@ const CommonRoute = () => {
 
 function App() {
   const { renderToast } = useToast({});
+
+  useEffect(() => {
+    TagManager.initialize({
+      gtmId: `${process.env.REACT_APP_GTM_ID}`,
+    })
+  }, [])
 
   return (
     <BrowserRouter>
