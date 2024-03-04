@@ -61,7 +61,7 @@ const KickMember = ({groupId, setCurrentPage, setShowGroupSetting}) => {
       <ContentWrapper>
         <div style={{display: "flex", flexDirection: "column", height: '100%'}}>
           <Search
-            topText={"\"멤버 내보내기\"를 누르시면?"}
+            topText={"\"멤버 내보내기\"를 하면 해당 멤버는 모임 참여 권한이 없어집니다. 단, 기존에 올렸던 기도제목은 삭제되지 않습니다."}
             setSearchName={setSearchName}
           />
           <SearchList memberList={memberList} memberId={memberId} setMemberId={setMemberId}/>
