@@ -214,6 +214,6 @@ const SubTextStyle = styled.div`
   display: flex;
   justify-content: center;
   font-size: 12px;
-  color: #75bd62;
+  color: var(--color-green);
   margin-bottom: 16px;
 `;
