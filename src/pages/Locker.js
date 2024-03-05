@@ -21,14 +21,20 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
   const [isClicked, setIsClicked] = useState([]);
   const [selectedID, setSelectedID] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  // 중복 저장 방지용 (API 통신 중인지 여부)
   const [saving, setSaving] = useState(false);
+  // 기도제목 저장할 때 PrayDateCategoryInput 컴포넌트에서 사용되는 변수
   const [showModal, setShowModal] = useState(false);
   const [showSubModal, setShowSubModal] = useState(false);
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
 
   const { showToast } = useToast({});
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("selectedID", selectedID);
+    console.log("isClicked", isClicked);
+  }, [selectedID, isClicked]);
 
   const defaultOptions = {
     //예제1
@@ -62,8 +68,11 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
   const onClickSelectAll = () => {
     if (isClicked.some((clicked) => clicked)) {
       setIsClicked(isClicked.map(() => false));
+      setSelectedID([]);
     } else {
       setIsClicked(isClicked.map(() => true));
+      const allPrayIds = data.map((item) => item.sharedPrayId);
+      setSelectedID(allPrayIds);
     }
   };
 
