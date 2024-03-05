@@ -104,6 +104,11 @@ const PrayDateCategoryInput = ({
           </SubModalCategory>
         </div>
         <FixedButtonContainer>
+          {isDefault && (
+            <SubTextStyle>
+              공유된 기도제목의 내용은 수정할 수 없습니다.
+            </SubTextStyle>
+          )}
           <ButtonV2
             buttonTheme={ButtonTheme.FILLED}
             disabled={inputCount === 0 && lockerCount === 0}
@@ -202,4 +207,13 @@ const LockerCountText = styled.span`
   height: 23px;
   border-bottom: 1px solid var(--color-white-green);
   margin-bottom: 12px;
+`;
+
+const SubTextStyle = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 12px;
+  color: #75bd62;
+  margin-bottom: 16px;
 `;
