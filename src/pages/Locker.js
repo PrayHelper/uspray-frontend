@@ -33,11 +33,6 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
 
   const { showToast } = useToast({});
 
-  useEffect(() => {
-    console.log("selectedID", selectedID);
-    console.log("isClicked", isClicked);
-  }, [selectedID, isClicked]);
-
   const defaultOptions = {
     //예제1
     loop: true,
