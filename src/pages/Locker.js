@@ -19,11 +19,13 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
   const [data, setData] = useState([]);
   const { categoryList, firstCategoryIndex } = useCategory("shared");
   const [isClicked, setIsClicked] = useState([]);
+  // 선택되어 있는 ID 배열
   const [selectedID, setSelectedID] = useState([]);
+  // 기도제목 목록 선택 여부 ex) [true, true, false]
   const [isLoading, setIsLoading] = useState(true);
   // 중복 저장 방지용 (API 통신 중인지 여부)
   const [saving, setSaving] = useState(false);
-  // 기도제목 저장할 때 PrayDateCategoryInput 컴포넌트에서 사용되는 변수
+  // 기도제목 저장할 때 PrayDateCategoryInput 컴포넌트에서 사용되는 변수들
   const [showModal, setShowModal] = useState(false);
   const [showSubModal, setShowSubModal] = useState(false);
   const [dateInputValue, setDateInputValue] = useState(null);
