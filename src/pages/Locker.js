@@ -18,11 +18,11 @@ import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateC
 const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
   const [data, setData] = useState([]);
   const { categoryList, firstCategoryIndex } = useCategory("shared");
-  const [isClicked, setIsClicked] = useState([]);
-  // 선택되어 있는 ID 배열
-  const [selectedID, setSelectedID] = useState([]);
-  // 기도제목 목록 선택 여부 ex) [true, true, false]
   const [isLoading, setIsLoading] = useState(true);
+  // 기도제목 목록 선택 여부 ex) [true, true, false]
+  const [isClicked, setIsClicked] = useState([]);
+  // 선택되어 있는 sharedPrayId 배열
+  const [selectedIds, setSelectedIds] = useState([]);
   // 중복 저장 방지용 (API 통신 중인지 여부)
   const [saving, setSaving] = useState(false);
   // 기도제목 저장할 때 PrayDateCategoryInput 컴포넌트에서 사용되는 변수들
@@ -65,28 +65,28 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
   const onClickSelectAll = () => {
     if (isClicked.some((clicked) => clicked)) {
       setIsClicked(isClicked.map(() => false));
-      setSelectedID([]);
+      setSelectedIds([]);
     } else {
       setIsClicked(isClicked.map(() => true));
       const allPrayIds = data.map((item) => item.sharedPrayId);
-      setSelectedID(allPrayIds);
+      setSelectedIds(allPrayIds);
     }
   };
 
   // 배열 요소 선택
   const onClickContent = (index, prayId) => {
-    const updateClickedID = prayId;
+    const updateClickedId = prayId;
     // 이미 선택된 prayId인지 확인
-    const isSelected = selectedID.includes(updateClickedID);
+    const isSelected = selectedIds.includes(updateClickedId);
     if (isSelected) {
       // 이미 선택된 경우 해당 prayId를 제거
-      const updatedSelectedID = selectedID.filter(
-        (id) => id !== updateClickedID
+      const updatedSelectedIds = selectedIds.filter(
+        (id) => id !== updateClickedId
       );
-      setSelectedID(updatedSelectedID);
+      setSelectedIds(updatedSelectedIds);
     } else {
       // 선택되지 않은 경우 해당 prayId를 추가
-      setSelectedID([...selectedID, updateClickedID]);
+      setSelectedIds([...selectedIds, updateClickedId]);
     }
 
     const updateClickedList = [...isClicked];
@@ -122,7 +122,7 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
       console.log("전체선택");
     } else {
       // 선택된 항목만 배열에 추가합니다.
-      prayIdList = selectedID;
+      prayIdList = selectedIds;
     }
 
     deleteListData(
@@ -136,7 +136,7 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
             theme: ToastTheme.SUCCESS,
           });
           refetchSharedListData();
-          setSelectedID([]);
+          setSelectedIds([]);
         },
       }
     );
@@ -154,7 +154,7 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
         console.log("전체선택");
       } else {
         // 선택된 항목만 배열에 추가합니다.
-        prayIdList = selectedID;
+        prayIdList = selectedIds;
       }
       setSaving(true);
       updateListData(
@@ -172,7 +172,7 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
             refetchPrayList();
             setDateInputValue(null);
             refetchSharedListData();
-            setSelectedID([]);
+            setSelectedIds([]);
             setShowSubModal(false);
             setSaving(false);
           },
@@ -262,7 +262,7 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
           buttonText="내 기도수첩에 저장하기"
           category={firstCategoryIndex}
           onClickFunc={() => saveSharedList(dateInputValue, categoryInputValue)}
-          lockerCount={selectedID.length}
+          lockerCount={selectedIds.length}
         />
       )}
       <BottomButton onClick={() => setIsOverlayOn(false)}>
