@@ -144,6 +144,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
+  position: fixed;
   z-index: 100;
 `;
 
