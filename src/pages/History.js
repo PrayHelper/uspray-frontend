@@ -1,7 +1,7 @@
 import Header from "../components/Header/Header";
 import styled from "styled-components";
 import HisContent from "../components/History/HisContent";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import { useHistoryList } from "../hooks/useHistoryList";
@@ -44,6 +44,7 @@ const History = () => {
   const [categoryInputValue, setCategoryInputValue] = useState(0);
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
+  const outside = useRef(null);
 
   const { data: myPrayData, refetch: refetchMyData } = useHistoryList({
     type: "personal",
@@ -224,6 +225,20 @@ const History = () => {
     }
   }, [hasMore, inView]);
 
+  useEffect(() => {
+    // blackscreen 클릭 시 모달 창 꺼지도록
+    function handleFocus(e) {
+      if (outside.current && !outside.current.contains(e.target)) {
+        console.log(e);
+        setShowModal(false);
+      }
+    }
+    document.addEventListener("mouseup", handleFocus);
+    return () => {
+      document.removeEventListener("mouseup", handleFocus);
+    };
+  }, [outside]);
+
   return (
     <HistoryWrapper>
       <div style={{ marginBottom: "24px" }}>
@@ -252,8 +267,10 @@ const History = () => {
           <NoDataContent>기간이 지나면 히스토리에 저장됩니다!</NoDataContent>
         </NoDataWrapper>
       )}
-      <div>
-        <BlackScreen isModalOn={showModal} />
+
+      <BlackScreen isModalOn={showModal} />
+
+      <div ref={outside}>
         {historyDetail && showModal && (
           <HistoryDetailModal
             showSubModal={showSubModal}
