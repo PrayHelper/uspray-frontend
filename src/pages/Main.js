@@ -16,7 +16,7 @@ import Locker from "./Locker";
 import ChangeCategoryOrder from "./ChangeCategoryOrder";
 import { useFetchSharedList } from "../hooks/useFetchSharedList";
 import useToast from "../hooks/useToast";
-import { ToastTheme } from "../../Toast/Toast";
+import { ToastTheme } from "../components/Toast/Toast";
 
 const Main = () => {
   const [tab, setTab] = useState("내가 쓴");
