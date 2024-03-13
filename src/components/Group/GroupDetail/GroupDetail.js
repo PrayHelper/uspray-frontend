@@ -11,7 +11,7 @@ import useFlutterWebview from "../../../hooks/useFlutterWebview";
 import MainContent from "../../Main/MainContent";
 import { useCategory } from "../../../hooks/useCategory";
 import useToast from "../../../hooks/useToast";
-import { ToastTheme } from "../components/Toast/Toast";
+import { ToastTheme } from "../../Toast/Toast";
 
 const GroupDetail = ({ group, setShowGroupDetail }) => {
   const [showGroupSetting, setShowGroupSetting] = useState(false);
