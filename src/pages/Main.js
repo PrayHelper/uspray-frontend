@@ -15,6 +15,8 @@ import { useShare } from "../hooks/useShare";
 import Locker from "./Locker";
 import ChangeCategoryOrder from "./ChangeCategoryOrder";
 import { useFetchSharedList } from "../hooks/useFetchSharedList";
+import useToast from "../hooks/useToast";
+import { ToastTheme } from "../../Toast/Toast";
 
 const Main = () => {
   const [tab, setTab] = useState("내가 쓴");
@@ -61,6 +63,8 @@ const Main = () => {
 
   const [categoryRefIndex, setCategoryRefIndex] = useState(0);
   const categoryRef = useRef([]);
+
+  const { showToast } = useToast({});
 
   useEffect(() => {
     if (categoryRef.current[categoryRefIndex]) {
@@ -210,7 +214,10 @@ const Main = () => {
           url: `${WEB_ORIGIN}/main?share=` + encodePrayIds,
         });
       } else {
-        alert("공유하기가 지원되지 않는 환경 입니다.");
+        showToast({
+          message: "공유하기가 지원되지 않는 환경 입니다.",
+          theme: ToastTheme.ERROR,
+        });
       }
     }
     console.log(`${WEB_ORIGIN}/main?share=` + encodePrayIds);
