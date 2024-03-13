@@ -13,6 +13,7 @@ import LottieData from "./json/uspray.json";
 import useFlutterWebview from "../../hooks/useFlutterWebview";
 import Toast, { ToastTheme } from "../../components/Toast/Toast";
 import PrayerSortToggle from "./PrayerSortToggle";
+import useToast from "../../hooks/useToast";
 
 const Background = styled.div`
   width: 100%;
@@ -154,6 +155,7 @@ function PrayerList({
     usePrayList("cnt");
   const { shareLink, isMobile } = useFlutterWebview();
   const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
+  const { showToast } = useToast({});
 
   const getPrayList = (bool, pray) => {
     // bool이 true일 때 밑에 ,bool이 false이면 위에 pray가 true이면 기도순 클릭
@@ -235,7 +237,10 @@ function PrayerList({
             url: `${WEB_ORIGIN}/main?share=` + listJoin,
           });
         } else {
-          alert("공유하기가 지원되지 않는 환경 입니다.");
+          showToast({
+            message: "공유하기가 지원되지 않는 환경 입니다.",
+            theme: ToastTheme.ERROR,
+          });
         }
       }
 
@@ -280,21 +285,24 @@ function PrayerList({
           opacity: isModify ? "1" : "0",
           pointerEvents: isModify ? "auto" : "none",
         }}
-        onClick={onModify}></BackgroundBright>
+        onClick={onModify}
+      ></BackgroundBright>
       <BackgroundBright
         style={{
           zIndex: "103",
           opacity: isDeleted ? "1" : "0",
           pointerEvents: isDeleted ? "auto" : "none",
         }}
-        onClick={onDeleted}></BackgroundBright>
+        onClick={onDeleted}
+      ></BackgroundBright>
       <BackgroundBright
         style={{
           zIndex: "103",
           opacity: isChecked ? "1" : "0",
           pointerEvents: isChecked ? "auto" : "none",
         }}
-        onClick={changeCheck}></BackgroundBright>
+        onClick={changeCheck}
+      ></BackgroundBright>
       <Background style={{ paddingBottom: padding }}>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           <div style={{ flex: 1, flexGrow: 1, flexBasis: "500px" }}>
@@ -385,7 +393,8 @@ function PrayerList({
           shareLength={shareLength}
           setshareToggle={setshareToggle}
           isModify={isModify}
-          isChecked={isChecked}></Share>
+          isChecked={isChecked}
+        ></Share>
         <ToastWrapper>{modalToggle && <Toast>{modalText}</Toast>}</ToastWrapper>
         <BottomMenu
           completeBtnClick={completeBtnClick}
