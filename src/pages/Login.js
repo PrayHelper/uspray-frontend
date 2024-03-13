@@ -156,13 +156,7 @@ const SocialLogin = () => {
           <S.Bar />
           <S.BottomLink to="/login">로그인하기</S.BottomLink>
           <S.Bar />
-          <S.BottomLink
-            onClick={() => {
-              console.log("!");
-            }}
-          >
-            문의하기
-          </S.BottomLink>
+          <S.BottomLink onClick={moveToKakao}>문의하기</S.BottomLink>
         </S.BottomLinks>
       </S.BottomWrapper>
     </S.SocialLoginWrapper>

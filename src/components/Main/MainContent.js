@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
-import styled from "styled-components";
-import Category from "../Category/Category";
-import CategoryTag from "../CategoryTag/CategoryTag";
-import completeImage from "../../images/check_img.svg";
-import deleteImage from "../../images/delete_img.svg";
-import modifyImage from "../../images/modify_img.svg";
-import { usePray } from "../../hooks/usePray";
-import { ToastTheme } from "../../components/Toast/Toast";
-import BlackScreen from "../BlackScreen";
-import Modal from "../Modal/Modal";
-import useToast from "../../hooks/useToast";
-import PrayDateCategoryInput from "../PrayDateCategoryInput/PrayDateCategoryInput";
-import useBottomNav from "../../hooks/useBottomNav";
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import Category from '../Category/Category';
+import CategoryTag from '../CategoryTag/CategoryTag';
+import completeImage from '../../images/check_img.svg';
+import deleteImage from '../../images/delete_img.svg';
+import modifyImage from '../../images/modify_img.svg';
+import { usePray } from '../../hooks/usePray';
+import { ToastTheme } from '../../components/Toast/Toast';
+import BlackScreen from '../BlackScreen';
+import Modal from '../Modal/Modal';
+import useToast from '../../hooks/useToast';
+import PrayDateCategoryInput from '../PrayDateCategoryInput/PrayDateCategoryInput';
+import useBottomNav from '../../hooks/useBottomNav';
 
 const MainContent = ({
   categoryList,
@@ -34,7 +34,7 @@ const MainContent = ({
   const [showSubModal, setShowSubModal] = useState(false);
   // 기도제목 수정할 때 아래 기도 정보 사용
   const [modifyPrayInfo, setModifyPrayInfo] = useState(null);
-  const [prayInputValue, setPrayInputValue] = useState("");
+  const [prayInputValue, setPrayInputValue] = useState('');
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
   const [checkedList, setCheckedList] = useState([]);
@@ -82,7 +82,7 @@ const MainContent = ({
       {
         onSuccess: () => {
           setShowSubModal(false);
-          setPrayInputValue("");
+          setPrayInputValue('');
           setDateInputValue(null);
           setSelectedCategoryIndex(categoryId);
         },
@@ -113,98 +113,103 @@ const MainContent = ({
   };
 
   return (
-    <MainContentWrapper>
-      {showModal && (
-        <>
-          <BlackScreen
-            isModalOn={showModal}
-            onClick={() => setShowModal(false)}
-          />
-          <Modal
-            isModalOn={showModal}
-            iconSrc={"images/ic_group_pray_delete.svg"}
-            iconAlt={"group_pray_delete"}
-            mainContent={"정말 삭제하시겠습니까?"}
-            subContent={"선택한 기도제목이 삭제됩니다."}
-            btnContent={"삭제"}
-            btnContent2={"취소"}
-            onClickBtn={() => {
-              deletePray(selectedPrayInfo.prayId, {
-                onSuccess: () => {
-                  setShowModal(false);
-                  setSelectedPrayInfo(null);
-                },
-              });
-            }}
-            onClickBtn2={() => setShowModal(false)}
-            modalTheme={2}
-          />
-        </>
-      )}
-      {showSubModal && (
-        <PrayDateCategoryInput
-          categoryList={categoryList}
-          showSubModal={showSubModal}
-          setShowSubModal={setShowSubModal}
-          inputPlaceHodler={modifyPrayInfo.content}
-          maxrow={3}
-          maxlen={75}
-          isShowWordCount={true}
-          isDefault={modifyPrayInfo.isShared}
-          setUpdateValue={setPrayInputValue}
-          setUpdateDate={setDateInputValue}
-          setUpdateCategory={setCategoryInputValue}
-          buttonText="기도제목 수정"
-          value={prayInputValue}
-          data={modifyPrayInfo.deadline}
-          category={modifyPrayInfo.categoryId}
-          onClickFunc={() =>
-            onModify(prayInputValue, dateInputValue, categoryInputValue)
-          }
-        />
-      )}
-      
-      <TopWrapper shareMode={shareMode}>
-        <CategoryTag
-          categoryList={categoryList}
-          selectedCategoryIndex={selectedCategoryIndex}
-          setSelectedCategoryIndex={setSelectedCategoryIndex}
-          setShowCategorySetting={setShowCategorySetting}
-          canAdd={!shareMode}
-          setCategoryRefIndex={setCategoryRefIndex}
-        />
-      </TopWrapper>
-      <Content>
-        {prayList &&
-          prayList.map((category, index) => (
-            <Category
-              key={index}
-              categoryId={category.categoryId}
-              title={category.categoryName}
-              prays={category.prays}
-              color={category.categoryColor}
-              setSelectedPrayInfo={setSelectedPrayInfo}
-              onDotIconClicked={onDotIconClicked}
-              setClickedCategoryData={setClickedCategoryData}
-              tabType={tabType}
-              categoryRef={categoryRef}
-              refIndex={index}
-              shareMode={shareMode}
-              setShowOption={setShowOption}
-              setCheckedList={setCheckedList}
-              checkedList={checkedList}
+    <>
+      <MainContentWrapper shareMode={shareMode}>
+        {showModal && (
+          <>
+            <BlackScreen
+              isModalOn={showModal}
+              onClick={() => setShowModal(false)}
             />
-          ))}
-      </Content>
-      <BottomSetWrapper selectedPrayInfo={selectedPrayInfo}>
+            <Modal
+              isModalOn={showModal}
+              iconSrc={'images/ic_group_pray_delete.svg'}
+              iconAlt={'group_pray_delete'}
+              mainContent={'정말 삭제하시겠습니까?'}
+              subContent={'선택한 기도제목이 삭제됩니다.'}
+              btnContent={'삭제'}
+              btnContent2={'취소'}
+              onClickBtn={() => {
+                deletePray(selectedPrayInfo.prayId, {
+                  onSuccess: () => {
+                    setShowModal(false);
+                    setSelectedPrayInfo(null);
+                  },
+                });
+              }}
+              onClickBtn2={onCancel}
+              modalTheme={2}
+            />
+          </>
+        )}
+        {showSubModal && (
+          <PrayDateCategoryInput
+            categoryList={categoryList}
+            showSubModal={showSubModal}
+            setShowSubModal={setShowSubModal}
+            inputPlaceHodler={modifyPrayInfo.content}
+            maxrow={3}
+            maxlen={75}
+            isShowWordCount={true}
+            isDefault={modifyPrayInfo.isShared}
+            setUpdateValue={setPrayInputValue}
+            setUpdateDate={setDateInputValue}
+            setUpdateCategory={setCategoryInputValue}
+            buttonText="기도제목 수정"
+            value={prayInputValue}
+            date={modifyPrayInfo.deadline}
+            category={modifyPrayInfo.categoryId}
+            onClickFunc={() =>
+              onModify(prayInputValue, dateInputValue, categoryInputValue)
+            }
+          />
+        )}
+
+        <TopWrapper shareMode={shareMode}>
+          <CategoryTag
+            categoryList={categoryList}
+            selectedCategoryIndex={selectedCategoryIndex}
+            setSelectedCategoryIndex={setSelectedCategoryIndex}
+            setShowCategorySetting={setShowCategorySetting}
+            canAdd={!shareMode}
+            setCategoryRefIndex={setCategoryRefIndex}
+          />
+        </TopWrapper>
+        <Content>
+          {prayList &&
+            prayList.map((category, index) => (
+              <Category
+                key={index}
+                categoryId={category.categoryId}
+                title={category.categoryName}
+                prays={category.prays}
+                color={category.categoryColor}
+                setSelectedPrayInfo={setSelectedPrayInfo}
+                onDotIconClicked={onDotIconClicked}
+                setClickedCategoryData={setClickedCategoryData}
+                tabType={tabType}
+                categoryRef={categoryRef}
+                refIndex={index}
+                shareMode={shareMode}
+                setShowOption={setShowOption}
+                setCheckedList={setCheckedList}
+                checkedList={checkedList}
+              />
+            ))}
+        </Content>
+      </MainContentWrapper>
+      <BottomSetWrapper
+        selectedPrayInfo={selectedPrayInfo}
+        showModal={showModal}
+      >
         <BottomButtonWrapper>
           <img src={completeImage} />
           <BottomButtonText
-            color={"green"}
+            color={'green'}
             onClick={() => {
               completePray(selectedPrayInfo.prayId);
               showToast({
-                message: "기도제목을 완료했어요.",
+                message: '기도제목을 완료했어요.',
                 theme: ToastTheme.SUCCESS,
               });
               setSelectedPrayInfo(null);
@@ -216,7 +221,7 @@ const MainContent = ({
         <BottomButtonWrapper>
           <img src={modifyImage} />
           <BottomButtonText
-            color={"blue"}
+            color={'blue'}
             onClick={() => prayModify(selectedPrayInfo)}
           >
             수정하기
@@ -224,17 +229,17 @@ const MainContent = ({
         </BottomButtonWrapper>
         <BottomButtonWrapper>
           <img src={deleteImage} />
-          <BottomButtonText color={"red"} onClick={() => onDelete()}>
+          <BottomButtonText color={'red'} onClick={() => onDelete()}>
             삭제하기
           </BottomButtonText>
         </BottomButtonWrapper>
       </BottomSetWrapper>
       <BottomShareWrapper shareMode={shareMode}>
-        <ShareNumberText>{checkedList.length + "개 선택"}</ShareNumberText>
+        <ShareNumberText>{checkedList.length + '개 선택'}</ShareNumberText>
         <ShareButtonContainer>
           <ShareButtonWrapper
             disabled={true}
-            color={"white"}
+            color={'white'}
             onClick={onCancel}
           >
             취소하기
@@ -242,7 +247,7 @@ const MainContent = ({
           </ShareButtonWrapper>
           <ShareButtonWrapper
             disabled={checkedList.length === 0}
-            color={"green"}
+            color={'green'}
             onClick={clickShareButton}
           >
             공유하기
@@ -274,7 +279,7 @@ const MainContentWrapper = styled.div`
   border-radius: 32px 32px 0px 0px;
   box-sizing: border-box;
   overflow-y: auto;
-  z-index: ${(props) => (props.shareMode ? 200 : "auto")};
+  z-index: ${(props) => (props.shareMode ? 200 : 'auto')};
   &::-webkit-scrollbar {
     display: none;
   }
@@ -293,9 +298,9 @@ const TopWrapper = styled.div`
   z-index: ${(props) => (props.shareMode ? 201 : 50)};
   backdrop-filter: blur(12px);
   border: ${(props) =>
-    props.shareMode ? "1px solid rgba(0, 0, 0, 0.1)" : "none"};
+    props.shareMode ? '1px solid rgba(0, 0, 0, 0.1)' : 'none'};
   box-shadow: ${(props) =>
-    props.shareMode ? "0px 0px 4px rgba(0, 0, 0, 0.1)" : "none"};
+    props.shareMode ? '0px 0px 4px rgba(0, 0, 0, 0.1)' : 'none'};
 `;
 
 // 카테고리 박스
@@ -317,7 +322,7 @@ const BottomSetWrapper = styled.div`
   padding: 37px 24px;
   transition: all 0.3s ease-in-out;
   bottom: ${(props) =>
-    props.selectedPrayInfo === null || props.showModal ? "-100%" : "0px"};
+    props.selectedPrayInfo === null || props.showModal ? '-100%' : '0px'};
   z-index: 202;
   border-radius: 24px 24px 0px 0px;
   background: #fff;
@@ -326,7 +331,7 @@ const BottomSetWrapper = styled.div`
 // BottomSetWrapper의 버튼
 const BottomButtonWrapper = styled.button`
   flex-grow: 1;
-  padding: 12px 28px;
+  padding: 12px 18px;
   border-radius: 16px;
   background: #f8f8f8;
   border: none;
@@ -339,11 +344,11 @@ const BottomButtonText = styled.div`
   font-weight: 700;
   line-height: normal;
   color: ${(props) =>
-    props.color == "green"
-      ? "#27CD2F"
-      : props.color == "blue"
-      ? "#408CFF"
-      : "#FF4F4F"};
+    props.color == 'green'
+      ? '#27CD2F'
+      : props.color == 'blue'
+      ? '#408CFF'
+      : '#FF4F4F'};
 `;
 
 // ShareMode일 때 아래에서 나오는 옵션 박스
@@ -360,9 +365,9 @@ const BottomShareWrapper = styled.div`
   box-sizing: border-box;
   transition: all 0.3s ease-in-out;
   opacity: ${(props) => (props.shareMode ? 1 : 0)};
-  visibility: ${(props) => (props.shareMode ? "visible" : "hidden")};
+  visibility: ${(props) => (props.shareMode ? 'visible' : 'hidden')};
   transform: ${(props) =>
-    props.shareMode ? "translateY(0%)" : "translateY(100%)"};
+    props.shareMode ? 'translateY(0%)' : 'translateY(100%)'};
   border: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
@@ -387,15 +392,15 @@ const ShareButtonWrapper = styled.div`
   justify-content: space-between;
   padding: 20px 12px;
   border: ${(props) =>
-    props.color === "white" ? "1px solid var(--color-dark-green)" : "none"};
+    props.color === 'white' ? '1px solid var(--color-dark-green)' : 'none'};
   background-color: ${(props) =>
-    props.color === "white"
-      ? "var(--color-white)"
+    props.color === 'white'
+      ? 'var(--color-white)'
       : props.disabled
-      ? "var(--color-light-green)"
-      : "var(--color-dark-green)"};
+      ? 'var(--color-light-green)'
+      : 'var(--color-dark-green)'};
   color: ${(props) =>
-    props.color === "white" ? "var(--color-dark-green)" : "var(--color-white)"};
+    props.color === 'white' ? 'var(--color-dark-green)' : 'var(--color-white)'};
   border-radius: 16px;
   font-weight: 700;
   font-size: 16px;
@@ -424,7 +429,7 @@ const ShareNumberText = styled.div`
 const BlackBackground = styled.div`
   transition: all 0.3s ease-in-out;
   background-color: rgba(0, 0, 0, 0.7);
-  display: ${(props) => (!props.showModal ? "flex" : "none")};
+  display: ${(props) => (!props.showModal ? 'flex' : 'none')};
   position: fixed;
   top: 0;
   right: 0;
@@ -436,5 +441,5 @@ const BlackBackground = styled.div`
     props.selectedPrayInfo !== null || props.shareMode ? 1 : 0};
   backdrop-filter: blur(4px);
   pointer-events: ${(props) =>
-    props.selectedPrayInfo !== null || props.shareMode ? "auto" : "none"};
+    props.selectedPrayInfo !== null || props.shareMode ? 'auto' : 'none'};
 `;

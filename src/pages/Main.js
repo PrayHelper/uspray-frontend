@@ -35,7 +35,6 @@ const Main = () => {
   const [clickedCategoryData, setClickedCategoryData] = useState({});
   const [inputValue, setInputValue] = useState("");
   const tabType = tab === "내가 쓴" ? "personal" : "shared";
-  const [isOverlayOn, setIsOverlayOn] = useState(false);
   const categoryState = useCategory(tabType);
   const prayState = usePray(tabType);
   const { refetchCategoryList } = categoryState;
@@ -412,10 +411,10 @@ const Main = () => {
           </ColorPalette>
         </CategorySetting>
       )}
-      {isOverlayOn && (
-        <Overlay isOverlayOn={isOverlayOn}>
+      {isLockerOverlayOn && (
+        <Overlay isOverlayOn={isLockerOverlayOn}>
           <Locker
-            setIsOverlayOn={setIsOverlayOn}
+            setIsOverlayOn={setIsLockerOverlayOn}
             refetchPrayList={refetchPrayList}
           />
         </Overlay>
