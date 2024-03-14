@@ -2,15 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { useGroupPray } from "../../hooks/useGroupPray";
 
-// group = {
-//   id: 0,
-//   name: "string",
-//   lastPrayContent: "string",
-//   memberCount: 0,
-//   prayCount: 0,
-//   updatedAt: "2023-11-24T10:06:06.136Z"
-// }
-
 const GroupItem = ({ group, setGroup, setShowGroupDetail }) => {
   const { groupHeartCount } = useGroupPray(group.id);
   const formatUpdatedAt = (updatedAt) => {
@@ -119,6 +110,12 @@ const GroupItemWrapper = styled.div`
   padding: 16px;
   border-radius: 16px;
   box-shadow: 0px 4px 24px 0px #0000001a;
+  transition: all 0.3s ease-in-out;
+  &:active {
+    transition: all 0.2s ease-in-out;
+    filter: brightness(0.9);
+    scale: 0.98;
+  }
 `;
 
 const GroupTitle = styled.div`
