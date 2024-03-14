@@ -63,8 +63,17 @@ const Main = () => {
 
   const [categoryRefIndex, setCategoryRefIndex] = useState(0);
   const categoryRef = useRef([]);
+  const categoryInputRef = useRef(null);
 
   const { showToast } = useToast({});
+
+  useEffect(() => {
+    if (showCategorySetting && categoryInputRef.current) {
+      categoryInputRef.current.focus();
+      const length = categoryInputRef.current.value.length;
+      categoryInputRef.current.setSelectionRange(length, length);
+    }
+  }, [showCategorySetting]);
 
   useEffect(() => {
     if (categoryRef.current[categoryRefIndex]) {
@@ -342,6 +351,7 @@ const Main = () => {
             placeholder={"카테고리를 입력해주세요"}
             onChange={handleInputChange}
             onClick={handleInnerClick}
+            ref={categoryInputRef}
           />
           <FixedButtonContainer onClick={handleInnerClick}>
             <ButtonV2
