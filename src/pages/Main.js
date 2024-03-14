@@ -516,6 +516,8 @@ const TabContainer = styled.div`
 
 const Tab = styled.div`
   font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.08em;
   color: ${(props) => (props.active ? "#FFFFFF" : "#FFFFFF80")};
   cursor: pointer;
   border-bottom: ${(props) => (props.active ? "2px solid #FFFFFF" : "none")};
