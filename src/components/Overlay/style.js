@@ -1,4 +1,15 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+`;
 
 export const OverlayWrapper = styled.div`
   transition: all 0.3s ease-in-out;
@@ -12,4 +23,6 @@ export const OverlayWrapper = styled.div`
   opacity: ${(props) => (props.isOverlayOn ? "1" : "0")};
   pointer-events: ${(props) => (props.isOverlayOn ? "auto" : "none")};
   overflow-y: auto;
+  transition: all 0.3s ease-in-out;
+  animation: ${fadeIn} 0.3s ease-in-out;
 `;
