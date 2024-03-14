@@ -548,6 +548,7 @@ const MoveToLockerButton = styled.div`
   color: #ffffff;
   border-radius: 16px;
   position: relative;
+  letter-spacing: -0.04em;
 
   ::after {
     content: "";
