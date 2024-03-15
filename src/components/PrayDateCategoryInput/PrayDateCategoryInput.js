@@ -30,6 +30,7 @@ const PrayDateCategoryInput = ({
   const modalInputRef = useRef(null);
   const [inputCount, setInputCount] = useState(value ? value.length : 0);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(category);
+  const [isBlackScreenOpen, setIsBlackScreenOpen] = useState(showSubModal);
 
   useEffect(() => {
     if (showSubModal && modalInputRef.current) {
@@ -50,9 +51,15 @@ const PrayDateCategoryInput = ({
     if (setUpdateValue) setUpdateValue(e.target.value);
   };
 
+  //블랙 스크린 관리
+  useEffect(() => {
+    if (showSubModal) setIsBlackScreenOpen(true);
+  }, [showSubModal]);
   return (
     <>
-      <BlackScreen isModalOn={showSubModal} zindex={400} />
+      {isBlackScreenOpen && (
+        <BlackScreen isModalOn={showSubModal} zindex={400} />
+      )}
       <SubModalWrapper
         showSubModal={showSubModal}
         ref={outside}

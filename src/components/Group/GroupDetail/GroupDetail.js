@@ -120,20 +120,19 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
         alt="group_invite_icon"
         onClick={onInvite}
       />
-      {shareMode && (
-        <MainContent
-          categoryList={categoryList}
-          selectedCategoryIndex={selectedCategoryIndex}
-          setSelectedCategoryIndex={setSelectedCategoryIndex}
-          tabType={tab}
-          categoryRef={categoryRef}
-          setCategoryRefIndex={setCategoryRefIndex}
-          shareMode={shareMode}
-          setShareMode={setShareMode}
-          listHandler={onGroupPray}
-          setIsPraySelected={setIsPraySelected}
-        />
-      )}
+
+      <MainContent
+        categoryList={categoryList}
+        selectedCategoryIndex={selectedCategoryIndex}
+        setSelectedCategoryIndex={setSelectedCategoryIndex}
+        tabType={tab}
+        categoryRef={categoryRef}
+        setCategoryRefIndex={setCategoryRefIndex}
+        shareMode={shareMode}
+        setShareMode={setShareMode}
+        listHandler={onGroupPray}
+        setIsPraySelected={setIsPraySelected}
+      />
     </Wrapper>
   );
 };

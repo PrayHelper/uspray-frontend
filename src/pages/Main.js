@@ -242,7 +242,10 @@ const Main = () => {
 
   return (
     <MainWrapper style={{ backgroundColor: bgColor }}>
-      <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
+      <BlackScreen
+        isModalOn={showModal || showCategorySetting || dotIconClicked} //showSubModal은 하위 컴포넌트여서 BlackScreen 분리
+        onClick={handleCloseModal}
+      />
       <Modal
         isModalOn={showModal}
         iconSrc={"images/icon_notice.svg"}
@@ -271,7 +274,7 @@ const Main = () => {
         </TopBox>
         <FlexContainer>
           {tab === "내가 쓴" ? (
-            showSubModal ? (
+            <>
               <PrayDateCategoryInput
                 categoryList={categoryList}
                 showSubModal={showSubModal}
@@ -291,7 +294,6 @@ const Main = () => {
                   onInsert(prayInputValue, dateInputValue, categoryInputValue)
                 }
               />
-            ) : (
               <Input
                 type="text"
                 placeholder="기도제목을 입력해주세요"
@@ -302,7 +304,7 @@ const Main = () => {
                 value={prayInputValue}
                 readOnly
               />
-            )
+            </>
           ) : (
             <MoveToLockerButton onClick={() => clickLocker()}>
               보관함에 {sharedDataLength}개의 기도제목이 있어요
@@ -561,13 +563,12 @@ const MoveToLockerButton = styled.div`
 `;
 
 const CategorySetting = styled.div`
-  z-index: 100;
+  z-index: 500;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
   display: flex;
   flex-direction: column;
   padding: 16px;
