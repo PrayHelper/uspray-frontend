@@ -47,11 +47,9 @@ const PrayDateCategoryInput = ({
     const isWhitespace = /^\s*$/.test(e.target.value);
     if (isWhitespace)
       setInputCount(0);
-    else {
-      if (e.target.value.length > e.maxLength)
-        setInputCount(e.value.slice(0, e.maxLength));
+    else
       setInputCount(e.target.value.length);
-    }
+
     if (setUpdateValue) setUpdateValue(e.target.value);
   };
 
