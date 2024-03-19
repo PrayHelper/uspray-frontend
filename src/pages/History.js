@@ -235,6 +235,8 @@ const History = () => {
       if (outside.current && !outside.current.contains(e.target)) {
         console.log(e);
         setShowModal(false);
+        setShowSubModal(false);
+        setSelectedHistoryId(null);
       }
     }
     document.addEventListener("mouseup", handleFocus);
@@ -268,7 +270,7 @@ const History = () => {
       {!loading && isDataLengthZero && (
         <NoDataWrapper>
           <NoDataTitle>완료된 기도제목이 없네요.</NoDataTitle>
-          <NoDataContent>기간이 지나면 히스토리에 저장됩니다!</NoDataContent>
+          <NoDataContent>기간이 지나면 히스토리에 저장됩니!</NoDataContent>
         </NoDataWrapper>
       )}
 
