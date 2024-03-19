@@ -268,7 +268,7 @@ const History = () => {
       {!loading && isDataLengthZero && (
         <NoDataWrapper>
           <NoDataTitle>완료된 기도제목이 없네요.</NoDataTitle>
-          <NoDataContent>기간이 지나면 히스토리에 저장됩니!</NoDataContent>
+          <NoDataContent>기간이 지나면 히스토리에 저장됩니다!</NoDataContent>
         </NoDataWrapper>
       )}
 
