@@ -67,6 +67,16 @@ const MainContent = ({
   }, [showSubModal, showModal]);
 
   useEffect(() => {
+    if (showModal) {
+      setIsPraySelected(true);
+      setIsVisible(false);
+    } else {
+      setIsPraySelected(false);
+      setIsVisible(true);
+    }
+  }, [showModal]);
+
+  useEffect(() => {
     if (!shareMode) setCheckedList([]);
   }, [shareMode]);
 
@@ -98,18 +108,6 @@ const MainContent = ({
 
   const onDelete = () => {
     setShowModal(true);
-  };
-
-  const clickShareButton = () => {
-    if (checkedList.length !== 0) {
-      listHandler(checkedList);
-    }
-  };
-
-  const clickBlackBackground = () => {
-    if (!shareMode) {
-      setSelectedPrayInfo(null);
-    }
   };
 
   const clickShareButton = () => {

@@ -193,8 +193,6 @@ const History = () => {
     }
   }, [selectedHistoryId]);
 
-  useEffect(() => {}, [deletedItemIds]);
-
   useEffect(() => {
     console.log("deletedItemIds", deletedItemIds);
   }, [deletedItemIds]);
