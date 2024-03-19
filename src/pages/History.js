@@ -46,7 +46,7 @@ const History = () => {
     useState(firstCategoryIndex);
   const outside = useRef(null);
 
-  const { data: myPrayData, refetch: refetchMyData } = useHistoryList({
+  const { data: myPrayData, refetch: refetchPersonalData } = useHistoryList({
     type: "personal",
     page: personalPage,
     size: 15,
@@ -179,7 +179,7 @@ const History = () => {
           setShowSubModal(false);
           setShowModal(false);
           setDeletedItemIds((prev) => [...prev, historyDetail.historyId]);
-          tab === "personal" ? refetchMyData() : refetchSharedData();
+          tab === "personal" ? refetchPersonalData() : refetchSharedData();
           resetInputData();
           showToast({});
         },
