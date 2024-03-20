@@ -26,32 +26,18 @@ const ModalContent = styled.div`
   z-index: 500;
 `;
 
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0%);
-  }
-`;
-
 const AnimationContainer = styled.div`
-width: 100%;
-height: 100vh;
-position: fixed;
-top: 0;
-left: 0;
-right: 0;
-bottom: 0;
-display: flex;
-flex-direction: column;
-align-items: center;
-background-color: #FFFFFF;
-z-index: 101;
-transition: all 0.3s ease-in-out;
-animation: ${fadeIn} 0.3s ease-in-out;
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #FFFFFF;
 `;
 
 const ModalButton1 = styled.button`

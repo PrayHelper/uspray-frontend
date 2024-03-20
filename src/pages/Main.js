@@ -429,19 +429,15 @@ const Main = () => {
           </ColorPalette>
         </CategorySetting>
       )}
-      {isLockerOverlayOn && (
-        <Overlay isOverlayOn={isLockerOverlayOn}>
-          <Locker
-            setIsOverlayOn={setIsLockerOverlayOn}
-            refetchPrayList={refetchPrayList}
-          />
-        </Overlay>
-      )}
-      {isOrderOverlayOn && (
-        <Overlay isOverlayOn={isOrderOverlayOn}>
-          <ChangeCategoryOrder setIsOverlayOn={setIsOrderOverlayOn} />
-        </Overlay>
-      )}
+      <Overlay isOverlayOn={isLockerOverlayOn}>
+        <Locker
+          setIsOverlayOn={setIsLockerOverlayOn}
+          refetchPrayList={refetchPrayList}
+        />
+      </Overlay>
+      <Overlay isOverlayOn={isOrderOverlayOn}>
+        <ChangeCategoryOrder setIsOverlayOn={setIsOrderOverlayOn} />
+      </Overlay>
       {!shareMode && !isPraySelected && (
         <>
           <OptionBtn

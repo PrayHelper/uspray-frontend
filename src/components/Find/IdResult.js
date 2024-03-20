@@ -64,17 +64,6 @@ const BoldText = styled.span`
   font-weight: bold;
 `;
 
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0%);
-  }
-`;
-
 const AnimationContainer = styled.div`
   width: 100%;
   height: 100vh;
@@ -87,9 +76,6 @@ const AnimationContainer = styled.div`
   flex-direction: column;
   align-items: center;
   background-color: #ffffff;
-  z-index: 101;
-  transition: all 0.3s ease-in-out;
-  animation: ${fadeIn} 0.3s ease-in-out;
 `;
 
 const IdResult = ( {userData} ) => {
