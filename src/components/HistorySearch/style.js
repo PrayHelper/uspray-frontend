@@ -23,6 +23,8 @@ export const SearchWrapper = styled.div`
   flex-direction: column;
   border-radius: 0px 0px 16px 16px;
   transition: all 0.3s;
+  position: fixed;
+  z-index: 400;
 `;
 
 export const Header = styled.div`
