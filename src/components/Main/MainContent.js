@@ -125,32 +125,30 @@ const MainContent = ({
   return (
     <>
       <MainContentWrapper shareMode={shareMode}>
+        <BlackScreen
+          isModalOn={showModal}
+          onClick={() => setShowModal(false)}
+        />
         {showModal && (
-          <>
-            <BlackScreen
-              isModalOn={showModal}
-              onClick={() => setShowModal(false)}
-            />
-            <Modal
-              isModalOn={showModal}
-              iconSrc={"images/ic_group_pray_delete.svg"}
-              iconAlt={"group_pray_delete"}
-              mainContent={"정말 삭제하시겠습니까?"}
-              subContent={"선택한 기도제목이 삭제됩니다."}
-              btnContent={"삭제"}
-              btnContent2={"취소"}
-              onClickBtn={() => {
-                deletePray(selectedPrayInfo.prayId, {
-                  onSuccess: () => {
-                    setShowModal(false);
-                    setSelectedPrayInfo(null);
-                  },
-                });
-              }}
-              onClickBtn2={onCancel}
-              modalTheme={2}
-            />
-          </>
+          <Modal
+            isModalOn={showModal}
+            iconSrc={"images/ic_group_pray_delete.svg"}
+            iconAlt={"group_pray_delete"}
+            mainContent={"정말 삭제하시겠습니까?"}
+            subContent={"선택한 기도제목이 삭제됩니다."}
+            btnContent={"삭제"}
+            btnContent2={"취소"}
+            onClickBtn={() => {
+              deletePray(selectedPrayInfo.prayId, {
+                onSuccess: () => {
+                  setShowModal(false);
+                  setSelectedPrayInfo(null);
+                },
+              });
+            }}
+            onClickBtn2={onCancel}
+            modalTheme={2}
+          />
         )}
         {showSubModal && (
           <PrayDateCategoryInput
@@ -446,9 +444,9 @@ const BlackBackground = styled.div`
   left: 0;
   bottom: 0;
   z-index: ${(props) =>
-    props.selectedPrayInfo !== null ? 100 : props.shareMode ? 198 : 0};
+    props.selectedPrayInfo !== null ? "100" : props.shareMode ? "198" : "0"};
   opacity: ${(props) =>
-    props.selectedPrayInfo !== null || props.shareMode ? 1 : 0};
+    props.selectedPrayInfo !== null || props.shareMode ? "1" : "0"};
   backdrop-filter: blur(4px);
   pointer-events: ${(props) =>
     props.selectedPrayInfo !== null || props.shareMode ? "auto" : "none"};

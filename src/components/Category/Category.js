@@ -1,9 +1,9 @@
-import styled from "styled-components";
-import { usePray } from "../../hooks/usePray";
-import GreenCheckbox from "../GreenCheckbox/GreenCheckbox";
+import styled, { css } from 'styled-components';
+import { usePray } from '../../hooks/usePray';
+import GreenCheckbox from '../GreenCheckbox/GreenCheckbox';
 
-const ICON_HEART_FILLED = "images/ic_filled_heart.svg";
-const ICON_HEART_EMPTY = "images/ic_empty_heart.svg";
+const ICON_HEART_FILLED = 'images/ic_filled_heart.svg';
+const ICON_HEART_EMPTY = 'images/ic_empty_heart.svg';
 
 const Category = ({
   categoryId,
@@ -68,7 +68,7 @@ const Category = ({
       <ItemList>
         {prays.map((pray) => (
           <Item key={pray.prayId}>
-            {tabType === "shared" ? (
+            {tabType === 'shared' ? (
               <ItemName selected={pray.isPrayedToday}>{pray.name}</ItemName>
             ) : null}
             <ItemText
@@ -83,11 +83,20 @@ const Category = ({
                 handler={(e) => handleCheck(e, pray.prayId)}
               />
             ) : (
-              <img
-                src={pray.isPrayedToday ? ICON_HEART_FILLED : ICON_HEART_EMPTY}
-                alt="heart_icon"
-                onClick={(e) => handleClick(e, pray)}
-              />
+              <ImageWrapper>
+                <HeartFilledImg
+                  imgStyle={pray.isPrayedToday}
+                  src={ICON_HEART_FILLED}
+                  alt="heart_icon"
+                  onClick={(e) => handleClick(e, pray)}
+                />
+                <HeartEmptyImg
+                  imgStyle={pray.isPrayedToday}
+                  src={ICON_HEART_EMPTY}
+                  alt="heart_icon"
+                  onClick={(e) => handleClick(e, pray)}
+                />
+              </ImageWrapper>
             )}
           </Item>
         ))}
@@ -111,7 +120,7 @@ const Title = styled.div`
   background-color: ${(props) => props.color};
   border-radius: 16px 16px 0px 0px;
   padding: 12px 16px;
-  color: ${(props) => (props.color === "#D0E8CB" ? "#A0A0A0" : "#FFFFFF")};
+  color: ${(props) => (props.color === '#D0E8CB' ? '#A0A0A0' : '#FFFFFF')};
   font-weight: 700;
   display: flex;
   justify-content: space-between;
@@ -127,13 +136,13 @@ const ItemText = styled.div`
   flex: 1;
   display: flex;
   align-items: center;
-  color: ${(props) => (props.selected ? "#49614380" : "#496143")};
+  color: ${(props) => (props.selected ? '#49614380' : '#496143')};
   font-size: 12px;
 `;
 
 const ItemName = styled.div`
   width: 48px;
-  color: ${(props) => (props.selected ? "#75BD6280" : "#75BD62")};
+  color: ${(props) => (props.selected ? '#75BD6280' : '#75BD62')};
   font-size: 12px;
 `;
 
@@ -145,11 +154,44 @@ const Item = styled.div`
   gap: 2px;
 
   &:not(:last-child)::after {
-    content: "";
+    content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     border-bottom: 1px solid #0000001a;
   }
+`;
+
+const HeartFilledImg = styled.img`
+  position: absolute;
+  ${(props) =>
+    props.imgStyle
+      ? css`
+          opacity: 1;
+        `
+      : css`
+          opacity: 0;
+        `};
+  transition: 0.3s;
+`;
+const HeartEmptyImg = styled.img`
+  position: absolute;
+  ${(props) =>
+    props.imgStyle
+      ? css`
+          opacity: 0;
+        `
+      : css`
+          opacity: 1;
+        `};
+  transition: 0.3s;
+`;
+const ImageWrapper = styled.div`
+  //자식 요소(img)와 같은 사이즈
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
