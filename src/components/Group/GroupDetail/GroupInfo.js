@@ -10,6 +10,7 @@ const GroupInfo = ({
   isData,
   categoryList,
   firstCategoryIndex,
+  shareMode,
   setShareMode,
 }) => {
   const { addGroupPray, groupHeartCount } = useGroupPray(group.id);
@@ -86,7 +87,7 @@ const GroupInfo = ({
         </GroupInfoText>
       )}
       <PrayInput>
-        {showSubModal ? (
+        <>
           <PrayDateCategoryInput
             categoryList={categoryList}
             showSubModal={showSubModal}
@@ -106,7 +107,7 @@ const GroupInfo = ({
               () => onInsert(prayInputValue, dateInputValue, categoryInputValue) // GroupPray 버전으로 바꿔야 됨
             }
           />
-        ) : (
+
           <Input
             type="text"
             placeholder="기도제목을 입력해주세요"
@@ -117,7 +118,7 @@ const GroupInfo = ({
             value={prayInputValue}
             readOnly
           />
-        )}
+        </>
         <LoadButton
           onClick={() => {
             setShareMode(true);

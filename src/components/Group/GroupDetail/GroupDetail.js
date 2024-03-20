@@ -102,6 +102,7 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
           isData={isGroupPrayListData}
           categoryList={categoryList}
           firstCategoryIndex={firstCategoryIndex}
+          shareMode={shareMode}
           setShareMode={setShareMode}
           setTab={setTab}
         />
