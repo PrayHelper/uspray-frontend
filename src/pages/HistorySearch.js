@@ -202,6 +202,7 @@ const HistorySearch = ({
                 {showStartDatePicker && (
                   <StartDatePickerContainer>
                     <Calender
+                      state={"start"}
                       maxDate={today}
                       selectedDate={selectedDate}
                       onChangeDate={(date) => onChangeDate(date, "start")}
@@ -219,6 +220,7 @@ const HistorySearch = ({
                 {showEndDatePicker && (
                   <EndDatePickerContainer>
                     <Calender
+                      state={"end"}
                       maxDate={today}
                       minDate={selectedDate}
                       selectedDate={selectedDate}
