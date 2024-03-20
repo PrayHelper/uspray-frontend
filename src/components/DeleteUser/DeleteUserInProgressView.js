@@ -39,16 +39,16 @@ const DeleteUserInProgressView = ({
             toggleOptionById={toggleOptionById}
             deleteReasonOptionList={deleteReasonOptionList}
           />
-          {isEtcChecked && (
-            <S.EtcReasonInput
-              placeholder={
-                "계정 삭제 사유에 대해 알려주세요. \n회원님의 소중한 피드백을 통하여 더 나은 서비스로 발전하겠습니다."
-              }
-              isEtcChecked={isEtcChecked}
-              value={etcReasonInput}
-              onChange={onChangeEtcReasonInput}
-            />
-          )}
+          {/* {isEtcChecked && ( */}
+          <S.EtcReasonInput
+            placeholder={
+              "계정 삭제 사유에 대해 알려주세요. \n회원님의 소중한 피드백을 통하여 더 나은 서비스로 발전하겠습니다."
+            }
+            isEtcChecked={isEtcChecked}
+            value={etcReasonInput}
+            onChange={onChangeEtcReasonInput}
+          />
+          {/* )} */}
         </S.TopTextsAndOptions>
 
         <S.DeleteCautionAndAgreement>
@@ -109,6 +109,16 @@ const fadeIn = keyframes`
     transform: translateY(0px);
   }
 `;
+const fadeOut = keyframes`
+  0% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+`;
 
 const S = {
   Root: styled.div`
@@ -143,6 +153,7 @@ const S = {
     display: flex;
     flex-direction: column;
     gap: 44px;
+    margin-top: 20px;
   `,
   Caution: styled.div`
     display: flex;
@@ -209,11 +220,17 @@ const S = {
     border: 1px solid var(--color-light-grey);
     padding: 16px 12px;
 
+    transition: visibility 0.5s ease;
+
+    opacity: ${(props) => (props.isEtcChecked ? "1" : "0")};
+
     animation: ${(props) =>
       props.isEtcChecked
         ? css`
             ${fadeIn} 0.5s ease
           `
-        : `none`};
+        : css`
+            ${fadeOut} 0.5s ease
+          `};
   `,
 };
