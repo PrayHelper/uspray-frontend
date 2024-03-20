@@ -39,7 +39,6 @@ const DeleteUserInProgressView = ({
             toggleOptionById={toggleOptionById}
             deleteReasonOptionList={deleteReasonOptionList}
           />
-          {/* {isEtcChecked && ( */}
           <S.EtcReasonInput
             placeholder={
               "계정 삭제 사유에 대해 알려주세요. \n회원님의 소중한 피드백을 통하여 더 나은 서비스로 발전하겠습니다."
@@ -48,7 +47,6 @@ const DeleteUserInProgressView = ({
             value={etcReasonInput}
             onChange={onChangeEtcReasonInput}
           />
-          {/* )} */}
         </S.TopTextsAndOptions>
 
         <S.DeleteCautionAndAgreement>
