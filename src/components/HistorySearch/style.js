@@ -90,6 +90,8 @@ export const DateWrapper = styled.div`
           ${fadeIn} 0.5s ease
         `
       : `none`};
+  gap: 8px;
+  text-align: center;
 `;
 
 export const DateBox = styled.div`
@@ -97,7 +99,8 @@ export const DateBox = styled.div`
   color: ${(props) =>
     props.isClicked ? `var(--color-green)` : `var(--color-grey-50)`};
   background-color: var(--color-white);
-  padding: 8px 36px;
+  padding: 8px;
+  width: 100%;
 `;
 
 export const CheckboxWrapper = styled.div`
@@ -112,3 +115,5 @@ export const NoDataContent = styled.div`
   margin-top: 16px;
   color: var(--color-secondary-grey);
 `;
+
+export const DateArrow = styled.img``;
