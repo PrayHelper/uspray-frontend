@@ -1,7 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import MainContent from "../components/Main/MainContent";
-import { useState } from "react";
 import ButtonV2, { ButtonTheme } from "../components/ButtonV2/ButtonV2";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import Modal from "../components/Modal/Modal";
@@ -15,38 +13,40 @@ import { useShare } from "../hooks/useShare";
 import Locker from "./Locker";
 import ChangeCategoryOrder from "./ChangeCategoryOrder";
 import { useFetchSharedList } from "../hooks/useFetchSharedList";
+import MainCategorySetting from "../components/pages/Main/CategorySetting/MainCategorySetting";
+import MainContent from "../components/pages/Main/MainContent";
+import MainHeader from "../components/pages/Main/Header/MainHeader";
 
 const Main = () => {
-  const [tab, setTab] = useState("내가 쓴");
-  const [bgColor, setBgColor] = useState("#7BAB6E");
+  const [tab, setTab] = useState("내가 쓴"); // 내가 쓴 or 공유 받은
+  const bgColor = tab === "내가 쓴" ? "#7BAB6E" : "#3D5537";
+  const tabType = tab === "내가 쓴" ? "personal" : "shared";
 
-  const [showCategorySetting, setShowCategorySetting] = useState(false);
+  const [showCategorySetting, setShowCategorySetting] = useState(true);
 
-  const [showSubModal, setShowSubModal] = useState(false);
+  const [isShowInputModal, setIsShowInputModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
   const [showOption, setShowOption] = useState(false);
   const [shareMode, setShareMode] = useState(false);
   const [isLockerOverlayOn, setIsLockerOverlayOn] = useState(false);
   const [isOrderOverlayOn, setIsOrderOverlayOn] = useState(false);
-  const [prayInputValue, setPrayInputValue] = useState("");
-  const [dateInputValue, setDateInputValue] = useState(null);
-  const [categoryInputValue, setCategoryInputValue] = useState(0);
   const [dotIconClicked, setDotIconClicked] = useState(false);
   const [clickedCategoryData, setClickedCategoryData] = useState({});
   const [inputValue, setInputValue] = useState("");
-  const tabType = tab === "내가 쓴" ? "personal" : "shared";
-  const categoryState = useCategory(tabType);
-  const prayState = usePray(tabType);
-  const { refetchCategoryList } = categoryState;
+
   const {
     categoryList,
     firstCategoryIndex,
     createCategory,
     changeCategory,
     deleteCategory,
-  } = categoryState;
+    refetchCategoryList,
+  } = useCategory(tabType);
+
+  const prayState = usePray(tabType);
   const { refetchPrayList } = prayState;
-  const { prayList, createPray } = prayState;
+  const { createPray } = prayState;
   const { shareLink, isMobile } = useFlutterWebview();
   const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
   const location = useLocation();
@@ -146,7 +146,6 @@ const Main = () => {
 
   const handleTabChange = (newTab) => {
     setTab(newTab);
-    setBgColor(newTab === "내가 쓴" ? "#7BAB6E" : "#3D5537");
   };
 
   const clickLocker = () => {
@@ -163,21 +162,6 @@ const Main = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
-  };
-
-  // 기도를 추가하는 함수
-  const onInsert = async (text, deadline, categoryId) => {
-    createPray(
-      { content: text, deadline: deadline, categoryId: categoryId },
-      {
-        onSuccess: () => {
-          setShowSubModal(false);
-          setPrayInputValue("");
-          setDateInputValue(null);
-          setSelectedCategoryIndex(categoryId);
-        },
-      }
-    );
   };
 
   const onShareReceive = async (prayIds) => {
@@ -220,7 +204,7 @@ const Main = () => {
     if (categoryList.length === 0) {
       setShowModal(true);
     } else {
-      setShowSubModal(!showSubModal);
+      setIsShowInputModal(!isShowInputModal);
     }
   };
 
@@ -252,64 +236,19 @@ const Main = () => {
         btnContent={"네, 그렇게 할게요."}
         onClickBtn={handleCloseModal}
       />
-      <TopContainer>
-        <TopBox>
-          <TabContainer>
-            <Tab
-              active={tab === "내가 쓴"}
-              onClick={() => handleTabChange("내가 쓴")}
-            >
-              내가 쓴
-            </Tab>
-            <Tab
-              active={tab === "공유 받은"}
-              onClick={() => handleTabChange("공유 받은")}
-            >
-              공유 받은
-            </Tab>
-          </TabContainer>
-        </TopBox>
-        <FlexContainer>
-          {tab === "내가 쓴" ? (
-            showSubModal ? (
-              <PrayDateCategoryInput
-                categoryList={categoryList}
-                showSubModal={showSubModal}
-                setShowSubModal={setShowSubModal}
-                inputPlaceHodler="기도제목을 입력해주세요"
-                maxrow={3}
-                maxlen={75}
-                isShowWordCount={true}
-                isDefault={false}
-                setUpdateValue={setPrayInputValue}
-                setUpdateDate={setDateInputValue}
-                setUpdateCategory={setCategoryInputValue}
-                buttonText="기도제목 작성"
-                value={prayInputValue}
-                category={selectedCategoryIndex}
-                onClickFunc={() =>
-                  onInsert(prayInputValue, dateInputValue, categoryInputValue)
-                }
-              />
-            ) : (
-              <Input
-                type="text"
-                placeholder="기도제목을 입력해주세요"
-                style={{
-                  width: "100%",
-                }}
-                onClick={() => onClickPrayInput()}
-                value={prayInputValue}
-                readOnly
-              />
-            )
-          ) : (
-            <MoveToLockerButton onClick={() => clickLocker()}>
-              보관함에 {sharedDataLength}개의 기도제목이 있어요
-            </MoveToLockerButton>
-          )}
-        </FlexContainer>
-      </TopContainer>
+      <MainHeader
+        {...{
+          categoryList,
+          onClickPrayInput,
+          setIsShowInputModal,
+          createPray,
+          handleTabChange,
+          isShowInputModal,
+          setIsLockerOverlayOn,
+          setSelectedCategoryIndex,
+        }}
+        currentTab={tab}
+      />
       <MainContent
         categoryList={categoryList}
         setShowCategorySetting={setShowCategorySetting}
@@ -326,6 +265,13 @@ const Main = () => {
         setShareMode={setShareMode}
         listHandler={onShare}
         setIsPraySelected={setIsPraySelected}
+      />
+      <MainCategorySetting
+        isShow={showCategorySetting}
+        inputValue={inputValue}
+        onChangeInputValue={handleInputChange}
+        onClick={handleInnerClick}
+        createCategoryHandler={createCategoryHandler}
       />
       {showCategorySetting && (
         <CategorySetting onClick={() => setShowCategorySetting(false)}>
@@ -346,8 +292,7 @@ const Main = () => {
                   color: selectedColor,
                   type: tabType,
                 })
-              }
-            >
+              }>
               카테고리 추가
             </ButtonV2>
           </FixedButtonContainer>
@@ -377,8 +322,7 @@ const Main = () => {
           <FixedButtonContainer onClick={handleInnerClick}>
             <ButtonV2
               buttonTheme={ButtonTheme.OUTLINED}
-              handler={() => deleteCategoryHandler(clickedCategoryData.id)}
-            >
+              handler={() => deleteCategoryHandler(clickedCategoryData.id)}>
               카테고리 삭제
             </ButtonV2>
             <ButtonV2
@@ -391,8 +335,7 @@ const Main = () => {
                   color: selectedColor,
                   type: tabType,
                 })
-              }
-            >
+              }>
               카테고리 수정
             </ButtonV2>
           </FixedButtonContainer>

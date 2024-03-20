@@ -8,8 +8,8 @@ import { useState } from "react";
 import GroupSetting from "../GroupSetting/GroupSetting";
 import { useGroupPray } from "../../../hooks/useGroupPray";
 import useFlutterWebview from "../../../hooks/useFlutterWebview";
-import MainContent from "../../Main/MainContent";
 import { useCategory } from "../../../hooks/useCategory";
+import MainContent from "../../pages/Main/MainContent";
 
 const GroupDetail = ({ group, setShowGroupDetail }) => {
   const [showGroupSetting, setShowGroupSetting] = useState(false);
