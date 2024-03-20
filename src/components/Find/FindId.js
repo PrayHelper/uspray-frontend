@@ -9,6 +9,7 @@ import useToast from "../../hooks/useToast";
 import { ToastTheme } from "../Toast/Toast";
 import { ReactComponent as NextArrowGray } from "../../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../../images/ic_next_arrow_white.svg";
+import Overlay from '../Overlay/Overlay';
 let init = 0;
 
 const SubLink = styled.a`
@@ -159,7 +160,12 @@ const FindId = () => {
 
   return (
     <div style={{ width: "100%", height: "100vh", position: "relative" }}>
-      {showResultPage && <IdResult userData={userData} />}
+      {
+        showResultPage && 
+          <Overlay isOverlayOn={showResultPage}>
+            <IdResult userData={userData} />
+          </Overlay>
+      }
       <UserHeader children={"아이디 찾기"} />
       <div
         style={{

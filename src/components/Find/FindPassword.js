@@ -10,6 +10,7 @@ import PwError from "./PwError";
 import useToast from "../../hooks/useToast";
 import { ReactComponent as NextArrowGray } from "../../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../../images/ic_next_arrow_white.svg";
+import Overlay from "../Overlay/Overlay";
 
 let init = 0;
 
@@ -220,8 +221,18 @@ const FindPassword = () => {
         position: "relative",
         flexDirection: "column",
       }}>
-      {showResultPage && <PwResult id={id} />}
-      {showErrorPage && <PwError />}
+      {
+        showResultPage && 
+          <Overlay isOverlayOn={showResultPage}>
+            <PwResult id={id} />
+          </Overlay>
+      }
+      {
+        showErrorPage && 
+          <Overlay isOverlayOn={showErrorPage}>
+            <PwError />
+          </Overlay>
+      }
       <UserHeader children={"비밀번호 찾기"} />
       <div
         style={{

@@ -21,7 +21,8 @@ const CategoryItem = ({ categoryItem, index }) => {
           bgColor={categoryItem.color}
           ref={provided.innerRef}
           {...provided.draggableProps}
-          {...provided.dragHandleProps}>
+          {...provided.dragHandleProps}
+        >
           <S.CategoryItemText>{categoryItem.name}</S.CategoryItemText>
           <Hamburger />
         </S.CategoryItemContainer>
@@ -52,14 +53,17 @@ const ChangeCategoryOrder = ({ setIsOverlayOn }) => {
 
   return (
     <S.PageRoot>
-      <UserHeader overlay={true} setIsOverlayOn={setIsOverlayOn}>카테고리 순서 변경</UserHeader>
+      <UserHeader overlay={true} setIsOverlayOn={setIsOverlayOn}>
+        카테고리 순서 변경
+      </UserHeader>
       {categoryList && (
         <DragDropContext onDragEnd={onDragEnd}>
           <StrictModeDroppable droppableId="droppable">
             {(provided) => (
               <S.CategoryList
                 ref={provided.innerRef}
-                {...provided.droppableProps}>
+                {...provided.droppableProps}
+              >
                 {categoryList.map((categoryItem, index) => (
                   <CategoryItem
                     index={index}

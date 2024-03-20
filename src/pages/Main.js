@@ -15,6 +15,8 @@ import { useShare } from "../hooks/useShare";
 import Locker from "./Locker";
 import ChangeCategoryOrder from "./ChangeCategoryOrder";
 import { useFetchSharedList } from "../hooks/useFetchSharedList";
+import useToast from "../hooks/useToast";
+import { ToastTheme } from "../components/Toast/Toast";
 
 const Main = () => {
   const [tab, setTab] = useState("내가 쓴");
@@ -61,6 +63,17 @@ const Main = () => {
 
   const [categoryRefIndex, setCategoryRefIndex] = useState(0);
   const categoryRef = useRef([]);
+  const categoryInputRef = useRef(null);
+
+  const { showToast } = useToast({});
+
+  useEffect(() => {
+    if (showCategorySetting && categoryInputRef.current) {
+      categoryInputRef.current.focus();
+      const length = categoryInputRef.current.value.length;
+      categoryInputRef.current.setSelectionRange(length, length);
+    }
+  }, [showCategorySetting]);
 
   useEffect(() => {
     if (categoryRef.current[categoryRefIndex]) {
@@ -210,7 +223,10 @@ const Main = () => {
           url: `${WEB_ORIGIN}/main?share=` + encodePrayIds,
         });
       } else {
-        alert("공유하기가 지원되지 않는 환경 입니다.");
+        showToast({
+          message: "공유하기가 지원되지 않는 환경 입니다.",
+          theme: ToastTheme.ERROR,
+        });
       }
     }
     console.log(`${WEB_ORIGIN}/main?share=` + encodePrayIds);
@@ -289,6 +305,7 @@ const Main = () => {
                 setUpdateCategory={setCategoryInputValue}
                 buttonText="기도제목 작성"
                 value={prayInputValue}
+                date={null}
                 category={selectedCategoryIndex}
                 onClickFunc={() =>
                   onInsert(prayInputValue, dateInputValue, categoryInputValue)
@@ -337,11 +354,12 @@ const Main = () => {
             placeholder={"카테고리를 입력해주세요"}
             onChange={handleInputChange}
             onClick={handleInnerClick}
+            ref={categoryInputRef}
           />
           <FixedButtonContainer onClick={handleInnerClick}>
             <ButtonV2
               buttonTheme={ButtonTheme.FILLED}
-              disabled={!inputValue}
+              disabled={!inputValue || /^\s*$/.test(inputValue)}
               handler={() =>
                 createCategoryHandler({
                   name: inputValue,
@@ -413,19 +431,15 @@ const Main = () => {
           </ColorPalette>
         </CategorySetting>
       )}
-      {isLockerOverlayOn && (
-        <Overlay isOverlayOn={isLockerOverlayOn}>
-          <Locker
-            setIsOverlayOn={setIsLockerOverlayOn}
-            refetchPrayList={refetchPrayList}
-          />
-        </Overlay>
-      )}
-      {isOrderOverlayOn && (
-        <Overlay isOverlayOn={isOrderOverlayOn}>
-          <ChangeCategoryOrder setIsOverlayOn={setIsOrderOverlayOn} />
-        </Overlay>
-      )}
+      <Overlay isOverlayOn={isLockerOverlayOn}>
+        <Locker
+          setIsOverlayOn={setIsLockerOverlayOn}
+          refetchPrayList={refetchPrayList}
+        />
+      </Overlay>
+      <Overlay isOverlayOn={isOrderOverlayOn}>
+        <ChangeCategoryOrder setIsOverlayOn={setIsOrderOverlayOn} />
+      </Overlay>
       {!shareMode && !isPraySelected && (
         <>
           <OptionBtn
@@ -511,6 +525,8 @@ const TabContainer = styled.div`
 
 const Tab = styled.div`
   font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.08em;
   color: ${(props) => (props.active ? "#FFFFFF" : "#FFFFFF80")};
   cursor: pointer;
   border-bottom: ${(props) => (props.active ? "2px solid #FFFFFF" : "none")};

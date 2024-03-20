@@ -67,6 +67,16 @@ const MainContent = ({
   }, [showSubModal, showModal]);
 
   useEffect(() => {
+    if (showModal) {
+      setIsPraySelected(true);
+      setIsVisible(false);
+    } else {
+      setIsPraySelected(false);
+      setIsVisible(true);
+    }
+  }, [showModal]);
+
+  useEffect(() => {
     if (!shareMode) setCheckedList([]);
   }, [shareMode]);
 
@@ -427,7 +437,7 @@ const ShareNumberText = styled.div`
 const BlackBackground = styled.div`
   transition: all 0.3s ease-in-out;
   background-color: rgba(0, 0, 0, 0.7);
-  display: ${(props) => (!props.showModal ? "flex" : "flex")};
+  display: ${(props) => (!props.showModal ? "flex" : "none")};
   position: fixed;
   top: 0;
   right: 0;

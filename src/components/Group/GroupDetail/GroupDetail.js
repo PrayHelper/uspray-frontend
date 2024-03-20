@@ -10,6 +10,8 @@ import { useGroupPray } from "../../../hooks/useGroupPray";
 import useFlutterWebview from "../../../hooks/useFlutterWebview";
 import MainContent from "../../Main/MainContent";
 import { useCategory } from "../../../hooks/useCategory";
+import useToast from "../../../hooks/useToast";
+import { ToastTheme } from "../../Toast/Toast";
 
 const GroupDetail = ({ group, setShowGroupDetail }) => {
   const [showGroupSetting, setShowGroupSetting] = useState(false);
@@ -30,6 +32,8 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
 
   const [categoryRefIndex, setCategoryRefIndex] = useState(0);
   const categoryRef = useRef([]);
+
+  const { showToast } = useToast({});
 
   useEffect(() => {
     refetchCategoryList();
@@ -57,7 +61,10 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
           url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
         });
       } else {
-        alert("초대하기가 지원되지 않는 환경 입니다.");
+        showToast({
+          message: "초대하기가 지원되지 않는 환경 입니다.",
+          theme: ToastTheme.ERROR,
+        });
       }
     }
     console.log(`${WEB_ORIGIN}/group?id=` + encodeGroupId);
