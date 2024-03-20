@@ -44,7 +44,6 @@ export const useHistory = () => {
       },
       onSuccess: (res) => {
         console.log(res);
-        // refetchPrayList(tabType);
       },
       retry: (cnt) => {
         return cnt < 3;
