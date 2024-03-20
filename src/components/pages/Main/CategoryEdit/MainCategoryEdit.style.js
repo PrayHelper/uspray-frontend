@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const S = {
-  Container: styled.div`
+  RootContainer: styled.div`
     z-index: 100;
     position: fixed;
     top: 0;
@@ -15,7 +15,7 @@ const S = {
     box-sizing: border-box;
     backdrop-filter: blur(8px);
   `,
-  CategoryInput: styled.input`
+  Input: styled.input`
     width: calc(100%-16px);
     height: 51px;
     border-radius: 16px;
@@ -40,6 +40,35 @@ const S = {
     display: flex;
     flex-direction: column;
     gap: 16px;
+  `,
+  ColorPalette: styled.div`
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    margin-top: 8px;
+  `,
+  ColorDrop: styled.div`
+    width: 32px;
+    height: 32px;
+    background-color: ${(props) => props.color};
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+    border-bottom-left-radius: 16px;
+    transform: rotate(45deg);
+
+    ::after {
+      content: "";
+      position: absolute;
+      top: 115%;
+      left: 115%;
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      display: ${(props) =>
+        props.color === props.selectedColor ? "block" : "none"};
+    }
   `,
 };
 

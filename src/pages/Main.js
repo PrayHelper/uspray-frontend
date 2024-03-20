@@ -1,39 +1,35 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import ButtonV2, { ButtonTheme } from "../components/ButtonV2/ButtonV2";
-import BlackScreen from "../components/BlackScreen/BlackScreen";
-import Modal from "../components/Modal/Modal";
-import Overlay from "../components/Overlay/Overlay";
-import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
 import { useCategory } from "../hooks/useCategory";
 import { usePray } from "../hooks/usePray";
 import { useLocation } from "react-router-dom";
 import useFlutterWebview from "../hooks/useFlutterWebview";
 import { useShare } from "../hooks/useShare";
-import Locker from "./Locker";
-import ChangeCategoryOrder from "./ChangeCategoryOrder";
 import { useFetchSharedList } from "../hooks/useFetchSharedList";
-import MainCategorySetting from "../components/pages/Main/CategorySetting/MainCategorySetting";
+import MainCategoryAdd from "../components/pages/Main/CategoryAdd/MainCategoryAdd";
 import MainContent from "../components/pages/Main/MainContent";
 import MainHeader from "../components/pages/Main/Header/MainHeader";
+import MainCategoryAlertModal from "../components/pages/Main/CategoryAlertModal/MainCategoryAlertModal";
+import MainCategoryEdit from "../components/pages/Main/CategoryEdit/MainCategoryEdit";
+import MainSelectedOverlay from "../components/pages/Main/SelectedOverlay/MainSelectedOverlay";
+import MainRightBottomOptions from "../components/pages/Main/RightBottomOptions/MainRightBottomOptions";
 
 const Main = () => {
   const [tab, setTab] = useState("내가 쓴"); // 내가 쓴 or 공유 받은
   const bgColor = tab === "내가 쓴" ? "#7BAB6E" : "#3D5537";
   const tabType = tab === "내가 쓴" ? "personal" : "shared";
 
-  const [showCategorySetting, setShowCategorySetting] = useState(true);
+  const [currentOverlay, setCurrentOverlay] = useState(null); // "LOCKER" | "CHANGE_ORDER" | null
+  const [showCategoryAdd, setShowCategoryAdd] = useState(false);
 
   const [isShowInputModal, setIsShowInputModal] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showAlertModal, setShowAlertModal] = useState(false);
 
-  const [showOption, setShowOption] = useState(false);
+  const [showRightBottomOptions, setShowRightBottomOptions] = useState(false);
   const [shareMode, setShareMode] = useState(false);
-  const [isLockerOverlayOn, setIsLockerOverlayOn] = useState(false);
-  const [isOrderOverlayOn, setIsOrderOverlayOn] = useState(false);
-  const [dotIconClicked, setDotIconClicked] = useState(false);
-  const [clickedCategoryData, setClickedCategoryData] = useState({});
-  const [inputValue, setInputValue] = useState("");
+
+  const [selectedCategoryDataToEdit, setSelectedCategoryDataToEdit] =
+    useState(null);
 
   const {
     categoryList,
@@ -71,64 +67,33 @@ const Main = () => {
     }
   }, [categoryRef, categoryRefIndex]);
 
-  const ColorList = [
-    "#D0E8CB",
-    "#AEDBA5",
-    "#9BD88A",
-    "#75BD62",
-    "#649D55",
-    "#58834D",
-    "#507247",
-  ];
-  const [selectedColor, setSelectedColor] = useState(ColorList[0]);
-
   useEffect(() => {
-    if (dotIconClicked) setInputValue(clickedCategoryData.name);
-    else setInputValue("");
-  }, [clickedCategoryData, dotIconClicked]);
-
-  useEffect(() => {
-    setShowOption(false);
+    setShowRightBottomOptions(false);
   }, [isPraySelected]);
 
-  useEffect(() => {
-    if (ColorList.includes(clickedCategoryData.color)) {
-      setSelectedColor(clickedCategoryData.color);
-    } else {
-      setSelectedColor(ColorList[0]);
-    }
-  }, [clickedCategoryData]);
-
-  const createCategoryHandler = async (categoryData) => {
+  const createCategoryHandler = (categoryData) => {
     try {
-      await createCategory(categoryData);
+      createCategory(categoryData);
     } catch (error) {
       console.error(error);
     } finally {
-      setShowCategorySetting(false);
-      setInputValue("");
+      setShowCategoryAdd(false);
     }
   };
 
-  const changeCategoryHandler = async (data) => {
+  const changeCategoryHandler = (data) => {
     try {
-      await changeCategory(data);
+      changeCategory(data);
     } catch (error) {
       console.error(error);
-    } finally {
-      setDotIconClicked(false);
-      setInputValue("");
     }
   };
 
-  const deleteCategoryHandler = async (categoryId) => {
+  const deleteCategoryHandler = (categoryId) => {
     try {
-      await deleteCategory(categoryId);
+      deleteCategory(categoryId);
     } catch (error) {
       console.error(error);
-    } finally {
-      setDotIconClicked(false);
-      setInputValue("");
     }
   };
 
@@ -136,7 +101,7 @@ const Main = () => {
     refetchCategoryList();
     refetchPrayList();
     refetchSharedListData();
-    setShowOption(false);
+    setShowRightBottomOptions(false);
   }, [tab]);
 
   useEffect(() => {
@@ -148,20 +113,12 @@ const Main = () => {
     setTab(newTab);
   };
 
-  const clickLocker = () => {
-    setIsLockerOverlayOn(true);
-  };
-
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-  };
-
   const handleInnerClick = (e) => {
     e.stopPropagation();
   };
 
   const handleCloseModal = () => {
-    setShowModal(false);
+    setShowAlertModal(false);
   };
 
   const onShareReceive = async (prayIds) => {
@@ -169,7 +126,7 @@ const Main = () => {
       { prayIds: prayIds },
       {
         onSuccess: () => {
-          setIsLockerOverlayOn(true);
+          setCurrentOverlay("LOCKER");
         },
       }
     );
@@ -202,14 +159,10 @@ const Main = () => {
 
   const onClickPrayInput = () => {
     if (categoryList.length === 0) {
-      setShowModal(true);
+      setShowAlertModal(true);
     } else {
       setIsShowInputModal(!isShowInputModal);
     }
-  };
-
-  const onDotIconClicked = () => {
-    setDotIconClicked(true);
   };
 
   useEffect(() => {
@@ -225,17 +178,8 @@ const Main = () => {
   }, []);
 
   return (
-    <MainWrapper style={{ backgroundColor: bgColor }}>
-      <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
-      <Modal
-        isModalOn={showModal}
-        iconSrc={"images/icon_notice.svg"}
-        iconAlt={"icon_notice"}
-        mainContent={"카테고리를 먼저 추가해주세요!"}
-        subContent={"기도제목은 카테고리 안에서 생성됩니다."}
-        btnContent={"네, 그렇게 할게요."}
-        onClickBtn={handleCloseModal}
-      />
+    <MainWrapper bgColor={bgColor}>
+      <MainCategoryAlertModal {...{ handleCloseModal, showAlertModal }} />
       <MainHeader
         {...{
           categoryList,
@@ -244,173 +188,65 @@ const Main = () => {
           createPray,
           handleTabChange,
           isShowInputModal,
-          setIsLockerOverlayOn,
+          setCurrentOverlay,
           setSelectedCategoryIndex,
         }}
         currentTab={tab}
       />
       <MainContent
-        categoryList={categoryList}
-        setShowCategorySetting={setShowCategorySetting}
-        selectedCategoryIndex={selectedCategoryIndex}
-        setSelectedCategoryIndex={setSelectedCategoryIndex}
-        tabType={tabType}
-        refetchPrayList={refetchPrayList}
-        onDotIconClicked={onDotIconClicked}
-        setClickedCategoryData={setClickedCategoryData}
-        categoryRef={categoryRef}
-        setCategoryRefIndex={setCategoryRefIndex}
-        shareMode={shareMode}
-        setShowOption={setShowOption}
-        setShareMode={setShareMode}
+        {...{
+          categoryList,
+          setShowCategoryAdd,
+          selectedCategoryIndex,
+          setSelectedCategoryIndex,
+          tabType,
+          refetchPrayList,
+          categoryRef,
+          setCategoryRefIndex,
+          shareMode,
+          setShowRightBottomOptions,
+          setShareMode,
+          setIsPraySelected,
+        }}
+        setClickedCategoryData={setSelectedCategoryDataToEdit}
         listHandler={onShare}
-        setIsPraySelected={setIsPraySelected}
       />
-      <MainCategorySetting
-        isShow={showCategorySetting}
-        inputValue={inputValue}
-        onChangeInputValue={handleInputChange}
-        onClick={handleInnerClick}
+      <MainCategoryAdd
+        isShow={showCategoryAdd}
         createCategoryHandler={createCategoryHandler}
+        onClick={handleInnerClick}
+        onClose={() => setShowCategoryAdd(false)}
+        tabType={tabType}
       />
-      {showCategorySetting && (
-        <CategorySetting onClick={() => setShowCategorySetting(false)}>
-          <Input
-            type="text"
-            value={inputValue}
-            placeholder={"카테고리를 입력해주세요"}
-            onChange={handleInputChange}
-            onClick={handleInnerClick}
-          />
-          <FixedButtonContainer onClick={handleInnerClick}>
-            <ButtonV2
-              buttonTheme={ButtonTheme.FILLED}
-              disabled={!inputValue}
-              handler={() =>
-                createCategoryHandler({
-                  name: inputValue,
-                  color: selectedColor,
-                  type: tabType,
-                })
-              }>
-              카테고리 추가
-            </ButtonV2>
-          </FixedButtonContainer>
-          <ColorPalette>
-            {ColorList.map((color) => (
-              <ColorDrop
-                color={color}
-                selectedColor={selectedColor}
-                onClick={(event) => {
-                  setSelectedColor(color);
-                  event.stopPropagation();
-                }}
-                key={color}
-              />
-            ))}
-          </ColorPalette>
-        </CategorySetting>
-      )}
-      {dotIconClicked && (
-        <CategorySetting onClick={() => setDotIconClicked(false)}>
-          <Input
-            type="text"
-            value={inputValue}
-            onChange={handleInputChange}
-            onClick={handleInnerClick}
-          />
-          <FixedButtonContainer onClick={handleInnerClick}>
-            <ButtonV2
-              buttonTheme={ButtonTheme.OUTLINED}
-              handler={() => deleteCategoryHandler(clickedCategoryData.id)}>
-              카테고리 삭제
-            </ButtonV2>
-            <ButtonV2
-              buttonTheme={ButtonTheme.FILLED}
-              disabled={!inputValue}
-              handler={() =>
-                changeCategoryHandler({
-                  id: clickedCategoryData.id,
-                  name: inputValue,
-                  color: selectedColor,
-                  type: tabType,
-                })
-              }>
-              카테고리 수정
-            </ButtonV2>
-          </FixedButtonContainer>
-          <ColorPalette>
-            {ColorList.map((color) => (
-              <ColorDrop
-                color={color}
-                selectedColor={selectedColor}
-                onClick={(event) => {
-                  setSelectedColor(color);
-                  event.stopPropagation();
-                }}
-                key={color}
-              />
-            ))}
-          </ColorPalette>
-        </CategorySetting>
-      )}
-      {isLockerOverlayOn && (
-        <Overlay isOverlayOn={isLockerOverlayOn}>
-          <Locker
-            setIsOverlayOn={setIsLockerOverlayOn}
-            refetchPrayList={refetchPrayList}
-          />
-        </Overlay>
-      )}
-      {isOrderOverlayOn && (
-        <Overlay isOverlayOn={isOrderOverlayOn}>
-          <ChangeCategoryOrder setIsOverlayOn={setIsOrderOverlayOn} />
-        </Overlay>
-      )}
-      {!shareMode && !isPraySelected && (
-        <>
-          <OptionBtn
-            src="images/ic_main_option.svg"
-            alt="main_option_icon"
-            onClick={() => setShowOption(true)}
-            isVisible={!showOption}
-            movingDistance={0}
-          />
-          <OptionBtn
-            src="images/ic_main_option_close.svg"
-            alt="main_option_close_icon"
-            onClick={() => setShowOption(false)}
-            isVisible={showOption}
-            movingDistance={0}
-          />
-          <OptionBtn
-            src="images/ic_main_order.svg"
-            alt="main_order_icon"
-            onClick={() => {
-              if (categoryList.length === 0) {
-                setShowModal(true);
-                return;
-              }
-              setIsOrderOverlayOn(true);
-              setShowOption(false);
-            }}
-            isVisible={showOption}
-            movingDistance={72}
-          />
-        </>
-      )}
-      {tab === "내가 쓴" ? (
-        <OptionBtn
-          src="images/ic_main_share.svg"
-          alt="main_share_icon"
-          onClick={() => {
-            setShareMode(true);
-            setShowOption(false);
-          }}
-          isVisible={showOption}
-          movingDistance={144}
-        />
-      ) : null}
+      <MainCategoryEdit
+        closeHandler={() => setSelectedCategoryDataToEdit(null)}
+        {...{
+          selectedCategoryDataToEdit,
+          changeCategoryHandler,
+          deleteCategoryHandler,
+          tabType,
+        }}
+      />
+      <MainSelectedOverlay
+        {...{
+          currentOverlay,
+          refetchPrayList,
+          setCurrentOverlay,
+        }}
+      />
+      <MainRightBottomOptions
+        {...{
+          categoryList,
+          isPraySelected,
+          setCurrentOverlay,
+          setShareMode,
+          setShowAlertModal,
+          setShowRightBottomOptions,
+          shareMode,
+          showRightBottomOptions,
+          tab,
+        }}
+      />
     </MainWrapper>
   );
 };
@@ -424,149 +260,6 @@ const MainWrapper = styled.div`
   width: 100%;
   position: relative;
   background-color: #7bab6e;
-`;
 
-const TopContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  padding: 16px;
-  gap: 16px;
-`;
-
-const TopBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
-const FlexContainer = styled.div`
-  display: flex;
-`;
-
-const TabContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-`;
-
-const Tab = styled.div`
-  font-size: 24px;
-  color: ${(props) => (props.active ? "#FFFFFF" : "#FFFFFF80")};
-  cursor: pointer;
-  border-bottom: ${(props) => (props.active ? "2px solid #FFFFFF" : "none")};
-`;
-
-const Input = styled.input`
-  width: calc(100%-16px);
-  height: 51px;
-  border-radius: 16px;
-  padding: 0px 16px;
-  ::placeholder {
-    color: var(--color-secondary-green);
-    font-weight: 400;
-  }
-  outline: none;
-  border: 0;
-  color: var(--color-green);
-  font-weight: 400;
-  letter-spacing: -0.64px;
-  font-size: 16px;
-  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.25);
-`;
-
-const MoveToLockerButton = styled.div`
-  width: 100%;
-  padding: 14px 16px;
-  background-color: #ffffff40;
-  color: #ffffff;
-  border-radius: 16px;
-  position: relative;
-
-  ::after {
-    content: "";
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
-    background-image: url("/images/ic_right_arrow.svg");
-    background-size: contain;
-  }
-
-  &:active {
-    transition: all 0.2s ease-in-out;
-    filter: ${(props) =>
-      props.disabled ? "brightness(1)" : "brightness(0.9)"};
-    scale: ${(props) => (props.disabled ? "1" : "0.98")};
-  }
-`;
-
-const CategorySetting = styled.div`
-  z-index: 100;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  box-sizing: border-box;
-  backdrop-filter: blur(8px);
-`;
-
-const ColorPalette = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 16px;
-  margin-top: 8px;
-`;
-
-const FixedButtonContainer = styled.div`
-  position: fixed;
-  bottom: 64px;
-  width: calc(100% - 32px);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const ColorDrop = styled.div`
-  width: 32px;
-  height: 32px;
-  background-color: ${(props) => props.color};
-  border-top-right-radius: 16px;
-  border-bottom-right-radius: 16px;
-  border-bottom-left-radius: 16px;
-  transform: rotate(45deg);
-
-  ::after {
-    content: "";
-    position: absolute;
-    top: 115%;
-    left: 115%;
-    width: 8px;
-    height: 8px;
-    background: white;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    display: ${(props) =>
-      props.color === props.selectedColor ? "block" : "none"};
-  }
-`;
-
-const OptionBtn = styled.img`
-  opacity: ${(props) => (props.isVisible ? 1 : 0)};
-  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
-  position: fixed;
-  bottom: ${(props) =>
-    props.isVisible ? `calc(80px + ${props.movingDistance}px)` : "80px"};
-  right: 20px;
-  transition: all 0.2s ease;
-  filter: ${(props) =>
-    props.isVisible ? "drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.3))" : "none"};
+  background-color: ${({ bgColor }) => bgColor};
 `;

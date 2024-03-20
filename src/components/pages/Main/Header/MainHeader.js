@@ -10,7 +10,7 @@ const HeaderBottomAreaContent = ({
   setIsShowInputModal,
   createPray,
   setSelectedCategoryIndex,
-  setIsLockerOverlayOn,
+  setCurrentOverlay,
 }) => {
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
@@ -36,7 +36,7 @@ const HeaderBottomAreaContent = ({
 
   if (currentTab === "공유 받은")
     return (
-      <S.MoveToLockerButton onClick={() => setIsLockerOverlayOn(true)}>
+      <S.MoveToLockerButton onClick={() => setCurrentOverlay("LOCKER")}>
         보관함에 X개의 기도제목이 있어요
       </S.MoveToLockerButton>
     );
@@ -85,7 +85,7 @@ const MainHeader = ({
   categoryList,
   createPray,
   setSelectedCategoryIndex,
-  setIsLockerOverlayOn,
+  setCurrentOverlay,
 }) => {
   return (
     <S.HeaderRootContainer>
@@ -109,7 +109,7 @@ const MainHeader = ({
             onClickPrayInput,
             setIsShowInputModal,
             setSelectedCategoryIndex,
-            setIsLockerOverlayOn,
+            setCurrentOverlay,
           }}
         />
       </S.BottomAreaWrapper>
