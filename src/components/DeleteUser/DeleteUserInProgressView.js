@@ -1,10 +1,10 @@
-import styled, { css } from 'styled-components';
-import DeleteReasonOptionList from '../WithdrawalReason/DeleteReasonOptionList';
-import UserHeader from '../UserHeader';
-import BlackScreen from '../BlackScreen';
-import Modal from '../Modal/Modal';
-import Checkbox from '../Checkbox/Checkbox';
-import { useUserName } from '../../hooks/useUserName';
+import styled, { css, keyframes } from "styled-components";
+import DeleteReasonOptionList from "../WithdrawalReason/DeleteReasonOptionList";
+import UserHeader from "../UserHeader";
+import BlackScreen from "../BlackScreen";
+import Modal from "../Modal/Modal";
+import Checkbox from "../Checkbox/Checkbox";
+import { useUserName } from "../../hooks/useUserName";
 
 const DeleteUserInProgressView = ({
   isEtcChecked,
@@ -42,8 +42,9 @@ const DeleteUserInProgressView = ({
           {isEtcChecked && (
             <S.EtcReasonInput
               placeholder={
-                '계정 삭제 사유에 대해 알려주세요. \n회원님의 소중한 피드백을 통하여 더 나은 서비스로 발전하겠습니다.'
+                "계정 삭제 사유에 대해 알려주세요. \n회원님의 소중한 피드백을 통하여 더 나은 서비스로 발전하겠습니다."
               }
+              isEtcChecked={isEtcChecked}
               value={etcReasonInput}
               onChange={onChangeEtcReasonInput}
             />
@@ -67,8 +68,8 @@ const DeleteUserInProgressView = ({
               checked={isAgreementsChecked}
               // 텍스트 영역 클릭시에도 toggle을 실행시키기 위해 보다 상위 컴포넌트에 onClick 지정
               handler={() => {}}
-              label={'주의사항을 모두 확인하였으며, 이에 동의합니다.'}
-              id={'agreement'}
+              label={"주의사항을 모두 확인하였으며, 이에 동의합니다."}
+              id={"agreement"}
             />
           </S.AgreementContainer>
         </S.DeleteCautionAndAgreement>
@@ -82,12 +83,12 @@ const DeleteUserInProgressView = ({
       <BlackScreen isModalOn={isModalOn} />
       <Modal
         isModalOn={isModalOn}
-        iconSrc={'images/ic_withdrawal.svg'}
-        iconAlt={'icon_withdrawal'}
-        mainContent={'회원탈퇴 하시겠습니까?'}
-        subContent={'신중하게 결정해주세요!'}
-        btnContent={'회원탈퇴'}
-        btnContent2={'취소'}
+        iconSrc={"images/ic_withdrawal.svg"}
+        iconAlt={"icon_withdrawal"}
+        mainContent={"회원탈퇴 하시겠습니까?"}
+        subContent={"신중하게 결정해주세요!"}
+        btnContent={"회원탈퇴"}
+        btnContent2={"취소"}
         onClickBtn={mutateDeleteUser}
         onClickBtn2={closeModal}
         modalTheme={2}
@@ -97,6 +98,17 @@ const DeleteUserInProgressView = ({
 };
 
 export default DeleteUserInProgressView;
+
+const fadeIn = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+`;
 
 const S = {
   Root: styled.div`
@@ -196,5 +208,12 @@ const S = {
     border-radius: 4px;
     border: 1px solid var(--color-light-grey);
     padding: 16px 12px;
+
+    animation: ${(props) =>
+      props.isEtcChecked
+        ? css`
+            ${fadeIn} 0.5s ease
+          `
+        : `none`};
   `,
 };
