@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useEffect } from "react";
+import styled from "styled-components";
 
 const CategoryTag = ({
   categoryList,
@@ -60,19 +60,19 @@ const Container = styled.div`
 `;
 
 const CategoryBox = styled.div`
-  background-color: ${(props) => (props.selected ? props.color : '#EEEEEE')};
+  background-color: ${(props) => (props.selected ? props.color : "#EEEEEE")};
   color: ${(props) =>
     props.selected
-      ? props.color === '#D0E8CB'
-        ? '#A0A0A0'
-        : '#FFFFFF'
-      : '#CECECE'};
+      ? props.color === "#D0E8CB"
+        ? "#A0A0A0"
+        : "#FFFFFF"
+      : "#CECECE"};
   border-radius: 24px;
   padding: 16px;
   font-size: 16px;
   font-weight: 700;
   white-space: nowrap;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.2s ease-in-out;
 `;
 
 const AddButton = styled.button`
