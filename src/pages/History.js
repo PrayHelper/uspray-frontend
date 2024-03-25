@@ -411,9 +411,11 @@ const NoDataTitle = styled.div`
   font-weight: 500;
   font-size: 28px;
   color: var(--color-grey);
+  letter-spacing: -0.02em;
 `;
 const NoDataContent = styled.div`
   font-weight: 400;
   font-size: 20px;
   color: var(--color-secondary-grey);
+  letter-spacing: -0.04em;
 `;

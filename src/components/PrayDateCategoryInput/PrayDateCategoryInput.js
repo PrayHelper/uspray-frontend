@@ -45,10 +45,8 @@ const PrayDateCategoryInput = ({
 
   const onInputHandler = (e) => {
     const isWhitespace = /^\s*$/.test(e.target.value);
-    if (isWhitespace)
-      setInputCount(0);
-    else
-      setInputCount(e.target.value.length);
+    if (isWhitespace) setInputCount(0);
+    else setInputCount(e.target.value.length);
 
     if (setUpdateValue) setUpdateValue(e.target.value);
   };
@@ -184,6 +182,7 @@ const ModalInput = styled(TextareaAutosize)`
     color: var(--color-dark-grey-30);
   }
   resize: none;
+  letter-spacing: -0.04em;
 `;
 
 const Countwords = styled.span`

@@ -57,6 +57,7 @@ export const SearchBar = styled.input`
     color: var(--color-grey-50);
   }
   color: var(--color-grey);
+  letter-spacing: -0.04em;
 `;
 
 export const SearchBtn = styled.div`
@@ -94,6 +95,7 @@ export const DateWrapper = styled.div`
       : `none`};
   gap: 8px;
   text-align: center;
+  letter-spacing: -0.04em;
 `;
 
 export const DateBox = styled.div`
@@ -116,6 +118,7 @@ export const NoDataContent = styled.div`
   font-size: 24px;
   margin-top: 16px;
   color: var(--color-secondary-grey);
+  letter-spacing: -0.04em;
 `;
 
 export const DateArrow = styled.img``;
