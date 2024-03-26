@@ -22,14 +22,19 @@ const Main = () => {
   const [currentOverlay, setCurrentOverlay] = useState(null); // "LOCKER" | "CHANGE_ORDER" | null
   const [showCategoryAdd, setShowCategoryAdd] = useState(false);
 
-  const [isShowInputModal, setIsShowInputModal] = useState(false);
   const [showAlertModal, setShowAlertModal] = useState(false);
+
+  const [isShowPrayInput, setIsShowPrayInput] = useState(false);
 
   const [showRightBottomOptions, setShowRightBottomOptions] = useState(false);
   const [shareMode, setShareMode] = useState(false);
 
   const [selectedCategoryDataToEdit, setSelectedCategoryDataToEdit] =
     useState(null);
+
+  useEffect(() => {
+    console.log({ selectedCategoryDataToEdit });
+  }, [selectedCategoryDataToEdit]);
 
   const {
     categoryList,
@@ -84,8 +89,11 @@ const Main = () => {
   const changeCategoryHandler = (data) => {
     try {
       changeCategory(data);
+      setSelectedCategoryDataToEdit(null);
     } catch (error) {
       console.error(error);
+    } finally {
+      setSelectedCategoryDataToEdit(null);
     }
   };
 
@@ -94,6 +102,8 @@ const Main = () => {
       deleteCategory(categoryId);
     } catch (error) {
       console.error(error);
+    } finally {
+      setSelectedCategoryDataToEdit(null);
     }
   };
 
@@ -161,7 +171,7 @@ const Main = () => {
     if (categoryList.length === 0) {
       setShowAlertModal(true);
     } else {
-      setIsShowInputModal(!isShowInputModal);
+      setIsShowPrayInput(true);
     }
   };
 
@@ -184,13 +194,14 @@ const Main = () => {
         {...{
           categoryList,
           onClickPrayInput,
-          setIsShowInputModal,
           createPray,
           handleTabChange,
-          isShowInputModal,
           setCurrentOverlay,
           setSelectedCategoryIndex,
+          sharedDataLength,
         }}
+        setIsShowInputModal={setIsShowPrayInput}
+        isShowInputModal={isShowPrayInput}
         currentTab={tab}
       />
       <MainContent
@@ -209,9 +220,11 @@ const Main = () => {
           setIsPraySelected,
         }}
         setClickedCategoryData={setSelectedCategoryDataToEdit}
+        setShowCategorySetting={setShowCategoryAdd}
         listHandler={onShare}
       />
       <MainCategoryAdd
+        selectedCategoryDataToEdit={selectedCategoryDataToEdit}
         isShow={showCategoryAdd}
         createCategoryHandler={createCategoryHandler}
         onClick={handleInnerClick}

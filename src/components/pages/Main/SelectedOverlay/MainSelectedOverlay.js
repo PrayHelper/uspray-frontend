@@ -1,21 +1,6 @@
 import ChangeCategoryOrder from "../../../../pages/ChangeCategoryOrder";
-import Locker from "../../../../pages/Locker";
+import Locker from "../Locker/Locker";
 import Overlay from "../../../Overlay/Overlay";
-
-const LockerOverlay = ({ setIsLockerOverlayOn, refetchPrayList }) => (
-  <Overlay isOverlayOn>
-    <Locker
-      setIsOverlayOn={setIsLockerOverlayOn}
-      refetchPrayList={refetchPrayList}
-    />
-  </Overlay>
-);
-
-const ChangeCategoryOrderOverlay = ({ setIsOrderOverlayOn }) => (
-  <Overlay isOverlayOn>
-    <ChangeCategoryOrder setIsOverlayOn={setIsOrderOverlayOn} />
-  </Overlay>
-);
 
 const MainSelectedOverlay = ({
   refetchPrayList,
@@ -25,16 +10,18 @@ const MainSelectedOverlay = ({
   switch (currentOverlay) {
     case "LOCKER":
       return (
-        <LockerOverlay
-          setIsOrderOverlayOn={() => setCurrentOverlay("LOCKER")}
-          refetchPrayList={refetchPrayList}
-        />
+        <Overlay isOverlayOn>
+          <Locker
+            goBack={() => setCurrentOverlay(null)}
+            refetchPrayList={refetchPrayList}
+          />
+        </Overlay>
       );
     case "CHANGE_ORDER":
       return (
-        <ChangeCategoryOrderOverlay
-          setIsOrderOverlayOn={() => setCurrentOverlay("CHANGE_ORDER")}
-        />
+        <Overlay isOverlayOn>
+          <ChangeCategoryOrder setIsOverlayOn={() => setCurrentOverlay(null)} />
+        </Overlay>
       );
     default:
       return null;

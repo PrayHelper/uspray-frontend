@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import completeImage from "../../../images/check_img.svg";
 import deleteImage from "../../../images/delete_img.svg";
 import modifyImage from "../../../images/modify_img.svg";
-import Category from "../../Category/Category";
 import { usePray } from "../../../hooks/usePray";
 import useToast from "../../../hooks/useToast";
 import useBottomNav from "../../../hooks/useBottomNav";
@@ -12,6 +11,7 @@ import PrayDateCategoryInput from "../../PrayDateCategoryInput/PrayDateCategoryI
 import CategoryTag from "../../CategoryTag/CategoryTag";
 import { ToastTheme } from "../../Toast/Toast";
 import S from "./MainContent.style";
+import MainCategory from "./Category/MainCategory";
 
 const MainContent = ({
   categoryList,
@@ -19,12 +19,10 @@ const MainContent = ({
   selectedCategoryIndex,
   setSelectedCategoryIndex,
   tabType,
-  onDotIconClicked,
   setClickedCategoryData,
   categoryRef,
   setCategoryRefIndex,
   shareMode,
-  setShowOption,
   setShareMode,
   listHandler,
   setIsPraySelected,
@@ -178,20 +176,18 @@ const MainContent = ({
         <S.Content>
           {prayList &&
             prayList.map((category, index) => (
-              <Category
+              <MainCategory
                 key={index}
                 categoryId={category.categoryId}
                 title={category.categoryName}
                 prays={category.prays}
                 color={category.categoryColor}
                 setSelectedPrayInfo={setSelectedPrayInfo}
-                onDotIconClicked={onDotIconClicked}
                 setClickedCategoryData={setClickedCategoryData}
                 tabType={tabType}
                 categoryRef={categoryRef}
                 refIndex={index}
                 shareMode={shareMode}
-                setShowOption={setShowOption}
                 setCheckedList={setCheckedList}
                 checkedList={checkedList}
               />

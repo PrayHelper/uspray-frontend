@@ -3,14 +3,15 @@ import PrayDateCategoryInput from "../../../PrayDateCategoryInput/PrayDateCatego
 import S from "./MainHeader.style";
 
 const HeaderBottomAreaContent = ({
-  currentTab,
   isShowInputModal,
+  setIsShowInputModal,
+  currentTab,
   onClickPrayInput,
   categoryList,
-  setIsShowInputModal,
   createPray,
   setSelectedCategoryIndex,
   setCurrentOverlay,
+  sharedDataLength,
 }) => {
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
@@ -37,7 +38,7 @@ const HeaderBottomAreaContent = ({
   if (currentTab === "공유 받은")
     return (
       <S.MoveToLockerButton onClick={() => setCurrentOverlay("LOCKER")}>
-        보관함에 X개의 기도제목이 있어요
+        보관함에 {sharedDataLength}개의 기도제목이 있어요
       </S.MoveToLockerButton>
     );
   else if (currentTab === "내가 쓴") {
@@ -54,7 +55,6 @@ const HeaderBottomAreaContent = ({
           buttonText="기도제목 작성"
           categoryList={categoryList}
           category={0}
-          setIsShowInputModal
           setUpdateValue={setPrayInputValue}
           setUpdateDate={setDateInputValue}
           setUpdateCategory={setCategoryInputValue}
@@ -77,15 +77,16 @@ const HeaderBottomAreaContent = ({
 };
 
 const MainHeader = ({
+  isShowInputModal,
+  setIsShowInputModal,
   handleTabChange,
   currentTab, // "내가 쓴" or "공유 받은"
-  isShowInputModal,
   onClickPrayInput,
-  setIsShowInputModal,
   categoryList,
   createPray,
   setSelectedCategoryIndex,
   setCurrentOverlay,
+  sharedDataLength,
 }) => {
   return (
     <S.HeaderRootContainer>
@@ -110,6 +111,7 @@ const MainHeader = ({
             setIsShowInputModal,
             setSelectedCategoryIndex,
             setCurrentOverlay,
+            sharedDataLength,
           }}
         />
       </S.BottomAreaWrapper>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import S from "./MainCategoryEdit.style";
 import ButtonV2, { ButtonTheme } from "../../../ButtonV2/ButtonV2";
 
@@ -12,6 +12,22 @@ const ColorList = [
   "#507247",
 ];
 
+// 선택된 카테고리 존재 -> 해당 카테고리의 state와 setter 반환, 존재하지 않을 시 null 반환
+// 카테고리 선택이 바뀔 때마다 해당 카테고리와 상태 동기화
+const useEditState = (category) => {
+  const [selectedColor, setSelectedColor] = useState(category?.color);
+  const [inputValue, setInputValue] = useState(category?.name);
+
+  useEffect(() => {
+    setSelectedColor(category?.color);
+    setInputValue(category?.name);
+  }, [category]);
+
+  if (!selectedColor || !inputValue) return null;
+
+  return { selectedColor, inputValue, setSelectedColor, setInputValue };
+};
+
 const MainCategoryEdit = ({
   selectedCategoryDataToEdit,
   deleteCategoryHandler,
@@ -19,17 +35,14 @@ const MainCategoryEdit = ({
   tabType,
   closeHandler,
 }) => {
-  const [selectedColor, setSelectedColor] = useState(
-    selectedCategoryDataToEdit?.color
-  );
-  const [inputValue, setInputValue] = useState(
-    selectedCategoryDataToEdit?.name
-  );
+  const editState = useEditState(selectedCategoryDataToEdit);
+  if (!editState) return null;
+
+  const { selectedColor, inputValue, setSelectedColor, setInputValue } =
+    editState;
 
   const handleInputChange = (e) => setInputValue(e.target.value);
   const handleInnerClick = (e) => e.stopPropagation();
-
-  if (!selectedCategoryDataToEdit) return null;
 
   return (
     <S.RootContainer onClick={closeHandler}>
