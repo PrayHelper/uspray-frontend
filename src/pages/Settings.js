@@ -18,13 +18,13 @@ import { useNotification } from "../hooks/useNotification";
 import { useCheckLogin } from "../hooks/useCheckLogin";
 import ChangeInfoSocial from "../components/ChangeInfo/ChangeInfoSocial";
 
-
 const Container = styled.div`
   width: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  height: 100vh;
+  overflow-y: ${(props) => (props.isModalOn ? "hidden" : "auto")};
 `;
 
 const Wrapper = styled.div`
@@ -33,7 +33,6 @@ const Wrapper = styled.div`
   flex-direction: column;
   gap: 4px;
   background-color: #f0f0f0;
-
   margin-top: 65px;
   margin-bottom: 65px;
 `;
@@ -134,10 +133,8 @@ const Settings = () => {
   };
 
   const movePageHandler = () => {
-    if (isSocialLogin.social)
-      navigate("/changeInfoSocial")
-    else
-      navigate("/checkInfo");
+    if (isSocialLogin.social) navigate("/changeInfoSocial");
+    else navigate("/checkInfo");
   };
 
   const logout = async () => {
@@ -167,7 +164,7 @@ const Settings = () => {
   };
 
   return (
-    <Container>
+    <Container isModalOn={showModal}>
       {showModal && (
         <>
           <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
