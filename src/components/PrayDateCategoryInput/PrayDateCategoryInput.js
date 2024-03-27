@@ -40,15 +40,17 @@ const PrayDateCategoryInput = ({
   }, [showSubModal]);
 
   useEffect(() => {
+    setSelectedCategoryIndex(category);
+  }, [category]);
+
+  useEffect(() => {
     setUpdateCategory(selectedCategoryIndex);
   }, [selectedCategoryIndex]);
 
   const onInputHandler = (e) => {
     const isWhitespace = /^\s*$/.test(e.target.value);
-    if (isWhitespace)
-      setInputCount(0);
-    else
-      setInputCount(e.target.value.length);
+    if (isWhitespace) setInputCount(0);
+    else setInputCount(e.target.value.length);
 
     if (setUpdateValue) setUpdateValue(e.target.value);
   };
