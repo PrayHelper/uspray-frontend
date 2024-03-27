@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const ToggleButtonStyle = styled.button`
   flex: 1 0;
@@ -17,5 +17,5 @@ export const ToggleButtonStyle = styled.button`
     border-radius: 0 16px 16px 0;
   }
 
-  transition: all 0.3s ease-in-out;
+  transition: all 0.2s ease-in-out;
 `;
