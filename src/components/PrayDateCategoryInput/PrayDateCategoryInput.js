@@ -40,6 +40,10 @@ const PrayDateCategoryInput = ({
   }, [showSubModal]);
 
   useEffect(() => {
+    setSelectedCategoryIndex(category);
+  }, [category]);
+
+  useEffect(() => {
     setUpdateCategory(selectedCategoryIndex);
   }, [selectedCategoryIndex]);
 
@@ -137,11 +141,11 @@ export default PrayDateCategoryInput;
 const SubModalWrapper = styled.div`
   position: fixed;
   justify-content: space-between;
-  left: 50%;
-  top: 50%;
-  height: calc(100vh - 32px);
-  transform: translate(-50%, -50%);
-  width: calc(100vw - 32px);
+  top: 0;
+  left: 0;
+  height: calc(100% - 32px);
+  width: calc(100% - 32px);
+  padding: 16px;
   display: flex;
   flex-direction: column;
   z-index: 500;
@@ -194,8 +198,6 @@ const Countwords = styled.span`
 `;
 
 const FixedButtonContainer = styled.div`
-  position: fixed;
-  bottom: 0px;
   width: 100%;
   cursor: pointer;
   display: flex;
