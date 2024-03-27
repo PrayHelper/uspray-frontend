@@ -6,6 +6,7 @@ import Checkbox, { CheckboxTheme } from "../components/Checkbox/Checkbox";
 import { useHistory } from "../hooks/useHistory";
 import {
   CheckboxWrapper,
+  DateArrow,
   DateBox,
   DateWrapper,
   EndDatePickerContainer,
@@ -210,7 +211,10 @@ const HistorySearch = ({
                     />
                   </StartDatePickerContainer>
                 )}
-                <img src="../images/ic_thin_arrow.svg" alt="icon_rightArrow" />
+                <DateArrow
+                  src="../images/ic_thin_arrow.svg"
+                  alt="icon_rightArrow"
+                />
                 <DateBox
                   isClicked={showEndDatePicker}
                   onClick={onClickEndDateBox}

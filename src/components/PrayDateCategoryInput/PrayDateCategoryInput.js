@@ -187,6 +187,7 @@ const ModalInput = styled(TextareaAutosize)`
     color: var(--color-dark-grey-30);
   }
   resize: none;
+  letter-spacing: -0.04em;
 `;
 
 const Countwords = styled.span`
