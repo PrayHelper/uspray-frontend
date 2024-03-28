@@ -7,12 +7,12 @@ import useFlutterWebview from "../hooks/useFlutterWebview";
 import { useShare } from "../hooks/useShare";
 import { useFetchSharedList } from "../hooks/useFetchSharedList";
 import MainCategoryAdd from "../components/pages/Main/CategoryAdd/MainCategoryAdd";
-import MainContent from "../components/pages/Main/MainContent";
 import MainHeader from "../components/pages/Main/Header/MainHeader";
 import MainCategoryAlertModal from "../components/pages/Main/CategoryAlertModal/MainCategoryAlertModal";
 import MainCategoryEdit from "../components/pages/Main/CategoryEdit/MainCategoryEdit";
 import MainSelectedOverlay from "../components/pages/Main/SelectedOverlay/MainSelectedOverlay";
 import MainRightBottomOptions from "../components/pages/Main/RightBottomOptions/MainRightBottomOptions";
+import ScrollSynchronizedCategoryList from "../components/ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
 
 const Main = () => {
   const [tab, setTab] = useState("내가 쓴"); // 내가 쓴 or 공유 받은
@@ -31,10 +31,6 @@ const Main = () => {
 
   const [selectedCategoryDataToEdit, setSelectedCategoryDataToEdit] =
     useState(null);
-
-  useEffect(() => {
-    console.log({ selectedCategoryDataToEdit });
-  }, [selectedCategoryDataToEdit]);
 
   const {
     categoryList,
@@ -204,7 +200,7 @@ const Main = () => {
         isShowInputModal={isShowPrayInput}
         currentTab={tab}
       />
-      <MainContent
+      <ScrollSynchronizedCategoryList
         {...{
           categoryList,
           setShowCategoryAdd,

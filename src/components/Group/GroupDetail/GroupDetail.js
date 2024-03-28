@@ -9,7 +9,7 @@ import GroupSetting from "../GroupSetting/GroupSetting";
 import { useGroupPray } from "../../../hooks/useGroupPray";
 import useFlutterWebview from "../../../hooks/useFlutterWebview";
 import { useCategory } from "../../../hooks/useCategory";
-import MainContent from "../../pages/Main/MainContent";
+import ScrollSynchronizedCategoryList from "../../ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
 
 const GroupDetail = ({ group, setShowGroupDetail }) => {
   const [showGroupSetting, setShowGroupSetting] = useState(false);
@@ -92,8 +92,7 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
             />
           );
         }}
-        back={() => setShowGroupDetail((prev) => !prev)}
-      >
+        back={() => setShowGroupDetail((prev) => !prev)}>
         {group.name}
       </UserHeader>
       <GroupWrapper>
@@ -121,7 +120,7 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
         onClick={onInvite}
       />
       {shareMode && (
-        <MainContent
+        <ScrollSynchronizedCategoryList
           categoryList={categoryList}
           selectedCategoryIndex={selectedCategoryIndex}
           setSelectedCategoryIndex={setSelectedCategoryIndex}

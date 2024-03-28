@@ -1,19 +1,56 @@
-import { useEffect, useState } from "react";
-import completeImage from "../../../images/check_img.svg";
-import deleteImage from "../../../images/delete_img.svg";
-import modifyImage from "../../../images/modify_img.svg";
-import { usePray } from "../../../hooks/usePray";
-import useToast from "../../../hooks/useToast";
-import useBottomNav from "../../../hooks/useBottomNav";
-import BlackScreen from "../../BlackScreen";
+import completeImage from "../../images/check_img.svg";
+import deleteImage from "../../images/delete_img.svg";
+import modifyImage from "../../images/modify_img.svg";
+import { useEffect, useRef, useState } from "react";
+import { usePray } from "../../hooks/usePray";
+import useToast from "../../hooks/useToast";
+import useBottomNav from "../../hooks/useBottomNav";
+import CategoryTag from "../CategoryTag/CategoryTag";
+import MainCategory from "../pages/Main/Category/MainCategory";
+import PrayDateCategoryInput from "../PrayDateCategoryInput/PrayDateCategoryInput";
+import BlackScreen from "../BlackScreen";
 import { Modal } from "@mui/material";
-import PrayDateCategoryInput from "../../PrayDateCategoryInput/PrayDateCategoryInput";
-import CategoryTag from "../../CategoryTag/CategoryTag";
-import { ToastTheme } from "../../Toast/Toast";
-import S from "./MainContent.style";
-import MainCategory from "./Category/MainCategory";
+import { ToastTheme } from "../Toast/Toast";
+import S from "./ScrollSynchronizedCategoryList.style";
+import {
+  ScrollingProvider,
+  Section,
+  useScrollSections,
+} from "../../lib/react-scroll-section";
 
-const MainContent = ({
+const VerticalCategories = ({
+  prayList,
+  setSelectedPrayInfo,
+  setClickedCategoryData,
+  tabType,
+  categoryRef,
+  shareMode,
+  setCheckedList,
+  checkedList,
+}) => {
+  const sections = useScrollSections();
+
+  return prayList.map((category, index) => (
+    <Section key={category.categoryId} id={category.categoryId}>
+      <MainCategory
+        key={index}
+        categoryId={category.categoryId}
+        title={category.categoryName}
+        prays={category.prays}
+        color={category.categoryColor}
+        setSelectedPrayInfo={setSelectedPrayInfo}
+        setClickedCategoryData={setClickedCategoryData}
+        tabType={tabType}
+        categoryRef={categoryRef}
+        refIndex={index}
+        shareMode={shareMode}
+        setCheckedList={setCheckedList}
+        checkedList={checkedList}
+      />
+    </Section>
+  ));
+};
+const ScrollSynchronizedCategoryList = ({
   categoryList,
   setShowCategorySetting,
   selectedCategoryIndex,
@@ -39,6 +76,7 @@ const MainContent = ({
   const { prayList, deletePray, completePray, modifyPray } = usePray(tabType);
   const { showToast } = useToast({});
   const { setIsVisible } = useBottomNav();
+  const contentRef = useRef(null);
 
   const prayModify = () => {
     setModifyPrayInfo(selectedPrayInfo);
@@ -162,37 +200,35 @@ const MainContent = ({
             }
           />
         )}
-
-        <S.TopWrapper shareMode={shareMode}>
-          <CategoryTag
-            categoryList={categoryList}
-            selectedCategoryIndex={selectedCategoryIndex}
-            setSelectedCategoryIndex={setSelectedCategoryIndex}
-            setShowCategorySetting={setShowCategorySetting}
-            canAdd={!shareMode}
-            setCategoryRefIndex={setCategoryRefIndex}
-          />
-        </S.TopWrapper>
-        <S.Content>
-          {prayList &&
-            prayList.map((category, index) => (
-              <MainCategory
-                key={index}
-                categoryId={category.categoryId}
-                title={category.categoryName}
-                prays={category.prays}
-                color={category.categoryColor}
-                setSelectedPrayInfo={setSelectedPrayInfo}
-                setClickedCategoryData={setClickedCategoryData}
-                tabType={tabType}
-                categoryRef={categoryRef}
-                refIndex={index}
-                shareMode={shareMode}
-                setCheckedList={setCheckedList}
-                checkedList={checkedList}
+        {prayList && (
+          <ScrollingProvider
+            offset={contentRef.current?.getBoundingClientRect().top}>
+            <S.TopWrapper shareMode={shareMode}>
+              <CategoryTag
+                categoryList={categoryList}
+                selectedCategoryIndex={selectedCategoryIndex}
+                setSelectedCategoryIndex={setSelectedCategoryIndex}
+                setShowCategorySetting={setShowCategorySetting}
+                canAdd={!shareMode}
+                setCategoryRefIndex={setCategoryRefIndex}
               />
-            ))}
-        </S.Content>
+            </S.TopWrapper>
+            <S.Content ref={contentRef}>
+              <VerticalCategories
+                {...{
+                  categoryRef,
+                  checkedList,
+                  setCheckedList,
+                  shareMode,
+                  setSelectedPrayInfo,
+                  setClickedCategoryData,
+                  tabType,
+                  prayList,
+                }}
+              />
+            </S.Content>
+          </ScrollingProvider>
+        )}
       </S.MainContentWrapper>
       <S.BottomSetWrapper
         selectedPrayInfo={selectedPrayInfo}
@@ -256,4 +292,4 @@ const MainContent = ({
   );
 };
 
-export default MainContent;
+export default ScrollSynchronizedCategoryList;
