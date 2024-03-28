@@ -160,6 +160,11 @@ const LoadButton = styled.div`
   align-items: center;
   gap: 8px;
   white-space: nowrap;
+  &:active {
+    transition: all 0.2s ease-in-out;
+    filter: brightness(0.9);
+    scale: 0.9;
+  }
 `;
 
 const GroupInfoText = styled.div`
@@ -184,4 +189,9 @@ const Input = styled.input`
   letter-spacing: -0.64px;
   font-size: 16px;
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.25);
+  &:active {
+    transition: all 0.2s ease-in-out;
+    filter: brightness(0.9);
+    scale: 0.98;
+  }
 `;
