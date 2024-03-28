@@ -72,6 +72,7 @@ const CategoryBox = styled.div`
   font-size: 16px;
   font-weight: 700;
   white-space: nowrap;
+  transition: all 0.2s ease-in-out;
 `;
 
 const AddButton = styled.button`

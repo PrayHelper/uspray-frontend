@@ -6,6 +6,7 @@ import Checkbox, { CheckboxTheme } from "../components/Checkbox/Checkbox";
 import { useHistory } from "../hooks/useHistory";
 import {
   CheckboxWrapper,
+  DateArrow,
   DateBox,
   DateWrapper,
   EndDatePickerContainer,
@@ -202,6 +203,7 @@ const HistorySearch = ({
                 {showStartDatePicker && (
                   <StartDatePickerContainer>
                     <Calender
+                      state={"start"}
                       maxDate={today}
                       selectedDate={selectedDate}
                       onChangeDate={(date) => onChangeDate(date, "start")}
@@ -209,7 +211,10 @@ const HistorySearch = ({
                     />
                   </StartDatePickerContainer>
                 )}
-                <img src="../images/ic_thin_arrow.svg" alt="icon_rightArrow" />
+                <DateArrow
+                  src="../images/ic_thin_arrow.svg"
+                  alt="icon_rightArrow"
+                />
                 <DateBox
                   isClicked={showEndDatePicker}
                   onClick={onClickEndDateBox}
@@ -219,6 +224,7 @@ const HistorySearch = ({
                 {showEndDatePicker && (
                   <EndDatePickerContainer>
                     <Calender
+                      state={"end"}
                       maxDate={today}
                       minDate={selectedDate}
                       selectedDate={selectedDate}

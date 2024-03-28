@@ -48,7 +48,7 @@ import DeleteUser from "./pages/DeleteUser";
 import ChangeCategoryOrder from "./pages/ChangeCategoryOrder";
 import ChangeInfoSocial from "./components/ChangeInfo/ChangeInfoSocial";
 import AppleRedirecting from "./pages/AppleRedirecting";
-import TagManager from 'react-gtm-module'
+import TagManager from "react-gtm-module";
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -96,8 +96,8 @@ function App() {
   useEffect(() => {
     TagManager.initialize({
       gtmId: `${process.env.REACT_APP_GTM_ID}`,
-    })
-  }, [])
+    });
+  }, []);
 
   return (
     <BrowserRouter>
@@ -150,7 +150,8 @@ function App() {
                 <Route path="/findPW" element={<FindPassword />}></Route>
                 <Route
                   path="/findPWResult"
-                  element={<FindPasswordResult />}></Route>
+                  element={<FindPasswordResult />}
+                ></Route>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/loading" element={<SplashScreen />} />
                 <Route path="*" element={<NotFound />} />

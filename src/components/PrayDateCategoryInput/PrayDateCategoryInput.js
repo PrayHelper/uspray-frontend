@@ -40,13 +40,18 @@ const PrayDateCategoryInput = ({
   }, [showSubModal]);
 
   useEffect(() => {
+    setSelectedCategoryIndex(category);
+  }, [category]);
+
+  useEffect(() => {
     setUpdateCategory(selectedCategoryIndex);
   }, [selectedCategoryIndex]);
 
   const onInputHandler = (e) => {
-    if (e.target.value.length > e.maxLength)
-      setInputCount(e.value.slice(0, e.maxLength));
-    setInputCount(e.target.value.length);
+    const isWhitespace = /^\s*$/.test(e.target.value);
+    if (isWhitespace) setInputCount(0);
+    else setInputCount(e.target.value.length);
+
     if (setUpdateValue) setUpdateValue(e.target.value);
   };
 
@@ -136,11 +141,11 @@ export default PrayDateCategoryInput;
 const SubModalWrapper = styled.div`
   position: fixed;
   justify-content: space-between;
-  left: 50%;
-  top: 50%;
-  height: calc(100vh - 32px);
-  transform: translate(-50%, -50%);
-  width: calc(100vw - 32px);
+  top: 0;
+  left: 0;
+  height: calc(100% - 32px);
+  width: calc(100% - 32px);
+  padding: 16px;
   display: flex;
   flex-direction: column;
   z-index: 500;
@@ -169,6 +174,7 @@ const ModalInput = styled(TextareaAutosize)`
   color: #606060;
   outline: none;
   border-bottom: 1px solid var(--color-white-green);
+  letter-spacing: -0.04em;
   ::placeholder {
     color: #b7ceb0; // 원하는 색상으로 변경
   }
@@ -181,6 +187,7 @@ const ModalInput = styled(TextareaAutosize)`
     color: var(--color-dark-grey-30);
   }
   resize: none;
+  letter-spacing: -0.04em;
 `;
 
 const Countwords = styled.span`
@@ -192,8 +199,6 @@ const Countwords = styled.span`
 `;
 
 const FixedButtonContainer = styled.div`
-  position: fixed;
-  bottom: 0px;
   width: 100%;
   cursor: pointer;
   display: flex;

@@ -63,8 +63,17 @@ const Main = () => {
 
   const [categoryRefIndex, setCategoryRefIndex] = useState(0);
   const categoryRef = useRef([]);
+  const categoryInputRef = useRef(null);
 
   const { showToast } = useToast({});
+
+  useEffect(() => {
+    if (showCategorySetting && categoryInputRef.current) {
+      categoryInputRef.current.focus();
+      const length = categoryInputRef.current.value.length;
+      categoryInputRef.current.setSelectionRange(length, length);
+    }
+  }, [showCategorySetting]);
 
   useEffect(() => {
     if (categoryRef.current[categoryRefIndex]) {
@@ -249,7 +258,10 @@ const Main = () => {
 
   return (
     <MainWrapper style={{ backgroundColor: bgColor }}>
-      <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
+      <BlackScreen
+        isModalOn={showModal || showCategorySetting || dotIconClicked}
+        onClick={handleCloseModal}
+      />
       <Modal
         isModalOn={showModal}
         iconSrc={"images/icon_notice.svg"}
@@ -278,7 +290,7 @@ const Main = () => {
         </TopBox>
         <FlexContainer>
           {tab === "내가 쓴" ? (
-            showSubModal ? (
+            <>
               <PrayDateCategoryInput
                 categoryList={categoryList}
                 showSubModal={showSubModal}
@@ -293,12 +305,12 @@ const Main = () => {
                 setUpdateCategory={setCategoryInputValue}
                 buttonText="기도제목 작성"
                 value={prayInputValue}
+                date={null}
                 category={selectedCategoryIndex}
                 onClickFunc={() =>
                   onInsert(prayInputValue, dateInputValue, categoryInputValue)
                 }
               />
-            ) : (
               <Input
                 type="text"
                 placeholder="기도제목을 입력해주세요"
@@ -309,7 +321,7 @@ const Main = () => {
                 value={prayInputValue}
                 readOnly
               />
-            )
+            </>
           ) : (
             <MoveToLockerButton onClick={() => clickLocker()}>
               보관함에 {sharedDataLength}개의 기도제목이 있어요
@@ -342,11 +354,12 @@ const Main = () => {
             placeholder={"카테고리를 입력해주세요"}
             onChange={handleInputChange}
             onClick={handleInnerClick}
+            ref={categoryInputRef}
           />
           <FixedButtonContainer onClick={handleInnerClick}>
             <ButtonV2
               buttonTheme={ButtonTheme.FILLED}
-              disabled={!inputValue}
+              disabled={!inputValue || /^\s*$/.test(inputValue)}
               handler={() =>
                 createCategoryHandler({
                   name: inputValue,
@@ -418,19 +431,15 @@ const Main = () => {
           </ColorPalette>
         </CategorySetting>
       )}
-      {isLockerOverlayOn && (
-        <Overlay isOverlayOn={isLockerOverlayOn}>
-          <Locker
-            setIsOverlayOn={setIsLockerOverlayOn}
-            refetchPrayList={refetchPrayList}
-          />
-        </Overlay>
-      )}
-      {isOrderOverlayOn && (
-        <Overlay isOverlayOn={isOrderOverlayOn}>
-          <ChangeCategoryOrder setIsOverlayOn={setIsOrderOverlayOn} />
-        </Overlay>
-      )}
+      <Overlay isOverlayOn={isLockerOverlayOn}>
+        <Locker
+          setIsOverlayOn={setIsLockerOverlayOn}
+          refetchPrayList={refetchPrayList}
+        />
+      </Overlay>
+      <Overlay isOverlayOn={isOrderOverlayOn}>
+        <ChangeCategoryOrder setIsOverlayOn={setIsOrderOverlayOn} />
+      </Overlay>
       {!shareMode && !isPraySelected && (
         <>
           <OptionBtn
@@ -571,13 +580,12 @@ const MoveToLockerButton = styled.div`
 `;
 
 const CategorySetting = styled.div`
-  z-index: 100;
+  z-index: 500;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
   display: flex;
   flex-direction: column;
   padding: 16px;
