@@ -23,6 +23,8 @@ export const SearchWrapper = styled.div`
   flex-direction: column;
   border-radius: 0px 0px 16px 16px;
   transition: all 0.3s;
+  position: fixed;
+  z-index: 400;
 `;
 
 export const Header = styled.div`
@@ -55,6 +57,7 @@ export const SearchBar = styled.input`
     color: var(--color-grey-50);
   }
   color: var(--color-grey);
+  letter-spacing: -0.04em;
 `;
 
 export const SearchBtn = styled.div`
@@ -90,6 +93,9 @@ export const DateWrapper = styled.div`
           ${fadeIn} 0.5s ease
         `
       : `none`};
+  gap: 8px;
+  text-align: center;
+  letter-spacing: -0.04em;
 `;
 
 export const DateBox = styled.div`
@@ -97,7 +103,8 @@ export const DateBox = styled.div`
   color: ${(props) =>
     props.isClicked ? `var(--color-green)` : `var(--color-grey-50)`};
   background-color: var(--color-white);
-  padding: 8px 36px;
+  padding: 8px;
+  width: 100%;
 `;
 
 export const CheckboxWrapper = styled.div`
@@ -111,4 +118,7 @@ export const NoDataContent = styled.div`
   font-size: 24px;
   margin-top: 16px;
   color: var(--color-secondary-grey);
+  letter-spacing: -0.04em;
 `;
+
+export const DateArrow = styled.img``;

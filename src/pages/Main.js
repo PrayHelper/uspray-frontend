@@ -13,6 +13,9 @@ import MainCategoryEdit from "../components/pages/Main/CategoryEdit/MainCategory
 import MainSelectedOverlay from "../components/pages/Main/SelectedOverlay/MainSelectedOverlay";
 import MainRightBottomOptions from "../components/pages/Main/RightBottomOptions/MainRightBottomOptions";
 import ScrollSynchronizedCategoryList from "../components/ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
+import useToast from "../hooks/useToast";
+import { ToastTheme } from "../components/Toast/Toast";
+import BlackScreen from "../components/BlackScreen";
 
 const Main = () => {
   const [tab, setTab] = useState("내가 쓴"); // 내가 쓴 or 공유 받은
@@ -58,6 +61,8 @@ const Main = () => {
 
   const [categoryRefIndex, setCategoryRefIndex] = useState(0);
   const categoryRef = useRef([]);
+
+  const { showToast } = useToast({});
 
   useEffect(() => {
     if (categoryRef.current[categoryRefIndex]) {
@@ -157,7 +162,10 @@ const Main = () => {
           url: `${WEB_ORIGIN}/main?share=` + encodePrayIds,
         });
       } else {
-        alert("공유하기가 지원되지 않는 환경 입니다.");
+        showToast({
+          message: "공유하기가 지원되지 않는 환경 입니다.",
+          theme: ToastTheme.ERROR,
+        });
       }
     }
     console.log(`${WEB_ORIGIN}/main?share=` + encodePrayIds);
@@ -255,7 +263,7 @@ const Main = () => {
           showRightBottomOptions,
           tab,
         }}
-      />
+      />{" "}
     </MainWrapper>
   );
 };

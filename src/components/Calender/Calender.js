@@ -43,7 +43,7 @@ const Calender = (props) => {
       )}
       selected={props.selectedDate}
       onChange={(date) => props.onChangeDate(date)}
-      minDate={new Date()}
+      minDate={props.state == "start" ? new Date() : props.selectedDate}
       dateFormat="yyyy-MM-dd"
       popperPlacement="bottom-start"
       onClickOutside={() => props.setShowDatePicker(false)}

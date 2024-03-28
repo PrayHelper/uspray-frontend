@@ -81,8 +81,8 @@ const SocialLoginNameInput = () => {
               device_token: deviceToken,
             },
             {
-              onSuccess: (res) => alert(res.status),
-              onError: (e) => alert(e.response.status),
+              onSuccess: (res) => console.log(res.status),
+              onError: (e) => console.log(e.response.status),
             }
           );
         } else {
@@ -142,7 +142,8 @@ const SocialLoginNameInput = () => {
           }
           handler={() => {
             socialLoginNameInputReq();
-          }}>
+          }}
+        >
           회원가입
           {isSignupButtonActivated ? <NextArrowWhite /> : <NextArrowGray />}
         </Button>
