@@ -171,6 +171,7 @@ const GroupInfoText = styled.div`
   font-size: 24px;
   font-weight: 700;
   color: var(--color-green-80);
+  letter-spacing: -0.04rem;
 `;
 
 const Input = styled.input`
