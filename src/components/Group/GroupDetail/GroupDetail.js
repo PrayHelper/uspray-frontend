@@ -8,8 +8,8 @@ import { useState } from "react";
 import GroupSetting from "../GroupSetting/GroupSetting";
 import { useGroupPray } from "../../../hooks/useGroupPray";
 import useFlutterWebview from "../../../hooks/useFlutterWebview";
-import MainContent from "../../Main/MainContent";
 import { useCategory } from "../../../hooks/useCategory";
+import ScrollSynchronizedCategoryList from "../../ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
 import useToast from "../../../hooks/useToast";
 import { ToastTheme } from "../../Toast/Toast";
 
@@ -99,8 +99,7 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
             />
           );
         }}
-        back={() => setShowGroupDetail((prev) => !prev)}
-      >
+        back={() => setShowGroupDetail((prev) => !prev)}>
         {group.name}
       </UserHeader>
       <GroupWrapper>
@@ -129,7 +128,7 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
         onClick={onInvite}
       />
       {shareMode && (
-        <MainContent
+        <ScrollSynchronizedCategoryList
           categoryList={categoryList}
           selectedCategoryIndex={selectedCategoryIndex}
           setSelectedCategoryIndex={setSelectedCategoryIndex}
