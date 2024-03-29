@@ -15,7 +15,7 @@ const initialDeleteReasonOptionList = [
   { id: "ETC", text: "기타", checked: false },
 ];
 
-const DeleteUser = () => {
+const DeleteUser = ({setShowDeleteUser}) => {
   const [isFinished, setIsFinished] = useState(false);
   const [deleteReasonOptionList, setDeleteOptionList] = useState(
     initialDeleteReasonOptionList
@@ -90,6 +90,7 @@ const DeleteUser = () => {
         isModalOn,
         mutateDeleteUser,
         closeModal,
+        setShowDeleteUser,
       }}
     />
   );
