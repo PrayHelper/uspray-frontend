@@ -7,15 +7,87 @@ import useFlutterWebview from "../hooks/useFlutterWebview";
 import { useShare } from "../hooks/useShare";
 import { useFetchSharedList } from "../hooks/useFetchSharedList";
 import MainCategoryAdd from "../components/pages/Main/CategoryAdd/MainCategoryAdd";
-import MainHeader from "../components/pages/Main/Header/MainHeader";
+import MainHeader, {
+  MainHeaderNext,
+} from "../components/pages/Main/Header/MainHeader";
 import MainCategoryAlertModal from "../components/pages/Main/CategoryAlertModal/MainCategoryAlertModal";
 import MainCategoryEdit from "../components/pages/Main/CategoryEdit/MainCategoryEdit";
 import MainSelectedOverlay from "../components/pages/Main/SelectedOverlay/MainSelectedOverlay";
 import MainRightBottomOptions from "../components/pages/Main/RightBottomOptions/MainRightBottomOptions";
-import ScrollSynchronizedCategoryList from "../components/ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
+import ScrollSynchronizedCategoryList, {
+  ScrollListNext,
+} from "../components/ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
 import useToast from "../hooks/useToast";
 import { ToastTheme } from "../components/Toast/Toast";
-import BlackScreen from "../components/BlackScreen";
+import { atom, useAtom } from "jotai";
+import Overlay from "../components/Overlay/Overlay";
+import Locker from "../components/pages/Main/Locker/Locker";
+import ChangeCategoryOrder from "./ChangeCategoryOrder";
+import PrayerBottomModal from "../components/pages/Main/PrayerBottomModal/PrayerBottomModal";
+
+// 관리 필요 state
+
+// 선택된 tab
+
+// overlay
+// - 기도제목 수정 / 생성에 필요한 기도제목 Input Modal(or Category 0개시 모달) - 기도제목 입력 text, 선택된 category
+// - 기도제목 완료 / 수정 / 삭제 Modal on / off
+// - 카테고리 생성 / 수정 / 삭제에 필요한 Input + Palatte Modal
+// - 순서 변경 / 보관함 on / off
+//
+
+const BG_COLOR_MAP = {
+  personal: "#7BAB6E",
+  shared: "#3D5537",
+};
+
+export const mainPageAtom = atom({
+  tab: "personal", // "personal" | "shared";
+  prayerInput: "",
+  showPrayerInputModal: false,
+  showPrayerHandleBottomModal: false,
+  showBottomDotOptions: false,
+  activeOverlays: [], // | "RIGHT_BOTTOM_OPTIONS" | "LOCKER" | "CHANGE_CATEGORY_ORDER" | "PRAYER_BOTTOM_MODAL" | "PRAYER_INPUT_MODAL" | "CATEGORY_INPUT_MODAL"
+  selectedCategory: null,
+});
+
+// 페이지에 띄울 Overlay
+const Overlays = () => {
+  const [{ tab, activeOverlays }, setPageState] = useAtom(mainPageAtom);
+  const { refetchPrayList } = usePray(tab);
+
+  const clearOverlays = () =>
+    setPageState((prev) => ({ ...prev, activeOverlays: [] }));
+
+  return (
+    <>
+      <Overlay isOverlayOn={activeOverlays.includes("LOCKER")}>
+        <Locker goBack={clearOverlays} refetchPrayList={refetchPrayList} />
+      </Overlay>
+      <Overlay isOverlayOn={activeOverlays.includes("CHANGE_CATEGORY_ORDER")}>
+        <ChangeCategoryOrder setIsOverlayOn={clearOverlays} />
+      </Overlay>
+      {/* {activeOverlays.includes("PRAYER_BOTTOM_MODAL") && <PrayerBottomModal />}
+      {activeOverlays.includes("PRAYER_INPUT_MODAL") && <MainCategoryAdd />}
+      {activeOverlays.includes("CATEGORY_INPUT_MODAL") && <MainCategoryEdit />}
+      {activeOverlays.includes("RIGHT_BOTTOM_OPTIONS") && <MainRightBottomOptions />} */}
+    </>
+  );
+};
+
+const MainNext = () => {
+  const { shareLink, isMobile } = useFlutterWebview();
+
+  const [{ tab }] = useAtom(mainPageAtom);
+
+  return (
+    <MainWrapper bgColor={BG_COLOR_MAP[tab]}>
+      <MainHeaderNext />
+      <ScrollListNext />
+      <Overlays />
+    </MainWrapper>
+  );
+};
 
 const Main = () => {
   const [tab, setTab] = useState("내가 쓴"); // 내가 쓴 or 공유 받은
@@ -269,6 +341,7 @@ const Main = () => {
 };
 
 export default Main;
+// export default MainNext;
 
 const MainWrapper = styled.div`
   display: flex;

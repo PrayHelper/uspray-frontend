@@ -1,6 +1,14 @@
 import { useState } from "react";
 import PrayDateCategoryInput from "../../../PrayDateCategoryInput/PrayDateCategoryInput";
 import S from "./MainHeader.style";
+import { useFetchSharedList } from "../../../../hooks/useFetchSharedList";
+import { useAtom } from "jotai";
+import { mainPageAtom } from "../../../../pages/Main";
+
+const TAB_TEXT_MAP = {
+  personal: "내가 쓴",
+  shared: "공유 받은",
+};
 
 const HeaderBottomAreaContent = ({
   isShowInputModal,
@@ -76,6 +84,60 @@ const HeaderBottomAreaContent = ({
   return null;
 };
 
+export const MainHeaderNext = () => {
+  const [{ tab }, setPageState] = useAtom(mainPageAtom);
+  const { sharedDataLength } = useFetchSharedList();
+
+  const selectTab = (tabParam) =>
+    setPageState((prev) => ({ ...prev, tab: tabParam }));
+
+  const activatePrayInput = () =>
+    setPageState((prev) => ({
+      ...prev,
+      activeOverlays: ["PRAY_INPUT"],
+    }));
+
+  const activateLocker = () =>
+    setPageState((prev) => ({
+      ...prev,
+      activeOverlays: ["LOCKER"],
+    }));
+
+  return (
+    <S.HeaderRootContainer>
+      <S.TabList>
+        {["personal", "shared"].map((tabItem) => (
+          <S.TabItem
+            key={tabItem}
+            active={tab === tabItem}
+            onClick={() => selectTab(tabItem)}>
+            {TAB_TEXT_MAP[tabItem]}
+          </S.TabItem>
+        ))}
+      </S.TabList>
+      <S.BottomAreaWrapper>
+        {
+          {
+            personal: (
+              <S.Input
+                type="text"
+                placeholder="기도제목을 입력해주세요"
+                readOnly
+                onClick={activatePrayInput}
+              />
+            ),
+            shared: (
+              <S.MoveToLockerButton onClick={activateLocker}>
+                보관함에 {sharedDataLength}개의 기도제목이 있어요
+              </S.MoveToLockerButton>
+            ),
+          }[tab]
+        }
+      </S.BottomAreaWrapper>
+    </S.HeaderRootContainer>
+  );
+};
+
 const MainHeader = ({
   isShowInputModal,
   setIsShowInputModal,
@@ -91,12 +153,12 @@ const MainHeader = ({
   return (
     <S.HeaderRootContainer>
       <S.TabList>
-        {["내가 쓴", "공유 받은"].map((tab) => (
+        {["내가 쓴", "공유 받은"].map((tabItem) => (
           <S.TabItem
-            key={tab}
-            active={currentTab === tab}
-            onClick={() => handleTabChange(tab)}>
-            {tab}
+            key={tabItem}
+            active={currentTab === tabItem}
+            onClick={() => handleTabChange(tabItem)}>
+            {tabItem}
           </S.TabItem>
         ))}
       </S.TabList>

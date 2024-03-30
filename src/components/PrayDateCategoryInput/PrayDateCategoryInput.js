@@ -7,6 +7,13 @@ import BlackScreen from "../BlackScreen/BlackScreen";
 import CategoryTag from "../CategoryTag/CategoryTag";
 import ButtonV2, { ButtonTheme } from "../ButtonV2/ButtonV2";
 
+const PrayerInputNext = ({}) => {
+  const outside = useRef();
+  const modalInputRef = useRef(null);
+
+  return null;
+};
+
 const PrayDateCategoryInput = ({
   categoryList, // 메인의 카테고리 목록
   showSubModal, // 현재 컴포넌트 창 켜져있는지
@@ -63,8 +70,7 @@ const PrayDateCategoryInput = ({
         ref={outside}
         onClick={(e) => {
           if (e.target === outside.current) setShowSubModal(false);
-        }}
-      >
+        }}>
         <div style={{ display: "flex", gap: "16px", flexDirection: "column" }}>
           <SubModalTop>
             {lockerCount === 0 ? (
@@ -117,8 +123,7 @@ const PrayDateCategoryInput = ({
           <ButtonV2
             buttonTheme={ButtonTheme.FILLED}
             disabled={inputCount === 0 && lockerCount === 0}
-            handler={onClickFunc}
-          >
+            handler={onClickFunc}>
             {buttonText}
           </ButtonV2>
         </FixedButtonContainer>

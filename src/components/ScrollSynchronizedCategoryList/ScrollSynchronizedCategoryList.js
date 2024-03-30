@@ -17,6 +17,8 @@ import {
   Section,
   useScrollSections,
 } from "../../lib/react-scroll-section";
+import { useAtom } from "jotai";
+import { mainPageAtom } from "../../pages/Main";
 
 const VerticalCategories = ({
   prayList,
@@ -50,6 +52,20 @@ const VerticalCategories = ({
     </Section>
   ));
 };
+
+export const ScrollListNext = () => {
+  const [pageState, setPageState] = useAtom(mainPageAtom);
+  const {
+    activeOverlays,
+    prayerInput,
+    showBottomDotOptions,
+    showPrayerHandleBottomModal,
+    showPrayerInputModal,
+  } = pageState;
+
+  return <></>;
+};
+
 const ScrollSynchronizedCategoryList = ({
   categoryList,
   setShowCategorySetting,
