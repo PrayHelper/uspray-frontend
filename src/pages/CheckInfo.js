@@ -16,8 +16,6 @@ const CheckInfo = () => {
   const [disabled, setDisabled] = useState(false);
   const [showChangeInfo, setShowChangeInfo] = useState(false);
 
-  const navigate = useNavigate();
-
   const pwRegEx = /^[a-zA-Z0-9!@#$%^&*()_+{}|:"<>?~\[\]\\;',./]{8,16}$/;
 
   const passwordChangeHandler = (e) => {

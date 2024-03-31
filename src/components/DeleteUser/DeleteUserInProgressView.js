@@ -19,12 +19,13 @@ const DeleteUserInProgressView = ({
   isModalOn,
   mutateDeleteUser,
   closeModal,
+  setShowDeleteUser,
 }) => {
   const { userName } = useUserName();
 
   return (
     <S.Root>
-      <UserHeader>계정 삭제</UserHeader>
+      <UserHeader back={() => setShowDeleteUser(false)}>계정 삭제</UserHeader>
       <S.Content>
         <S.TopTextsAndOptions>
           <S.TopTexts>
