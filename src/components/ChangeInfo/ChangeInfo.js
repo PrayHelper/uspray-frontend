@@ -9,6 +9,7 @@ import { useDeleteUser } from "../../hooks/useDeleteUser";
 import { ReactComponent as NextArrowWhite } from "../../images/ic_next_arrow_white.svg";
 import ChangePw from "./ChangePw";
 import ChangePhoneNumber from './ChangePhoneNumber';
+import DeleteUser from "../../pages/DeleteUser";
 
 const ModalContent = styled.div`
   position: fixed;
@@ -54,6 +55,7 @@ const ModalButton2 = styled.button`
 const ChangeInfo = () => {
   const [showChangePw, setShowChangePw] = useState(false);
   const [showChangePhoneNumber, setShowChangePhoneNumber] = useState(false);
+  const [showDeleteUser, setShowDeleteUser] = useState(false);
 
   const navigate = useNavigate();
 
@@ -61,6 +63,7 @@ const ChangeInfo = () => {
     <Wrapper>
       {showChangePw && <ChangePw setShowChangePw={setShowChangePw}/>}
       {showChangePhoneNumber && <ChangePhoneNumber setShowChangePhoneNumber={setShowChangePhoneNumber}/>}
+      {showDeleteUser && <DeleteUser setShowDeleteUser={setShowDeleteUser}/>}
       <UserHeader>회원정보 변경</UserHeader>
       <div
         style={{
@@ -103,7 +106,9 @@ const ChangeInfo = () => {
             color={"#7bab6e"}
             borderColor={"#7bab6e"}
             arrowColor={"#7bab6e"}
-            handler={() => navigate('/deleteUser')}
+            handler={() => {
+              setShowDeleteUser(true);
+            }}
           />
         </div>
       </div>
