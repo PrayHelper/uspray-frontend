@@ -277,6 +277,6 @@ const MainWrapper = styled.div`
   width: 100%;
   position: relative;
   background-color: #7bab6e;
-
+  
   background-color: ${({ bgColor }) => bgColor};
 `;

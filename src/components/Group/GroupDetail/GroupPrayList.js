@@ -140,6 +140,7 @@ const NoDataWrapper = styled.div`
   color: var(--color-secondary-grey);
   font-size: 24px;
   font-weight: 700;
+  letter-spacing: -0.04rem;
 `;
 
 const PrayList = styled.div`

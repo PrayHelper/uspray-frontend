@@ -16,6 +16,14 @@ export const WrapperStyle = styled.div`
     border: 2px solid ${(props) => (props.isError ? "#FF6B6B" : "#7BAB6E")};
     margin: -1px;
   }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-text-fill-color: #75bd62;
+    -webkit-box-shadow: 0 0 0px 40rem #fff inset;
+  }
 `;
 
 export const LabelStyle = styled.span`
@@ -38,6 +46,7 @@ export const InputStyle = styled.input`
   width: 100%;
   padding: 16.5px 14px;
   border: none;
+  border-radius: 15px;
 
   background: transparent;
   &:focus {
