@@ -332,10 +332,16 @@ const BottomButton = styled.div`
   border-radius: 0;
   overflow: visible;
   cursor: pointer;
-  width: 100%
+  width: 100%;
   font-weight: 500;
   text-align: center;
   padding: 20px 0px;
   background-color: var(--color-dark-green);
   color: var(--color-white);
+
+  &:active {
+    transition: all 0.2s ease-in-out;
+    filter: ${(props) =>
+      props.disabled ? "brightness(1)" : "brightness(0.9)"};
+  }
 `;
