@@ -12,6 +12,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
+    "caniuse-lite": "^1.0.30001591",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.9",
     "dotenv": "^16.4.0",
@@ -36,6 +37,7 @@
     "react-textarea-autosize": "^8.5.3",
     "recoil": "^0.7.7",
     "recoil-persist": "^4.2.0",
+    "smoothscroll-polyfill": "^0.4.4",
     "styled-components": "^5.3.9",
     "styled-reset": "^4.4.5",
     "web-vitals": "^2.1.4"

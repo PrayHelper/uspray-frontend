@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import LockerContent from "../components/Locker/LockerContent";
-import LockerHeader from "../components/Locker/L_Header";
-import { ToastTheme } from "../components/Toast/Toast";
-import { useDeleteSharedList } from "../hooks/useDeleteSharedList";
-import { useFetchSharedList } from "../hooks/useFetchSharedList";
-import { useUpdateSharedList } from "../hooks/useUpdateSharedList";
+import S from "./Locker.style";
+import LockerContent from "../../../Locker/LockerContent";
+import LockerHeader from "../../../Locker/L_Header";
+import { ToastTheme } from "../../../Toast/Toast";
+import { useDeleteSharedList } from "../../../../hooks/useDeleteSharedList";
+import { useFetchSharedList } from "../../../../hooks/useFetchSharedList";
+import { useUpdateSharedList } from "../../../../hooks/useUpdateSharedList";
 import Lottie from "react-lottie";
-import LottieData from "../json/lottie.json";
-import useToast from "../hooks/useToast";
-import BlackScreen from "../components/BlackScreen";
-import Modal from "../components/Modal/Modal";
-import { useCategory } from "../hooks/useCategory";
-import { useNavigate } from "react-router-dom";
-import PrayDateCategoryInput from "../components/PrayDateCategoryInput/PrayDateCategoryInput";
+import LottieData from "../../../../json/lottie.json";
+import useToast from "../../../../hooks/useToast";
+import BlackScreen from "../../../BlackScreen";
+import Modal from "../../../Modal/Modal";
+import { useCategory } from "../../../../hooks/useCategory";
+import PrayDateCategoryInput from "../../../PrayDateCategoryInput/PrayDateCategoryInput";
 
-const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
+const Locker = ({ goBack, refetchPrayList }) => {
   const [data, setData] = useState([]);
   const { categoryList, firstCategoryIndex } = useCategory("shared");
   const [isLoading, setIsLoading] = useState(true);
@@ -191,14 +190,14 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
       fetchSharedList();
       setIsLoading(false);
     }
-  }, [sharedListData]);
+  }, [sharedListData, setIsLoading]);
 
   const handleCloseModal = () => {
     setShowModal(false);
   };
 
   return (
-    <LockerWrapper>
+    <S.LockerWrapper>
       <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
       <Modal
         isModalOn={showModal}
@@ -217,7 +216,7 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
         onClickSave={onClickSave}
       />
       {isLoading && (
-        <LottieWrapper>
+        <S.LottieWrapper>
           <Lottie
             style={{ scale: "0.5" }}
             options={defaultOptions}
@@ -225,16 +224,16 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
             width={300}
             isClickToPauseDisabled={true}
           />
-        </LottieWrapper>
+        </S.LottieWrapper>
       )}
       {!isLoading && isEmptyData(data) && (
-        <NoDataWrapper>
-          <NoDataTitle>공유받은 기도제목이 없네요.</NoDataTitle>
-          <NoDataContent>공유받으면 보관함에 저장됩니다!</NoDataContent>
-        </NoDataWrapper>
+        <S.NoDataWrapper>
+          <S.NoDataTitle>공유받은 기도제목이 없네요.</S.NoDataTitle>
+          <S.NoDataContent>공유받으면 보관함에 저장됩니다!</S.NoDataContent>
+        </S.NoDataWrapper>
       )}
       {!isLoading && !isEmptyData(data) && (
-        <LockerList>
+        <S.LockerList>
           <div style={{ paddingTop: "65px", width: "100%" }}>
             {data.map((item, index) => (
               <div onClick={() => onClickContent(index, item.sharedPrayId)}>
@@ -248,7 +247,7 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
               </div>
             ))}
           </div>
-        </LockerList>
+        </S.LockerList>
       )}
       {showSubModal && (
         <PrayDateCategoryInput
@@ -265,14 +264,13 @@ const Locker = ({ setIsOverlayOn, refetchPrayList }) => {
           lockerCount={selectedIds.length}
         />
       )}
-      <BottomButton onClick={() => setIsOverlayOn(false)}>
-        뒤로 가기
-      </BottomButton>
-    </LockerWrapper>
+      <S.BottomButton onClick={goBack}>뒤로 가기</S.BottomButton>
+    </S.LockerWrapper>
   );
 };
 
 export default Locker;
+<<<<<<< HEAD:src/pages/Locker.js
 
 const LockerWrapper = styled.div`
   display: flex;
@@ -345,3 +343,5 @@ const BottomButton = styled.div`
       props.disabled ? "brightness(1)" : "brightness(0.9)"};
   }
 `;
+=======
+>>>>>>> main:src/components/pages/Main/Locker/Locker.js

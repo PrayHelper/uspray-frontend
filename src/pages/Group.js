@@ -62,6 +62,7 @@ const Group = () => {
                   color: "var(--color-dark-green)",
                   fontSize: "28px",
                   fontWeight: "700",
+                  letterSpacing: "-0.04rem",
                 }}
               >
                 참여하신 모임이 없어요.
@@ -70,6 +71,7 @@ const Group = () => {
                 style={{
                   color: "var(--color-secondary-green)",
                   fontSize: "20px",
+                  letterSpacing: "-0.04rem",
                 }}
               >
                 모임에 참여해서 기도제목을 공유해보세요!

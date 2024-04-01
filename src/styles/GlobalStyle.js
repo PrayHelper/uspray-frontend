@@ -25,6 +25,7 @@ const GlobalStyle = createGlobalStyle`
     --color-locker-content-shadow: #31412c40;
     --color-group-pray-button-background: #F8F8F8;
     --color-group-pray-content: #496143;
+    user-select: none;
   }
 `;
 

@@ -57,12 +57,9 @@ const GroupPrayItem = ({
 
   return (
     <Wrapper>
+      <BlackScreen isModalOn={showModal} onClick={() => setShowModal(false)} />
       {showModal && (
         <>
-          <BlackScreen
-            isModalOn={showModal}
-            onClick={() => setShowModal(false)}
-          />
           <Modal
             isModalOn={showModal}
             iconSrc={"images/ic_group_pray_delete.svg"}

@@ -1,7 +1,7 @@
 import Header from "../components/Header/Header";
 import styled from "styled-components";
 import HisContent from "../components/History/HisContent";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import BlackScreen from "../components/BlackScreen/BlackScreen";
 import { useHistoryList } from "../hooks/useHistoryList";
@@ -44,8 +44,9 @@ const History = () => {
   const [categoryInputValue, setCategoryInputValue] = useState(0);
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
+  const outside = useRef(null);
 
-  const { data: myPrayData, refetch: refetchMyData } = useHistoryList({
+  const { data: myPrayData, refetch: refetchPersonalData } = useHistoryList({
     type: "personal",
     page: personalPage,
     size: 15,
@@ -83,6 +84,7 @@ const History = () => {
 
   const onClickExitModal = () => {
     setShowModal(false);
+    setShowSubModal(false);
     setSelectedHistoryId(null);
   };
 
@@ -148,11 +150,10 @@ const History = () => {
         deadline: updateDate,
       },
       {
-        onSuccess: (res) => {
+        onSuccess: () => {
           showToast({});
-          setDeletedItemIds((prev) => [...prev, res.data.id]);
           onClickExitModal();
-          tab === "personal" ? refetchMyData() : refetchSharedData();
+          tab === "personal" ? fetchMyData() : fetchSharedData();
         },
       }
     );
@@ -177,7 +178,10 @@ const History = () => {
         onSuccess: () => {
           setShowSubModal(false);
           setShowModal(false);
+          setDeletedItemIds((prev) => [...prev, historyDetail.historyId]);
+          tab === "personal" ? refetchPersonalData() : refetchSharedData();
           resetInputData();
+          showToast({});
         },
       }
     );
@@ -188,6 +192,10 @@ const History = () => {
       setShowModal(true);
     }
   }, [selectedHistoryId]);
+
+  useEffect(() => {
+    console.log("deletedItemIds", deletedItemIds);
+  }, [deletedItemIds]);
 
   useEffect(() => {
     if (historyDetail) {
@@ -219,8 +227,24 @@ const History = () => {
     }
   }, [hasMore, inView]);
 
+  useEffect(() => {
+    // blackscreen 클릭 시 모달 창 꺼지도록
+    function handleFocus(e) {
+      if (outside.current && !outside.current.contains(e.target)) {
+        console.log(e);
+        setShowModal(false);
+        setShowSubModal(false);
+        setSelectedHistoryId(null);
+      }
+    }
+    document.addEventListener("mouseup", handleFocus);
+    return () => {
+      document.removeEventListener("mouseup", handleFocus);
+    };
+  }, [outside]);
+
   return (
-    <HistoryWrapper>
+    <HistoryWrapper showModal={showModal}>
       <div style={{ marginBottom: "24px" }}>
         <Header
           tab={tab}
@@ -247,8 +271,10 @@ const History = () => {
           <NoDataContent>기간이 지나면 히스토리에 저장됩니다!</NoDataContent>
         </NoDataWrapper>
       )}
-      <div>
-        <BlackScreen isModalOn={showModal} />
+
+      <BlackScreen isModalOn={showModal} />
+
+      <div ref={outside}>
         {historyDetail && showModal && (
           <HistoryDetailModal
             showSubModal={showSubModal}
@@ -291,7 +317,9 @@ const History = () => {
               <HisContent
                 name={el.name}
                 content={el.content}
-                date={`${el.createdAt.split("T")[0]} ~ ${el.deadline}`}
+                date={`${el.createdAt
+                  .split("T")[0]
+                  .replace(/-/g, ".")} ~ ${el.deadline.replace(/-/g, ".")}`}
               />
               <div ref={ref}></div>
             </div>
@@ -309,7 +337,9 @@ const History = () => {
               <HisContent
                 name={el.name}
                 content={el.content}
-                date={`${el.createdAt.split("T")[0]} ~ ${el.deadline}`}
+                date={`${el.createdAt
+                  .split("T")[0]
+                  .replace(/-/g, ".")} ~ ${el.deadline.replace(/-/g, ".")}`}
               />
               <div ref={ref}></div>
             </div>
@@ -356,6 +386,7 @@ const HistoryWrapper = styled.div`
   width: 100%;
   position: relative;
   /* padding-top: 65px; */
+  overflow-y: ${(props) => (props.showModal ? "hidden" : "auto")};
 `;
 const LottieWrapper = styled.div`
   position: fixed;
@@ -381,9 +412,11 @@ const NoDataTitle = styled.div`
   font-weight: 500;
   font-size: 28px;
   color: var(--color-grey);
+  letter-spacing: -0.02em;
 `;
 const NoDataContent = styled.div`
   font-weight: 400;
   font-size: 20px;
   color: var(--color-secondary-grey);
+  letter-spacing: -0.04em;
 `;

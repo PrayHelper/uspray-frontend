@@ -1,22 +1,20 @@
 import styled from "styled-components";
-import { usePray } from "../../hooks/usePray";
-import GreenCheckbox from "../GreenCheckbox/GreenCheckbox";
+import { usePray } from "../../../../hooks/usePray";
+import GreenCheckbox from "../../../GreenCheckbox/GreenCheckbox";
 
 const ICON_HEART_FILLED = "images/ic_filled_heart.svg";
 const ICON_HEART_EMPTY = "images/ic_empty_heart.svg";
 
-const Category = ({
+const MainCategory = ({
   categoryId,
   title,
   color,
   setSelectedPrayInfo,
   prays,
-  onDotIconClicked,
   setClickedCategoryData,
   tabType,
   categoryRef,
   refIndex,
-  setShowOption,
   shareMode,
   setCheckedList,
   checkedList,
@@ -34,7 +32,6 @@ const Category = ({
 
   const titleClick = (pray) => {
     if (shareMode) return;
-    setShowOption(false);
     const { name, categoryName, isPrayedToday, ...selectedPrayInfoSubset } =
       pray;
     setSelectedPrayInfo(selectedPrayInfoSubset);
@@ -49,7 +46,7 @@ const Category = ({
   };
 
   const handleCategoryTitleClick = () => {
-    onDotIconClicked();
+    console.log({ id: categoryId, color: color, name: title });
     setClickedCategoryData({ id: categoryId, color: color, name: title });
   };
 
@@ -73,8 +70,7 @@ const Category = ({
             ) : null}
             <ItemText
               selected={pray.isPrayedToday}
-              onClick={(e) => titleClick(pray)}
-            >
+              onClick={(e) => titleClick(pray)}>
               {pray.content}
             </ItemText>
             {shareMode ? (
@@ -96,7 +92,7 @@ const Category = ({
   );
 };
 
-export default Category;
+export default MainCategory;
 
 const CategoryContainer = styled.div`
   display: flex;
