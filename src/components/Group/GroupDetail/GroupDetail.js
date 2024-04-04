@@ -46,7 +46,7 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
   const onInvite = async () => {
     const groupId = group.id;
     var encodeGroupId = window.btoa(groupId.toString());
-    if (isMobile()) {
+    // if (isMobile()) {
       if (/android/i.test(navigator.userAgent)) {
         shareLink({
           title: "Web_invite",
@@ -66,7 +66,7 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
           theme: ToastTheme.ERROR,
         });
       }
-    }
+    // }
     console.log(`${WEB_ORIGIN}/group?id=` + encodeGroupId);
   };
 
