@@ -148,6 +148,7 @@ const Main = () => {
     const stringPrayIds = checkedPrayIds.join(",");
     var encodePrayIds = window.btoa(stringPrayIds.toString());
     if (isMobile()) {
+      console.log(`ShareLink`);
       if (/android/i.test(navigator.userAgent)) {
         shareLink({
           title: "Web_invite",
