@@ -33,6 +33,9 @@ const useDeviceToken = () => {
     //eslint-disable-next-line
     FlutterGetDeviceToken.postMessage(nil);
 
+    //eslint-disable-next-line
+    window.Bridge.FlutterGetDeviceToken(nil);
+
     deviceLock.current = true;
     await sleepWithCondition(() => deviceLock.current === false)
 
