@@ -110,6 +110,8 @@ const useShareLink = () => {
         const data = JSON.stringify({title, url})
         //eslint-disable-next-line
         FlutterShareLink.postMessage(data);
+        //eslint-disable-next-line
+        window.Bridge.FlutterShareLink(data);
     }
 
     return {
