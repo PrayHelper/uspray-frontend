@@ -126,14 +126,18 @@ const S = {
 
     display: flex;
     flex-direction: column;
+    background-color: #ffffff;
+    z-index: 101;
   `,
   Content: styled.div`
     flex: 1;
-    margin: 36px 16px 24px 16px;
+    padding: 36px 16px 24px 16px;
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    background-color: #ffffff;
+    z-index: 101;
   `,
   TopTextsAndOptions: styled.div`
     display: flex;

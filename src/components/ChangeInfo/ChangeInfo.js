@@ -63,55 +63,59 @@ const ChangeInfo = () => {
     <Wrapper>
       {showChangePw && <ChangePw setShowChangePw={setShowChangePw}/>}
       {showChangePhoneNumber && <ChangePhoneNumber setShowChangePhoneNumber={setShowChangePhoneNumber}/>}
-      {showDeleteUser && <DeleteUser setShowDeleteUser={setShowDeleteUser}/>}
-      <UserHeader>회원정보 변경</UserHeader>
-      <div
-        style={{
-          width: "100%",
-          gap: "24px",
-          marginTop: "64px",
-        }}
-      >
-        <div
-          style={{
-            padding: "0 16px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "24px",
-          }}
-        >
-          <Button
-            buttonSize={ButtonSize.LARGE}
-            buttonTheme={ButtonTheme.GREEN}
-            handler={() => {
-              setShowChangePw(true);
+      {showDeleteUser ?
+        <DeleteUser setShowDeleteUser={setShowDeleteUser}/> :
+        <>
+          <UserHeader>회원정보 변경</UserHeader>
+          <div
+            style={{
+              width: "100%",
+              gap: "24px",
+              marginTop: "64px",
             }}
           >
-            비밀번호 변경
-            <NextArrowWhite/>
-          </Button>
-          <Button
-            buttonSize={ButtonSize.LARGE}
-            buttonTheme={ButtonTheme.GREEN}
-            handler={() => {
-              setShowChangePhoneNumber(true);
-            }}
-          >
-            전화번호 변경
-            <NextArrowWhite/>
-          </Button>
-          <LoginButton
-            background={"#ffffff"}
-            context={"회원탈퇴"}
-            color={"#7bab6e"}
-            borderColor={"#7bab6e"}
-            arrowColor={"#7bab6e"}
-            handler={() => {
-              setShowDeleteUser(true);
-            }}
-          />
-        </div>
-      </div>
+            <div
+              style={{
+                padding: "0 16px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "24px",
+              }}
+            >
+              <Button
+                buttonSize={ButtonSize.LARGE}
+                buttonTheme={ButtonTheme.GREEN}
+                handler={() => {
+                  setShowChangePw(true);
+                }}
+              >
+                비밀번호 변경
+                <NextArrowWhite/>
+              </Button>
+              <Button
+                buttonSize={ButtonSize.LARGE}
+                buttonTheme={ButtonTheme.GREEN}
+                handler={() => {
+                  setShowChangePhoneNumber(true);
+                }}
+              >
+                전화번호 변경
+                <NextArrowWhite/>
+              </Button>
+              <LoginButton
+                background={"#ffffff"}
+                context={"회원탈퇴"}
+                color={"#7bab6e"}
+                borderColor={"#7bab6e"}
+                arrowColor={"#7bab6e"}
+                handler={() => {
+                  setShowDeleteUser(true);
+                }}
+              />
+            </div>
+          </div>
+        </>
+      }
     </Wrapper>
   );
 };
