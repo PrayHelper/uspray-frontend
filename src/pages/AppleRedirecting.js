@@ -15,7 +15,7 @@ const useSendDeviceToken = () => {
   const { postFetcher } = useApi();
   return useMutation(
     async (data) => {
-      return await postFetcher("/user/device/token", data);
+      return await postFetcher("/member/fcm-token", data);
     },
     {
       onError: (e) => {
@@ -59,7 +59,7 @@ const AppleRedirecting = () => {
 
             sendDeviceToken(
               {
-                device_token: deviceToken,
+                fcmToken: deviceToken,
               },
               {
                 onSuccess: (res) => console.log(res.status),
