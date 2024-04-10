@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import StrictModeDroppable from "../lib/StrictModeDroppable";
-import { useCategoryTemp_by_limeojin } from "../hooks/useCategoryTemp_by_limeojin";
-import { useParams } from "react-router-dom";
 import UserHeader from "../components/UserHeader";
+import { useCategory } from "../hooks/useCategory";
+import { useMainStates } from "./Main";
 
 const Hamburger = () => (
   <S.HamburgerContainer>
@@ -21,8 +21,7 @@ const CategoryItem = ({ categoryItem, index }) => {
           bgColor={categoryItem.color}
           ref={provided.innerRef}
           {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
+          {...provided.dragHandleProps}>
           <S.CategoryItemText>{categoryItem.name}</S.CategoryItemText>
           <Hamburger />
         </S.CategoryItemContainer>
@@ -32,10 +31,8 @@ const CategoryItem = ({ categoryItem, index }) => {
 };
 
 const ChangeCategoryOrder = ({ setIsOverlayOn }) => {
-  const { categoryType } = useParams(); // "personal" or "shared"
-  const { categoryList, updateCategoryOrder } = useCategoryTemp_by_limeojin({
-    categoryType,
-  });
+  const { tab } = useMainStates();
+  const { categoryList, updateCategoryOrder } = useCategory(tab);
 
   const onDragEnd = ({ source, destination }) => {
     if (!source || !destination) return;
@@ -53,7 +50,7 @@ const ChangeCategoryOrder = ({ setIsOverlayOn }) => {
 
   return (
     <S.PageRoot>
-      <UserHeader overlay={true} setIsOverlayOn={setIsOverlayOn}>
+      <UserHeader overlay setIsOverlayOn={setIsOverlayOn}>
         카테고리 순서 변경
       </UserHeader>
       {categoryList && (
@@ -62,8 +59,7 @@ const ChangeCategoryOrder = ({ setIsOverlayOn }) => {
             {(provided) => (
               <S.CategoryList
                 ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
+                {...provided.droppableProps}>
                 {categoryList.map((categoryItem, index) => (
                   <CategoryItem
                     index={index}

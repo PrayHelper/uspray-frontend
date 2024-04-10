@@ -13,7 +13,9 @@ import MainHeader, {
 import MainCategoryAlertModal from "../components/pages/Main/CategoryAlertModal/MainCategoryAlertModal";
 import MainCategoryModifyModal from "../components/pages/Main/overlays/MainCategoryModifyModal";
 import MainSelectedOverlay from "../components/pages/Main/SelectedOverlay/MainSelectedOverlay";
-import MainRightBottomOptions from "../components/pages/Main/overlays/MainRightBottomOptions";
+import MainRightBottomOptions, {
+  MainDotOptionsNext,
+} from "../components/pages/Main/overlays/MainRightBottomOptions";
 import ScrollSynchronizedCategoryList, {
   MainContentNext,
 } from "../components/ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
@@ -44,6 +46,7 @@ const BG_COLOR_MAP = {
   shared: "#3D5537",
 };
 
+const showAlertModalAtom = atom(false);
 const tabStateAtom = atom("personal");
 const selectedPrayerToEdit = atom(null);
 const prayerInputAtom = atom("");
@@ -62,6 +65,7 @@ const selectedPrayAtom = atom(null);
 const activeOverlaysAtom = atom([]);
 const isShareModeAtom = atom(false);
 const checkIdListAtom = atom([]);
+const dotOptionsOpenAtom = atom(false);
 
 export const useMainStates = () => {
   const [tab, setTab] = useAtom(tabStateAtom);
@@ -107,6 +111,9 @@ export const useMainStates = () => {
     todayPray,
   } = usePray(tab);
   const [checkedIdList, setCheckedIdList] = useAtom(checkIdListAtom);
+  const [dotOptionsOpen, setDotOptionsOpen] = useAtom(dotOptionsOpenAtom);
+  const [showAlertModal, setShowAlertModal] = useAtom(showAlertModalAtom);
+
   const sections = useScrollSections();
 
   return {
@@ -162,6 +169,12 @@ export const useMainStates = () => {
     checkedIdList,
     setCheckedIdList,
 
+    dotOptionsOpen,
+    setDotOptionsOpen,
+
+    showAlertModal,
+    setShowAlertModal,
+
     sections,
   };
 };
@@ -183,15 +196,11 @@ const MainOverlays = () => {
       </Overlay>
       <MainPrayerCreateModal />
       <MainPrayerModifyModal />
-
       {activeOverlays.includes("CATEGORY_CREATE_MODAL") && (
         <MainCategoryCreateModal />
       )}
       {activeOverlays.includes("CATEGORY_MODIFY_MODAL") && (
         <MainCategoryModifyModal />
-      )}
-      {activeOverlays.includes("RIGHT_BOTTOM_OPTIONS") && (
-        <MainRightBottomOptions />
       )}
       {activeOverlays.includes("PRAYER_BOTTOM_MODAL") && (
         <MainPrayerBottomModal />
@@ -211,6 +220,7 @@ const MainNext = () => {
       <MainWrapper bgColor={BG_COLOR_MAP[tab]}>
         <MainHeaderNext />
         <MainContentNext />
+        <MainDotOptionsNext />
       </MainWrapper>
     </>
   );

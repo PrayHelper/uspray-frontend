@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import useApi from "./useApi";
 import useToast from "../hooks/useToast";
 import { ToastTheme } from "../components/Toast/Toast";
@@ -6,6 +6,8 @@ import { ToastTheme } from "../components/Toast/Toast";
 export const useCategory = (categoryType) => {
   const { getFetcher, postFetcher, putFetcher, deleteFetcher } = useApi();
   const { showToast } = useToast({});
+
+  const queryClient = useQueryClient();
 
   const { data, refetch: refetchCategoryList } = useQuery(
     ["categoryList", categoryType],
@@ -18,6 +20,64 @@ export const useCategory = (categoryType) => {
       },
       onSuccess: (res) => {
         console.log(res);
+      },
+      retry: (cnt) => {
+        return cnt < 3;
+      },
+      retryDelay: 300,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const { mutate: updateCategoryOrder } = useMutation(
+    async ({ srcIndex, destIndex }) => {
+      let prevArrayData;
+
+      try {
+        // TODO: 살려주세요(.data, .data ..? Response Body에 대한 협의가 필요할듯)
+        const arrayData = queryClient.getQueryData(["categoryList"]).data.data;
+
+        // 반응성 개선을 위한 코드((update 요청 + refetch 요청) 완료 전에 프론트에서 먼저 완료 상태 보여주기)
+        queryClient.setQueryData(["categoryList"], (prev) => {
+          prevArrayData = prev.data.data;
+
+          const nextArrayData = [...prevArrayData];
+          nextArrayData.splice(srcIndex, 1);
+          nextArrayData.splice(destIndex, 0, prevArrayData[srcIndex]);
+
+          return { ...prev, data: { ...prev.data, data: nextArrayData } };
+        });
+
+        const categoryId = arrayData[srcIndex].id;
+        const index = destIndex;
+
+        return await putFetcher(
+          `/category/${categoryId}/order/${index + 1}`,
+          {}
+        );
+      } catch (error) {
+        // 에러 발생 시 원상복구
+        queryClient.setQueryData(["categoryList"], (prev) => {
+          prevArrayData = prev.data.data;
+
+          return { ...prev, data: { ...prev.data, data: prevArrayData } };
+        });
+
+        throw new Error();
+      }
+    },
+    {
+      onError: () => {
+        showToast({
+          message: "카테고리 순서 변경에 실패했어요. 네트워크를 확인해주세요.",
+          theme: ToastTheme.ERROR,
+        });
+      },
+      onSuccess: async () => {
+        showToast({ message: "카테고리 순서를 변경했어요." });
+
+        await refetchCategoryList();
+        await queryClient.refetchQueries({ queryKey: ["prayList"] });
       },
       retry: (cnt) => {
         return cnt < 3;
