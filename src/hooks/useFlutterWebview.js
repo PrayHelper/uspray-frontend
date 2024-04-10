@@ -27,16 +27,16 @@ const useDeviceToken = () => {
     if (deviceToken.current != null) {
       return deviceToken.current;
     }
-    alert("hi1");
+    
     //eslint-disable-next-line
     FlutterGetDeviceToken.postMessage(nil);
-    alert("hi2");
+    
     //eslint-disable-next-line
     window.Bridge.FlutterGetDeviceToken(nil);
-    alert("hi3");
+    
     deviceLock.current = true;
     await sleepWithCondition(() => deviceLock.current === false);
-    alert("hi4");
+    
     console.log(`getDeviceToken() returned ${deviceToken.current}`);
     return deviceToken.current;
   };
@@ -117,7 +117,7 @@ const useShareLink = () => {
 
 const useFlutterWebview = () => {
   const isMobile = () => {
-    /*
+    
     //eslint-disable-next-line
     const isDeviceTokenAvail = typeof FlutterGetDeviceToken !== "undefined" && typeof FlutterGetDeviceToken.postMessage === "function"
     //eslint-disable-next-line
@@ -130,8 +130,8 @@ const useFlutterWebview = () => {
     } else {
       return false;
     }
-    */
-
+    
+/*
     if (
       /android/i.test(navigator.userAgent) ||
       /iPad|iPhone|iPod/.test(navigator.userAgent) ||
@@ -140,7 +140,7 @@ const useFlutterWebview = () => {
       return true;
     } else {
       return false;
-    }
+    }*/
   };
 
   const { getDeviceToken } = useDeviceToken();
