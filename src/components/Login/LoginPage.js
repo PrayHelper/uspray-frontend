@@ -76,7 +76,7 @@ const LoginPage = () => {
       if (res.status === 200) {
         if (isMobile()) {
           const deviceToken = await getDeviceToken();
-
+          alert("hi");
           sendDeviceToken(
             {
               fcmToken: deviceToken,

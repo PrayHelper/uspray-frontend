@@ -130,16 +130,14 @@ const useFlutterWebview = () => {
       return false;
     }
     */
-    alert("hi");
+
     if (
       /android/i.test(navigator.userAgent) ||
       /iPad|iPhone|iPod/.test(navigator.userAgent) ||
       navigator.share
     ) {
-      alert("hi1");
       return true;
     } else {
-      alert("hi2");
       return false;
     }
   };
