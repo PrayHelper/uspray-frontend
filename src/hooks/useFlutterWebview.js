@@ -27,15 +27,16 @@ const useDeviceToken = () => {
     if (deviceToken.current != null) {
       return deviceToken.current;
     }
+    alert("hi1");
     //eslint-disable-next-line
     FlutterGetDeviceToken.postMessage(nil);
-
+    alert("hi2");
     //eslint-disable-next-line
     window.Bridge.FlutterGetDeviceToken(nil);
-
+    alert("hi3");
     deviceLock.current = true;
     await sleepWithCondition(() => deviceLock.current === false);
-
+    alert("hi4");
     console.log(`getDeviceToken() returned ${deviceToken.current}`);
     return deviceToken.current;
   };
