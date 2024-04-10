@@ -80,6 +80,10 @@ export const ScrollingProvider = ({
       if (!section) return console.warn("Section ID not recognized!"); // eslint-disable-line
 
       setSelected(id);
+      console.log({
+        top: section.ref.current.offsetTop + offset,
+        behavior: scrollBehavior,
+      });
       if (section.ref.current) {
         window.scrollTo({
           top: section.ref.current.offsetTop + offset,

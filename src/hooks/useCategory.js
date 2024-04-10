@@ -8,12 +8,12 @@ export const useCategory = (categoryType) => {
   const { showToast } = useToast({});
 
   const { data, refetch: refetchCategoryList } = useQuery(
-    ["categoryList"],
+    ["categoryList", categoryType],
     async () => {
       return await getFetcher(`/category/?categoryType=${categoryType}`);
     },
     {
-      onError: async (e) => {
+      onError: (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
@@ -51,9 +51,13 @@ export const useCategory = (categoryType) => {
     }
   );
 
-  const { mutate: changeCategory }  = useMutation(
+  const { mutate: changeCategory } = useMutation(
     async (data) => {
-      return await putFetcher(`/category/${data.id}`, {name: data.name, color: data.color, type: data.type})
+      return await putFetcher(`/category/${data.id}`, {
+        name: data.name,
+        color: data.color,
+        type: data.type,
+      });
     },
     {
       onError: async (e) => {
@@ -75,9 +79,9 @@ export const useCategory = (categoryType) => {
     }
   );
 
-  const { mutate: deleteCategory }  = useMutation(
+  const { mutate: deleteCategory } = useMutation(
     async (categoryId) => {
-      return await deleteFetcher(`/category/${categoryId}`)
+      return await deleteFetcher(`/category/${categoryId}`);
     },
     {
       onError: async (e) => {
@@ -109,6 +113,6 @@ export const useCategory = (categoryType) => {
     createCategory,
     firstCategoryIndex,
     changeCategory,
-    deleteCategory
+    deleteCategory,
   };
 };

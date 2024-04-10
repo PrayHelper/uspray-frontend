@@ -11,11 +11,11 @@ import MainHeader, {
   MainHeaderNext,
 } from "../components/pages/Main/Header/MainHeader";
 import MainCategoryAlertModal from "../components/pages/Main/CategoryAlertModal/MainCategoryAlertModal";
-import MainCategoryEdit from "../components/pages/Main/CategoryEdit/MainCategoryEdit";
+import MainCategoryModifyModal from "../components/pages/Main/overlays/MainCategoryModifyModal";
 import MainSelectedOverlay from "../components/pages/Main/SelectedOverlay/MainSelectedOverlay";
-import MainRightBottomOptions from "../components/pages/Main/RightBottomOptions/MainRightBottomOptions";
+import MainRightBottomOptions from "../components/pages/Main/overlays/MainRightBottomOptions";
 import ScrollSynchronizedCategoryList, {
-  ScrollListNext,
+  MainContentNext,
 } from "../components/ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
 import useToast from "../hooks/useToast";
 import { ToastTheme } from "../components/Toast/Toast";
@@ -23,7 +23,11 @@ import { atom, useAtom } from "jotai";
 import Overlay from "../components/Overlay/Overlay";
 import Locker from "../components/pages/Main/Locker/Locker";
 import ChangeCategoryOrder from "./ChangeCategoryOrder";
-import PrayerBottomModal from "../components/pages/Main/PrayerBottomModal/PrayerBottomModal";
+import MainPrayerBottomModal from "../components/pages/Main/overlays/MainPrayerBottomModal";
+import { useScrollSections } from "../lib/react-scroll-section";
+import MainPrayerCreateModal from "../components/pages/Main/overlays/MainPrayerCreateModal";
+import MainPrayerModifyModal from "../components/pages/Main/overlays/MainPrayerModifyModal";
+import MainCategoryCreateModal from "../components/pages/Main/overlays/MainCategoryCreateModal";
 
 // 관리 필요 state
 
@@ -34,30 +38,140 @@ import PrayerBottomModal from "../components/pages/Main/PrayerBottomModal/Prayer
 // - 기도제목 완료 / 수정 / 삭제 Modal on / off
 // - 카테고리 생성 / 수정 / 삭제에 필요한 Input + Palatte Modal
 // - 순서 변경 / 보관함 on / off
-//
 
 const BG_COLOR_MAP = {
   personal: "#7BAB6E",
   shared: "#3D5537",
 };
 
-export const mainPageAtom = atom({
-  tab: "personal", // "personal" | "shared";
-  prayerInput: "",
-  showPrayerInputModal: false,
-  showPrayerHandleBottomModal: false,
-  showBottomDotOptions: false,
-  activeOverlays: [], // | "RIGHT_BOTTOM_OPTIONS" | "LOCKER" | "CHANGE_CATEGORY_ORDER" | "PRAYER_BOTTOM_MODAL" | "PRAYER_INPUT_MODAL" | "CATEGORY_INPUT_MODAL"
-  selectedCategory: null,
-});
+const tabStateAtom = atom("personal");
+const selectedPrayerToEdit = atom(null);
+const prayerInputAtom = atom("");
+const prayerDateInputAtom = atom(null);
+const prayerCategoryIndexAtom = atom(null);
+const categoryInputAtom = atom("");
+const showPrayerInputModalAtom = atom(false);
+const showPrayerHandleBottomModalAtom = atom(false);
+const showBottomDotOptionsAtom = atom(false);
+const selectedCategoryToEditAtom = atom(null);
+const selectedPrayAtom = atom(null);
+// "LOCKER" | "CHANGE_CATEGORY_ORDER" |
+// "PRAYER_BOTTOM_MODAL" | "PRAYER_MODIFY_MODAL" | "PRAYER_CREATE_MODAL" |
+// "CATEGORY_CREATE_MODAL" | "CATEGORY_MODIFY_MODAL" |
+// "RIGHT_BOTTOM_OPTIONS"
+const activeOverlaysAtom = atom([]);
+const isShareModeAtom = atom(false);
+const checkIdListAtom = atom([]);
+
+export const useMainStates = () => {
+  const [tab, setTab] = useAtom(tabStateAtom);
+  const [isShareMode, setIsShareMode] = useAtom(isShareModeAtom);
+  const [selectedPray, setSelectedPrayToEdit] = useAtom(selectedPrayerToEdit);
+  const [prayerInput, setPrayerInput] = useAtom(prayerInputAtom);
+  const [prayerDateInput, setPrayerDateInput] = useAtom(prayerDateInputAtom);
+  const [categoryInput, setCategoryInput] = useAtom(categoryInputAtom);
+  const [showPrayerInputModal, setShowPrayerInputModal] = useAtom(
+    showPrayerInputModalAtom
+  );
+  const [prayerCategoryIndex, setPrayerCategoryIndex] = useAtom(
+    prayerCategoryIndexAtom
+  );
+  const [showPrayerHandleBottomModal, setShowPrayerHandleBottomModal] = useAtom(
+    showPrayerHandleBottomModalAtom
+  );
+  const [showBottomDotOptions, setShowBottomDotOptions] = useAtom(
+    showBottomDotOptionsAtom
+  );
+  const [selectedCategoryToEdit, setSelectedCategoryToEdit] = useAtom(
+    selectedCategoryToEditAtom
+  );
+  const [selectedScrollPray, setSelectedScrollPray] = useAtom(selectedPrayAtom);
+  const [activeOverlays, setActiveOverlays] = useAtom(activeOverlaysAtom);
+  const {
+    categoryList,
+    firstCategoryIndex,
+    changeCategory,
+    createCategory,
+    deleteCategory,
+    refetchCategoryList,
+  } = useCategory(tab);
+  const { refetchSharedListData, sharedDataLength, sharedListData } =
+    useFetchSharedList();
+  const {
+    prayList,
+    modifyPray,
+    cancelPray,
+    createPray,
+    deletePray,
+    completePray,
+    todayPray,
+  } = usePray(tab);
+  const [checkedIdList, setCheckedIdList] = useAtom(checkIdListAtom);
+  const sections = useScrollSections();
+
+  return {
+    tab,
+    prayerInput,
+    categoryInput,
+    showPrayerInputModal,
+    showPrayerHandleBottomModal,
+    showBottomDotOptions,
+    selectedCategoryToEdit,
+    selectedScrollPray,
+    activeOverlays,
+    prayerDateInput,
+    prayerCategoryIndex,
+    selectedPray,
+
+    setTab,
+    setPrayerInput,
+    setCategoryInput,
+    setShowPrayerInputModal,
+    setShowPrayerHandleBottomModal,
+    setShowBottomDotOptions,
+    setSelectedCategoryToEdit,
+    setSelectedScrollPray,
+    setActiveOverlays,
+    setPrayerDateInput,
+    setPrayerCategoryIndex,
+    setSelectedPrayToEdit,
+
+    categoryList,
+    firstCategoryIndex,
+
+    changeCategory,
+    createCategory,
+    deleteCategory,
+    refetchCategoryList,
+
+    refetchSharedListData,
+    sharedDataLength,
+    sharedListData,
+
+    prayList,
+    modifyPray,
+    createPray,
+    deletePray,
+    completePray,
+    cancelPray,
+    todayPray,
+
+    isShareMode,
+    setIsShareMode,
+
+    checkedIdList,
+    setCheckedIdList,
+
+    sections,
+  };
+};
 
 // 페이지에 띄울 Overlay
-const Overlays = () => {
-  const [{ tab, activeOverlays }, setPageState] = useAtom(mainPageAtom);
-  const { refetchPrayList } = usePray(tab);
+const MainOverlays = () => {
+  const { activeOverlays, setActiveOverlays, refetchPrayList } =
+    useMainStates();
 
-  const clearOverlays = () =>
-    setPageState((prev) => ({ ...prev, activeOverlays: [] }));
+  const clearOverlays = () => setActiveOverlays([]);
 
   return (
     <>
@@ -67,10 +181,21 @@ const Overlays = () => {
       <Overlay isOverlayOn={activeOverlays.includes("CHANGE_CATEGORY_ORDER")}>
         <ChangeCategoryOrder setIsOverlayOn={clearOverlays} />
       </Overlay>
-      {/* {activeOverlays.includes("PRAYER_BOTTOM_MODAL") && <PrayerBottomModal />}
-      {activeOverlays.includes("PRAYER_INPUT_MODAL") && <MainCategoryAdd />}
-      {activeOverlays.includes("CATEGORY_INPUT_MODAL") && <MainCategoryEdit />}
-      {activeOverlays.includes("RIGHT_BOTTOM_OPTIONS") && <MainRightBottomOptions />} */}
+      <MainPrayerCreateModal />
+      <MainPrayerModifyModal />
+
+      {activeOverlays.includes("CATEGORY_CREATE_MODAL") && (
+        <MainCategoryCreateModal />
+      )}
+      {activeOverlays.includes("CATEGORY_MODIFY_MODAL") && (
+        <MainCategoryModifyModal />
+      )}
+      {activeOverlays.includes("RIGHT_BOTTOM_OPTIONS") && (
+        <MainRightBottomOptions />
+      )}
+      {activeOverlays.includes("PRAYER_BOTTOM_MODAL") && (
+        <MainPrayerBottomModal />
+      )}
     </>
   );
 };
@@ -78,14 +203,16 @@ const Overlays = () => {
 const MainNext = () => {
   const { shareLink, isMobile } = useFlutterWebview();
 
-  const [{ tab }] = useAtom(mainPageAtom);
+  const { tab } = useMainStates();
 
   return (
-    <MainWrapper bgColor={BG_COLOR_MAP[tab]}>
-      <MainHeaderNext />
-      <ScrollListNext />
-      <Overlays />
-    </MainWrapper>
+    <>
+      <MainOverlays />
+      <MainWrapper bgColor={BG_COLOR_MAP[tab]}>
+        <MainHeaderNext />
+        <MainContentNext />
+      </MainWrapper>
+    </>
   );
 };
 
@@ -307,7 +434,7 @@ const Main = () => {
         onClose={() => setShowCategoryAdd(false)}
         tabType={tabType}
       />
-      <MainCategoryEdit
+      <MainCategoryAdd
         closeHandler={() => setSelectedCategoryDataToEdit(null)}
         {...{
           selectedCategoryDataToEdit,
@@ -335,13 +462,13 @@ const Main = () => {
           showRightBottomOptions,
           tab,
         }}
-      />{" "}
+      />
     </MainWrapper>
   );
 };
 
-export default Main;
-// export default MainNext;
+// export default Main;
+export default MainNext;
 
 const MainWrapper = styled.div`
   display: flex;
@@ -349,7 +476,6 @@ const MainWrapper = styled.div`
   height: 100vh;
   width: 100%;
   position: relative;
-  background-color: #7bab6e;
 
   background-color: ${({ bgColor }) => bgColor};
 `;

@@ -12,13 +12,9 @@ import BlackScreen from "../BlackScreen";
 import { Modal } from "@mui/material";
 import { ToastTheme } from "../Toast/Toast";
 import S from "./ScrollSynchronizedCategoryList.style";
-import {
-  ScrollingProvider,
-  Section,
-  useScrollSections,
-} from "../../lib/react-scroll-section";
-import { useAtom } from "jotai";
-import { mainPageAtom } from "../../pages/Main";
+import { Section } from "../../lib/react-scroll-section";
+import TopHorizontalCategories from "./TopHorizontalCategories/TopHorizontalCategories";
+import CategoryBoxes from "./CategoryBoxes/CategoryBoxes";
 
 const VerticalCategories = ({
   prayList,
@@ -30,8 +26,6 @@ const VerticalCategories = ({
   setCheckedList,
   checkedList,
 }) => {
-  const sections = useScrollSections();
-
   return prayList.map((category, index) => (
     <Section key={category.categoryId} id={category.categoryId}>
       <MainCategory
@@ -53,17 +47,13 @@ const VerticalCategories = ({
   ));
 };
 
-export const ScrollListNext = () => {
-  const [pageState, setPageState] = useAtom(mainPageAtom);
-  const {
-    activeOverlays,
-    prayerInput,
-    showBottomDotOptions,
-    showPrayerHandleBottomModal,
-    showPrayerInputModal,
-  } = pageState;
-
-  return <></>;
+export const MainContentNext = () => {
+  return (
+    <S.MainContentWrapper>
+      <TopHorizontalCategories />
+      <CategoryBoxes />
+    </S.MainContentWrapper>
+  );
 };
 
 const ScrollSynchronizedCategoryList = ({
@@ -225,8 +215,7 @@ const ScrollSynchronizedCategoryList = ({
           />
         )}
         {prayList && (
-          <ScrollingProvider
-            offset={contentRef.current?.getBoundingClientRect().top}>
+          <>
             <S.TopWrapper shareMode={shareMode}>
               <CategoryTag
                 categoryList={categoryList}
@@ -251,7 +240,7 @@ const ScrollSynchronizedCategoryList = ({
                 }}
               />
             </S.Content>
-          </ScrollingProvider>
+          </>
         )}
       </S.MainContentWrapper>
       <S.BottomSetWrapper

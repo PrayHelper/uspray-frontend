@@ -7,13 +7,6 @@ import BlackScreen from "../BlackScreen/BlackScreen";
 import CategoryTag from "../CategoryTag/CategoryTag";
 import ButtonV2, { ButtonTheme } from "../ButtonV2/ButtonV2";
 
-const PrayerInputNext = ({}) => {
-  const outside = useRef();
-  const modalInputRef = useRef(null);
-
-  return null;
-};
-
 const PrayDateCategoryInput = ({
   categoryList, // 메인의 카테고리 목록
   showSubModal, // 현재 컴포넌트 창 켜져있는지

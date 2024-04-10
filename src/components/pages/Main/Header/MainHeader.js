@@ -1,9 +1,7 @@
 import { useState } from "react";
 import PrayDateCategoryInput from "../../../PrayDateCategoryInput/PrayDateCategoryInput";
 import S from "./MainHeader.style";
-import { useFetchSharedList } from "../../../../hooks/useFetchSharedList";
-import { useAtom } from "jotai";
-import { mainPageAtom } from "../../../../pages/Main";
+import { useMainStates } from "../../../../pages/Main";
 
 const TAB_TEXT_MAP = {
   personal: "내가 쓴",
@@ -85,23 +83,13 @@ const HeaderBottomAreaContent = ({
 };
 
 export const MainHeaderNext = () => {
-  const [{ tab }, setPageState] = useAtom(mainPageAtom);
-  const { sharedDataLength } = useFetchSharedList();
+  const { tab, setTab, setActiveOverlays, sharedDataLength } = useMainStates();
 
-  const selectTab = (tabParam) =>
-    setPageState((prev) => ({ ...prev, tab: tabParam }));
+  const selectTab = (tabParam) => setTab(tabParam);
 
-  const activatePrayInput = () =>
-    setPageState((prev) => ({
-      ...prev,
-      activeOverlays: ["PRAY_INPUT"],
-    }));
+  const activatePrayInput = () => setActiveOverlays(["PRAYER_CREATE_MODAL"]);
 
-  const activateLocker = () =>
-    setPageState((prev) => ({
-      ...prev,
-      activeOverlays: ["LOCKER"],
-    }));
+  const activateLocker = () => setActiveOverlays(["LOCKER"]);
 
   return (
     <S.HeaderRootContainer>

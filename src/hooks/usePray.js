@@ -8,7 +8,7 @@ export const usePray = (tabType) => {
   const { showToast } = useToast({});
 
   const { data, refetch: refetchPrayList } = useQuery(
-    ["prayList"],
+    ["prayList", tabType],
     async () => {
       return await getFetcher(`/pray/?prayType=${tabType}`);
     },
