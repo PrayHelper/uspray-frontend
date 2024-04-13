@@ -18,6 +18,7 @@ import MainRightBottomOptions, {
 } from "../components/pages/Main/overlays/MainRightBottomOptions";
 import ScrollSynchronizedCategoryList, {
   MainContentNext,
+  NextNext,
 } from "../components/ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
 import useToast from "../hooks/useToast";
 import { ToastTheme } from "../components/Toast/Toast";
@@ -212,6 +213,7 @@ const MainOverlays = () => {
 
 const MainNext = () => {
   const { shareLink, isMobile } = useFlutterWebview();
+  const { prayList } = useMainStates();
 
   const { tab } = useMainStates();
 
@@ -220,7 +222,7 @@ const MainNext = () => {
       <MainOverlays />
       <MainWrapper bgColor={BG_COLOR_MAP[tab]}>
         <MainHeaderNext />
-        <MainContentNext />
+        <NextNext categoriesWithPrayers={prayList} />
         <MainDotOptionsNext />
       </MainWrapper>
     </>

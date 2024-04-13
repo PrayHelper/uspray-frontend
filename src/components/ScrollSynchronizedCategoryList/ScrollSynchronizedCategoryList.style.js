@@ -12,7 +12,6 @@ const S = {
     background-color: var(--color-white);
     border-radius: 32px 32px 0px 0px;
     box-sizing: border-box;
-    overflow-y: auto;
     z-index: ${(props) => (props.shareMode ? 200 : "auto")};
     &::-webkit-scrollbar {
       display: none;

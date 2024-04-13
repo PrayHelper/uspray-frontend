@@ -1,7 +1,7 @@
 import completeImage from "../../images/check_img.svg";
 import deleteImage from "../../images/delete_img.svg";
 import modifyImage from "../../images/modify_img.svg";
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { usePray } from "../../hooks/usePray";
 import useToast from "../../hooks/useToast";
 import useBottomNav from "../../hooks/useBottomNav";
@@ -21,6 +21,8 @@ import { useMemo } from "react";
 import { createRef } from "react";
 
 import smoothscroll from "smoothscroll-polyfill";
+import TopCategoryList from "./TopCategoryList/TopCategoryList";
+import BottomCategoryBoxList from "./BottomBoxList/BottomBoxList";
 
 if (typeof window !== "undefined") {
   smoothscroll.polyfill();
@@ -70,8 +72,164 @@ export const MainNextContext = createContext({
   selectedId: null,
 });
 
+export const ScrollingContext = createContext({
+  registerTopItemRef: (id, node) => {},
+  registerBottomItemRef: (id, node) => {},
+  onClickTopItem: (id) => {},
+  registerTopListRef: (node) => {},
+  registerBottomListRef: (node) => {},
+  selectedId: null,
+});
+
+const ScrollingProvider = ({ children }) => {
+  const topItemsRef = useRef({});
+  const bottomItemsRef = useRef({});
+  const topListRef = useRef(null);
+  const bottomListRef = useRef(null);
+  const [selectedId, setSelectedId] = useState(null);
+
+  const syncTopScroll = useCallback((id) => {
+    const item = topItemsRef.current[id];
+
+    const offset = -16;
+
+    if (item && topListRef.current) {
+      topListRef.current.scrollTo({
+        left: item.offsetLeft + offset,
+        behavior: "smooth",
+      });
+    }
+  }, []);
+
+  const syncBottomScroll = useCallback((id) => {
+    const item = bottomItemsRef.current[id];
+
+    const offset = -98;
+
+    if (item && bottomListRef) {
+      bottomListRef.current.scrollTo({
+        top: item.offsetTop + offset,
+        behavior: "smooth",
+      });
+    }
+  }, []);
+
+  const onClickTopItem = useCallback(
+    (id) => {
+      console.log({ id });
+      syncTopScroll(id);
+      syncBottomScroll(id);
+      setSelectedId(id);
+    },
+    [syncTopScroll, syncBottomScroll]
+  );
+
+  const handleBottomScroll = useCallback(
+    (event) => {
+      // 상단 리스트에서 발생한 scroll은 무시
+      if (event && event.target.contains(topListRef.current)) return;
+
+      if (!bottomItemsRef?.current) return;
+      if (!bottomListRef?.current) return;
+
+      const { id } = Object.keys(bottomItemsRef.current).reduce(
+        (acc, id) => {
+          const nowSection = bottomItemsRef.current[id];
+          if (!nowSection) {
+            return { id, diffrenceFromTop: 0 };
+          }
+
+          const checkRef = nowSection.getBoundingClientRect();
+          const listRect = bottomListRef.current.getBoundingClientRect();
+
+          const diffrenceFromTop = Math.abs(checkRef.top - listRect.top);
+
+          if (diffrenceFromTop >= acc.diffrenceFromTop) return acc;
+
+          return {
+            id,
+            diffrenceFromTop,
+          };
+        },
+        {
+          id: "",
+          diffrenceFromTop: 9999,
+        }
+      );
+
+      console.log("id to scroll: ", id);
+
+      if (selectedId !== id) {
+        syncTopScroll(id);
+        setSelectedId(id);
+      }
+    },
+    [selectedId, syncTopScroll]
+  );
+
+  const debounceScroll = debounce(handleBottomScroll, 50);
+
+  useEffect(() => {
+    document.addEventListener("scroll", debounceScroll, true);
+
+    handleBottomScroll();
+
+    return () => document.removeEventListener("scroll", debounceScroll, true);
+  }, []);
+
+  const registerTopItemRef = useCallback((id, node) => {
+    topItemsRef.current[id] = node;
+  }, []);
+
+  const registerBottomItemRef = useCallback((id, node) => {
+    bottomItemsRef.current[id] = node;
+  }, []);
+
+  const registerTopListRef = useCallback((node) => {
+    topListRef.current = node;
+  }, []);
+
+  const registerBottomListRef = useCallback((node) => {
+    bottomListRef.current = node;
+  }, []);
+
+  return (
+    <ScrollingContext.Provider
+      value={{
+        registerTopItemRef,
+        registerBottomItemRef,
+        registerTopListRef,
+        registerBottomListRef,
+        onClickTopItem,
+        selectedId,
+      }}>
+      {children}
+    </ScrollingContext.Provider>
+  );
+};
+
+export const NextNext = ({
+  categoriesWithPrayers,
+  openCategoryAddModal,
+  openCategoryModifyModal, // category 객체를 받아 편집 Modal open
+  openPrayerBottomModal, // prayer 객체를 받아 완료-수정-삭제 Modal open
+  togglePrayerHeart, // prayer id를 받아 heart on/off
+  isShareMode,
+  setShareModeOn,
+  togglePrayerShareItem, // prayer id를 받아 checkbox on/off
+}) => {
+  return (
+    <ScrollingProvider>
+      <S.MainContentWrapper>
+        <TopCategoryList categories={categoriesWithPrayers} />
+        <BottomCategoryBoxList categories={categoriesWithPrayers} />
+      </S.MainContentWrapper>
+    </ScrollingProvider>
+  );
+};
+
 export const MainContentNext = () => {
-  // 1. 상단 카테고리 클릭시 수평방향 스크롤 +  하단에서 수직방향 스크롤
+  // 1. 상단 카테고리 클릭시 수평방향 스크롤 + 하단에서 수직방향 스크롤
   // 2. 하단 스크롤시 상단 카테고리 변경 + 수평방향 스크롤
 
   const entireRef = useRef(null);
@@ -107,40 +265,52 @@ export const MainContentNext = () => {
     }
   };
 
-  const handleBottomScroll = useCallback(() => {
-    const selectedSection = Object.keys(bottomMap).reduce(
-      (acc, id) => {
-        const sectionRef = bottomMap[id].ref.current;
-        if (!sectionRef) {
+  const handleBottomScroll = useCallback(
+    (event) => {
+      if (
+        topListRef?.current &&
+        !!event &&
+        topListRef?.current.contains(event.target)
+      )
+        return;
+
+      console.log(1);
+
+      const selectedSection = Object.keys(bottomMap).reduce(
+        (acc, id) => {
+          const sectionRef = bottomMap[id].ref.current;
+          if (!sectionRef) {
+            return {
+              id,
+              differenceFromTop: 0,
+            };
+          }
+
+          const { top } = sectionRef.getBoundingClientRect();
+          const differenceFromTop = Math.abs(
+            top - entireRef.current.getBoundingClientRect().top - 40
+          );
+
+          if (differenceFromTop >= acc.differenceFromTop) return acc;
+
           return {
             id,
-            differenceFromTop: 0,
+            differenceFromTop,
           };
+        },
+        {
+          id: "",
+          differenceFromTop: 9999,
         }
+      );
 
-        const { top } = sectionRef.getBoundingClientRect();
-        const differenceFromTop = Math.abs(
-          top - entireRef.current.getBoundingClientRect().top - 40
-        );
-
-        if (differenceFromTop >= acc.differenceFromTop) return acc;
-
-        return {
-          id,
-          differenceFromTop,
-        };
-      },
-      {
-        id: "",
-        differenceFromTop: 9999,
+      if (selectedId !== selectedSection.id) {
+        syncTopScroll(selectedSection.id);
+        setSelectedId(String(selectedSection.id));
       }
-    );
-
-    if (selectedId !== selectedSection.id) {
-      syncTopScroll(selectedSection.id);
-      setSelectedId(String(selectedSection.id));
-    }
-  }, [bottomMap, selectedId, syncTopScroll]);
+    },
+    [bottomMap, selectedId, syncTopScroll]
+  );
 
   const DEBOUNCE_DELAY = 50; // TODO: 다른곳으로 빼기
 

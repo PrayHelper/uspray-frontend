@@ -74,8 +74,6 @@ export const MainDotOptionsNext = () => {
     setIsShareMode,
   } = useMainStates();
 
-  console.log(1);
-
   return (
     <>
       <S.OptionItem
