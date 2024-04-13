@@ -1,13 +1,47 @@
 import styled from "styled-components";
-import { useScrollSections } from "../../../lib/react-scroll-section";
 import { useMainStates } from "../../../pages/Main";
+import { forwardRef } from "react";
+import { useContext } from "react";
+import { MainNextContext } from "../ScrollSynchronizedCategoryList";
+import { useMemo } from "react";
+import { useRef } from "react";
+import { useEffect } from "react";
 
-const TopHorizontalCategories = () => {
-  const sections = useScrollSections();
+const CategoryBox = ({ category }) => {
+  const { id, color, name } = category;
 
-  const getSectionById = (id) =>
-    sections.find((section) => section.id === String(id));
+  const { registerTopRef, unregisterTopRef, selectedId, handleTopItemClick } =
+    useContext(MainNextContext);
 
+  const ref = useMemo(() => registerTopRef({ id }), [registerTopRef, id]);
+
+  const firstCalled = useRef(false);
+
+  useEffect(() => {
+    // StrictMode 대응을 위한 trick
+    setTimeout(() => {
+      firstCalled.current = true;
+    });
+
+    return () => {
+      if (firstCalled.current) unregisterTopRef(id);
+    };
+  }, [unregisterTopRef, id]);
+
+  return (
+    <S.CategoryBox
+      id={id}
+      ref={ref}
+      selected={selectedId === String(id)}
+      key={id}
+      color={color}
+      onClick={() => handleTopItemClick(id)}>
+      {name}
+    </S.CategoryBox>
+  );
+};
+
+const TopHorizontalCategories = forwardRef((_, ref) => {
   const { setActiveOverlays, categoryList } = useMainStates();
 
   const activateCategorySetting = () =>
@@ -15,17 +49,9 @@ const TopHorizontalCategories = () => {
 
   return (
     <S.TopWrapper>
-      <S.ListContainer>
+      <S.ListContainer ref={ref}>
         {categoryList.map((category) => (
-          <S.CategoryBox
-            selected={getSectionById(category.id)?.selected}
-            onClick={() => {
-              getSectionById(category.id)?.onClick();
-            }}
-            key={category.id}
-            color={category.color}>
-            {category.name}
-          </S.CategoryBox>
+          <CategoryBox category={category} />
         ))}
         <S.AddButton onClick={activateCategorySetting}>
           추가
@@ -34,7 +60,7 @@ const TopHorizontalCategories = () => {
       </S.ListContainer>
     </S.TopWrapper>
   );
-};
+});
 
 export default TopHorizontalCategories;
 

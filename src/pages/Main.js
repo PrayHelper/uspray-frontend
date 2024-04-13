@@ -89,7 +89,8 @@ export const useMainStates = () => {
   const [selectedCategoryToEdit, setSelectedCategoryToEdit] = useAtom(
     selectedCategoryToEditAtom
   );
-  const [selectedScrollPray, setSelectedScrollPray] = useAtom(selectedPrayAtom);
+  const [selectedScrollCategory, setSelectedScrollCategory] =
+    useAtom(selectedPrayAtom);
   const [activeOverlays, setActiveOverlays] = useAtom(activeOverlaysAtom);
   const {
     categoryList,
@@ -124,7 +125,7 @@ export const useMainStates = () => {
     showPrayerHandleBottomModal,
     showBottomDotOptions,
     selectedCategoryToEdit,
-    selectedScrollPray,
+    selectedScrollCategory,
     activeOverlays,
     prayerDateInput,
     prayerCategoryIndex,
@@ -137,7 +138,7 @@ export const useMainStates = () => {
     setShowPrayerHandleBottomModal,
     setShowBottomDotOptions,
     setSelectedCategoryToEdit,
-    setSelectedScrollPray,
+    setSelectedScrollCategory,
     setActiveOverlays,
     setPrayerDateInput,
     setPrayerCategoryIndex,

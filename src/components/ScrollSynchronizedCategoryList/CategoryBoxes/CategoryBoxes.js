@@ -1,12 +1,15 @@
-import { Section } from "../../../lib/react-scroll-section";
+import { forwardRef } from "react";
 import { useMainStates } from "../../../pages/Main";
 import GreenCheckbox from "../../GreenCheckbox/GreenCheckbox";
 import { S } from "./CategoryBoxes.style";
+import { useContext } from "react";
+import { MainNextContext } from "../ScrollSynchronizedCategoryList";
+import { useMemo } from "react";
+import { useEffect } from "react";
+import { useRef } from "react";
 
 const ICON_HEART_FILLED = "images/ic_filled_heart.svg";
 const ICON_HEART_EMPTY = "images/ic_empty_heart.svg";
-
-const HeartToggle = ({ on }) => (on ? null : null);
 
 const PrayerList = ({ prays }) => {
   const {
@@ -86,8 +89,27 @@ const CategoryBoxWithPrayer = ({ category }) => {
     setActiveOverlays(["CATEGORY_MODIFY_MODAL"]);
   };
 
+  const { categoryId: id } = category;
+  const { registerBottomRef, unregisterBottomRef } =
+    useContext(MainNextContext);
+
+  const ref = useMemo(() => registerBottomRef({ id }), [registerBottomRef, id]);
+
+  const firstCalled = useRef(false);
+
+  useEffect(() => {
+    // StrictMode 대응을 위한 trick
+    setTimeout(() => {
+      firstCalled.current = true;
+    });
+
+    return () => {
+      if (firstCalled.current) unregisterBottomRef(id);
+    };
+  }, [unregisterBottomRef, id]);
+
   return (
-    <S.CategoryContainer>
+    <S.CategoryContainer ref={ref}>
       <S.Title color={category.categoryColor} onClick={selectCategory}>
         {category.categoryName}
         <img src="/images/ic_dot.svg" alt="dot_icon" />
@@ -99,18 +121,16 @@ const CategoryBoxWithPrayer = ({ category }) => {
   );
 };
 
-const MainCategoryBoxes = () => {
+const MainCategoryBoxes = forwardRef((_, ref) => {
   const { prayList } = useMainStates();
 
   return (
-    <S.Content>
+    <S.Content ref={ref}>
       {prayList.map((category) => (
-        <Section key={category.categoryId} id={category.categoryId}>
-          <CategoryBoxWithPrayer category={category} />
-        </Section>
+        <CategoryBoxWithPrayer category={category} />
       ))}
     </S.Content>
   );
-};
+});
 
 export default MainCategoryBoxes;

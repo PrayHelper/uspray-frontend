@@ -1,7 +1,7 @@
 import completeImage from "../../images/check_img.svg";
 import deleteImage from "../../images/delete_img.svg";
 import modifyImage from "../../images/modify_img.svg";
-import { useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import { usePray } from "../../hooks/usePray";
 import useToast from "../../hooks/useToast";
 import useBottomNav from "../../hooks/useBottomNav";
@@ -15,6 +15,16 @@ import S from "./ScrollSynchronizedCategoryList.style";
 import { Section } from "../../lib/react-scroll-section";
 import TopHorizontalCategories from "./TopHorizontalCategories/TopHorizontalCategories";
 import CategoryBoxes from "./CategoryBoxes/CategoryBoxes";
+import { useCallback } from "react";
+import { debounce } from "../../lib/react-scroll-section/utils";
+import { useMemo } from "react";
+import { createRef } from "react";
+
+import smoothscroll from "smoothscroll-polyfill";
+
+if (typeof window !== "undefined") {
+  smoothscroll.polyfill();
+}
 
 const VerticalCategories = ({
   prayList,
@@ -47,12 +57,165 @@ const VerticalCategories = ({
   ));
 };
 
+export const MainNextContext = createContext({
+  topMap: {},
+  registerTopRef: () => {},
+  unregisterTopRef: () => {},
+
+  bottomMap: {},
+  registerBottomRef: () => {},
+  unregisterBottomRef: () => {},
+
+  handleTopItemClick: () => {},
+  selectedId: null,
+});
+
 export const MainContentNext = () => {
+  // 1. 상단 카테고리 클릭시 수평방향 스크롤 +  하단에서 수직방향 스크롤
+  // 2. 하단 스크롤시 상단 카테고리 변경 + 수평방향 스크롤
+
+  const entireRef = useRef(null);
+  const topListRef = useRef(null);
+  const bottomListRef = useRef(null);
+
+  const [topMap, setTopMap] = useState({});
+  const [bottomMap, setBottomMap] = useState({});
+  const [selectedId, setSelectedId] = useState(null);
+
+  const syncTopScroll = useCallback(
+    (id) => {
+      const topSection = topMap[id];
+
+      if (topSection?.ref.current && topListRef?.current) {
+        topListRef.current.scrollTo({
+          left: topSection.ref.current.offsetLeft - 16,
+          behavior: "smooth",
+        });
+      }
+    },
+    [topMap]
+  );
+
+  const syncBottomScroll = (id) => {
+    const bottomSection = bottomMap[id];
+
+    if (bottomSection?.ref.current && entireRef?.current) {
+      entireRef.current.scrollTo({
+        top: bottomSection.ref.current.offsetTop - 98,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handleBottomScroll = useCallback(() => {
+    const selectedSection = Object.keys(bottomMap).reduce(
+      (acc, id) => {
+        const sectionRef = bottomMap[id].ref.current;
+        if (!sectionRef) {
+          return {
+            id,
+            differenceFromTop: 0,
+          };
+        }
+
+        const { top } = sectionRef.getBoundingClientRect();
+        const differenceFromTop = Math.abs(
+          top - entireRef.current.getBoundingClientRect().top - 40
+        );
+
+        if (differenceFromTop >= acc.differenceFromTop) return acc;
+
+        return {
+          id,
+          differenceFromTop,
+        };
+      },
+      {
+        id: "",
+        differenceFromTop: 9999,
+      }
+    );
+
+    if (selectedId !== selectedSection.id) {
+      syncTopScroll(selectedSection.id);
+      setSelectedId(String(selectedSection.id));
+    }
+  }, [bottomMap, selectedId, syncTopScroll]);
+
+  const DEBOUNCE_DELAY = 50; // TODO: 다른곳으로 빼기
+
+  const debounceScroll = debounce(handleBottomScroll, DEBOUNCE_DELAY);
+
+  useEffect(() => {
+    document.addEventListener("scroll", debounceScroll, true);
+
+    handleBottomScroll();
+
+    return () => document.removeEventListener("scroll", debounceScroll, true);
+  }, [debounceScroll, handleBottomScroll]);
+
+  const registerTopRef = useMemo(
+    () =>
+      ({ id }) => {
+        const ref = createRef();
+        setTopMap((prev) => ({ ...prev, [id]: { ref } }));
+
+        return ref;
+      },
+    []
+  );
+
+  const unregisterTopRef = useMemo(
+    () => (id) => {
+      setTopMap(({ [id]: toRemove, ...rest }) => rest);
+    },
+    []
+  );
+
+  const registerBottomRef = useMemo(
+    () =>
+      ({ id }) => {
+        const ref = createRef();
+        setBottomMap((prev) => ({ ...prev, [id]: { ref } }));
+
+        return ref;
+      },
+    []
+  );
+
+  const unregisterBottomRef = useMemo(
+    () => (id) => {
+      setBottomMap(({ [id]: toRemove, ...rest }) => rest);
+    },
+    []
+  );
+
+  const handleTopItemClick = (id) => {
+    syncTopScroll(String(id));
+    syncBottomScroll(String(id));
+
+    setTimeout(() => {
+      setSelectedId(String(id));
+    }, 1000);
+  };
+
   return (
-    <S.MainContentWrapper>
-      <TopHorizontalCategories />
-      <CategoryBoxes />
-    </S.MainContentWrapper>
+    <MainNextContext.Provider
+      value={{
+        bottomMap,
+        registerBottomRef,
+        unregisterBottomRef,
+        topMap,
+        registerTopRef,
+        unregisterTopRef,
+        selectedId,
+        handleTopItemClick,
+      }}>
+      <S.MainContentWrapper ref={entireRef}>
+        <TopHorizontalCategories ref={topListRef} />
+        <CategoryBoxes ref={bottomListRef} />
+      </S.MainContentWrapper>
+    </MainNextContext.Provider>
   );
 };
 
