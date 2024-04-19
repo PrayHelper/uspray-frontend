@@ -2,37 +2,48 @@ import { useContext } from "react";
 import { ScrollingContext } from "../ScrollSynchronizedCategoryList";
 import styled from "styled-components";
 import InnerPrayerList from "./InnerPrayerList";
+import usePrayerBottomModal from "../../../overlays/PrayerBottomModal/usePrayerBottomModal";
+import usePrayerModifyModal from "../../../overlays/PrayerInputModal/usePrayerModifyModal";
+import usePrayerCreateModal from "../../../overlays/PrayerInputModal/usePrayerCreateModal";
+import PrayerInputModal from "../../../overlays/PrayerInputModal/PrayerInputModal";
+import PrayerBottomModal from "../../../overlays/PrayerBottomModal/PrayerBottomModal";
 
 const BottomCategoryBoxItem = ({ id, name, color, prayers }) => {
   const { registerBottomItemRef } = useContext(ScrollingContext);
 
   return (
-    <S.CategoryContainer
-      ref={(node) => {
-        registerBottomItemRef(id, node);
-      }}>
+    <S.CategoryContainer ref={(node) => registerBottomItemRef(id, node)}>
       <S.Title color={color} onClick={() => {}}>
         {name}
+        <img src="/images/ic_dot.svg" alt="dot_icon" />
       </S.Title>
       <InnerPrayerList prayers={prayers} />
     </S.CategoryContainer>
   );
 };
 
-const BottomCategoryBoxList = ({ categories }) => {
+const BottomCategoryBoxList = ({ categoriesWithPrayers }) => {
   const { registerBottomListRef } = useContext(ScrollingContext);
+  const { controlledProps: bottomControlledProps } = usePrayerBottomModal();
+  const { controlledProps: modifyControlledProps } = usePrayerModifyModal();
+  const { controlledProps: createControlledProps } = usePrayerCreateModal();
 
   return (
     <S.Content ref={(node) => registerBottomListRef(node)}>
-      {categories.map(({ categoryId, categoryName, categoryColor, prays }) => (
-        <BottomCategoryBoxItem
-          key={categoryId}
-          id={String(categoryId)}
-          name={categoryName}
-          color={categoryColor}
-          prayers={prays}
-        />
-      ))}
+      {categoriesWithPrayers.map(
+        ({ categoryId, categoryName, categoryColor, prays }) => (
+          <BottomCategoryBoxItem
+            key={categoryId}
+            id={String(categoryId)}
+            name={categoryName}
+            color={categoryColor}
+            prayers={prays}
+          />
+        )
+      )}
+      <PrayerBottomModal {...bottomControlledProps} />
+      <PrayerInputModal {...modifyControlledProps} />
+      <PrayerInputModal {...createControlledProps} />
     </S.Content>
   );
 };
@@ -44,7 +55,6 @@ const S = {
     display: flex;
     flex-direction: column;
     width: 100%;
-    min-height: 100px;
     border-radius: 16px;
     box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.25);
   `,

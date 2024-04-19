@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import Calender from "../Calender/Calender";
+import { useCallback } from "react";
 
 /*
   props 넘겨받을 목록 (History.js 파일 참고하기)
@@ -8,6 +9,128 @@ import Calender from "../Calender/Calender";
   2. showSubModal 변수 (현재 컴포넌트 창 켜져있는지)
   3. date 변수 (기존 선택되어야 하는 날짜)
 */
+
+export const SelectDateNew = ({ selectDateValue, date, isShow }) => {
+  const dateOptions = [3, 7, 30, 100];
+  const [selectedBtn, setSelectedBtn] = useState("");
+  const [designedDate, setDesignedDate] = useState(null); // yyyy-mm-dd (요일) 형태
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const changeDate = useCallback(
+    (date) => {
+      const options = { weekday: "short" };
+      const formattedDayOfWeek = new Intl.DateTimeFormat(
+        "ko-KR",
+        options
+      ).format(date);
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      const formattedDate = `${yyyy}-${mm}-${dd}`; // 포맷된 날짜
+      setDesignedDate(`${yyyy}-${mm}-${dd} ${formattedDayOfWeek}`);
+      selectDateValue(formattedDate);
+    },
+    [selectDateValue, setDesignedDate]
+  );
+
+  const onChangeDate = useCallback(
+    (date) => {
+      if (typeof date == "number" || date === "") {
+        const today = new Date();
+        const targetDate = new Date(
+          today.getTime() + date * 24 * 60 * 60 * 1000
+        );
+        changeDate(targetDate);
+        setSelectedBtn(date); // css 변경용
+      } else {
+        setSelectedDate(date); // 선택된 날짜 업데이트
+        changeDate(date);
+        setShowDatePicker(false); // DatePicker 닫기
+        setSelectedBtn();
+      }
+    },
+    [changeDate, setSelectedDate, setSelectedBtn]
+  );
+
+  useEffect(() => {
+    if (date) {
+      // 넘겨받은 date가 있으면
+      const dateObject = new Date(date);
+      selectDateValue(date);
+      onChangeDate(dateObject);
+      setDesignedDate(dateWithDayOfWeek(date));
+      setSelectedBtn();
+      setSelectedDate(dateObject);
+    } else {
+      // 넘겨받은 date가 없으면
+      onChangeDate(7);
+      setSelectedDate();
+    }
+  }, [
+    date,
+    selectDateValue,
+    setDesignedDate,
+    setSelectedBtn,
+    setSelectedDate,
+    onChangeDate,
+  ]);
+
+  const onClickCalendar = () => {
+    if (selectedBtn === "calendar") {
+      setSelectedBtn();
+    } else {
+      setSelectedBtn("calendar");
+      setShowDatePicker(!showDatePicker);
+    }
+  };
+
+  const dateWithDayOfWeek = (inputDate) => {
+    const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
+    const [year, month, day] = inputDate.split("-").map(Number);
+    const formattedDate = new Date(year, month - 1, day);
+    const dayOfWeekIndex = formattedDate.getDay();
+    const dayOfWeek = daysOfWeek[dayOfWeekIndex];
+
+    return `${inputDate} ${dayOfWeek}`;
+  };
+
+  return (
+    <SelectDateWrapper>
+      {dateOptions.map((option) => (
+        <SubModalBtn
+          key={option}
+          isSelected={selectedBtn === option}
+          onClick={() => onChangeDate(option)}>
+          {`${option}일`}
+        </SubModalBtn>
+      ))}
+      {showDatePicker && (
+        <DatePickerContainerNew>
+          <Calender
+            selectedDate={selectedDate}
+            onChangeDate={onChangeDate}
+            setShowDatePicker={setShowDatePicker}
+          />
+        </DatePickerContainerNew>
+      )}
+
+      <CalenderIcon
+        src={
+          selectedBtn === "calendar"
+            ? "../images/icon_calender_filled.svg"
+            : "../images/icon_calender.svg"
+        }
+        alt="icon_calender"
+        onClick={onClickCalendar}
+      />
+
+      {designedDate && (
+        <SubModalDate>~{designedDate.replace(/-/g, ".")}</SubModalDate>
+      )}
+    </SelectDateWrapper>
+  );
+};
 
 const SelectDate = (props) => {
   const dateOptions = [3, 7, 30, 100];
@@ -85,8 +208,7 @@ const SelectDate = (props) => {
         <SubModalBtn
           key={option}
           isSelected={selectedBtn === option}
-          onClick={() => onChangeDate(option)}
-        >
+          onClick={() => onChangeDate(option)}>
           {`${option}일`}
         </SubModalBtn>
       ))}
@@ -123,6 +245,8 @@ const SelectDateWrapper = styled.div`
   flex-direction: row;
   gap: 8px;
   align-items: center;
+
+  position: relative;
 `;
 
 const SubModalBtn = styled.div`
@@ -164,6 +288,12 @@ const DatePickerContainer = styled.div`
   right: 0;
   top: calc(100% + 16px);
   z-index: 400;
+`;
+
+const DatePickerContainerNew = styled.div`
+  position: absolute;
+  top: 64px;
+  right: 0;
 `;
 
 const CalenderIcon = styled.img`

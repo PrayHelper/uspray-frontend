@@ -11,14 +11,12 @@ import MainHeader, {
   MainHeaderNext,
 } from "../components/pages/Main/Header/MainHeader";
 import MainCategoryAlertModal from "../components/pages/Main/CategoryAlertModal/MainCategoryAlertModal";
-import MainCategoryModifyModal from "../components/pages/Main/overlays/MainCategoryModifyModal";
 import MainSelectedOverlay from "../components/pages/Main/SelectedOverlay/MainSelectedOverlay";
 import MainRightBottomOptions, {
   MainDotOptionsNext,
 } from "../components/pages/Main/overlays/MainRightBottomOptions";
 import ScrollSynchronizedCategoryList, {
-  MainContentNext,
-  NextNext,
+  ScrollSynchronizedPrayerList,
 } from "../components/ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
 import useToast from "../hooks/useToast";
 import { ToastTheme } from "../components/Toast/Toast";
@@ -26,11 +24,7 @@ import { atom, useAtom } from "jotai";
 import Overlay from "../components/Overlay/Overlay";
 import Locker from "../components/pages/Main/Locker/Locker";
 import ChangeCategoryOrder from "./ChangeCategoryOrder";
-import MainPrayerBottomModal from "../components/pages/Main/overlays/MainPrayerBottomModal";
 import { useScrollSections } from "../lib/react-scroll-section";
-import MainPrayerCreateModal from "../components/pages/Main/overlays/MainPrayerCreateModal";
-import MainPrayerModifyModal from "../components/pages/Main/overlays/MainPrayerModifyModal";
-import MainCategoryCreateModal from "../components/pages/Main/overlays/MainCategoryCreateModal";
 
 // 관리 필요 state
 
@@ -48,7 +42,7 @@ const BG_COLOR_MAP = {
 };
 
 const showAlertModalAtom = atom(false);
-const tabStateAtom = atom("personal");
+export const tabStateAtom = atom("personal");
 const selectedPrayerToEdit = atom(null);
 const prayerInputAtom = atom("");
 const prayerDateInputAtom = atom(null);
@@ -67,6 +61,8 @@ const activeOverlaysAtom = atom([]);
 const isShareModeAtom = atom(false);
 const checkIdListAtom = atom([]);
 const dotOptionsOpenAtom = atom(false);
+
+export const useTab = () => useAtom(tabStateAtom);
 
 export const useMainStates = () => {
   const [tab, setTab] = useAtom(tabStateAtom);
@@ -92,7 +88,6 @@ export const useMainStates = () => {
   );
   const [selectedScrollCategory, setSelectedScrollCategory] =
     useAtom(selectedPrayAtom);
-  const [activeOverlays, setActiveOverlays] = useAtom(activeOverlaysAtom);
   const {
     categoryList,
     firstCategoryIndex,
@@ -127,7 +122,6 @@ export const useMainStates = () => {
     showBottomDotOptions,
     selectedCategoryToEdit,
     selectedScrollCategory,
-    activeOverlays,
     prayerDateInput,
     prayerCategoryIndex,
     selectedPray,
@@ -140,7 +134,6 @@ export const useMainStates = () => {
     setShowBottomDotOptions,
     setSelectedCategoryToEdit,
     setSelectedScrollCategory,
-    setActiveOverlays,
     setPrayerDateInput,
     setPrayerCategoryIndex,
     setSelectedPrayToEdit,
@@ -196,33 +189,24 @@ const MainOverlays = () => {
       <Overlay isOverlayOn={activeOverlays.includes("CHANGE_CATEGORY_ORDER")}>
         <ChangeCategoryOrder setIsOverlayOn={clearOverlays} />
       </Overlay>
-      <MainPrayerCreateModal />
-      <MainPrayerModifyModal />
-      {activeOverlays.includes("CATEGORY_CREATE_MODAL") && (
-        <MainCategoryCreateModal />
-      )}
-      {activeOverlays.includes("CATEGORY_MODIFY_MODAL") && (
-        <MainCategoryModifyModal />
-      )}
-      {activeOverlays.includes("PRAYER_BOTTOM_MODAL") && (
-        <MainPrayerBottomModal />
-      )}
     </>
   );
 };
 
 const MainNext = () => {
   const { shareLink, isMobile } = useFlutterWebview();
-  const { prayList } = useMainStates();
+  const { prayList, setActiveOverlays, isShareMode } = useMainStates();
 
   const { tab } = useMainStates();
 
   return (
     <>
-      <MainOverlays />
       <MainWrapper bgColor={BG_COLOR_MAP[tab]}>
         <MainHeaderNext />
-        <NextNext categoriesWithPrayers={prayList} />
+        <ScrollSynchronizedPrayerList
+          categoriesWithPrayers={prayList}
+          isShareMode={isShareMode}
+        />
         <MainDotOptionsNext />
       </MainWrapper>
     </>

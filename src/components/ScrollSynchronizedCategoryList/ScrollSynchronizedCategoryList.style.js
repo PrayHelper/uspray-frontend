@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const S = {
   // 전체 흰색 박스(카테고리 목록 ~ 기도제목 목록)
-  MainContentWrapper: styled.div`
+  Wrapper: styled.div`
     display: flex;
     flex-direction: column;
     height: calc(100vh - 139px);

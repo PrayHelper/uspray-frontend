@@ -2,36 +2,42 @@ import { useContext } from "react";
 import { ScrollingContext } from "../ScrollSynchronizedCategoryList";
 import styled from "styled-components";
 
-const TopCategoryItem = ({ id, name, color }) => {
+const Item = ({ id, name, color }) => {
   const { registerTopItemRef, onClickTopItem, selectedId } =
     useContext(ScrollingContext);
 
   return (
-    <S.CategoryBox
+    <S.ItemContainer
       id={id}
       ref={(node) => registerTopItemRef(id, node)}
       onClick={() => onClickTopItem(id)}
       selected={id === selectedId}
       color={color}>
       {name}
-    </S.CategoryBox>
+    </S.ItemContainer>
   );
 };
 
-const TopCategoryList = ({ categories }) => {
+const TopCategoryList = ({ categoriesWithPrayers, openCategoryAddModal }) => {
   const { registerTopListRef } = useContext(ScrollingContext);
 
   return (
     <S.TopWrapper>
       <S.ListContainer ref={(node) => registerTopListRef(node)}>
-        {categories.map(({ categoryId, categoryName, categoryColor }) => (
-          <TopCategoryItem
-            key={categoryId}
-            id={String(categoryId)}
-            name={categoryName}
-            color={categoryColor}
-          />
-        ))}
+        {categoriesWithPrayers.map(
+          ({ categoryId, categoryName, categoryColor }) => (
+            <Item
+              key={categoryId}
+              id={String(categoryId)}
+              name={categoryName}
+              color={categoryColor}
+            />
+          )
+        )}
+        <S.AddButton onClick={openCategoryAddModal}>
+          추가
+          <img src="images/ic_add.svg" alt="add_icon" />
+        </S.AddButton>
       </S.ListContainer>
     </S.TopWrapper>
   );
@@ -70,7 +76,7 @@ const S = {
     box-shadow: ${(props) =>
       props.shareMode ? "0px 0px 4px rgba(0, 0, 0, 0.1)" : "none"};
   `,
-  CategoryBox: styled.div`
+  ItemContainer: styled.div`
     background-color: ${(props) => (props.selected ? props.color : "#EEEEEE")};
     color: ${(props) =>
       props.selected

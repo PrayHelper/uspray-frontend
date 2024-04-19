@@ -3,7 +3,6 @@ import { useMainStates } from "../../../pages/Main";
 import GreenCheckbox from "../../GreenCheckbox/GreenCheckbox";
 import { S } from "./CategoryBoxes.style";
 import { useContext } from "react";
-import { MainNextContext } from "../ScrollSynchronizedCategoryList";
 import { useMemo } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
@@ -80,57 +79,3 @@ const PrayerList = ({ prays }) => {
     </>
   );
 };
-
-const CategoryBoxWithPrayer = ({ category }) => {
-  const { setSelectedCategoryToEdit, setActiveOverlays } = useMainStates();
-
-  const selectCategory = () => {
-    setSelectedCategoryToEdit(category);
-    setActiveOverlays(["CATEGORY_MODIFY_MODAL"]);
-  };
-
-  const { categoryId: id } = category;
-  const { registerBottomRef, unregisterBottomRef } =
-    useContext(MainNextContext);
-
-  const ref = useMemo(() => registerBottomRef({ id }), [registerBottomRef, id]);
-
-  const firstCalled = useRef(false);
-
-  useEffect(() => {
-    // StrictMode 대응을 위한 trick
-    setTimeout(() => {
-      firstCalled.current = true;
-    });
-
-    return () => {
-      if (firstCalled.current) unregisterBottomRef(id);
-    };
-  }, [unregisterBottomRef, id]);
-
-  return (
-    <S.CategoryContainer ref={ref}>
-      <S.Title color={category.categoryColor} onClick={selectCategory}>
-        {category.categoryName}
-        <img src="/images/ic_dot.svg" alt="dot_icon" />
-      </S.Title>
-      <S.ItemList>
-        <PrayerList prays={category.prays} />
-      </S.ItemList>
-    </S.CategoryContainer>
-  );
-};
-
-const MainCategoryBoxes = forwardRef((_, ref) => {
-  const { prayList } = useMainStates();
-
-  return (
-    <S.Content ref={ref}>
-      {prayList.map((category) => (
-        <CategoryBoxWithPrayer category={category} />
-      ))}
-    </S.Content>
-  );
-});
-
-export default MainCategoryBoxes;

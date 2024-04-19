@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import GreenCheckbox from "../../GreenCheckbox/GreenCheckbox";
+import usePrayerBottomModal from "../../../overlays/PrayerBottomModal/usePrayerBottomModal";
 
 const Username = ({ selected, name }) => (
   <S.ItemName selected={selected}>{name}</S.ItemName>
@@ -24,15 +25,19 @@ const ItemRight = ({ isShared, isPrayedToday, checked }) => {
 const Item = ({ prayer, isShared }) => {
   const { name, isPrayedToday, content } = prayer;
 
-  <S.Item>
-    {isShared && <Username selected={isPrayedToday} name={name} />}
-    <S.ItemContent>{content}</S.ItemContent>
-    <ItemRight
-      checked={false}
-      isPrayedToday={isPrayedToday}
-      isShared={isShared}
-    />
-  </S.Item>;
+  const { selectPrayerInfo } = usePrayerBottomModal();
+
+  return (
+    <S.Item onClick={() => selectPrayerInfo(prayer)}>
+      {isShared && <Username selected={isPrayedToday} name={name} />}
+      <S.ItemContent>{content}</S.ItemContent>
+      <ItemRight
+        checked={false}
+        isPrayedToday={isPrayedToday}
+        isShared={isShared}
+      />
+    </S.Item>
+  );
 };
 
 const InnerPrayerList = ({ prayers, isShared }) => {

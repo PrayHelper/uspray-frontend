@@ -1,76 +1,53 @@
 import completeImage from "../../images/check_img.svg";
 import deleteImage from "../../images/delete_img.svg";
 import modifyImage from "../../images/modify_img.svg";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import { usePray } from "../../hooks/usePray";
 import useToast from "../../hooks/useToast";
 import useBottomNav from "../../hooks/useBottomNav";
 import CategoryTag from "../CategoryTag/CategoryTag";
-import MainCategory from "../pages/Main/Category/MainCategory";
+// import MainCategory from "../pages/Main/Category/MainCategory";
 import PrayDateCategoryInput from "../PrayDateCategoryInput/PrayDateCategoryInput";
 import BlackScreen from "../BlackScreen";
 import { Modal } from "@mui/material";
 import { ToastTheme } from "../Toast/Toast";
 import S from "./ScrollSynchronizedCategoryList.style";
-import { Section } from "../../lib/react-scroll-section";
-import TopHorizontalCategories from "./TopHorizontalCategories/TopHorizontalCategories";
-import CategoryBoxes from "./CategoryBoxes/CategoryBoxes";
+// import { Section } from "../../lib/react-scroll-section";
 import { useCallback } from "react";
 import { debounce } from "../../lib/react-scroll-section/utils";
-import { useMemo } from "react";
-import { createRef } from "react";
-
-import smoothscroll from "smoothscroll-polyfill";
 import TopCategoryList from "./TopCategoryList/TopCategoryList";
 import BottomCategoryBoxList from "./BottomBoxList/BottomBoxList";
 
-if (typeof window !== "undefined") {
-  smoothscroll.polyfill();
-}
-
-const VerticalCategories = ({
-  prayList,
-  setSelectedPrayInfo,
-  setClickedCategoryData,
-  tabType,
-  categoryRef,
-  shareMode,
-  setCheckedList,
-  checkedList,
-}) => {
-  return prayList.map((category, index) => (
-    <Section key={category.categoryId} id={category.categoryId}>
-      <MainCategory
-        key={index}
-        categoryId={category.categoryId}
-        title={category.categoryName}
-        prays={category.prays}
-        color={category.categoryColor}
-        setSelectedPrayInfo={setSelectedPrayInfo}
-        setClickedCategoryData={setClickedCategoryData}
-        tabType={tabType}
-        categoryRef={categoryRef}
-        refIndex={index}
-        shareMode={shareMode}
-        setCheckedList={setCheckedList}
-        checkedList={checkedList}
-      />
-    </Section>
-  ));
-};
-
-export const MainNextContext = createContext({
-  topMap: {},
-  registerTopRef: () => {},
-  unregisterTopRef: () => {},
-
-  bottomMap: {},
-  registerBottomRef: () => {},
-  unregisterBottomRef: () => {},
-
-  handleTopItemClick: () => {},
-  selectedId: null,
-});
+// const VerticalCategories = ({
+//   prayList,
+//   setSelectedPrayInfo,
+//   setClickedCategoryData,
+//   tabType,
+//   categoryRef,
+//   shareMode,
+//   setCheckedList,
+//   checkedList,
+// }) => {
+//   return prayList.map((category, index) => (
+//     <Section key={category.categoryId} id={category.categoryId}>
+//       <MainCategory
+//         key={index}
+//         categoryId={category.categoryId}
+//         title={category.categoryName}
+//         prays={category.prays}
+//         color={category.categoryColor}
+//         setSelectedPrayInfo={setSelectedPrayInfo}
+//         setClickedCategoryData={setClickedCategoryData}
+//         tabType={tabType}
+//         categoryRef={categoryRef}
+//         refIndex={index}
+//         shareMode={shareMode}
+//         setCheckedList={setCheckedList}
+//         checkedList={checkedList}
+//       />
+//     </Section>
+//   ));
+// };
 
 export const ScrollingContext = createContext({
   registerTopItemRef: (id, node) => {},
@@ -116,18 +93,18 @@ const ScrollingProvider = ({ children }) => {
 
   const onClickTopItem = useCallback(
     (id) => {
-      console.log({ id });
-      syncTopScroll(id);
       syncBottomScroll(id);
-      setSelectedId(id);
     },
-    [syncTopScroll, syncBottomScroll]
+    [syncBottomScroll]
   );
 
   const handleBottomScroll = useCallback(
     (event) => {
       // 상단 리스트에서 발생한 scroll은 무시
-      if (event && event.target.contains(topListRef.current)) return;
+      if (event && event.target.contains(topListRef.current)) {
+        console.log(1);
+        return;
+      }
 
       if (!bottomItemsRef?.current) return;
       if (!bottomListRef?.current) return;
@@ -175,7 +152,7 @@ const ScrollingProvider = ({ children }) => {
     handleBottomScroll();
 
     return () => document.removeEventListener("scroll", debounceScroll, true);
-  }, []);
+  }, [handleBottomScroll, debounceScroll]);
 
   const registerTopItemRef = useCallback((id, node) => {
     topItemsRef.current[id] = node;
@@ -208,11 +185,8 @@ const ScrollingProvider = ({ children }) => {
   );
 };
 
-export const NextNext = ({
+export const ScrollSynchronizedPrayerList = ({
   categoriesWithPrayers,
-  openCategoryAddModal,
-  openCategoryModifyModal, // category 객체를 받아 편집 Modal open
-  openPrayerBottomModal, // prayer 객체를 받아 완료-수정-삭제 Modal open
   togglePrayerHeart, // prayer id를 받아 heart on/off
   isShareMode,
   setShareModeOn,
@@ -220,172 +194,11 @@ export const NextNext = ({
 }) => {
   return (
     <ScrollingProvider>
-      <S.MainContentWrapper>
-        <TopCategoryList categories={categoriesWithPrayers} />
-        <BottomCategoryBoxList categories={categoriesWithPrayers} />
-      </S.MainContentWrapper>
+      <S.Wrapper>
+        <TopCategoryList categoriesWithPrayers={categoriesWithPrayers} />
+        <BottomCategoryBoxList categoriesWithPrayers={categoriesWithPrayers} />
+      </S.Wrapper>
     </ScrollingProvider>
-  );
-};
-
-export const MainContentNext = () => {
-  // 1. 상단 카테고리 클릭시 수평방향 스크롤 + 하단에서 수직방향 스크롤
-  // 2. 하단 스크롤시 상단 카테고리 변경 + 수평방향 스크롤
-
-  const entireRef = useRef(null);
-  const topListRef = useRef(null);
-  const bottomListRef = useRef(null);
-
-  const [topMap, setTopMap] = useState({});
-  const [bottomMap, setBottomMap] = useState({});
-  const [selectedId, setSelectedId] = useState(null);
-
-  const syncTopScroll = useCallback(
-    (id) => {
-      const topSection = topMap[id];
-
-      if (topSection?.ref.current && topListRef?.current) {
-        topListRef.current.scrollTo({
-          left: topSection.ref.current.offsetLeft - 16,
-          behavior: "smooth",
-        });
-      }
-    },
-    [topMap]
-  );
-
-  const syncBottomScroll = (id) => {
-    const bottomSection = bottomMap[id];
-
-    if (bottomSection?.ref.current && entireRef?.current) {
-      entireRef.current.scrollTo({
-        top: bottomSection.ref.current.offsetTop - 98,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  const handleBottomScroll = useCallback(
-    (event) => {
-      if (
-        topListRef?.current &&
-        !!event &&
-        topListRef?.current.contains(event.target)
-      )
-        return;
-
-      console.log(1);
-
-      const selectedSection = Object.keys(bottomMap).reduce(
-        (acc, id) => {
-          const sectionRef = bottomMap[id].ref.current;
-          if (!sectionRef) {
-            return {
-              id,
-              differenceFromTop: 0,
-            };
-          }
-
-          const { top } = sectionRef.getBoundingClientRect();
-          const differenceFromTop = Math.abs(
-            top - entireRef.current.getBoundingClientRect().top - 40
-          );
-
-          if (differenceFromTop >= acc.differenceFromTop) return acc;
-
-          return {
-            id,
-            differenceFromTop,
-          };
-        },
-        {
-          id: "",
-          differenceFromTop: 9999,
-        }
-      );
-
-      if (selectedId !== selectedSection.id) {
-        syncTopScroll(selectedSection.id);
-        setSelectedId(String(selectedSection.id));
-      }
-    },
-    [bottomMap, selectedId, syncTopScroll]
-  );
-
-  const DEBOUNCE_DELAY = 50; // TODO: 다른곳으로 빼기
-
-  const debounceScroll = debounce(handleBottomScroll, DEBOUNCE_DELAY);
-
-  useEffect(() => {
-    document.addEventListener("scroll", debounceScroll, true);
-
-    handleBottomScroll();
-
-    return () => document.removeEventListener("scroll", debounceScroll, true);
-  }, [debounceScroll, handleBottomScroll]);
-
-  const registerTopRef = useMemo(
-    () =>
-      ({ id }) => {
-        const ref = createRef();
-        setTopMap((prev) => ({ ...prev, [id]: { ref } }));
-
-        return ref;
-      },
-    []
-  );
-
-  const unregisterTopRef = useMemo(
-    () => (id) => {
-      setTopMap(({ [id]: toRemove, ...rest }) => rest);
-    },
-    []
-  );
-
-  const registerBottomRef = useMemo(
-    () =>
-      ({ id }) => {
-        const ref = createRef();
-        setBottomMap((prev) => ({ ...prev, [id]: { ref } }));
-
-        return ref;
-      },
-    []
-  );
-
-  const unregisterBottomRef = useMemo(
-    () => (id) => {
-      setBottomMap(({ [id]: toRemove, ...rest }) => rest);
-    },
-    []
-  );
-
-  const handleTopItemClick = (id) => {
-    syncTopScroll(String(id));
-    syncBottomScroll(String(id));
-
-    setTimeout(() => {
-      setSelectedId(String(id));
-    }, 1000);
-  };
-
-  return (
-    <MainNextContext.Provider
-      value={{
-        bottomMap,
-        registerBottomRef,
-        unregisterBottomRef,
-        topMap,
-        registerTopRef,
-        unregisterTopRef,
-        selectedId,
-        handleTopItemClick,
-      }}>
-      <S.MainContentWrapper ref={entireRef}>
-        <TopHorizontalCategories ref={topListRef} />
-        <CategoryBoxes ref={bottomListRef} />
-      </S.MainContentWrapper>
-    </MainNextContext.Provider>
   );
 };
 
@@ -499,7 +312,7 @@ const ScrollSynchronizedCategoryList = ({
 
   return (
     <>
-      <S.MainContentWrapper shareMode={shareMode}>
+      <S.Wrapper shareMode={shareMode}>
         <BlackScreen
           isModalOn={showModal}
           onClick={() => setShowModal(false)}
@@ -560,7 +373,7 @@ const ScrollSynchronizedCategoryList = ({
               />
             </S.TopWrapper>
             <S.Content ref={contentRef}>
-              <VerticalCategories
+              {/* <VerticalCategories
                 {...{
                   categoryRef,
                   checkedList,
@@ -571,11 +384,11 @@ const ScrollSynchronizedCategoryList = ({
                   tabType,
                   prayList,
                 }}
-              />
+              /> */}
             </S.Content>
           </>
         )}
-      </S.MainContentWrapper>
+      </S.Wrapper>
       <S.BottomSetWrapper
         selectedPrayInfo={selectedPrayInfo}
         showModal={showModal}>

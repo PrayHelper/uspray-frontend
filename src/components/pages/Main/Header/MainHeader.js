@@ -1,7 +1,9 @@
 import { useState } from "react";
 import PrayDateCategoryInput from "../../../PrayDateCategoryInput/PrayDateCategoryInput";
 import S from "./MainHeader.style";
-import { useMainStates } from "../../../../pages/Main";
+import { tabStateAtom, useMainStates } from "../../../../pages/Main";
+import { useAtom, useAtomValue } from "jotai";
+import usePrayerCreateModal from "../../../../overlays/PrayerInputModal/usePrayerCreateModal";
 
 const TAB_TEXT_MAP = {
   personal: "내가 쓴",
@@ -83,13 +85,13 @@ const HeaderBottomAreaContent = ({
 };
 
 export const MainHeaderNext = () => {
-  const { tab, setTab, setActiveOverlays, sharedDataLength } = useMainStates();
+  const [tab, setTab] = useAtom(tabStateAtom);
+
+  const { open: openCreateModal } = usePrayerCreateModal();
+
+  // const { tab, setTab, setActiveOverlays, sharedDataLength } = useMainStates();
 
   const selectTab = (tabParam) => setTab(tabParam);
-
-  const activatePrayInput = () => setActiveOverlays(["PRAYER_CREATE_MODAL"]);
-
-  const activateLocker = () => setActiveOverlays(["LOCKER"]);
 
   return (
     <S.HeaderRootContainer>
@@ -111,12 +113,15 @@ export const MainHeaderNext = () => {
                 type="text"
                 placeholder="기도제목을 입력해주세요"
                 readOnly
-                onClick={activatePrayInput}
+                onClick={openCreateModal}
               />
             ),
             shared: (
-              <S.MoveToLockerButton onClick={activateLocker}>
-                보관함에 {sharedDataLength}개의 기도제목이 있어요
+              <S.MoveToLockerButton
+                onClick={() => {
+                  alert();
+                }}>
+                보관함에 {0}개의 기도제목이 있어요
               </S.MoveToLockerButton>
             ),
           }[tab]
