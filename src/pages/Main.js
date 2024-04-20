@@ -25,6 +25,16 @@ import Overlay from "../components/Overlay/Overlay";
 import Locker from "../components/pages/Main/Locker/Locker";
 import ChangeCategoryOrder from "./ChangeCategoryOrder";
 import { useScrollSections } from "../lib/react-scroll-section";
+import usePrayerBottomModal from "../overlays/PrayerBottomModal/usePrayerBottomModal";
+import usePrayerModifyModal from "../overlays/PrayerInputModal/usePrayerModifyModal";
+import usePrayerCreateModal from "../overlays/PrayerInputModal/usePrayerCreateModal";
+import usePrayerDeleteModal from "../overlays/PrayerDeleteModal/usePrayerDeleteModal";
+import useCategoryCreateModal from "../overlays/PrayerInputModal/useCategoryCreateModal";
+import PrayerBottomModal from "../overlays/PrayerBottomModal/PrayerBottomModal";
+import PrayerInputModal from "../overlays/PrayerInputModal/PrayerInputModal";
+import PrayerDeleteModal from "../overlays/PrayerDeleteModal/PrayerDeleteModal";
+import CategoryInputModal from "../overlays/PrayerInputModal/CategoryInputModal";
+import useCategoryEditModal from "../overlays/PrayerInputModal/useCategoryEditModal";
 
 // 관리 필요 state
 
@@ -95,6 +105,11 @@ export const useMainStates = () => {
     deleteCategory,
     refetchCategoryList,
   } = useCategory(tab);
+  useEffect(() => {
+    console.log(111);
+    console.log({ categoryList });
+    console.log(111);
+  }, [categoryList]);
   const { refetchSharedListData, sharedDataLength, sharedListData } =
     useFetchSharedList();
   const {
@@ -197,6 +212,13 @@ const MainNext = () => {
   const { prayList, setActiveOverlays, isShareMode } = useMainStates();
 
   const { tab } = useMainStates();
+  const { controlledProps: bottomControlledProps } = usePrayerBottomModal();
+  const { controlledProps: modifyControlledProps } = usePrayerModifyModal();
+  const { controlledProps: createControlledProps } = usePrayerCreateModal();
+  const { controlledProps: deleteControlledProps } = usePrayerDeleteModal();
+  const { controlledProps: categoryControlledProps } = useCategoryCreateModal();
+  const { controlledProps: categoryEditControlledProps } =
+    useCategoryEditModal();
 
   return (
     <>
@@ -208,6 +230,12 @@ const MainNext = () => {
         />
         <MainDotOptionsNext />
       </MainWrapper>
+      <PrayerBottomModal {...bottomControlledProps} />
+      <PrayerInputModal {...modifyControlledProps} />
+      <PrayerInputModal {...createControlledProps} />
+      <PrayerDeleteModal {...deleteControlledProps} />
+      <CategoryInputModal {...categoryControlledProps} />
+      <CategoryInputModal {...categoryEditControlledProps} />
     </>
   );
 };

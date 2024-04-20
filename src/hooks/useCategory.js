@@ -2,10 +2,12 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import useApi from "./useApi";
 import useToast from "../hooks/useToast";
 import { ToastTheme } from "../components/Toast/Toast";
+import { usePray } from "./usePray";
 
 export const useCategory = (categoryType) => {
   const { getFetcher, postFetcher, putFetcher, deleteFetcher } = useApi();
   const { showToast } = useToast({});
+  const { refetchPrayList } = usePray(categoryType);
 
   const queryClient = useQueryClient();
 
@@ -98,6 +100,7 @@ export const useCategory = (categoryType) => {
       onSuccess: (res) => {
         console.log(res);
         refetchCategoryList();
+        refetchPrayList();
         showToast({
           message: "카테고리를 생성했어요.",
           theme: ToastTheme.SUCCESS,
@@ -126,6 +129,7 @@ export const useCategory = (categoryType) => {
       onSuccess: (res) => {
         console.log(res);
         refetchCategoryList();
+        refetchPrayList();
         showToast({
           message: "카테고리를 수정했어요.",
           theme: ToastTheme.SUCCESS,
@@ -149,6 +153,7 @@ export const useCategory = (categoryType) => {
       },
       onSuccess: (res) => {
         console.log(res);
+        refetchPrayList();
         refetchCategoryList();
         showToast({
           message: "카테고리를 삭제했어요.",

@@ -2,20 +2,15 @@ import { useContext } from "react";
 import { ScrollingContext } from "../ScrollSynchronizedCategoryList";
 import styled from "styled-components";
 import InnerPrayerList from "./InnerPrayerList";
-import usePrayerBottomModal from "../../../overlays/PrayerBottomModal/usePrayerBottomModal";
-import usePrayerModifyModal from "../../../overlays/PrayerInputModal/usePrayerModifyModal";
-import usePrayerCreateModal from "../../../overlays/PrayerInputModal/usePrayerCreateModal";
-import PrayerInputModal from "../../../overlays/PrayerInputModal/PrayerInputModal";
-import PrayerBottomModal from "../../../overlays/PrayerBottomModal/PrayerBottomModal";
-import usePrayerDeleteModal from "../../../overlays/PrayerDeleteModal/usePrayerDeleteModal";
-import PrayerDeleteModal from "../../../overlays/PrayerDeleteModal/PrayerDeleteModal";
+import useCategoryEditModal from "../../../overlays/PrayerInputModal/useCategoryEditModal";
 
 const BottomCategoryBoxItem = ({ id, name, color, prayers }) => {
   const { registerBottomItemRef } = useContext(ScrollingContext);
+  const { open } = useCategoryEditModal();
 
   return (
     <S.CategoryContainer ref={(node) => registerBottomItemRef(id, node)}>
-      <S.Title color={color} onClick={() => {}}>
+      <S.Title color={color} onClick={() => open({ id, name, color })}>
         {name}
         <img src="/images/ic_dot.svg" alt="dot_icon" />
       </S.Title>
@@ -26,10 +21,6 @@ const BottomCategoryBoxItem = ({ id, name, color, prayers }) => {
 
 const BottomCategoryBoxList = ({ categoriesWithPrayers }) => {
   const { registerBottomListRef } = useContext(ScrollingContext);
-  const { controlledProps: bottomControlledProps } = usePrayerBottomModal();
-  const { controlledProps: modifyControlledProps } = usePrayerModifyModal();
-  const { controlledProps: createControlledProps } = usePrayerCreateModal();
-  const { controlledProps: deleteControlledProps } = usePrayerDeleteModal();
 
   return (
     <S.Content ref={(node) => registerBottomListRef(node)}>
@@ -44,10 +35,6 @@ const BottomCategoryBoxList = ({ categoriesWithPrayers }) => {
           />
         )
       )}
-      <PrayerBottomModal {...bottomControlledProps} />
-      <PrayerInputModal {...modifyControlledProps} />
-      <PrayerInputModal {...createControlledProps} />
-      <PrayerDeleteModal {...deleteControlledProps} />
     </S.Content>
   );
 };

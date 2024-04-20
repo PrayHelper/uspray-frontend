@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { ScrollingContext } from "../ScrollSynchronizedCategoryList";
 import styled from "styled-components";
+import useCategoryCreateModal from "../../../overlays/PrayerInputModal/useCategoryCreateModal";
 
 const Item = ({ id, name, color }) => {
   const { registerTopItemRef, onClickTopItem, selectedId } =
@@ -18,7 +19,8 @@ const Item = ({ id, name, color }) => {
   );
 };
 
-const TopCategoryList = ({ categoriesWithPrayers, openCategoryAddModal }) => {
+const TopCategoryList = ({ categoriesWithPrayers }) => {
+  const { open: openCategoryModal } = useCategoryCreateModal();
   const { registerTopListRef } = useContext(ScrollingContext);
 
   return (
@@ -34,7 +36,7 @@ const TopCategoryList = ({ categoriesWithPrayers, openCategoryAddModal }) => {
             />
           )
         )}
-        <S.AddButton onClick={openCategoryAddModal}>
+        <S.AddButton onClick={openCategoryModal}>
           추가
           <img src="images/ic_add.svg" alt="add_icon" />
         </S.AddButton>
