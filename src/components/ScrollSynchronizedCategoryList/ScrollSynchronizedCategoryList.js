@@ -155,19 +155,23 @@ const ScrollingProvider = ({ children }) => {
   }, [handleBottomScroll, debounceScroll]);
 
   const registerTopItemRef = useCallback((id, node) => {
-    topItemsRef.current[id] = node;
+    if (!node) delete topItemsRef.current[id];
+    else topItemsRef.current[id] = node;
   }, []);
 
   const registerBottomItemRef = useCallback((id, node) => {
-    bottomItemsRef.current[id] = node;
+    if (!node) delete bottomItemsRef.current[id];
+    else bottomItemsRef.current[id] = node;
   }, []);
 
   const registerTopListRef = useCallback((node) => {
-    topListRef.current = node;
+    if (!node) delete topListRef.current;
+    else topListRef.current = node;
   }, []);
 
   const registerBottomListRef = useCallback((node) => {
-    bottomListRef.current = node;
+    if (!node) delete bottomListRef.current;
+    else bottomListRef.current = node;
   }, []);
 
   return (

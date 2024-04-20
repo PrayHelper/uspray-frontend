@@ -7,6 +7,8 @@ import usePrayerModifyModal from "../../../overlays/PrayerInputModal/usePrayerMo
 import usePrayerCreateModal from "../../../overlays/PrayerInputModal/usePrayerCreateModal";
 import PrayerInputModal from "../../../overlays/PrayerInputModal/PrayerInputModal";
 import PrayerBottomModal from "../../../overlays/PrayerBottomModal/PrayerBottomModal";
+import usePrayerDeleteModal from "../../../overlays/PrayerDeleteModal/usePrayerDeleteModal";
+import PrayerDeleteModal from "../../../overlays/PrayerDeleteModal/PrayerDeleteModal";
 
 const BottomCategoryBoxItem = ({ id, name, color, prayers }) => {
   const { registerBottomItemRef } = useContext(ScrollingContext);
@@ -27,6 +29,7 @@ const BottomCategoryBoxList = ({ categoriesWithPrayers }) => {
   const { controlledProps: bottomControlledProps } = usePrayerBottomModal();
   const { controlledProps: modifyControlledProps } = usePrayerModifyModal();
   const { controlledProps: createControlledProps } = usePrayerCreateModal();
+  const { controlledProps: deleteControlledProps } = usePrayerDeleteModal();
 
   return (
     <S.Content ref={(node) => registerBottomListRef(node)}>
@@ -44,6 +47,7 @@ const BottomCategoryBoxList = ({ categoriesWithPrayers }) => {
       <PrayerBottomModal {...bottomControlledProps} />
       <PrayerInputModal {...modifyControlledProps} />
       <PrayerInputModal {...createControlledProps} />
+      <PrayerDeleteModal {...deleteControlledProps} />
     </S.Content>
   );
 };

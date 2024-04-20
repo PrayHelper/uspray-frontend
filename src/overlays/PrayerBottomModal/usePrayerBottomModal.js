@@ -5,6 +5,7 @@ import useToast from "../../hooks/useToast";
 import { useCallback } from "react";
 import { ToastTheme } from "../../components/Toast/Toast";
 import usePrayerModifyModal from "../PrayerInputModal/usePrayerModifyModal";
+import usePrayerDeleteModal from "../PrayerDeleteModal/usePrayerDeleteModal";
 
 const selectedPrayerInfoAtom = atom(null);
 
@@ -14,6 +15,8 @@ const usePrayerBottomModal = () => {
   );
   const { open: openModifyModal } = usePrayerModifyModal();
 
+  const { open: openDeleteModal } = usePrayerDeleteModal();
+
   const tab = useAtomValue(tabStateAtom);
 
   const { completePray } = usePray(tab);
@@ -21,7 +24,7 @@ const usePrayerBottomModal = () => {
   const { showToast } = useToast({});
 
   const onClickComplete = useCallback(() => {
-    completePray(selectedPrayerInfo);
+    completePray(selectedPrayerInfo.prayId);
     showToast({
       message: "기도제목을 완료했어요.",
       theme: ToastTheme.SUCCESS,
@@ -34,8 +37,8 @@ const usePrayerBottomModal = () => {
   }, [openModifyModal, selectedPrayerInfo]);
 
   const onClickDelete = useCallback(() => {
-    alert("삭제 모달 보여주기");
-  }, []);
+    openDeleteModal(selectedPrayerInfo);
+  }, [openDeleteModal, selectedPrayerInfo]);
 
   const close = () => selectPrayerInfo(null);
 

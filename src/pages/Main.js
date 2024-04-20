@@ -57,7 +57,6 @@ const selectedPrayAtom = atom(null);
 // "PRAYER_BOTTOM_MODAL" | "PRAYER_MODIFY_MODAL" | "PRAYER_CREATE_MODAL" |
 // "CATEGORY_CREATE_MODAL" | "CATEGORY_MODIFY_MODAL" |
 // "RIGHT_BOTTOM_OPTIONS"
-const activeOverlaysAtom = atom([]);
 const isShareModeAtom = atom(false);
 const checkIdListAtom = atom([]);
 const dotOptionsOpenAtom = atom(false);

@@ -24,7 +24,17 @@ const usePrayerCreateModal = () => {
   const { createPray } = usePray(tab);
 
   const open = () => setIsOpened(true);
-  const close = useCallback(() => setIsOpened(false), [setIsOpened]);
+
+  const resetValues = useCallback(() => {
+    setTextInputValue("");
+    selectCategoryId(null);
+    selectDateValue(null);
+  }, [selectCategoryId, selectDateValue, setTextInputValue]);
+
+  const close = useCallback(() => {
+    resetValues();
+    setIsOpened(false);
+  }, [setIsOpened, resetValues]);
 
   const onClickBottomButton = useCallback(() => {
     const data = {
