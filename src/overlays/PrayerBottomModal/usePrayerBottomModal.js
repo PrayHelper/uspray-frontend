@@ -23,6 +23,8 @@ const usePrayerBottomModal = () => {
 
   const { showToast } = useToast({});
 
+  const close = useCallback(() => selectPrayerInfo(null), [selectPrayerInfo]);
+
   const onClickComplete = useCallback(() => {
     completePray(selectedPrayerInfo.prayId);
     showToast({
@@ -33,14 +35,14 @@ const usePrayerBottomModal = () => {
   }, [completePray, selectedPrayerInfo, selectPrayerInfo, showToast]);
 
   const onClickModify = useCallback(() => {
+    close();
     openModifyModal(selectedPrayerInfo);
-  }, [openModifyModal, selectedPrayerInfo]);
+  }, [openModifyModal, selectedPrayerInfo, close]);
 
   const onClickDelete = useCallback(() => {
+    close();
     openDeleteModal(selectedPrayerInfo);
-  }, [openDeleteModal, selectedPrayerInfo]);
-
-  const close = () => selectPrayerInfo(null);
+  }, [openDeleteModal, selectedPrayerInfo, close]);
 
   return {
     selectedPrayerInfo,

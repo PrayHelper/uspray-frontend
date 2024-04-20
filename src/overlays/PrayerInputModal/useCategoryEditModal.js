@@ -44,6 +44,7 @@ const useCategoryEditModal = () => {
       mode: "MODIFY",
       selectedColor,
       textInput,
+      selectColor,
       onChangeTextInputValue: (e) => setTextInput(e.target.value),
       closeHandler: close,
       onClickBottomButton,

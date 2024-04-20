@@ -45,7 +45,7 @@ const usePrayerModifyModal = () => {
 
   return {
     controlledProps: {
-      isOpened: !!prayerId,
+      isShow: !!prayerId,
       isShared: false,
       mode: "CREATE",
       selectDateValue,

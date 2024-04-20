@@ -1,55 +1,80 @@
 import { createPortal } from "react-dom";
 import styled from "styled-components";
 
+const COLOR_MAP = {
+  green: "#27CD2F",
+  blue: "#408CFF",
+  red: "#FF4F4F",
+};
+
 const PrayerBottomModal = ({
   isShow,
   closeModal,
   onClickComplete,
   onClickModify,
   onClickDelete,
-}) =>
-  isShow &&
-  createPortal(
-    <S.BlackBg onClick={closeModal}>
-      <S.ModalContainer>
-        <S.BottomButtonWrapper>
-          <img src={"/images/delete_img.svg"} alt="" />
-          <S.BottomButtonText color={"green"} onClick={onClickComplete}>
-            완료하기
-          </S.BottomButtonText>
-        </S.BottomButtonWrapper>
-        <S.BottomButtonWrapper>
-          <img src={"/images/delete_img.svg"} alt="" />
-          <S.BottomButtonText color={"blue"} onClick={onClickModify}>
-            수정하기
-          </S.BottomButtonText>
-        </S.BottomButtonWrapper>
-        <S.BottomButtonWrapper>
-          <img src={"/images/delete_img.svg"} alt="" />
-          <S.BottomButtonText color={"red"} onClick={onClickDelete}>
-            삭제하기
-          </S.BottomButtonText>
-        </S.BottomButtonWrapper>
-      </S.ModalContainer>
-    </S.BlackBg>,
+}) => {
+  return createPortal(
+    <>
+      <S.BlackBg id={"blackbg"} isShow={isShow} onClick={closeModal} />
+      <S.ModalOuter isShow={isShow}>
+        <S.ModalInner>
+          <S.BottomButtonWrapper onClick={onClickComplete}>
+            <img src={"/images/check_img.svg"} alt="" />
+            <S.BottomButtonText color={"green"}>완료하기</S.BottomButtonText>
+          </S.BottomButtonWrapper>
+          <S.BottomButtonWrapper onClick={onClickModify}>
+            <img src={"/images/modify_img.svg"} alt="" />
+            <S.BottomButtonText color={"blue"}>수정하기</S.BottomButtonText>
+          </S.BottomButtonWrapper>
+          <S.BottomButtonWrapper onClick={onClickDelete}>
+            <img src={"/images/delete_img.svg"} alt="" />
+            <S.BottomButtonText color={"red"}>삭제하기</S.BottomButtonText>
+          </S.BottomButtonWrapper>
+        </S.ModalInner>
+      </S.ModalOuter>
+    </>,
     document.getElementById("prayer-bottom-modal")
   );
+};
 
 export default PrayerBottomModal;
 
 const S = {
-  // 기도제목 눌렀을 때 아래에서 나오는 옵션 박스
-  ModalContainer: styled.div`
-    display: flex;
-    box-sizing: border-box;
-    justify-content: center;
-    gap: 18px;
+  BlackBg: styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    backdrop-filter: blur(4px);
+    background-color: rgba(0, 0, 0, 0.7);
+
+    opacity: ${({ isShow }) => (isShow ? 1 : 0)};
+    pointer-events: ${({ isShow }) => (isShow ? "auto" : "none")};
+    transition: all 0.2s ease-in-out;
+    z-index: 201;
+  `,
+  ModalOuter: styled.div`
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
     width: 100%;
-    padding: 37px 24px;
-    transition: all 0.3s ease-in-out;
-    z-index: 202;
     border-radius: 24px 24px 0px 0px;
     background: #fff;
+
+    transform: ${({ isShow }) =>
+      isShow ? "translateY(0%)" : "translateY(100%)"};
+    transition: all 0.2s ease-in-out;
+    z-index: 204;
+  `,
+  ModalInner: styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+
+    padding: 37px 24px;
   `,
   BottomButtonWrapper: styled.button`
     flex-grow: 1;
@@ -58,34 +83,11 @@ const S = {
     background: #f8f8f8;
     border: none;
   `,
-  // ModalContainer의 Text
   BottomButtonText: styled.div`
     font-size: 16px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
-    color: ${(props) =>
-      props.color === "green"
-        ? "#27CD2F"
-        : props.color === "blue"
-        ? "#408CFF"
-        : "#FF4F4F"};
-  `,
-  BlackBg: styled.div`
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 100vw;
-    background-color: red;
-    transition: all 0.3s ease-in-out;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
-    /* pointer-events: ${(props) =>
-      props.selectedPray !== null || props.shareMode ? "auto" : "none"}; */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    z-index: 100;
+    color: ${({ color }) => COLOR_MAP[color]};
   `,
 };

@@ -105,11 +105,7 @@ export const useMainStates = () => {
     deleteCategory,
     refetchCategoryList,
   } = useCategory(tab);
-  useEffect(() => {
-    console.log(111);
-    console.log({ categoryList });
-    console.log(111);
-  }, [categoryList]);
+
   const { refetchSharedListData, sharedDataLength, sharedListData } =
     useFetchSharedList();
   const {
@@ -208,8 +204,7 @@ const MainOverlays = () => {
 };
 
 const MainNext = () => {
-  const { shareLink, isMobile } = useFlutterWebview();
-  const { prayList, setActiveOverlays, isShareMode } = useMainStates();
+  const { prayList, isShareMode } = useMainStates();
 
   const { tab } = useMainStates();
   const { controlledProps: bottomControlledProps } = usePrayerBottomModal();

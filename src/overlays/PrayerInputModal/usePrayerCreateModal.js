@@ -10,7 +10,7 @@ const selectedCategoryIdAtom = atom(null);
 const selectedDateValueAtom = atom(null);
 
 const usePrayerCreateModal = () => {
-  const [isOpened, setIsOpened] = useAtom(isOpenedAtom);
+  const [isShow, setIsShow] = useAtom(isOpenedAtom);
   const [textInputValue, setTextInputValue] = useAtom(inputValueAtom);
   const [selectedCategoryId, selectCategoryId] = useAtom(
     selectedCategoryIdAtom
@@ -23,7 +23,7 @@ const usePrayerCreateModal = () => {
 
   const { createPray } = usePray(tab);
 
-  const open = () => setIsOpened(true);
+  const open = () => setIsShow(true);
 
   const resetValues = useCallback(() => {
     setTextInputValue("");
@@ -33,8 +33,8 @@ const usePrayerCreateModal = () => {
 
   const close = useCallback(() => {
     resetValues();
-    setIsOpened(false);
-  }, [setIsOpened, resetValues]);
+    setIsShow(false);
+  }, [setIsShow, resetValues]);
 
   const onClickBottomButton = useCallback(() => {
     const data = {
@@ -54,7 +54,7 @@ const usePrayerCreateModal = () => {
 
   return {
     controlledProps: {
-      isOpened,
+      isShow,
       open,
       close,
       textInputValue,

@@ -56,6 +56,7 @@ const S = {
   ListContainer: styled.div`
     display: flex;
     flex-direction: column;
+    min-height: 50px;
   `,
   Item: styled.div`
     padding: 16px;

@@ -29,55 +29,61 @@ const CategoryInputModal = ({
   onClickSecondaryButton,
   mode, // "CREATE" | "EDIT"
 }) => {
-  if (!isShow) return null;
+  console.log({ selectedColor });
 
   return createPortal(
-    <S.Container onClick={closeHandler}>
-      <S.CategoryInput
-        type="text"
-        value={textInputValue}
-        placeholder={"카테고리를 입력해주세요"}
-        onChange={onChangeTextInputValue}
-        onClick={(e) => e.stopPropagation()}
-      />
-      <S.FixedButtonContainer onClick={(e) => e.stopPropagation()}>
-        {mode === "CREATE" ? (
-          <ButtonV2
-            buttonTheme={ButtonTheme.FILLED}
-            disabled={!textInputValue}
-            handler={onClickBottomButton}>
-            {LABEL_MAP["CREATE"]}
-          </ButtonV2>
-        ) : (
-          <>
-            <ButtonV2
-              buttonTheme={ButtonTheme.OUTLINED}
-              handler={onClickSecondaryButton}>
-              {LABEL_MAP["DELETE"]}
-            </ButtonV2>
-            <ButtonV2
-              buttonTheme={ButtonTheme.FILLED}
-              disabled={!textInputValue}
-              handler={onClickBottomButton}>
-              {LABEL_MAP["MODIFY"]}
-            </ButtonV2>
-          </>
-        )}
-      </S.FixedButtonContainer>
-      <S.ColorPalette>
-        {COLORS.map((color) => (
-          <S.ColorDrop
-            color={color}
-            selectedColor={selectedColor}
-            onClick={(e) => {
-              selectColor(color);
-              e.stopPropagation();
-            }}
-            key={color}
-          />
-        ))}
-      </S.ColorPalette>
-    </S.Container>,
+    <>
+      <S.BlackBg isShow={isShow} onClick={closeHandler} />
+      <S.Outer isShow={isShow}>
+        <S.Inner>
+          <S.TextAndColorContainer>
+            <S.CategoryInput
+              isShow={isShow}
+              type="text"
+              value={textInputValue}
+              placeholder={"카테고리를 입력해주세요"}
+              onChange={onChangeTextInputValue}
+            />
+            <S.ColorPalette isShow={isShow}>
+              {COLORS.map((color) => (
+                <S.ColorDrop
+                  key={color}
+                  color={color}
+                  isSelected={selectedColor === color}
+                  onClick={() => {
+                    selectColor(color);
+                  }}
+                />
+              ))}
+            </S.ColorPalette>
+          </S.TextAndColorContainer>
+          <S.FixedButtonContainer isShow={isShow}>
+            {mode === "CREATE" ? (
+              <ButtonV2
+                buttonTheme={ButtonTheme.FILLED}
+                disabled={!textInputValue}
+                handler={onClickBottomButton}>
+                {LABEL_MAP["CREATE"]}
+              </ButtonV2>
+            ) : (
+              <>
+                <ButtonV2
+                  buttonTheme={ButtonTheme.OUTLINED}
+                  handler={onClickSecondaryButton}>
+                  {LABEL_MAP["DELETE"]}
+                </ButtonV2>
+                <ButtonV2
+                  buttonTheme={ButtonTheme.FILLED}
+                  disabled={!textInputValue}
+                  handler={onClickBottomButton}>
+                  {LABEL_MAP["MODIFY"]}
+                </ButtonV2>
+              </>
+            )}
+          </S.FixedButtonContainer>
+        </S.Inner>
+      </S.Outer>
+    </>,
     document.getElementById("category-input-modal")
   );
 };
@@ -85,20 +91,46 @@ const CategoryInputModal = ({
 export default CategoryInputModal;
 
 const S = {
-  Container: styled.div`
-    z-index: 100;
+  BlackBg: styled.div`
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: transparent;
+    height: 100vh;
+    width: 100vw;
+    backdrop-filter: blur(4px);
+    background-color: rgba(0, 0, 0, 0.7);
+
+    opacity: ${({ isShow }) => (isShow ? 1 : 0)};
+    pointer-events: ${({ isShow }) => (isShow ? "auto" : "none")};
+    transition: all 0.2s ease-in-out;
+    z-index: 201;
+  `,
+  Outer: styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+
     display: flex;
     flex-direction: column;
+
+    opacity: ${({ isShow }) => (isShow ? 1 : 0)};
+    z-index: 202;
+    pointer-events: none;
+  `,
+  Inner: styled.div`
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
     padding: 16px;
-    box-sizing: border-box;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(8px);
+  `,
+  TextAndColorContainer: styled.div`
+    display: flex;
+    flex-direction: column;
   `,
   CategoryInput: styled.input`
     width: calc(100%-16px);
@@ -116,26 +148,21 @@ const S = {
     letter-spacing: -0.64px;
     font-size: 16px;
     box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.25);
-  `,
-  FixedButtonContainer: styled.div`
-    position: fixed;
-    bottom: 64px;
-    width: calc(100% - 32px);
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+
+    pointer-events: ${({ isShow }) => (isShow ? "auto" : "none")};
   `,
   ColorPalette: styled.div`
     display: flex;
     justify-content: space-between;
     padding: 16px;
     margin-top: 8px;
+
+    pointer-events: ${({ isShow }) => (isShow ? "auto" : "none")};
   `,
   ColorDrop: styled.div`
     width: 32px;
     height: 32px;
-    background-color: ${(props) => props.color};
+    background-color: ${({ color }) => color};
     border-top-right-radius: 16px;
     border-bottom-right-radius: 16px;
     border-bottom-left-radius: 16px;
@@ -151,8 +178,18 @@ const S = {
       background: white;
       border-radius: 50%;
       transform: translate(-50%, -50%);
-      display: ${(props) =>
-        props.color === props.selectedColor ? "block" : "none"};
+      display: ${({ isSelected }) => (isSelected ? "block" : "none")};
     }
+  `,
+  FixedButtonContainer: styled.div`
+    position: fixed;
+    bottom: 64px;
+    width: calc(100% - 32px);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    pointer-events: ${({ isShow }) => (isShow ? "auto" : "none")};
   `,
 };

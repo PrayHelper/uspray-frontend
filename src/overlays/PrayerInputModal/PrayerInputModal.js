@@ -3,13 +3,12 @@ import ButtonV2 from "../../components/ButtonV2/ButtonV2";
 import { ButtonTheme } from "../../components/Button/Button";
 import { TextareaAutosize } from "@mui/material";
 import { SelectDateNew } from "../../components/SelectDate/SelectDate";
-import { useRef } from "react";
 import { createPortal } from "react-dom";
 
 // PrayDateCategoryInput의 개선된 버전, usePrayerInput과 함께 사용
 const PrayerInputModal = ({
   // hook level에서 주입되는 props
-  isOpened,
+  isShow,
   onClickBackground,
   isShared,
   textInputValue,
@@ -27,59 +26,52 @@ const PrayerInputModal = ({
   maxLength = 3,
   showsWordCount = true,
 }) => {
-  const bgRef = useRef(null);
-
-  if (!isOpened) return null;
-
   return createPortal(
-    <S.BlackBg>
-      <S.InnerBg
-        ref={bgRef}
-        onClick={(e) => {
-          if (e.target !== bgRef.current) return;
-          onClickBackground();
-        }}>
-        <S.TopContainer>
-          <S.TextAndDateContainer>
-            <S.TextInput
-              value={textInputValue}
-              onChange={onChangeTextInputValue}
-              placeholder={"기도제목을 입력해주세요"}
-              disabled={isShared}
-            />
-            <SelectDateNew
-              selectDateValue={selectDateValue}
-              date={selectedDateValue}
-            />
-          </S.TextAndDateContainer>
-          <S.ListContainer>
-            {categoryList.map((category) => (
-              <S.ItemContainer
-                key={category.id}
-                selected={category.id === selectedCategoryId}
-                color={category.color}
-                onClick={() => selectCategoryId(category.id)}>
-                {category.name}
-              </S.ItemContainer>
-            ))}
-          </S.ListContainer>
-          {/* 여기에 카테고리 선택 컴포넌트 */}
-        </S.TopContainer>
-        <S.BottomContainer>
-          {isShared && (
-            <S.SubTextStyle>
-              공유된 기도제목의 내용은 수정할 수 없습니다.
-            </S.SubTextStyle>
-          )}
-          <ButtonV2
-            buttonTheme={ButtonTheme.FILLED}
-            disabled={textInputValue.length === 0}
-            handler={onClickBottomButton}>
-            {bottomButtonText}
-          </ButtonV2>
-        </S.BottomContainer>
-      </S.InnerBg>
-    </S.BlackBg>,
+    <>
+      <S.BlackBg isShow={isShow} onClick={onClickBackground} />
+      <S.Outer isShow={isShow}>
+        <S.Inner>
+          <S.TopContainer isShow={isShow}>
+            <S.TextAndDateContainer>
+              <S.TextInput
+                value={textInputValue}
+                onChange={onChangeTextInputValue}
+                placeholder={"기도제목을 입력해주세요"}
+                disabled={isShared}
+              />
+              <SelectDateNew
+                selectDateValue={selectDateValue}
+                date={selectedDateValue}
+              />
+            </S.TextAndDateContainer>
+            <S.ListContainer>
+              {categoryList.map((category) => (
+                <S.ItemContainer
+                  key={category.id}
+                  selected={category.id === selectedCategoryId}
+                  color={category.color}
+                  onClick={() => selectCategoryId(category.id)}>
+                  {category.name}
+                </S.ItemContainer>
+              ))}
+            </S.ListContainer>
+          </S.TopContainer>
+          <S.BottomContainer isShow={isShow}>
+            {isShared && (
+              <S.SubTextStyle>
+                공유된 기도제목의 내용은 수정할 수 없습니다.
+              </S.SubTextStyle>
+            )}
+            <ButtonV2
+              buttonTheme={ButtonTheme.FILLED}
+              disabled={!textInputValue.length || !selectedCategoryId}
+              handler={onClickBottomButton}>
+              {bottomButtonText}
+            </ButtonV2>
+          </S.BottomContainer>
+        </S.Inner>
+      </S.Outer>
+    </>,
     document.getElementById("prayer-input-modal")
   );
 };
@@ -91,22 +83,38 @@ const S = {
     position: fixed;
     top: 0;
     left: 0;
-
     height: 100vh;
     width: 100vw;
-    transition: all 0.3s ease-in-out;
-    background-color: rgba(0, 0, 0, 0.7);
+
     backdrop-filter: blur(4px);
-    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.7);
+
+    opacity: ${({ isShow }) => (isShow ? 1 : 0)};
+    pointer-events: ${({ isShow }) => (isShow ? "auto" : "none")};
+    transition: all 0.2s ease-in-out;
+    z-index: 201;
+  `,
+  Outer: styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+
+    z-index: 202;
 
     display: flex;
     flex-direction: column;
+
+    opacity: ${({ isShow }) => (isShow ? 1 : 0)};
+    pointer-events: none;
   `,
-  InnerBg: styled.div`
+  Inner: styled.div`
+    flex: 1;
+
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    flex: 1;
 
     padding: 16px;
   `,
@@ -114,6 +122,7 @@ const S = {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    pointer-events: ${({ isShow }) => (isShow ? "auto" : "none")};
   `,
   TextAndDateContainer: styled.div`
     border-radius: 16px;
@@ -123,6 +132,7 @@ const S = {
   BottomContainer: styled.div`
     display: flex;
     flex-direction: column;
+    pointer-events: ${({ isShow }) => (isShow ? "auto" : "none")};
   `,
   ListContainer: styled.div`
     display: flex;
