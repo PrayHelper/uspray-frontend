@@ -4,7 +4,8 @@ import StrictModeDroppable from "../lib/StrictModeDroppable";
 import UserHeader from "../components/UserHeader";
 import { useCategory } from "../hooks/useCategory";
 import { useAtomValue } from "jotai";
-import { tabStateAtom } from "./Main";
+import { mainTabAtom } from "./Main";
+import Overlay from "../components/Overlay/Overlay";
 
 const Hamburger = () => (
   <S.HamburgerContainer>
@@ -31,8 +32,8 @@ const CategoryItem = ({ categoryItem, index }) => {
   );
 };
 
-const ChangeCategoryOrder = ({ setIsOverlayOn }) => {
-  const tab = useAtomValue(tabStateAtom);
+const ChangeCategoryOrder = ({ isShow, goBack }) => {
+  const tab = useAtomValue(mainTabAtom);
   const { categoryList, updateCategoryOrder } = useCategory(tab);
 
   const onDragEnd = ({ source, destination }) => {
@@ -50,31 +51,33 @@ const ChangeCategoryOrder = ({ setIsOverlayOn }) => {
   };
 
   return (
-    <S.PageRoot>
-      <UserHeader overlay setIsOverlayOn={setIsOverlayOn}>
-        카테고리 순서 변경
-      </UserHeader>
-      {categoryList && (
-        <DragDropContext onDragEnd={onDragEnd}>
-          <StrictModeDroppable droppableId="droppable">
-            {(provided) => (
-              <S.CategoryList
-                ref={provided.innerRef}
-                {...provided.droppableProps}>
-                {categoryList.map((categoryItem, index) => (
-                  <CategoryItem
-                    index={index}
-                    key={categoryItem.id}
-                    categoryItem={categoryItem}
-                  />
-                ))}
-                {provided.placeholder}
-              </S.CategoryList>
-            )}
-          </StrictModeDroppable>
-        </DragDropContext>
-      )}
-    </S.PageRoot>
+    <Overlay isOverlayOn={isShow}>
+      <S.PageRoot>
+        <UserHeader overlay setIsOverlayOn={goBack}>
+          카테고리 순서 변경
+        </UserHeader>
+        {categoryList && (
+          <DragDropContext onDragEnd={onDragEnd}>
+            <StrictModeDroppable droppableId="droppable">
+              {(provided) => (
+                <S.CategoryList
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}>
+                  {categoryList.map((categoryItem, index) => (
+                    <CategoryItem
+                      index={index}
+                      key={categoryItem.id}
+                      categoryItem={categoryItem}
+                    />
+                  ))}
+                  {provided.placeholder}
+                </S.CategoryList>
+              )}
+            </StrictModeDroppable>
+          </DragDropContext>
+        )}
+      </S.PageRoot>
+    </Overlay>
   );
 };
 
@@ -82,6 +85,7 @@ export default ChangeCategoryOrder;
 
 const S = {
   PageRoot: styled.div`
+    z-index: 500;
     width: 100%;
     height: 100vh;
 

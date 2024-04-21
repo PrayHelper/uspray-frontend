@@ -2,7 +2,7 @@ import styled from "styled-components";
 import ButtonV2, { ButtonTheme } from "../../components/ButtonV2/ButtonV2";
 import { createPortal } from "react-dom";
 
-const COLORS = [
+export const CATEGORY_COLORS = [
   "#D0E8CB",
   "#AEDBA5",
   "#9BD88A",
@@ -43,7 +43,7 @@ const CategoryInputModal = ({
               onChange={onChangeTextInputValue}
             />
             <S.ColorPalette isShow={isShow}>
-              {COLORS.map((color) => (
+              {CATEGORY_COLORS.map((color) => (
                 <S.ColorDrop
                   key={color}
                   color={color}
@@ -59,7 +59,7 @@ const CategoryInputModal = ({
             {mode === "CREATE" ? (
               <ButtonV2
                 buttonTheme={ButtonTheme.FILLED}
-                disabled={!textInputValue}
+                disabled={!textInputValue || !selectedColor}
                 handler={onClickBottomButton}>
                 {LABEL_MAP["CREATE"]}
               </ButtonV2>

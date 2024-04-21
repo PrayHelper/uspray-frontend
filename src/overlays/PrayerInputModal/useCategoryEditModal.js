@@ -1,5 +1,5 @@
 import { atom, useAtom, useAtomValue } from "jotai";
-import { tabStateAtom } from "../../pages/Main";
+import { mainTabAtom } from "../../pages/Main";
 import { useCategory } from "../../hooks/useCategory";
 
 const categoryIdAtom = atom(null);
@@ -11,7 +11,7 @@ const useCategoryEditModal = () => {
   const [textInput, setTextInput] = useAtom(categoryNameAtom);
   const [selectedColor, selectColor] = useAtom(selectedColorAtom);
 
-  const tab = useAtomValue(tabStateAtom);
+  const tab = useAtomValue(mainTabAtom);
 
   const { changeCategory, deleteCategory } = useCategory(tab);
 

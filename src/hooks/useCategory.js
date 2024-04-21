@@ -37,10 +37,13 @@ export const useCategory = (categoryType) => {
 
       try {
         // TODO: 살려주세요(.data, .data ..? Response Body에 대한 협의가 필요할듯)
-        const arrayData = queryClient.getQueryData(["categoryList"]).data.data;
+        const arrayData = queryClient.getQueryData([
+          "categoryList",
+          categoryType,
+        ]).data.data;
 
         // 반응성 개선을 위한 코드((update 요청 + refetch 요청) 완료 전에 프론트에서 먼저 완료 상태 보여주기)
-        queryClient.setQueryData(["categoryList"], (prev) => {
+        queryClient.setQueryData(["categoryList", categoryType], (prev) => {
           prevArrayData = prev.data.data;
 
           const nextArrayData = [...prevArrayData];
@@ -59,7 +62,7 @@ export const useCategory = (categoryType) => {
         );
       } catch (error) {
         // 에러 발생 시 원상복구
-        queryClient.setQueryData(["categoryList"], (prev) => {
+        queryClient.setQueryData(["categoryList", categoryType], (prev) => {
           prevArrayData = prev.data.data;
 
           return { ...prev, data: { ...prev.data, data: prevArrayData } };
@@ -69,7 +72,7 @@ export const useCategory = (categoryType) => {
       }
     },
     {
-      onError: () => {
+      onError: (e) => {
         showToast({
           message: "카테고리 순서 변경에 실패했어요. 네트워크를 확인해주세요.",
           theme: ToastTheme.ERROR,
@@ -179,5 +182,6 @@ export const useCategory = (categoryType) => {
     firstCategoryIndex,
     changeCategory,
     deleteCategory,
+    updateCategoryOrder,
   };
 };

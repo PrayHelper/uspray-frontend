@@ -1,5 +1,5 @@
 import { atom, useAtom, useAtomValue } from "jotai";
-import { tabStateAtom } from "../../pages/Main";
+import { mainTabAtom } from "../../pages/Main";
 import { usePray } from "../../hooks/usePray";
 import useToast from "../../hooks/useToast";
 import { useCallback } from "react";
@@ -17,7 +17,7 @@ const usePrayerBottomModal = () => {
 
   const { open: openDeleteModal } = usePrayerDeleteModal();
 
-  const tab = useAtomValue(tabStateAtom);
+  const tab = useAtomValue(mainTabAtom);
 
   const { completePray } = usePray(tab);
 

@@ -1,5 +1,5 @@
 import { atom, useAtom, useAtomValue } from "jotai";
-import { tabStateAtom } from "../../pages/Main";
+import { mainTabAtom } from "../../pages/Main";
 import { useCategory } from "../../hooks/useCategory";
 import { usePray } from "../../hooks/usePray";
 
@@ -16,7 +16,7 @@ const usePrayerModifyModal = () => {
   );
   const [selectedDateValue, selectDateValue] = useAtom(selectedDateValueAtom);
 
-  const tab = useAtomValue(tabStateAtom);
+  const tab = useAtomValue(mainTabAtom);
 
   const { categoryList } = useCategory(tab);
 

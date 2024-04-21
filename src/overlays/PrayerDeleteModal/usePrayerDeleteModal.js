@@ -1,6 +1,6 @@
 import { atom, useAtom, useAtomValue } from "jotai";
 import { usePray } from "../../hooks/usePray";
-import { tabStateAtom } from "../../pages/Main";
+import { mainTabAtom } from "../../pages/Main";
 
 const selectedPrayerInto = atom(null);
 
@@ -11,7 +11,7 @@ const usePrayerDeleteModal = () => {
 
   const close = () => selectPrayerInfo(null);
 
-  const tab = useAtomValue(tabStateAtom);
+  const tab = useAtomValue(mainTabAtom);
 
   const { deletePray } = usePray(tab);
 

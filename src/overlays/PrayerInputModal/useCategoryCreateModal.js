@@ -1,6 +1,8 @@
 import { atom, useAtom, useAtomValue } from "jotai";
 import { useCategory } from "../../hooks/useCategory";
-import { tabStateAtom } from "../../pages/Main";
+import { mainTabAtom } from "../../pages/Main";
+import { CATEGORY_COLORS } from "./CategoryInputModal";
+import { useCallback, useEffect } from "react";
 
 const isShowAtom = atom(false);
 const textInputValueAtom = atom("");
@@ -13,14 +15,18 @@ const useCategoryCreateModal = () => {
 
   const open = () => setIsShow(true);
 
-  const tab = useAtomValue(tabStateAtom);
+  const tab = useAtomValue(mainTabAtom);
 
   const { createCategory } = useCategory(tab);
 
-  const resetInputs = () => {
+  const resetInputs = useCallback(() => {
     setTextInputValue("");
-    selectColor(null);
-  };
+    selectColor(CATEGORY_COLORS[0]);
+  }, [selectColor, setTextInputValue]);
+
+  useEffect(() => {
+    resetInputs();
+  }, [resetInputs]);
 
   const close = () => {
     resetInputs();

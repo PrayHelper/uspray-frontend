@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PrayDateCategoryInput from "../../../PrayDateCategoryInput/PrayDateCategoryInput";
 import S from "./MainHeader.style";
-import { tabStateAtom} from "../../../../pages/Main";
+import { mainTabAtom } from "../../../../pages/Main";
 import { useAtom } from "jotai";
 import usePrayerCreateModal from "../../../../overlays/PrayerInputModal/usePrayerCreateModal";
 
@@ -84,8 +84,10 @@ const HeaderBottomAreaContent = ({
   return null;
 };
 
+const TAB_LIST = ["personal", "shared"];
+
 const MainHeader = () => {
-  const [tab, setTab] = useAtom(tabStateAtom);
+  const [tab, setTab] = useAtom(mainTabAtom);
 
   const { open: openCreateModal } = usePrayerCreateModal();
 
@@ -94,7 +96,7 @@ const MainHeader = () => {
   return (
     <S.HeaderRootContainer>
       <S.TabList>
-        {["personal", "shared"].map((tabItem) => (
+        {TAB_LIST.map((tabItem) => (
           <S.TabItem
             key={tabItem}
             active={tab === tabItem}
@@ -104,26 +106,21 @@ const MainHeader = () => {
         ))}
       </S.TabList>
       <S.BottomAreaWrapper>
-        {
-          {
-            personal: (
-              <S.Input
-                type="text"
-                placeholder="기도제목을 입력해주세요"
-                readOnly
-                onClick={openCreateModal}
-              />
-            ),
-            shared: (
-              <S.MoveToLockerButton
-                onClick={() => {
-                  alert();
-                }}>
-                보관함에 {0}개의 기도제목이 있어요
-              </S.MoveToLockerButton>
-            ),
-          }[tab]
-        }
+        {tab === "personal" ? (
+          <S.Input
+            type="text"
+            placeholder="기도제목을 입력해주세요"
+            readOnly
+            onClick={openCreateModal}
+          />
+        ) : (
+          <S.MoveToLockerButton
+            onClick={() => {
+              alert();
+            }}>
+            보관함에 {0}개의 기도제목이 있어요
+          </S.MoveToLockerButton>
+        )}
       </S.BottomAreaWrapper>
     </S.HeaderRootContainer>
   );

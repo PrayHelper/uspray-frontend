@@ -16,7 +16,7 @@ import ScrollSynchronizedCategoryList, {
 } from "../components/ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
 import useToast from "../hooks/useToast";
 import { ToastTheme } from "../components/Toast/Toast";
-import { atom, useAtom, useAtomValue } from "jotai";
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import usePrayerBottomModal from "../overlays/PrayerBottomModal/usePrayerBottomModal";
 import usePrayerModifyModal from "../overlays/PrayerInputModal/usePrayerModifyModal";
 import usePrayerCreateModal from "../overlays/PrayerInputModal/usePrayerCreateModal";
@@ -27,17 +27,46 @@ import PrayerInputModal from "../overlays/PrayerInputModal/PrayerInputModal";
 import PrayerDeleteModal from "../overlays/PrayerDeleteModal/PrayerDeleteModal";
 import CategoryInputModal from "../overlays/PrayerInputModal/CategoryInputModal";
 import useCategoryEditModal from "../overlays/PrayerInputModal/useCategoryEditModal";
+import MainDotOptions from "../components/pages/Main/DotOptions/MainDotOptions";
+import ChangeCategoryOrder from "./ChangeCategoryOrder";
+import Overlay from "../components/Overlay/Overlay";
 
 const BG_COLOR_MAP = {
   personal: "#7BAB6E",
   shared: "#3D5537",
 };
 
-export const tabStateAtom = atom("personal");
-export const useTab = () => useAtom(tabStateAtom);
+export const mainModeAtom = atom("DEFAULT"); // "DEFAULT" | "SHARE" | "CHANGE_CATEGORY_ORDER"
+
+export const mainTabAtom = atom("personal"); // "personal" | "shared"
+
+const useDotOptions = () => {
+  const [isOpened, setIsOpened] = useState(false);
+  const setMainMode = useSetAtom(mainModeAtom);
+
+  const open = () => setIsOpened(true);
+  const close = () => setIsOpened(false);
+
+  return {
+    controlledProps: {
+      isOpened,
+      isTabSharedMode: useAtomValue(mainTabAtom) === "shared",
+      open,
+      close,
+      onClickOrder: () => {
+        setMainMode("CHANGE_CATEGORY_ORDER");
+        close();
+      },
+      onClickShare: () => {
+        setMainMode("SHARE");
+        close();
+      },
+    },
+  };
+};
 
 const MainNext = () => {
-  const tab = useAtomValue(tabStateAtom);
+  const tab = useAtomValue(mainTabAtom);
   const { prayList } = usePray(tab);
 
   const { controlledProps: bottomControlledProps } = usePrayerBottomModal();
@@ -47,21 +76,25 @@ const MainNext = () => {
   const { controlledProps: categoryControlledProps } = useCategoryCreateModal();
   const { controlledProps: categoryEditControlledProps } =
     useCategoryEditModal();
+  const { controlledProps: dotOptionsProps } = useDotOptions();
+  const [mainMode, setMainMode] = useAtom(mainModeAtom);
 
   return (
-    <>
-      <MainWrapper bgColor={BG_COLOR_MAP[tab]}>
-        <MainHeader />
-        <ScrollSynchronizedPrayerList categoriesWithPrayers={prayList} />
-        {/* <MainDotOptionsNext /> */}
-      </MainWrapper>
+    <MainWrapper bgColor={BG_COLOR_MAP[tab]}>
+      <ChangeCategoryOrder
+        isShow={mainMode === "CHANGE_CATEGORY_ORDER"}
+        goBack={() => setMainMode("default")}
+      />
+      <MainHeader />
+      <ScrollSynchronizedPrayerList categoriesWithPrayers={prayList} />
+      <MainDotOptions {...dotOptionsProps} />
       <PrayerBottomModal {...bottomControlledProps} />
       <PrayerInputModal {...modifyControlledProps} />
       <PrayerInputModal {...createControlledProps} />
       <PrayerDeleteModal {...deleteControlledProps} />
       <CategoryInputModal {...categoryControlledProps} />
       <CategoryInputModal {...categoryEditControlledProps} />
-    </>
+    </MainWrapper>
   );
 };
 

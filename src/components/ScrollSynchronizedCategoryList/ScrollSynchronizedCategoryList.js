@@ -6,48 +6,15 @@ import { usePray } from "../../hooks/usePray";
 import useToast from "../../hooks/useToast";
 import useBottomNav from "../../hooks/useBottomNav";
 import CategoryTag from "../CategoryTag/CategoryTag";
-// import MainCategory from "../pages/Main/Category/MainCategory";
 import PrayDateCategoryInput from "../PrayDateCategoryInput/PrayDateCategoryInput";
 import BlackScreen from "../BlackScreen";
 import { Modal } from "@mui/material";
 import { ToastTheme } from "../Toast/Toast";
 import S from "./ScrollSynchronizedCategoryList.style";
-// import { Section } from "../../lib/react-scroll-section";
 import { useCallback } from "react";
 import { debounce } from "../../lib/react-scroll-section/utils";
 import TopCategoryList from "./TopCategoryList/TopCategoryList";
 import BottomCategoryBoxList from "./BottomBoxList/BottomBoxList";
-
-// const VerticalCategories = ({
-//   prayList,
-//   setSelectedPrayInfo,
-//   setClickedCategoryData,
-//   tabType,
-//   categoryRef,
-//   shareMode,
-//   setCheckedList,
-//   checkedList,
-// }) => {
-//   return prayList.map((category, index) => (
-//     <Section key={category.categoryId} id={category.categoryId}>
-//       <MainCategory
-//         key={index}
-//         categoryId={category.categoryId}
-//         title={category.categoryName}
-//         prays={category.prays}
-//         color={category.categoryColor}
-//         setSelectedPrayInfo={setSelectedPrayInfo}
-//         setClickedCategoryData={setClickedCategoryData}
-//         tabType={tabType}
-//         categoryRef={categoryRef}
-//         refIndex={index}
-//         shareMode={shareMode}
-//         setCheckedList={setCheckedList}
-//         checkedList={checkedList}
-//       />
-//     </Section>
-//   ));
-// };
 
 export const ScrollingContext = createContext({
   registerTopItemRef: (id, node) => {},
@@ -189,12 +156,13 @@ const ScrollingProvider = ({ children }) => {
 
 export const ScrollSynchronizedPrayerList = ({ categoriesWithPrayers }) => {
   return (
-    <ScrollingProvider>
-      <S.Wrapper>
+    <S.Wrapper>
+      <ScrollingProvider>
         <TopCategoryList categoriesWithPrayers={categoriesWithPrayers} />
         <BottomCategoryBoxList categoriesWithPrayers={categoriesWithPrayers} />
-      </S.Wrapper>
-    </ScrollingProvider>
+        <div style={{ padding: 50 }}></div>
+      </ScrollingProvider>
+    </S.Wrapper>
   );
 };
 
