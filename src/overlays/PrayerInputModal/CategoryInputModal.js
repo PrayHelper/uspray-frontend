@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import ButtonV2, { ButtonTheme } from "../../components/ButtonV2/ButtonV2";
 import { createPortal } from "react-dom";
+import { useEffect, useRef } from "react";
 
 export const CATEGORY_COLORS = [
   "#D0E8CB",
@@ -29,6 +30,12 @@ const CategoryInputModal = ({
   onClickSecondaryButton,
   mode, // "CREATE" | "EDIT"
 }) => {
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (inputRef?.current) inputRef.current.focus();
+  }, [isShow]);
+
   return createPortal(
     <>
       <S.BlackBg isShow={isShow} onClick={closeHandler} />
@@ -36,6 +43,7 @@ const CategoryInputModal = ({
         <S.Inner>
           <S.TextAndColorContainer>
             <S.CategoryInput
+              ref={inputRef}
               isShow={isShow}
               type="text"
               value={textInputValue}
@@ -72,7 +80,7 @@ const CategoryInputModal = ({
                 </ButtonV2>
                 <ButtonV2
                   buttonTheme={ButtonTheme.FILLED}
-                  disabled={!textInputValue}
+                  disabled={!textInputValue || !selectedColor}
                   handler={onClickBottomButton}>
                   {LABEL_MAP["MODIFY"]}
                 </ButtonV2>

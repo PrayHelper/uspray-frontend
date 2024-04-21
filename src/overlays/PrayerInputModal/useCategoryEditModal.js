@@ -8,7 +8,7 @@ const selectedColorAtom = atom(null);
 
 const useCategoryEditModal = () => {
   const [categoryId, setCategoryId] = useAtom(categoryIdAtom);
-  const [textInput, setTextInput] = useAtom(categoryNameAtom);
+  const [textInputValue, setTextInput] = useAtom(categoryNameAtom);
   const [selectedColor, selectColor] = useAtom(selectedColorAtom);
 
   const tab = useAtomValue(mainTabAtom);
@@ -26,7 +26,7 @@ const useCategoryEditModal = () => {
   const onClickBottomButton = () => {
     changeCategory({
       id: categoryId,
-      name: textInput,
+      name: textInputValue,
       color: selectedColor,
       type: tab,
     });
@@ -43,7 +43,7 @@ const useCategoryEditModal = () => {
       isShow: !!categoryId,
       mode: "MODIFY",
       selectedColor,
-      textInput,
+      textInputValue,
       selectColor,
       onChangeTextInputValue: (e) => setTextInput(e.target.value),
       closeHandler: close,

@@ -29,7 +29,6 @@ import CategoryInputModal from "../overlays/PrayerInputModal/CategoryInputModal"
 import useCategoryEditModal from "../overlays/PrayerInputModal/useCategoryEditModal";
 import MainDotOptions from "../components/pages/Main/DotOptions/MainDotOptions";
 import ChangeCategoryOrder from "./ChangeCategoryOrder";
-import Overlay from "../components/Overlay/Overlay";
 
 const BG_COLOR_MAP = {
   personal: "#7BAB6E",
@@ -59,6 +58,7 @@ const useDotOptions = () => {
       },
       onClickShare: () => {
         setMainMode("SHARE");
+        alert("아직 구현 안된 기능");
         close();
       },
     },

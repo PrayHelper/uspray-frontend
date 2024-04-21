@@ -4,6 +4,7 @@ import { ButtonTheme } from "../../components/Button/Button";
 import { TextareaAutosize } from "@mui/material";
 import { SelectDateNew } from "../../components/SelectDate/SelectDate";
 import { createPortal } from "react-dom";
+import { useEffect, useRef } from "react";
 
 // PrayDateCategoryInput의 개선된 버전, usePrayerInput과 함께 사용
 const PrayerInputModal = ({
@@ -26,6 +27,12 @@ const PrayerInputModal = ({
   maxLength = 3,
   showsWordCount = true,
 }) => {
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (inputRef?.current) inputRef.current.focus();
+  }, [isShow]);
+
   return createPortal(
     <>
       <S.BlackBg isShow={isShow} onClick={onClickBackground} />
@@ -34,6 +41,7 @@ const PrayerInputModal = ({
           <S.TopContainer isShow={isShow}>
             <S.TextAndDateContainer>
               <S.TextInput
+                ref={inputRef}
                 value={textInputValue}
                 onChange={onChangeTextInputValue}
                 placeholder={"기도제목을 입력해주세요"}
