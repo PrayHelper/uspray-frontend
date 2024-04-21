@@ -2,7 +2,8 @@ import { atom, useAtom, useAtomValue } from "jotai";
 import { tabStateAtom } from "../../pages/Main";
 import { useCategory } from "../../hooks/useCategory";
 import { usePray } from "../../hooks/usePray";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
+import { getCalculatedDate } from "../../utils/date";
 
 const isOpenedAtom = atom(false);
 const inputValueAtom = atom("");
@@ -19,7 +20,7 @@ const usePrayerCreateModal = () => {
 
   const tab = useAtomValue(tabStateAtom);
 
-  const { categoryList } = useCategory(tab);
+  const { categoryList, firstCategoryIndex } = useCategory(tab);
 
   const { createPray } = usePray(tab);
 
@@ -27,9 +28,18 @@ const usePrayerCreateModal = () => {
 
   const resetValues = useCallback(() => {
     setTextInputValue("");
-    selectCategoryId(null);
-    selectDateValue(null);
-  }, [selectCategoryId, selectDateValue, setTextInputValue]);
+    selectCategoryId(firstCategoryIndex);
+    selectDateValue(getCalculatedDate(7));
+  }, [
+    selectCategoryId,
+    selectDateValue,
+    setTextInputValue,
+    firstCategoryIndex,
+  ]);
+
+  useEffect(() => {
+    resetValues();
+  }, [resetValues]);
 
   const close = useCallback(() => {
     resetValues();

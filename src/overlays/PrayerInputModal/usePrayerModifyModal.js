@@ -26,7 +26,7 @@ const usePrayerModifyModal = () => {
     setPrayerId(prayId);
     setTextInputValue(content);
     selectCategoryId(categoryId);
-    selectDateValue(deadline);
+    selectDateValue(new Date(deadline));
   };
 
   const close = () => setPrayerId(null);
@@ -47,7 +47,7 @@ const usePrayerModifyModal = () => {
     controlledProps: {
       isShow: !!prayerId,
       isShared: false,
-      mode: "CREATE",
+      mode: "MODIFY",
       selectDateValue,
       onChangeTextInputValue: (e) => setTextInputValue(e.target.value),
       bottomButtonText: "기도제목 수정",

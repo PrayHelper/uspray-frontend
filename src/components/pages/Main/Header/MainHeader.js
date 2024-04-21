@@ -89,8 +89,6 @@ export const MainHeaderNext = () => {
 
   const { open: openCreateModal } = usePrayerCreateModal();
 
-  // const { tab, setTab, setActiveOverlays, sharedDataLength } = useMainStates();
-
   const selectTab = (tabParam) => setTab(tabParam);
 
   return (

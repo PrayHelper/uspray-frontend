@@ -29,8 +29,6 @@ const CategoryInputModal = ({
   onClickSecondaryButton,
   mode, // "CREATE" | "EDIT"
 }) => {
-  console.log({ selectedColor });
-
   return createPortal(
     <>
       <S.BlackBg isShow={isShow} onClick={closeHandler} />

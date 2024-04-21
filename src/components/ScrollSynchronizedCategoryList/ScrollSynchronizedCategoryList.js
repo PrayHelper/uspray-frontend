@@ -134,8 +134,6 @@ const ScrollingProvider = ({ children }) => {
         }
       );
 
-      console.log("id to scroll: ", id);
-
       if (selectedId !== id) {
         syncTopScroll(id);
         setSelectedId(id);

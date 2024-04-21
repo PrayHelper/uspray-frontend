@@ -4,6 +4,7 @@ import { ButtonTheme } from "../../components/Button/Button";
 import { TextareaAutosize } from "@mui/material";
 import { SelectDateNew } from "../../components/SelectDate/SelectDate";
 import { createPortal } from "react-dom";
+import { useEffect } from "react";
 
 // PrayDateCategoryInput의 개선된 버전, usePrayerInput과 함께 사용
 const PrayerInputModal = ({
@@ -26,6 +27,10 @@ const PrayerInputModal = ({
   maxLength = 3,
   showsWordCount = true,
 }) => {
+  useEffect(() => {
+    console.log(selectedDateValue);
+  }, [selectedDateValue]);
+
   return createPortal(
     <>
       <S.BlackBg isShow={isShow} onClick={onClickBackground} />
@@ -40,8 +45,8 @@ const PrayerInputModal = ({
                 disabled={isShared}
               />
               <SelectDateNew
-                selectDateValue={selectDateValue}
-                date={selectedDateValue}
+                selectDate={selectDateValue}
+                selectedDate={selectedDateValue}
               />
             </S.TextAndDateContainer>
             <S.ListContainer>
