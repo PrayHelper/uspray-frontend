@@ -1,8 +1,8 @@
 import { useState } from "react";
 import PrayDateCategoryInput from "../../../PrayDateCategoryInput/PrayDateCategoryInput";
 import S from "./MainHeader.style";
-import { tabStateAtom, useMainStates } from "../../../../pages/Main";
-import { useAtom, useAtomValue } from "jotai";
+import { tabStateAtom} from "../../../../pages/Main";
+import { useAtom } from "jotai";
 import usePrayerCreateModal from "../../../../overlays/PrayerInputModal/usePrayerCreateModal";
 
 const TAB_TEXT_MAP = {
@@ -84,7 +84,7 @@ const HeaderBottomAreaContent = ({
   return null;
 };
 
-export const MainHeaderNext = () => {
+const MainHeader = () => {
   const [tab, setTab] = useAtom(tabStateAtom);
 
   const { open: openCreateModal } = usePrayerCreateModal();
@@ -129,47 +129,47 @@ export const MainHeaderNext = () => {
   );
 };
 
-const MainHeader = ({
-  isShowInputModal,
-  setIsShowInputModal,
-  handleTabChange,
-  currentTab, // "내가 쓴" or "공유 받은"
-  onClickPrayInput,
-  categoryList,
-  createPray,
-  setSelectedCategoryIndex,
-  setCurrentOverlay,
-  sharedDataLength,
-}) => {
-  return (
-    <S.HeaderRootContainer>
-      <S.TabList>
-        {["내가 쓴", "공유 받은"].map((tabItem) => (
-          <S.TabItem
-            key={tabItem}
-            active={currentTab === tabItem}
-            onClick={() => handleTabChange(tabItem)}>
-            {tabItem}
-          </S.TabItem>
-        ))}
-      </S.TabList>
-      <S.BottomAreaWrapper>
-        <HeaderBottomAreaContent
-          {...{
-            categoryList,
-            createPray,
-            currentTab,
-            isShowInputModal,
-            onClickPrayInput,
-            setIsShowInputModal,
-            setSelectedCategoryIndex,
-            setCurrentOverlay,
-            sharedDataLength,
-          }}
-        />
-      </S.BottomAreaWrapper>
-    </S.HeaderRootContainer>
-  );
-};
+// const MainHeader = ({
+//   isShowInputModal,
+//   setIsShowInputModal,
+//   handleTabChange,
+//   currentTab, // "내가 쓴" or "공유 받은"
+//   onClickPrayInput,
+//   categoryList,
+//   createPray,
+//   setSelectedCategoryIndex,
+//   setCurrentOverlay,
+//   sharedDataLength,
+// }) => {
+//   return (
+//     <S.HeaderRootContainer>
+//       <S.TabList>
+//         {["내가 쓴", "공유 받은"].map((tabItem) => (
+//           <S.TabItem
+//             key={tabItem}
+//             active={currentTab === tabItem}
+//             onClick={() => handleTabChange(tabItem)}>
+//             {tabItem}
+//           </S.TabItem>
+//         ))}
+//       </S.TabList>
+//       <S.BottomAreaWrapper>
+//         <HeaderBottomAreaContent
+//           {...{
+//             categoryList,
+//             createPray,
+//             currentTab,
+//             isShowInputModal,
+//             onClickPrayInput,
+//             setIsShowInputModal,
+//             setSelectedCategoryIndex,
+//             setCurrentOverlay,
+//             sharedDataLength,
+//           }}
+//         />
+//       </S.BottomAreaWrapper>
+//     </S.HeaderRootContainer>
+//   );
+// };
 
 export default MainHeader;

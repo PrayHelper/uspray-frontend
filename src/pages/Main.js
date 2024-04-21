@@ -7,24 +7,16 @@ import useFlutterWebview from "../hooks/useFlutterWebview";
 import { useShare } from "../hooks/useShare";
 import { useFetchSharedList } from "../hooks/useFetchSharedList";
 import MainCategoryAdd from "../components/pages/Main/CategoryAdd/MainCategoryAdd";
-import MainHeader, {
-  MainHeaderNext,
-} from "../components/pages/Main/Header/MainHeader";
+import MainHeader from "../components/pages/Main/Header/MainHeader";
 import MainCategoryAlertModal from "../components/pages/Main/CategoryAlertModal/MainCategoryAlertModal";
 import MainSelectedOverlay from "../components/pages/Main/SelectedOverlay/MainSelectedOverlay";
-import MainRightBottomOptions, {
-  MainDotOptionsNext,
-} from "../components/pages/Main/overlays/MainRightBottomOptions";
+import MainRightBottomOptions from "../components/pages/Main/overlays/MainRightBottomOptions";
 import ScrollSynchronizedCategoryList, {
   ScrollSynchronizedPrayerList,
 } from "../components/ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
 import useToast from "../hooks/useToast";
 import { ToastTheme } from "../components/Toast/Toast";
-import { atom, useAtom } from "jotai";
-import Overlay from "../components/Overlay/Overlay";
-import Locker from "../components/pages/Main/Locker/Locker";
-import ChangeCategoryOrder from "./ChangeCategoryOrder";
-import { useScrollSections } from "../lib/react-scroll-section";
+import { atom, useAtom, useAtomValue } from "jotai";
 import usePrayerBottomModal from "../overlays/PrayerBottomModal/usePrayerBottomModal";
 import usePrayerModifyModal from "../overlays/PrayerInputModal/usePrayerModifyModal";
 import usePrayerCreateModal from "../overlays/PrayerInputModal/usePrayerCreateModal";
@@ -36,177 +28,18 @@ import PrayerDeleteModal from "../overlays/PrayerDeleteModal/PrayerDeleteModal";
 import CategoryInputModal from "../overlays/PrayerInputModal/CategoryInputModal";
 import useCategoryEditModal from "../overlays/PrayerInputModal/useCategoryEditModal";
 
-// 관리 필요 state
-
-// 선택된 tab
-
-// overlay
-// - 기도제목 수정 / 생성에 필요한 기도제목 Input Modal(or Category 0개시 모달) - 기도제목 입력 text, 선택된 category
-// - 기도제목 완료 / 수정 / 삭제 Modal on / off
-// - 카테고리 생성 / 수정 / 삭제에 필요한 Input + Palatte Modal
-// - 순서 변경 / 보관함 on / off
-
 const BG_COLOR_MAP = {
   personal: "#7BAB6E",
   shared: "#3D5537",
 };
 
-const showAlertModalAtom = atom(false);
 export const tabStateAtom = atom("personal");
-const selectedPrayerToEdit = atom(null);
-const prayerInputAtom = atom("");
-const prayerDateInputAtom = atom(null);
-const prayerCategoryIndexAtom = atom(null);
-const categoryInputAtom = atom("");
-const showPrayerInputModalAtom = atom(false);
-const showPrayerHandleBottomModalAtom = atom(false);
-const showBottomDotOptionsAtom = atom(false);
-const selectedCategoryToEditAtom = atom(null);
-const selectedPrayAtom = atom(null);
-// "LOCKER" | "CHANGE_CATEGORY_ORDER" |
-// "PRAYER_BOTTOM_MODAL" | "PRAYER_MODIFY_MODAL" | "PRAYER_CREATE_MODAL" |
-// "CATEGORY_CREATE_MODAL" | "CATEGORY_MODIFY_MODAL" |
-// "RIGHT_BOTTOM_OPTIONS"
-const isShareModeAtom = atom(false);
-const checkIdListAtom = atom([]);
-const dotOptionsOpenAtom = atom(false);
-
 export const useTab = () => useAtom(tabStateAtom);
 
-export const useMainStates = () => {
-  const [tab, setTab] = useAtom(tabStateAtom);
-  const [isShareMode, setIsShareMode] = useAtom(isShareModeAtom);
-  const [selectedPray, setSelectedPrayToEdit] = useAtom(selectedPrayerToEdit);
-  const [prayerInput, setPrayerInput] = useAtom(prayerInputAtom);
-  const [prayerDateInput, setPrayerDateInput] = useAtom(prayerDateInputAtom);
-  const [categoryInput, setCategoryInput] = useAtom(categoryInputAtom);
-  const [showPrayerInputModal, setShowPrayerInputModal] = useAtom(
-    showPrayerInputModalAtom
-  );
-  const [prayerCategoryIndex, setPrayerCategoryIndex] = useAtom(
-    prayerCategoryIndexAtom
-  );
-  const [showPrayerHandleBottomModal, setShowPrayerHandleBottomModal] = useAtom(
-    showPrayerHandleBottomModalAtom
-  );
-  const [showBottomDotOptions, setShowBottomDotOptions] = useAtom(
-    showBottomDotOptionsAtom
-  );
-  const [selectedCategoryToEdit, setSelectedCategoryToEdit] = useAtom(
-    selectedCategoryToEditAtom
-  );
-  const [selectedScrollCategory, setSelectedScrollCategory] =
-    useAtom(selectedPrayAtom);
-  const {
-    categoryList,
-    firstCategoryIndex,
-    changeCategory,
-    createCategory,
-    deleteCategory,
-    refetchCategoryList,
-  } = useCategory(tab);
-
-  const { refetchSharedListData, sharedDataLength, sharedListData } =
-    useFetchSharedList();
-  const {
-    prayList,
-    modifyPray,
-    cancelPray,
-    createPray,
-    deletePray,
-    completePray,
-    todayPray,
-  } = usePray(tab);
-  const [checkedIdList, setCheckedIdList] = useAtom(checkIdListAtom);
-  const [dotOptionsOpen, setDotOptionsOpen] = useAtom(dotOptionsOpenAtom);
-  const [showAlertModal, setShowAlertModal] = useAtom(showAlertModalAtom);
-
-  const sections = useScrollSections();
-
-  return {
-    tab,
-    prayerInput,
-    categoryInput,
-    showPrayerInputModal,
-    showPrayerHandleBottomModal,
-    showBottomDotOptions,
-    selectedCategoryToEdit,
-    selectedScrollCategory,
-    prayerDateInput,
-    prayerCategoryIndex,
-    selectedPray,
-
-    setTab,
-    setPrayerInput,
-    setCategoryInput,
-    setShowPrayerInputModal,
-    setShowPrayerHandleBottomModal,
-    setShowBottomDotOptions,
-    setSelectedCategoryToEdit,
-    setSelectedScrollCategory,
-    setPrayerDateInput,
-    setPrayerCategoryIndex,
-    setSelectedPrayToEdit,
-
-    categoryList,
-    firstCategoryIndex,
-
-    changeCategory,
-    createCategory,
-    deleteCategory,
-    refetchCategoryList,
-
-    refetchSharedListData,
-    sharedDataLength,
-    sharedListData,
-
-    prayList,
-    modifyPray,
-    createPray,
-    deletePray,
-    completePray,
-    cancelPray,
-    todayPray,
-
-    isShareMode,
-    setIsShareMode,
-
-    checkedIdList,
-    setCheckedIdList,
-
-    dotOptionsOpen,
-    setDotOptionsOpen,
-
-    showAlertModal,
-    setShowAlertModal,
-
-    sections,
-  };
-};
-
-// 페이지에 띄울 Overlay
-const MainOverlays = () => {
-  const { activeOverlays, setActiveOverlays, refetchPrayList } =
-    useMainStates();
-
-  const clearOverlays = () => setActiveOverlays([]);
-
-  return (
-    <>
-      <Overlay isOverlayOn={activeOverlays.includes("LOCKER")}>
-        <Locker goBack={clearOverlays} refetchPrayList={refetchPrayList} />
-      </Overlay>
-      <Overlay isOverlayOn={activeOverlays.includes("CHANGE_CATEGORY_ORDER")}>
-        <ChangeCategoryOrder setIsOverlayOn={clearOverlays} />
-      </Overlay>
-    </>
-  );
-};
-
 const MainNext = () => {
-  const { prayList, isShareMode } = useMainStates();
+  const tab = useAtomValue(tabStateAtom);
+  const { prayList } = usePray(tab);
 
-  const { tab } = useMainStates();
   const { controlledProps: bottomControlledProps } = usePrayerBottomModal();
   const { controlledProps: modifyControlledProps } = usePrayerModifyModal();
   const { controlledProps: createControlledProps } = usePrayerCreateModal();
@@ -218,12 +51,9 @@ const MainNext = () => {
   return (
     <>
       <MainWrapper bgColor={BG_COLOR_MAP[tab]}>
-        <MainHeaderNext />
-        <ScrollSynchronizedPrayerList
-          categoriesWithPrayers={prayList}
-          isShareMode={isShareMode}
-        />
-        <MainDotOptionsNext />
+        <MainHeader />
+        <ScrollSynchronizedPrayerList categoriesWithPrayers={prayList} />
+        {/* <MainDotOptionsNext /> */}
       </MainWrapper>
       <PrayerBottomModal {...bottomControlledProps} />
       <PrayerInputModal {...modifyControlledProps} />

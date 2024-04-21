@@ -187,13 +187,7 @@ const ScrollingProvider = ({ children }) => {
   );
 };
 
-export const ScrollSynchronizedPrayerList = ({
-  categoriesWithPrayers,
-  togglePrayerHeart, // prayer id를 받아 heart on/off
-  isShareMode,
-  setShareModeOn,
-  togglePrayerShareItem, // prayer id를 받아 checkbox on/off
-}) => {
+export const ScrollSynchronizedPrayerList = ({ categoriesWithPrayers }) => {
   return (
     <ScrollingProvider>
       <S.Wrapper>

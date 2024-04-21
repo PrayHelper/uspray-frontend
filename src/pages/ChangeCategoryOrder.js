@@ -3,7 +3,8 @@ import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import StrictModeDroppable from "../lib/StrictModeDroppable";
 import UserHeader from "../components/UserHeader";
 import { useCategory } from "../hooks/useCategory";
-import { useMainStates } from "./Main";
+import { useAtomValue } from "jotai";
+import { tabStateAtom } from "./Main";
 
 const Hamburger = () => (
   <S.HamburgerContainer>
@@ -31,7 +32,7 @@ const CategoryItem = ({ categoryItem, index }) => {
 };
 
 const ChangeCategoryOrder = ({ setIsOverlayOn }) => {
-  const { tab } = useMainStates();
+  const tab = useAtomValue(tabStateAtom);
   const { categoryList, updateCategoryOrder } = useCategory(tab);
 
   const onDragEnd = ({ source, destination }) => {
