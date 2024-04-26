@@ -3,14 +3,14 @@ import useApi from "./useApi";
 import useToast from "./useToast";
 import { ToastTheme } from "../components/Toast/Toast";
 
-export const usePray = (tabType) => {
+export const usePray = (tab) => {
   const { getFetcher, postFetcher, putFetcher, deleteFetcher } = useApi();
   const { showToast } = useToast({});
 
   const { data, refetch: refetchPrayList } = useQuery(
-    ["prayList", tabType],
+    ["prayList", tab],
     async () => {
-      return await getFetcher(`/pray/?prayType=${tabType}`);
+      return await getFetcher(`/pray/?prayType=${tab}`);
     },
     {
       onError: async (e) => {
@@ -45,7 +45,7 @@ export const usePray = (tabType) => {
           message: "기도제목이 저장되었어요.",
           theme: ToastTheme.SUCCESS,
         });
-        refetchPrayList("personal");
+        refetchPrayList();
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -73,7 +73,7 @@ export const usePray = (tabType) => {
           message: "기도제목을 삭제했어요.",
           theme: ToastTheme.SUCCESS,
         });
-        refetchPrayList(tabType);
+        refetchPrayList();
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -97,7 +97,7 @@ export const usePray = (tabType) => {
       },
       onSuccess: (res) => {
         console.log(res);
-        refetchPrayList(tabType);
+        refetchPrayList();
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -129,7 +129,7 @@ export const usePray = (tabType) => {
           message: "기도제목이 수정되었어요.",
           theme: ToastTheme.SUCCESS,
         });
-        refetchPrayList(tabType);
+        refetchPrayList();
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -153,7 +153,7 @@ export const usePray = (tabType) => {
       },
       onSuccess: (res) => {
         console.log(res);
-        refetchPrayList(tabType);
+        refetchPrayList();
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -177,7 +177,7 @@ export const usePray = (tabType) => {
       },
       onSuccess: (res) => {
         console.log(res);
-        refetchPrayList(tabType);
+        refetchPrayList();
       },
       retry: (cnt) => {
         return cnt < 3;

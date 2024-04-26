@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useCategory } from "../hooks/useCategory";
 import { usePray } from "../hooks/usePray";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import useFlutterWebview from "../hooks/useFlutterWebview";
 import { useShare } from "../hooks/useShare";
 import { useFetchSharedList } from "../hooks/useFetchSharedList";
@@ -28,41 +28,41 @@ import PrayerDeleteModal from "../overlays/PrayerDeleteModal/PrayerDeleteModal";
 import CategoryInputModal from "../overlays/PrayerInputModal/CategoryInputModal";
 import useCategoryEditModal from "../overlays/PrayerInputModal/useCategoryEditModal";
 import MainDotOptions from "../components/pages/Main/DotOptions/MainDotOptions";
-import ChangeCategoryOrder from "./ChangeCategoryOrder";
+import MainChangeCategoryOrder from "../components/pages/Main/ChangeCategoryOrder/MainChangeCategoryOrder";
+import Locker from "../components/pages/Main/Locker/Locker";
+import Overlay from "../components/Overlay/Overlay";
+import MainLocker from "../components/pages/Main/Locker/MainLocker";
 
 const BG_COLOR_MAP = {
   personal: "#7BAB6E",
   shared: "#3D5537",
 };
 
-export const mainModeAtom = atom("DEFAULT"); // "DEFAULT" | "SHARE" | "CHANGE_CATEGORY_ORDER"
+export const mainModeAtom = atom("DEFAULT"); // "DEFAULT" | "SHARING" | "CHANGE_CATEGORY_ORDER" | "LOCKER"
 
 export const mainTabAtom = atom("personal"); // "personal" | "shared"
 
-const useDotOptions = () => {
-  const [isOpened, setIsOpened] = useState(false);
-  const setMainMode = useSetAtom(mainModeAtom);
+const useRecieveSharedPrayers = () => {
+  const [searchParams] = useSearchParams();
+  const setTab = useSetAtom(mainTabAtom);
 
-  const open = () => setIsOpened(true);
-  const close = () => setIsOpened(false);
+  const { mutate: receivePrays } = useShare();
 
-  return {
-    controlledProps: {
-      isOpened,
-      isTabSharedMode: useAtomValue(mainTabAtom) === "shared",
-      open,
-      close,
-      onClickOrder: () => {
-        setMainMode("CHANGE_CATEGORY_ORDER");
-        close();
-      },
-      onClickShare: () => {
-        setMainMode("SHARE");
-        alert("아직 구현 안된 기능");
-        close();
-      },
-    },
-  };
+  useEffect(() => {
+    const sharedIds = searchParams.getAll("share");
+    if (sharedIds.length < 1) return;
+
+    const decodedPrayIds = window.atob(sharedIds[0]).split(",");
+    receivePrays({ prayIds: decodedPrayIds });
+    setTab("shared");
+  }, [searchParams, receivePrays, setTab]);
+
+  // useEffect(() => {
+  //   if (decodedPrayIds) {
+  //     receivePrays({ prayIds: decodedPrayIds });
+  //     setTab("shared");
+  //   }
+  // }, [receivePrays, decodedPrayIds]);
 };
 
 const MainNext = () => {
@@ -76,24 +76,36 @@ const MainNext = () => {
   const { controlledProps: categoryControlledProps } = useCategoryCreateModal();
   const { controlledProps: categoryEditControlledProps } =
     useCategoryEditModal();
-  const { controlledProps: dotOptionsProps } = useDotOptions();
   const [mainMode, setMainMode] = useAtom(mainModeAtom);
+
+  useRecieveSharedPrayers();
 
   return (
     <MainWrapper bgColor={BG_COLOR_MAP[tab]}>
-      <ChangeCategoryOrder
-        isShow={mainMode === "CHANGE_CATEGORY_ORDER"}
-        goBack={() => setMainMode("default")}
-      />
-      <MainHeader />
-      <ScrollSynchronizedPrayerList categoriesWithPrayers={prayList} />
-      <MainDotOptions {...dotOptionsProps} />
+      {/* <Overlay isOverlayOn={mainMode === "LOCKER"}>
+        <Locker
+          goBack={() => setMainMode("DEFAULT")}
+          refetchPrayList={() => {}}
+        />
+      </Overlay> */}
+
+      <MainLocker />
+      <MainChangeCategoryOrder />
+
+      <MainDotOptions />
+
       <PrayerBottomModal {...bottomControlledProps} />
       <PrayerInputModal {...modifyControlledProps} />
       <PrayerInputModal {...createControlledProps} />
       <PrayerDeleteModal {...deleteControlledProps} />
       <CategoryInputModal {...categoryControlledProps} />
       <CategoryInputModal {...categoryEditControlledProps} />
+
+      <MainHeader />
+      <ScrollSynchronizedPrayerList
+        isSharing={mainMode === "SHARING"}
+        categoriesWithPrayers={prayList}
+      />
     </MainWrapper>
   );
 };

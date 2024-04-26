@@ -1,8 +1,8 @@
 import { useState } from "react";
 import PrayDateCategoryInput from "../../../PrayDateCategoryInput/PrayDateCategoryInput";
 import S from "./MainHeader.style";
-import { mainTabAtom } from "../../../../pages/Main";
-import { useAtom } from "jotai";
+import { mainModeAtom, mainTabAtom } from "../../../../pages/Main";
+import { useAtom, useSetAtom } from "jotai";
 import usePrayerCreateModal from "../../../../overlays/PrayerInputModal/usePrayerCreateModal";
 
 const TAB_TEXT_MAP = {
@@ -93,6 +93,8 @@ const MainHeader = () => {
 
   const selectTab = (tabParam) => setTab(tabParam);
 
+  const setMainMode = useSetAtom(mainModeAtom);
+
   return (
     <S.HeaderRootContainer>
       <S.TabList>
@@ -114,10 +116,7 @@ const MainHeader = () => {
             onClick={openCreateModal}
           />
         ) : (
-          <S.MoveToLockerButton
-            onClick={() => {
-              alert();
-            }}>
+          <S.MoveToLockerButton onClick={() => setMainMode("LOCKER")}>
             보관함에 {0}개의 기도제목이 있어요
           </S.MoveToLockerButton>
         )}

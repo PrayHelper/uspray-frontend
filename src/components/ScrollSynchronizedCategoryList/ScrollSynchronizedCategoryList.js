@@ -160,7 +160,6 @@ export const ScrollSynchronizedPrayerList = ({ categoriesWithPrayers }) => {
       <ScrollingProvider>
         <TopCategoryList categoriesWithPrayers={categoriesWithPrayers} />
         <BottomCategoryBoxList categoriesWithPrayers={categoriesWithPrayers} />
-        <div style={{ padding: 50 }}></div>
       </ScrollingProvider>
     </S.Wrapper>
   );

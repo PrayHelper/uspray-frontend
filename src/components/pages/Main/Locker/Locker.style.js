@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 const S = {
   LockerWrapper: styled.div`
+    z-index: 100;
     display: flex;
     flex-direction: column;
     height: 100vh;

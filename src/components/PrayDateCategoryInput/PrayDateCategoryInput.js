@@ -1,3 +1,5 @@
+// Deprecated(24/4/26 기준). PrayerInputModal로 대체하여 주세요.
+
 import React, { useEffect } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import SelectDate from "../SelectDate/SelectDate";

@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
-import StrictModeDroppable from "../lib/StrictModeDroppable";
-import UserHeader from "../components/UserHeader";
-import { useCategory } from "../hooks/useCategory";
-import { useAtomValue } from "jotai";
-import { mainTabAtom } from "./Main";
-import Overlay from "../components/Overlay/Overlay";
+import StrictModeDroppable from "../../../../lib/StrictModeDroppable";
+import UserHeader from "../../../UserHeader";
+import { useCategory } from "../../../../hooks/useCategory";
+import { useAtom, useAtomValue } from "jotai";
+import { mainModeAtom, mainTabAtom } from "../../../../pages/Main";
+import Overlay from "../../../Overlay/Overlay";
 
 const Hamburger = () => (
   <S.HamburgerContainer>
@@ -32,9 +32,11 @@ const CategoryItem = ({ categoryItem, index }) => {
   );
 };
 
-const ChangeCategoryOrder = ({ isShow, goBack }) => {
-  const tab = useAtomValue(mainTabAtom);
-  const { categoryList, updateCategoryOrder } = useCategory(tab);
+const MainChangeCategoryOrder = () => {
+  const [mainMode, setMainMode] = useAtom(mainModeAtom);
+  const mainTab = useAtomValue(mainTabAtom);
+
+  const { categoryList, updateCategoryOrder } = useCategory(mainTab);
 
   const onDragEnd = ({ source, destination }) => {
     if (!source || !destination) return;
@@ -51,9 +53,9 @@ const ChangeCategoryOrder = ({ isShow, goBack }) => {
   };
 
   return (
-    <Overlay isOverlayOn={isShow}>
+    <Overlay isOverlayOn={mainMode === "CHANGE_CATEGORY_ORDER"}>
       <S.PageRoot>
-        <UserHeader overlay setIsOverlayOn={goBack}>
+        <UserHeader overlay setIsOverlayOn={() => setMainMode("default")}>
           카테고리 순서 변경
         </UserHeader>
         {categoryList && (
@@ -81,7 +83,7 @@ const ChangeCategoryOrder = ({ isShow, goBack }) => {
   );
 };
 
-export default ChangeCategoryOrder;
+export default MainChangeCategoryOrder;
 
 const S = {
   PageRoot: styled.div`

@@ -1,7 +1,8 @@
+// Deprecated(4/26)
+
 import React, { useEffect, useState } from "react";
 import S from "./Locker.style";
 import LockerContent from "../../../Locker/LockerContent";
-import LockerHeader from "../../../Locker/L_Header";
 import { ToastTheme } from "../../../Toast/Toast";
 import { useDeleteSharedList } from "../../../../hooks/useDeleteSharedList";
 import { useFetchSharedList } from "../../../../hooks/useFetchSharedList";
@@ -13,6 +14,7 @@ import BlackScreen from "../../../BlackScreen";
 import Modal from "../../../Modal/Modal";
 import { useCategory } from "../../../../hooks/useCategory";
 import PrayDateCategoryInput from "../../../PrayDateCategoryInput/PrayDateCategoryInput";
+import LockerHeader from "../../../Locker/LockerHeader";
 
 const Locker = ({ goBack, refetchPrayList }) => {
   const [data, setData] = useState([]);

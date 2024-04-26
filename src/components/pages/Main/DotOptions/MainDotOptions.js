@@ -1,13 +1,54 @@
+import { useAtomValue, useSetAtom } from "jotai";
+import { useState } from "react";
 import styled from "styled-components";
+import { mainModeAtom, mainTabAtom } from "../../../../pages/Main";
 
-const MainDotOptions = ({
-  isOpened,
-  isTabSharedMode,
-  open,
-  close,
-  onClickOrder,
-  onClickShare,
-}) => {
+export const useDotOptions = () => {
+  const [isOpened, setIsOpened] = useState(false);
+  const setMainMode = useSetAtom(mainModeAtom);
+
+  const open = () => setIsOpened(true);
+  const close = () => setIsOpened(false);
+
+  return {
+    controlledProps: {
+      isOpened,
+      isTabSharedMode: useAtomValue(mainTabAtom) === "shared",
+      open,
+      close,
+      onClickOrder: () => {
+        setMainMode("CHANGE_CATEGORY_ORDER");
+        close();
+      },
+      onClickShare: () => {
+        setMainMode("SHARE");
+        alert("아직 구현 안된 기능");
+        close();
+      },
+    },
+  };
+};
+
+const MainDotOptions = () => {
+  const [isOpened, setIsOpened] = useState(false);
+  const setMainMode = useSetAtom(mainModeAtom);
+
+  const open = () => setIsOpened(true);
+  const close = () => setIsOpened(false);
+
+  const onClickOrder = () => {
+    setMainMode("CHANGE_CATEGORY_ORDER");
+    close();
+  };
+
+  const onClickShare = () => {
+    setMainMode("SHARE");
+    alert("아직 구현 안된 기능");
+    close();
+  };
+
+  const isTabSharedMode = useAtomValue(mainTabAtom) === "shared";
+
   return (
     <>
       <S.OptionItem
@@ -55,5 +96,6 @@ const S = {
     transition: all 0.2s ease;
     filter: ${(props) =>
       props.isVisible ? "drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.3))" : "none"};
+    z-index: 100;
   `,
 };

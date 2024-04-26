@@ -22,3 +22,11 @@ export const getCalculatedDiff = (date) => {
 
   return Math.ceil((date - today) / (24 * 60 * 60 * 1000));
 };
+
+export const getDDayLabel = (date) => {
+  const diff = getCalculatedDiff(date);
+
+  if (diff === 0) return "D-Day";
+  if (diff > 0) return `D-${diff}`;
+  return `D+${Math.abs(diff)}`;
+};

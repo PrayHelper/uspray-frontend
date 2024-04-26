@@ -35,6 +35,8 @@ const BottomCategoryBoxList = ({ categoriesWithPrayers }) => {
           />
         )
       )}
+      {/* 스크롤 공간 마련을 위한 element - 더 나은 방안이 생각난다면 대체 부탁드립니다 */}
+      <S.EmptySpaceForScroll />
     </S.Content>
   );
 };
@@ -91,6 +93,9 @@ const S = {
       right: 0;
       border-bottom: 1px solid #0000001a;
     }
+  `,
+  EmptySpaceForScroll: styled.div`
+    padding: 100px;
   `,
   // 카테고리 박스
   Content: styled.div`
