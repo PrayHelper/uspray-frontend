@@ -1,50 +1,76 @@
 import styled from "styled-components";
 import GreenCheckbox from "../../GreenCheckbox/GreenCheckbox";
 import usePrayerBottomModal from "../../../overlays/PrayerBottomModal/usePrayerBottomModal";
+import { useContext } from "react";
+import { PrayerListDataContext } from "../ScrollSynchronizedCategoryList";
+import { usePray } from "../../../hooks/usePray";
+import { useShareSelection } from "../../../overlays/ShareSelectionModal/ShareSelectionModal";
 
-const Username = ({ selected, name }) => (
-  <S.ItemName selected={selected}>{name}</S.ItemName>
-);
+const Toggle = ({
+  type, // "CHECKBOX" | "HEART"
+  isOn,
+  toggleHandler,
+}) => {
+  const onClick = (e) => {
+    e.stopPropagation();
+    toggleHandler();
+  };
 
-const ItemRight = ({ isShared, isPrayedToday, checked }) => {
-  if (isShared) return <GreenCheckbox checked={checked} handler={() => {}} />;
+  if (type === "CHECKBOX")
+    return <GreenCheckbox checked={isOn} handler={onClick} />;
 
-  return (
-    <img
-      src={
-        isPrayedToday
-          ? "images/ic_filled_heart.svg"
-          : "images/ic_empty_heart.svg"
-      }
-      alt="heart_icon"
-      onClick={() => {}}
-    />
-  );
+  return <S.HeartToggleView isOn={isOn} onClick={onClick} />;
 };
 
-const Item = ({ prayer, isShared }) => {
-  const { name, isPrayedToday, content } = prayer;
+const Item = ({ item }) => {
+  const { name, isPrayedToday, content, prayId } = item;
+  const { isSharedPrayers: isSharedPrayer, isSharingMode } = useContext(
+    PrayerListDataContext
+  );
+
+  const { isSelectedMap, toggleById } = useShareSelection();
+
+  const tab = isSharedPrayer ? "shared" : "personal";
+
+  const { todayPray, cancelPray } = usePray(tab);
 
   const { selectPrayerInfo } = usePrayerBottomModal();
 
+  const toggleHandler = async () => {
+    if (isSharingMode) {
+      toggleById(prayId);
+    } else {
+      if (!isPrayedToday) todayPray(prayId);
+      else cancelPray(prayId);
+    }
+  };
+
+  const onClick = () => {
+    if (isSharingMode) toggleById(prayId);
+    else selectPrayerInfo(item);
+  };
+
   return (
-    <S.Item onClick={() => selectPrayerInfo(prayer)}>
-      {isShared && <Username selected={isPrayedToday} name={name} />}
-      <S.ItemContent>{content}</S.ItemContent>
-      <ItemRight
-        checked={false}
-        isPrayedToday={isPrayedToday}
-        isShared={isShared}
+    <S.Item onClick={onClick}>
+      {isSharedPrayer && (
+        <S.ItemName selected={isPrayedToday}>{name}</S.ItemName>
+      )}
+      <S.ItemContent selected={isPrayedToday}>{content}</S.ItemContent>
+      <Toggle
+        isOn={isSharingMode ? isSelectedMap[prayId] : isPrayedToday}
+        isShared={isSharedPrayer}
+        type={isSharingMode ? "CHECKBOX" : "HEART"}
+        toggleHandler={toggleHandler}
       />
     </S.Item>
   );
 };
 
-const InnerPrayerList = ({ prayers, isShared }) => {
+const InnerPrayerList = ({ innerPrayers, isShared }) => {
   return (
     <S.ListContainer>
-      {prayers.map((prayer) => (
-        <Item key={prayer.prayId} isShared={isShared} prayer={prayer} />
+      {innerPrayers.map((item) => (
+        <Item key={item.prayId} isShared={isShared} item={item} />
       ))}
     </S.ListContainer>
   );
@@ -78,12 +104,29 @@ const S = {
     flex: 1;
     display: flex;
     align-items: center;
-    color: ${(props) => (props.selected ? "#49614380" : "#496143")};
+    color: ${({ selected }) => (selected ? "#49614380" : "#496143")};
     font-size: 12px;
+    transition: all 0.2s;
   `,
   ItemName: styled.div`
     width: 48px;
-    color: ${(props) => (props.selected ? "#75BD6280" : "#75BD62")};
+    color: ${({ selected }) => (selected ? "#75BD6280" : "#75BD62")};
     font-size: 12px;
+    transition: all 0.2s;
+  `,
+  HeartToggleView: styled.div`
+    width: 24px;
+    height: 24px;
+
+    background-image: ${({ isOn }) =>
+      isOn
+        ? "url('images/ic_filled_heart.svg')"
+        : "url('images/ic_empty_heart.svg')"};
+
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    transition: all 0.2s;
   `,
 };

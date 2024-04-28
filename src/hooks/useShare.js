@@ -1,8 +1,11 @@
 import { useMutation } from "react-query";
 import useApi from "./useApi";
+import { useFetchSharedList } from "./useFetchSharedList";
 
 export const useShare = () => {
   const { postFetcher } = useApi();
+  const { refetchSharedListData } = useFetchSharedList();
+
   return useMutation(
     async (data) => {
       return await postFetcher("/share/receive", data);
@@ -12,7 +15,7 @@ export const useShare = () => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        refetchSharedListData();
       },
       retry: (cnt) => {
         return cnt < 3;

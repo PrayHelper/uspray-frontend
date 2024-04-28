@@ -29,40 +29,42 @@ import CategoryInputModal from "../overlays/PrayerInputModal/CategoryInputModal"
 import useCategoryEditModal from "../overlays/PrayerInputModal/useCategoryEditModal";
 import MainDotOptions from "../components/pages/Main/DotOptions/MainDotOptions";
 import MainChangeCategoryOrder from "../components/pages/Main/ChangeCategoryOrder/MainChangeCategoryOrder";
-import Locker from "../components/pages/Main/Locker/Locker";
-import Overlay from "../components/Overlay/Overlay";
 import MainLocker from "../components/pages/Main/Locker/MainLocker";
+import { useShareSelection } from "../overlays/ShareSelectionModal/ShareSelectionModal";
 
 const BG_COLOR_MAP = {
   personal: "#7BAB6E",
   shared: "#3D5537",
 };
 
-export const mainModeAtom = atom("DEFAULT"); // "DEFAULT" | "SHARING" | "CHANGE_CATEGORY_ORDER" | "LOCKER"
+export const mainModeAtom = atom("DEFAULT"); // "DEFAULT" | "CHANGE_CATEGORY_ORDER" | "LOCKER"
 
 export const mainTabAtom = atom("personal"); // "personal" | "shared"
 
-const useRecieveSharedPrayers = () => {
-  const [searchParams] = useSearchParams();
+const useReceive = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isMountedRef = useRef(false);
+
   const setTab = useSetAtom(mainTabAtom);
 
   const { mutate: receivePrays } = useShare();
 
   useEffect(() => {
-    const sharedIds = searchParams.getAll("share");
-    if (sharedIds.length < 1) return;
+    if (isMountedRef.current) return;
 
-    const decodedPrayIds = window.atob(sharedIds[0]).split(",");
-    receivePrays({ prayIds: decodedPrayIds });
-    setTab("shared");
-  }, [searchParams, receivePrays, setTab]);
+    const sharedIds = searchParams.get("share");
 
-  // useEffect(() => {
-  //   if (decodedPrayIds) {
-  //     receivePrays({ prayIds: decodedPrayIds });
-  //     setTab("shared");
-  //   }
-  // }, [receivePrays, decodedPrayIds]);
+    if (sharedIds) {
+      const decodedPrayIds = window.atob(sharedIds).split(",");
+
+      receivePrays({ prayIds: decodedPrayIds });
+
+      setTab("shared");
+      setSearchParams({ share: "" });
+    }
+
+    isMountedRef.current = true;
+  }, [receivePrays, searchParams, setTab, setSearchParams]);
 };
 
 const MainNext = () => {
@@ -76,9 +78,8 @@ const MainNext = () => {
   const { controlledProps: categoryControlledProps } = useCategoryCreateModal();
   const { controlledProps: categoryEditControlledProps } =
     useCategoryEditModal();
-  const [mainMode, setMainMode] = useAtom(mainModeAtom);
 
-  useRecieveSharedPrayers();
+  useReceive();
 
   return (
     <MainWrapper bgColor={BG_COLOR_MAP[tab]}>
@@ -103,7 +104,7 @@ const MainNext = () => {
 
       <MainHeader />
       <ScrollSynchronizedPrayerList
-        isSharing={mainMode === "SHARING"}
+        isSharedPrayers={tab === "shared"}
         categoriesWithPrayers={prayList}
       />
     </MainWrapper>

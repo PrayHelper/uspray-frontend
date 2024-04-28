@@ -1,37 +1,14 @@
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useState } from "react";
 import styled from "styled-components";
 import { mainModeAtom, mainTabAtom } from "../../../../pages/Main";
-
-export const useDotOptions = () => {
-  const [isOpened, setIsOpened] = useState(false);
-  const setMainMode = useSetAtom(mainModeAtom);
-
-  const open = () => setIsOpened(true);
-  const close = () => setIsOpened(false);
-
-  return {
-    controlledProps: {
-      isOpened,
-      isTabSharedMode: useAtomValue(mainTabAtom) === "shared",
-      open,
-      close,
-      onClickOrder: () => {
-        setMainMode("CHANGE_CATEGORY_ORDER");
-        close();
-      },
-      onClickShare: () => {
-        setMainMode("SHARE");
-        alert("아직 구현 안된 기능");
-        close();
-      },
-    },
-  };
-};
+import { useShareSelection } from "../../../../overlays/ShareSelectionModal/ShareSelectionModal";
 
 const MainDotOptions = () => {
   const [isOpened, setIsOpened] = useState(false);
-  const setMainMode = useSetAtom(mainModeAtom);
+  const [mainMode, setMainMode] = useAtom(mainModeAtom);
+
+  const { open: openShareSelectionModal } = useShareSelection();
 
   const open = () => setIsOpened(true);
   const close = () => setIsOpened(false);
@@ -42,12 +19,13 @@ const MainDotOptions = () => {
   };
 
   const onClickShare = () => {
-    setMainMode("SHARE");
-    alert("아직 구현 안된 기능");
+    openShareSelectionModal();
     close();
   };
 
   const isTabSharedMode = useAtomValue(mainTabAtom) === "shared";
+
+  if (mainMode !== "DEFAULT") return null;
 
   return (
     <>
@@ -87,15 +65,15 @@ export default MainDotOptions;
 
 const S = {
   OptionItem: styled.img`
-    opacity: ${(props) => (props.isVisible ? 1 : 0)};
-    visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
+    opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+    visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
     position: fixed;
-    bottom: ${(props) =>
-      props.isVisible ? `calc(80px + ${props.movingDistance}px)` : "80px"};
+    bottom: ${({ isVisible, movingDistance }) =>
+      isVisible ? `calc(80px + ${movingDistance}px)` : "80px"};
     right: 20px;
     transition: all 0.2s ease;
-    filter: ${(props) =>
-      props.isVisible ? "drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.3))" : "none"};
-    z-index: 100;
+    filter: ${({ isVisible }) =>
+      isVisible ? "drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.3))" : "none"};
+    z-index: 160;
   `,
 };

@@ -18,6 +18,8 @@ const S = {
     }
     scrollbar-width: none;
     -ms-overflow-style: none;
+
+    z-index: 150;
   `,
   // 카테고리 덮개
   TopWrapper: styled.div`

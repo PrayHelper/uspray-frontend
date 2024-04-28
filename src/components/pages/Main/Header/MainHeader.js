@@ -4,6 +4,7 @@ import S from "./MainHeader.style";
 import { mainModeAtom, mainTabAtom } from "../../../../pages/Main";
 import { useAtom, useSetAtom } from "jotai";
 import usePrayerCreateModal from "../../../../overlays/PrayerInputModal/usePrayerCreateModal";
+import { useFetchSharedList } from "../../../../hooks/useFetchSharedList";
 
 const TAB_TEXT_MAP = {
   personal: "내가 쓴",
@@ -95,6 +96,8 @@ const MainHeader = () => {
 
   const setMainMode = useSetAtom(mainModeAtom);
 
+  const { sharedListData } = useFetchSharedList();
+
   return (
     <S.HeaderRootContainer>
       <S.TabList>
@@ -117,7 +120,7 @@ const MainHeader = () => {
           />
         ) : (
           <S.MoveToLockerButton onClick={() => setMainMode("LOCKER")}>
-            보관함에 {0}개의 기도제목이 있어요
+            보관함에 {sharedListData.length}개의 기도제목이 있어요
           </S.MoveToLockerButton>
         )}
       </S.BottomAreaWrapper>

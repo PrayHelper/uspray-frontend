@@ -55,7 +55,7 @@ const MainChangeCategoryOrder = () => {
   return (
     <Overlay isOverlayOn={mainMode === "CHANGE_CATEGORY_ORDER"}>
       <S.PageRoot>
-        <UserHeader overlay setIsOverlayOn={() => setMainMode("default")}>
+        <UserHeader overlay setIsOverlayOn={() => setMainMode("DEFUALT")}>
           카테고리 순서 변경
         </UserHeader>
         {categoryList && (

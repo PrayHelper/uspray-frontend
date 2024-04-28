@@ -12,11 +12,19 @@ import { Modal } from "@mui/material";
 import { ToastTheme } from "../Toast/Toast";
 import S from "./ScrollSynchronizedCategoryList.style";
 import { useCallback } from "react";
-import { debounce } from "../../lib/react-scroll-section/utils";
 import TopCategoryList from "./TopCategoryList/TopCategoryList";
 import BottomCategoryBoxList from "./BottomBoxList/BottomBoxList";
+import ShareSelectionModal, {
+  useShareSelection,
+} from "../../overlays/ShareSelectionModal/ShareSelectionModal";
 
-export const ScrollingContext = createContext({
+export const PrayerListDataContext = createContext({
+  isSharedPrayers: false,
+  isSharingMode: false,
+  categoriesWithPrayers: [],
+});
+
+export const PrayerListScrollingContext = createContext({
   registerTopItemRef: (id, node) => {},
   registerBottomItemRef: (id, node) => {},
   onClickTopItem: (id) => {},
@@ -25,7 +33,7 @@ export const ScrollingContext = createContext({
   selectedId: null,
 });
 
-const ScrollingProvider = ({ children }) => {
+const PrayerListScrollingProvider = ({ children }) => {
   const topItemsRef = useRef({});
   const bottomItemsRef = useRef({});
   const topListRef = useRef(null);
@@ -140,7 +148,7 @@ const ScrollingProvider = ({ children }) => {
   }, []);
 
   return (
-    <ScrollingContext.Provider
+    <PrayerListScrollingContext.Provider
       value={{
         registerTopItemRef,
         registerBottomItemRef,
@@ -150,18 +158,27 @@ const ScrollingProvider = ({ children }) => {
         selectedId,
       }}>
       {children}
-    </ScrollingContext.Provider>
+    </PrayerListScrollingContext.Provider>
   );
 };
 
-export const ScrollSynchronizedPrayerList = ({ categoriesWithPrayers }) => {
+export const ScrollSynchronizedPrayerList = ({
+  categoriesWithPrayers,
+  isSharedPrayers,
+}) => {
+  const { isOpened: isSharingMode, controlledModalProps } = useShareSelection();
+
   return (
-    <S.Wrapper>
-      <ScrollingProvider>
-        <TopCategoryList categoriesWithPrayers={categoriesWithPrayers} />
-        <BottomCategoryBoxList categoriesWithPrayers={categoriesWithPrayers} />
-      </ScrollingProvider>
-    </S.Wrapper>
+    <PrayerListDataContext.Provider
+      value={{ categoriesWithPrayers, isSharedPrayers, isSharingMode }}>
+      <PrayerListScrollingProvider>
+        <S.Wrapper>
+          <TopCategoryList />
+          <BottomCategoryBoxList />
+          <ShareSelectionModal {...controlledModalProps} />
+        </S.Wrapper>
+      </PrayerListScrollingProvider>
+    </PrayerListDataContext.Provider>
   );
 };
 
@@ -171,8 +188,6 @@ const ScrollSynchronizedCategoryList = ({
   selectedCategoryIndex,
   setSelectedCategoryIndex,
   tabType,
-  setClickedCategoryData,
-  categoryRef,
   setCategoryRefIndex,
   shareMode,
   setShareMode,
@@ -415,3 +430,17 @@ const ScrollSynchronizedCategoryList = ({
 };
 
 export default ScrollSynchronizedCategoryList;
+
+const debounce = (func, waitFor) => {
+  let timeout = null;
+
+  const debounced = (...args) => {
+    if (timeout !== null) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+    timeout = setTimeout(() => func(...args), waitFor);
+  };
+
+  return debounced;
+};

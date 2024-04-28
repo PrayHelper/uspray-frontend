@@ -2,36 +2,21 @@ import ButtonV2 from "../../components/ButtonV2/ButtonV2";
 import { ButtonTheme } from "../../components/Button/Button";
 import { SelectDateNew } from "../../components/SelectDate/SelectDate";
 import { createPortal } from "react-dom";
-import { useEffect, useRef } from "react";
 import S from "./styles";
 
 // PrayDateCategoryInput의 개선된 버전, usePrayerInput과 함께 사용
-const PrayerInputModal = ({
+const PrayerSaveModal = ({
   // hook level에서 주입되는 props
   isShow,
+  selectedListLength,
   onClickBackground,
-  isShared,
-  textInputValue,
-  onChangeTextInputValue,
   selectedDateValue,
   selectDateValue,
   categoryList,
   selectedCategoryId,
   selectCategoryId,
   onClickBottomButton,
-  bottomButtonText,
-
-  // component 사용 단계에서 주입되는 props
-  maxRow = 75,
-  maxLength = 3,
-  showsWordCount = true,
 }) => {
-  const inputRef = useRef(null);
-
-  useEffect(() => {
-    if (inputRef?.current) inputRef.current.focus();
-  }, [isShow]);
-
   return createPortal(
     <>
       <S.BlackBg isShow={isShow} onClick={onClickBackground} />
@@ -39,13 +24,9 @@ const PrayerInputModal = ({
         <S.Inner>
           <S.TopContainer isShow={isShow}>
             <S.TextAndDateContainer>
-              <S.TextInput
-                ref={inputRef}
-                value={textInputValue}
-                onChange={onChangeTextInputValue}
-                placeholder={"기도제목을 입력해주세요"}
-                disabled={isShared}
-              />
+              <S.SaveCountText>
+                {selectedListLength}개의 기도제목이 선택되었어요
+              </S.SaveCountText>
               <SelectDateNew
                 selectDate={selectDateValue}
                 selectedDate={selectedDateValue}
@@ -64,16 +45,14 @@ const PrayerInputModal = ({
             </S.CategoryListContainer>
           </S.TopContainer>
           <S.BottomContainer isShow={isShow}>
-            {isShared && (
-              <S.SubTextStyle>
-                공유된 기도제목의 내용은 수정할 수 없습니다.
-              </S.SubTextStyle>
-            )}
+            <S.SubTextStyle>
+              공유된 기도제목의 내용은 수정할 수 없습니다.
+            </S.SubTextStyle>
             <ButtonV2
               buttonTheme={ButtonTheme.FILLED}
-              disabled={!textInputValue.length || !selectedCategoryId}
+              disabled={!selectedCategoryId}
               handler={onClickBottomButton}>
-              {bottomButtonText}
+              내 기도수첩에 저장하기
             </ButtonV2>
           </S.BottomContainer>
         </S.Inner>
@@ -83,4 +62,4 @@ const PrayerInputModal = ({
   );
 };
 
-export default PrayerInputModal;
+export default PrayerSaveModal;

@@ -1,11 +1,15 @@
 import { useContext } from "react";
-import { ScrollingContext } from "../ScrollSynchronizedCategoryList";
+import {
+  PrayerListDataContext,
+  PrayerListScrollingContext,
+} from "../ScrollSynchronizedCategoryList";
 import styled from "styled-components";
 import useCategoryCreateModal from "../../../overlays/PrayerInputModal/useCategoryCreateModal";
 
 const Item = ({ id, name, color }) => {
-  const { registerTopItemRef, onClickTopItem, selectedId } =
-    useContext(ScrollingContext);
+  const { registerTopItemRef, onClickTopItem, selectedId } = useContext(
+    PrayerListScrollingContext
+  );
 
   return (
     <S.ItemContainer
@@ -19,9 +23,10 @@ const Item = ({ id, name, color }) => {
   );
 };
 
-const TopCategoryList = ({ categoriesWithPrayers }) => {
+const TopCategoryList = () => {
+  const { categoriesWithPrayers } = useContext(PrayerListDataContext);
   const { open: openCategoryModal } = useCategoryCreateModal();
-  const { registerTopListRef } = useContext(ScrollingContext);
+  const { registerTopListRef } = useContext(PrayerListScrollingContext);
 
   return (
     <S.TopWrapper>

@@ -4,19 +4,16 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { ScrollingProvider } from "./lib/react-scroll-section";
 
 const queryClient = new QueryClient();
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <ScrollingProvider>
-      <RecoilRoot>
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
-      </RecoilRoot>
-    </ScrollingProvider>
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </RecoilRoot>
   </React.StrictMode>
 );
 

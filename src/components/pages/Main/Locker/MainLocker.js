@@ -8,11 +8,10 @@ import LockerPrayerList from "./LockerPrayerList";
 import { useFetchSharedList } from "../../../../hooks/useFetchSharedList";
 import { useDeleteSharedList } from "../../../../hooks/useDeleteSharedList";
 import { useState } from "react";
-import { useUpdateSharedList } from "../../../../hooks/useUpdateSharedList";
 import { getDDayLabel } from "../../../../utils/date";
 import { ToastTheme } from "../../../Toast/Toast";
-
-const fixedTabName = "shared";
+import usePrayerSaveModal from "../../../../overlays/PrayerInputModal/usePrayerSaveModal";
+import PrayerSaveModal from "../../../../overlays/PrayerInputModal/PrayerSaveModal";
 
 const NoDataExists = () => (
   <S.NoDataWrapper>
@@ -27,7 +26,7 @@ const useCheckStateFromSharedList = (sharedList) => {
   // 한개 이상 체크되었는지
   const isCheckedAtLeastOne = Object.values(isCheckedMap).some(Boolean);
 
-  const toggleSingleItem = (id) => {
+  const toggleById = (id) => {
     setIsCheckedMap(({ [id]: prev, ...rest }) => ({
       [id]: !prev,
       ...rest,
@@ -62,7 +61,7 @@ const useCheckStateFromSharedList = (sharedList) => {
     clearAllItems,
     activateAllItems,
     toggleAllItem,
-    toggleSingleItem,
+    toggleById,
     getSelectedSharedPrayIds,
   };
 };
@@ -70,14 +69,12 @@ const useCheckStateFromSharedList = (sharedList) => {
 const useLockerStates = () => {
   const { sharedListData, refetchSharedListData } = useFetchSharedList();
   const { mutateAsync: deleteListData } = useDeleteSharedList();
-  const { mutate: updateListData } = useUpdateSharedList();
   const {
     isCheckedMap,
     isCheckedAtLeastOne,
-    toggleSingleItem,
+    toggleById,
     toggleAllItem,
     getSelectedSharedPrayIds,
-    activateAllItems,
     clearAllItems,
   } = useCheckStateFromSharedList(sharedListData);
 
@@ -90,7 +87,7 @@ const useLockerStates = () => {
       content,
       isChecked: isCheckedMap[sharedPrayId],
       dDayLabel: getDDayLabel(createdAt),
-      onClick: () => toggleSingleItem(sharedPrayId),
+      onClick: () => toggleById(sharedPrayId),
     })
   );
 
@@ -112,13 +109,15 @@ const useLockerStates = () => {
     );
   };
 
-  const saveHandler = () => {};
+  const { open } = usePrayerSaveModal();
 
   return {
     lockerPrayerList,
     isCheckedAtLeastOne,
     deleteHandler,
-    saveHandler,
+    saveHandler: () => {
+      open(getSelectedSharedPrayIds());
+    },
     toggleAllItem,
   };
 };
@@ -134,29 +133,36 @@ const MainLocker = () => {
     toggleAllItem,
   } = useLockerStates();
 
+  const { controlledProps } = usePrayerSaveModal();
+
   const isDataEmpty = lockerPrayerList.length === 0;
 
   return (
     <Overlay isOverlayOn={mainMode === "LOCKER"}>
-      <S.Wrapper>
+      <S.PageWrapper>
         <LockerHeaderNew
           {...{
             isDataEmpty,
             isCheckedAtLeastOne,
             toggleAllItem,
-            saveHandler,
             deleteHandler,
+            saveHandler,
           }}
         />
-        {isDataEmpty ? (
-          <NoDataExists />
-        ) : (
-          <LockerPrayerList lockerPrayerList={lockerPrayerList} />
-        )}
+        <S.ContentOuter>
+          <S.ContentInner>
+            {isDataEmpty ? (
+              <NoDataExists />
+            ) : (
+              <LockerPrayerList lockerPrayerList={lockerPrayerList} />
+            )}
+          </S.ContentInner>
+        </S.ContentOuter>
         <S.BottomButton onClick={() => setMainMode("DEFAULT")}>
           뒤로 가기
         </S.BottomButton>
-      </S.Wrapper>
+      </S.PageWrapper>
+      <PrayerSaveModal {...controlledProps} />
     </Overlay>
   );
 };
@@ -164,27 +170,26 @@ const MainLocker = () => {
 export default MainLocker;
 
 const S = {
-  Wrapper: styled.div`
+  PageWrapper: styled.div`
     background-color: var(--color-light-green);
-
-    display: flex;
-    flex-direction: column;
 
     height: 100vh;
     width: 100%;
 
     z-index: 100;
   `,
+  ContentOuter: styled.div`
+    padding: 65px 0;
+  `,
+  ContentInner: styled.div`
+    height: calc(100vh - 130px);
+    overflow: auto;
+  `,
   NoDataWrapper: styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: fixed;
-    width: 100%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
   `,
   NoDataTitle: styled.div`
     font-weight: 700;
@@ -199,6 +204,10 @@ const S = {
     color: var(--color-secondary-green);
   `,
   BottomButton: styled.div`
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
     border: none;
     box-shadow: none;
     border-radius: 0;

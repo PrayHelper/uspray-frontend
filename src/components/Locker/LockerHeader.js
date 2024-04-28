@@ -50,7 +50,7 @@ export const LockerHeaderNew = ({
   deleteHandler,
 }) => {
   return (
-    <S.HeaderWrapper id="123123">
+    <S.HeaderWrapper>
       <S.Title>보관함</S.Title>
       {!isDataEmpty && (
         <S.Selectors>
@@ -77,6 +77,10 @@ export default LockerHeader;
 
 const S = {
   HeaderWrapper: styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+
     width: 100%;
     height: 65px;
     display: flex;

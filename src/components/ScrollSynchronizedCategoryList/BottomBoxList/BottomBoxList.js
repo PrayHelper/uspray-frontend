@@ -1,26 +1,40 @@
 import { useContext } from "react";
-import { ScrollingContext } from "../ScrollSynchronizedCategoryList";
+import {
+  PrayerListDataContext,
+  PrayerListScrollingContext,
+} from "../ScrollSynchronizedCategoryList";
 import styled from "styled-components";
 import InnerPrayerList from "./InnerPrayerList";
 import useCategoryEditModal from "../../../overlays/PrayerInputModal/useCategoryEditModal";
 
-const BottomCategoryBoxItem = ({ id, name, color, prayers }) => {
-  const { registerBottomItemRef } = useContext(ScrollingContext);
+const BottomCategoryBoxItem = ({ id, name, color, innerPrayers }) => {
+  const { registerBottomItemRef } = useContext(PrayerListScrollingContext);
   const { open } = useCategoryEditModal();
+  const { isSharingMode } = useContext(PrayerListDataContext);
+
+  const onClick = () => {
+    if (!isSharingMode) open({ id, name, color });
+  };
 
   return (
     <S.CategoryContainer ref={(node) => registerBottomItemRef(id, node)}>
-      <S.Title color={color} onClick={() => open({ id, name, color })}>
+      <S.Title color={color} onClick={onClick}>
         {name}
-        <img src="/images/ic_dot.svg" alt="dot_icon" />
+        {!isSharingMode && <img src="/images/ic_dot.svg" alt="dot_icon" />}
       </S.Title>
-      <InnerPrayerList prayers={prayers} />
+
+      {innerPrayers.length > 0 ? (
+        <InnerPrayerList innerPrayers={innerPrayers} />
+      ) : (
+        <S.PrayerEmpty>이 카테고리에는 아직 기도제목이 없네요!</S.PrayerEmpty>
+      )}
     </S.CategoryContainer>
   );
 };
 
-const BottomCategoryBoxList = ({ categoriesWithPrayers }) => {
-  const { registerBottomListRef } = useContext(ScrollingContext);
+const BottomCategoryBoxList = () => {
+  const { categoriesWithPrayers } = useContext(PrayerListDataContext);
+  const { registerBottomListRef } = useContext(PrayerListScrollingContext);
 
   return (
     <S.Content ref={(node) => registerBottomListRef(node)}>
@@ -31,7 +45,7 @@ const BottomCategoryBoxList = ({ categoriesWithPrayers }) => {
             id={String(categoryId)}
             name={categoryName}
             color={categoryColor}
-            prayers={prays}
+            innerPrayers={prays}
           />
         )
       )}
@@ -105,5 +119,11 @@ const S = {
     padding: 8px 16px 124px;
 
     overflow: auto;
+  `,
+  PrayerEmpty: styled.div`
+    padding: 16px;
+    font-weight: 300;
+    font-size: 12px;
+    text-align: center;
   `,
 };

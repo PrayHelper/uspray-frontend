@@ -45,8 +45,8 @@ const usePrayerModifyModal = () => {
 
   return {
     controlledProps: {
+      isShared: tab === "shared",
       isShow: !!prayerId,
-      isShared: false,
       mode: "MODIFY",
       selectDateValue,
       onChangeTextInputValue: (e) => setTextInputValue(e.target.value),
