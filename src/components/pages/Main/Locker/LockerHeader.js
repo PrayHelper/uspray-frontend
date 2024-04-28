@@ -10,39 +10,6 @@ const CheckIcon = () => (
 );
 
 const LockerHeader = ({
-  isEmptyData,
-  isClicked,
-  onClickSelectAll,
-  onClickSave,
-  deleteSharedList,
-}) => {
-  return (
-    <div style={{ width: "100%" }}>
-      <StyledHeader>
-        <Title>보관함</Title>
-        {!isEmptyData && (
-          <SelectGroup>
-            {!isClicked && (
-              <div onClick={onClickSelectAll}>
-                <CheckIcon />
-                전체 선택
-              </div>
-            )}
-            {isClicked && (
-              <>
-                <div onClick={onClickSelectAll}>전체 취소</div>
-                <div onClick={onClickSave}>저장</div>
-                <div onClick={deleteSharedList}>삭제</div>
-              </>
-            )}
-          </SelectGroup>
-        )}
-      </StyledHeader>
-    </div>
-  );
-};
-
-export const LockerHeaderNew = ({
   isDataEmpty,
   isCheckedAtLeastOne,
   toggleAllItem,

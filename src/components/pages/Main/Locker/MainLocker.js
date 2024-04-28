@@ -3,7 +3,7 @@ import { mainModeAtom } from "../../../../pages/Main";
 import useToast from "../../../../hooks/useToast";
 import Overlay from "../../../Overlay/Overlay";
 import styled from "styled-components";
-import { LockerHeaderNew } from "../../../Locker/LockerHeader";
+import LockerHeaderNew from "./LockerHeader";
 import LockerPrayerList from "./LockerPrayerList";
 import { useFetchSharedList } from "../../../../hooks/useFetchSharedList";
 import { useDeleteSharedList } from "../../../../hooks/useDeleteSharedList";
