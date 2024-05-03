@@ -347,11 +347,8 @@ const MainNext = () => {
 export default MainNext;
 
 const MainWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
   height: 100vh;
   width: 100%;
-  position: relative;
 
   background-color: ${({ bgColor }) => bgColor};
 `;

@@ -74,6 +74,6 @@ const S = {
     transition: all 0.2s ease;
     filter: ${({ isVisible }) =>
       isVisible ? "drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.3))" : "none"};
-    z-index: 160;
+    z-index: 120;
   `,
 };

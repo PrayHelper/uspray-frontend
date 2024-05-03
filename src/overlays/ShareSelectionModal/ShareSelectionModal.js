@@ -90,7 +90,7 @@ const ShareSelectionModal = ({
   shareHandler,
   selectedLength,
 }) => {
-  return createPortal(
+  return (
     <>
       <S.BlackBg isOpened={isOpened} onClick={onClickBackground} />
       <S.BottomShareWrapper isOpened={isOpened}>
@@ -112,8 +112,7 @@ const ShareSelectionModal = ({
           </S.ShareButtonWrapper>
         </S.ShareButtonContainer>
       </S.BottomShareWrapper>
-    </>,
-    document.getElementById("share-selection-modal")
+    </>
   );
 };
 

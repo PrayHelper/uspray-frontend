@@ -166,17 +166,22 @@ export const ScrollSynchronizedPrayerList = ({
   categoriesWithPrayers,
   isSharedPrayers,
 }) => {
-  const { isOpened: isSharingMode, controlledModalProps } = useShareSelection();
+  const { isOpened: isSharingMode } = useShareSelection();
+
+  const { controlledModalProps } = useShareSelection();
+
+  // 더 세련된 방법으로 z-index를 제어하는 방법을 찾았다면 고쳐주세요ㅜㅜ
+  const zIndex = isSharingMode ? 131 : "auto";
 
   return (
     <PrayerListDataContext.Provider
       value={{ categoriesWithPrayers, isSharedPrayers, isSharingMode }}>
       <PrayerListScrollingProvider>
-        <S.Wrapper>
+        <S.WrapperNew zIndex={zIndex}>
           <TopCategoryList />
           <BottomCategoryBoxList />
-          <ShareSelectionModal {...controlledModalProps} />
-        </S.Wrapper>
+        </S.WrapperNew>
+        <ShareSelectionModal {...controlledModalProps} />
       </PrayerListScrollingProvider>
     </PrayerListDataContext.Provider>
   );
