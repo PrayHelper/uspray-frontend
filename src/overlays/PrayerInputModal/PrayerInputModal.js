@@ -22,6 +22,7 @@ const PrayerInputModal = ({
   bottomButtonText,
   close,
   placeholder,
+  placeholderColor,
 
   // component 사용 단계에서 주입되는 props
   maxRow = 75,
@@ -62,6 +63,7 @@ const PrayerInputModal = ({
                   value={textInputValue}
                   onChange={onChangeTextInputValue}
                   placeholder={placeholder}
+                  placeholderColor={placeholderColor}
                   disabled={isShared}
                 />
                 <SelectDateNew

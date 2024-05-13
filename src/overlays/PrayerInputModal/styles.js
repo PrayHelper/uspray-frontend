@@ -94,7 +94,8 @@ const S = {
     border-bottom: 1px solid var(--color-white-green);
     letter-spacing: -0.04em;
     ::placeholder {
-      color: #b7ceb0; // 원하는 색상으로 변경
+      color: ${({ placeholderColor }) =>
+        placeholderColor ?? "#b7ceb0"}; // 원하는 색상으로 변경
     }
     :focus {
       border-bottom: 1px solid var(--color-dark-green);
