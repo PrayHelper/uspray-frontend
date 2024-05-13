@@ -76,7 +76,6 @@ const usePrayerCreateModal = () => {
       selectedDateValue,
       selectDateValue,
       onClickBottomButton,
-      onClickBackground: close,
       categoryList,
     },
     open,
