@@ -14,10 +14,10 @@ const PrayerInputModal = ({
   textInputValue,
   onChangeTextInputValue,
   selectedDateValue,
-  selectDateValue,
+  setSelectedDateValue,
   categoryList,
   selectedCategoryId,
-  selectCategoryId,
+  setSelectedCategoryId,
   onClickBottomButton,
   bottomButtonText,
   close,
@@ -67,7 +67,7 @@ const PrayerInputModal = ({
                   disabled={isShared}
                 />
                 <SelectDateNew
-                  selectDate={selectDateValue}
+                  selectDate={setSelectedDateValue}
                   selectedDate={selectedDateValue}
                 />
               </S.TextAndDateContainer>
@@ -77,7 +77,7 @@ const PrayerInputModal = ({
                     key={category.id}
                     selected={category.id === selectedCategoryId}
                     color={category.color}
-                    onClick={() => selectCategoryId(category.id)}>
+                    onClick={() => setSelectedCategoryId(category.id)}>
                     {category.name}
                   </S.CategoryItemContainer>
                 ))}

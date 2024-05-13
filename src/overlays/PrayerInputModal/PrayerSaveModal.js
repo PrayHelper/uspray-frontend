@@ -11,10 +11,10 @@ const PrayerSaveModal = ({
   selectedListLength,
   onClickBackground,
   selectedDateValue,
-  selectDateValue,
+  setSelectedDateValue,
   categoryList,
   selectedCategoryId,
-  selectCategoryId,
+  setSelectedCategoryId,
   onClickBottomButton,
 }) => {
   return createPortal(
@@ -28,7 +28,7 @@ const PrayerSaveModal = ({
                 {selectedListLength}개의 기도제목이 선택되었어요
               </S.SaveCountText>
               <SelectDateNew
-                selectDate={selectDateValue}
+                selectDate={setSelectedDateValue}
                 selectedDate={selectedDateValue}
               />
             </S.TextAndDateContainer>
@@ -38,7 +38,7 @@ const PrayerSaveModal = ({
                   key={category.id}
                   selected={category.id === selectedCategoryId}
                   color={category.color}
-                  onClick={() => selectCategoryId(category.id)}>
+                  onClick={() => setSelectedCategoryId(category.id)}>
                   {category.name}
                 </S.CategoryItemContainer>
               ))}

@@ -16,10 +16,12 @@ const tab = "shared";
 
 const usePrayerSaveModal = () => {
   const [selectedSharedIds, selectSharedIds] = useAtom(selectedSharedIdsAtom);
-  const [selectedCategoryId, selectCategoryId] = useAtom(
+  const [selectedCategoryId, setSelectedCategoryId] = useAtom(
     selectedCategoryIdAtom
   );
-  const [selectedDateValue, selectDateValue] = useAtom(selectedDateValueAtom);
+  const [selectedDateValue, setSelectedDateValue] = useAtom(
+    selectedDateValueAtom
+  );
 
   const { categoryList, firstCategoryIndex: firstCategoryId } =
     useCategory(tab);
@@ -33,9 +35,9 @@ const usePrayerSaveModal = () => {
   const { showToast } = useToast({});
 
   const resetValues = useCallback(() => {
-    selectCategoryId(firstCategoryId);
-    selectDateValue(getCalculatedDate(7)); // 7일 후로 설정
-  }, [selectCategoryId, selectDateValue, firstCategoryId]);
+    setSelectedCategoryId(firstCategoryId);
+    setSelectedDateValue(getCalculatedDate(7)); // 7일 후로 설정
+  }, [setSelectedCategoryId, setSelectedDateValue, firstCategoryId]);
 
   const open = (sharedIds) => selectSharedIds(sharedIds);
 
@@ -85,10 +87,10 @@ const usePrayerSaveModal = () => {
       onClickBackground: close,
       onClickBottomButton,
       selectedDateValue,
-      selectDateValue,
+      setSelectedDateValue,
       categoryList,
       selectedCategoryId,
-      selectCategoryId,
+      setSelectedCategoryId,
     },
     open,
     close,

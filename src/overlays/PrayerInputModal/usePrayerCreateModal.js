@@ -13,10 +13,12 @@ const selectedDateValueAtom = atom(null);
 const usePrayerCreateModal = () => {
   const [isShow, setIsShow] = useAtom(isOpenedAtom);
   const [textInputValue, setTextInputValue] = useAtom(inputValueAtom);
-  const [selectedCategoryId, selectCategoryId] = useAtom(
+  const [selectedCategoryId, setSelectedCategoryId] = useAtom(
     selectedCategoryIdAtom
   );
-  const [selectedDateValue, selectDateValue] = useAtom(selectedDateValueAtom);
+  const [selectedDateValue, setSelectedDateValue] = useAtom(
+    selectedDateValueAtom
+  );
 
   const tab = useAtomValue(mainTabAtom);
 
@@ -28,11 +30,11 @@ const usePrayerCreateModal = () => {
 
   const resetValues = useCallback(() => {
     setTextInputValue("");
-    selectCategoryId(firstCategoryIndex);
-    selectDateValue(getCalculatedDate(7));
+    setSelectedCategoryId(firstCategoryIndex);
+    setSelectedDateValue(getCalculatedDate(7));
   }, [
-    selectCategoryId,
-    selectDateValue,
+    setSelectedCategoryId,
+    setSelectedDateValue,
     setTextInputValue,
     firstCategoryIndex,
   ]);
@@ -73,9 +75,9 @@ const usePrayerCreateModal = () => {
       onChangeTextInputValue: (e) => setTextInputValue(e.target.value),
       bottomButtonText: "기도제목 작성",
       placeholder: "기도제목을 입력해주세요",
-      selectCategoryId,
+      setSelectedCategoryId,
       selectedDateValue,
-      selectDateValue,
+      setSelectedDateValue,
       onClickBottomButton,
       categoryList,
     },

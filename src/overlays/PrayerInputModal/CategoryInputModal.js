@@ -24,7 +24,7 @@ const CategoryInputModal = ({
   textInputValue,
   onChangeTextInputValue,
   selectedColor,
-  selectColor,
+  setSelectedColor,
   closeHandler,
   onClickBottomButton,
   onClickSecondaryButton,
@@ -57,7 +57,7 @@ const CategoryInputModal = ({
                   color={color}
                   isSelected={selectedColor === color}
                   onClick={() => {
-                    selectColor(color);
+                    setSelectedColor(color);
                   }}
                 />
               ))}

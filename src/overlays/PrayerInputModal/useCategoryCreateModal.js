@@ -11,7 +11,7 @@ const selectedColorAtom = atom(null);
 const useCategoryCreateModal = () => {
   const [isShow, setIsShow] = useAtom(isShowAtom);
   const [textInputValue, setTextInputValue] = useAtom(textInputValueAtom);
-  const [selectedColor, selectColor] = useAtom(selectedColorAtom);
+  const [selectedColor, setSelectedColor] = useAtom(selectedColorAtom);
 
   const open = () => setIsShow(true);
 
@@ -21,8 +21,8 @@ const useCategoryCreateModal = () => {
 
   const resetInputs = useCallback(() => {
     setTextInputValue("");
-    selectColor(CATEGORY_COLORS[0]);
-  }, [selectColor, setTextInputValue]);
+    setSelectedColor(CATEGORY_COLORS[0]);
+  }, [setSelectedColor, setTextInputValue]);
 
   useEffect(() => {
     resetInputs();
@@ -52,7 +52,7 @@ const useCategoryCreateModal = () => {
       onChangeTextInputValue: (e) => setTextInputValue(e.target.value),
       onClickBottomButton,
       selectedColor,
-      selectColor,
+      setSelectedColor,
       closeHandler: close,
     },
   };

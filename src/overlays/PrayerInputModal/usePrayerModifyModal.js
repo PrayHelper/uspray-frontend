@@ -11,10 +11,12 @@ const selectedDateValueAtom = atom(null);
 const usePrayerModifyModal = () => {
   const [prayerId, setPrayerId] = useAtom(prayerIdAtom);
   const [textInputValue, setTextInputValue] = useAtom(inputValueAtom);
-  const [selectedCategoryId, selectCategoryId] = useAtom(
+  const [selectedCategoryId, setSelectedCategoryId] = useAtom(
     selectedCategoryIdAtom
   );
-  const [selectedDateValue, selectDateValue] = useAtom(selectedDateValueAtom);
+  const [selectedDateValue, setSelectedDateValue] = useAtom(
+    selectedDateValueAtom
+  );
 
   const tab = useAtomValue(mainTabAtom);
 
@@ -25,8 +27,8 @@ const usePrayerModifyModal = () => {
   const open = ({ prayId, content, categoryId, deadline }) => {
     setPrayerId(prayId);
     setTextInputValue(content);
-    selectCategoryId(categoryId);
-    selectDateValue(new Date(deadline));
+    setSelectedCategoryId(categoryId);
+    setSelectedDateValue(new Date(deadline));
   };
 
   const close = () => setPrayerId(null);
@@ -50,11 +52,11 @@ const usePrayerModifyModal = () => {
       mode: "MODIFY",
       placeholder: "공유받은 기도제목은 내용 수정이 안 돼요",
       placeholderColor: "#6060604D",
-      selectDateValue,
+      setSelectedDateValue,
       onChangeTextInputValue: (e) => setTextInputValue(e.target.value),
       bottomButtonText: "수정 완료",
       onClickBottomButton,
-      selectCategoryId,
+      setSelectedCategoryId,
       categoryList,
       selectedCategoryId,
       selectedDateValue,
