@@ -189,7 +189,7 @@ const S = {
   `,
   FixedButtonContainer: styled.div`
     position: fixed;
-    bottom: 64px;
+    bottom: 24px;
     width: calc(100% - 32px);
     cursor: pointer;
     display: flex;
