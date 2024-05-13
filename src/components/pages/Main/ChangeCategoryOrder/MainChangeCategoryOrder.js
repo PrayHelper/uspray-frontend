@@ -6,6 +6,7 @@ import { useCategory } from "../../../../hooks/useCategory";
 import { useAtom, useAtomValue } from "jotai";
 import { mainModeAtom, mainTabAtom } from "../../../../pages/Main";
 import Overlay from "../../../Overlay/Overlay";
+import { useEffect } from "react";
 
 const Hamburger = () => (
   <S.HamburgerContainer>
@@ -32,6 +33,11 @@ const CategoryItem = ({ categoryItem, index }) => {
   );
 };
 
+const browserPreventEvent = (event) => {
+  window.history.pushState(null, "", window.location.href);
+  event();
+};
+
 const MainChangeCategoryOrder = () => {
   const [mainMode, setMainMode] = useAtom(mainModeAtom);
   const mainTab = useAtomValue(mainTabAtom);
@@ -52,8 +58,21 @@ const MainChangeCategoryOrder = () => {
       });
   };
 
+  const isOn = mainMode === "CHANGE_CATEGORY_ORDER";
+
+  // Override browser back button
+  useEffect(() => {
+    if (isOn)
+      browserPreventEvent(() => {
+        window.onpopstate = () => {
+          setMainMode("DEFAULT");
+        };
+      });
+    else window.onpopstate = null;
+  }, [isOn, setMainMode]);
+
   return (
-    <Overlay isOverlayOn={mainMode === "CHANGE_CATEGORY_ORDER"}>
+    <Overlay isOverlayOn={isOn}>
       <S.PageRoot>
         <UserHeader overlay setIsOverlayOn={() => setMainMode("DEFAULT")}>
           카테고리 순서 변경
