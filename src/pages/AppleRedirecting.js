@@ -49,7 +49,6 @@ const AppleRedirecting = () => {
   useEffect(() => {
     const login = async () => {
       const api = `/apple/login`;
-
       const data = code;
 
       try {
