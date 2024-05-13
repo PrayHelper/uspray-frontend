@@ -72,6 +72,7 @@ const usePrayerCreateModal = () => {
       selectedCategoryId,
       onChangeTextInputValue: (e) => setTextInputValue(e.target.value),
       bottomButtonText: "기도제목 작성",
+      placeholder: "기도제목을 입력해주세요",
       selectCategoryId,
       selectedDateValue,
       selectDateValue,

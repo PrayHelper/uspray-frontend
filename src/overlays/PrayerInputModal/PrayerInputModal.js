@@ -21,6 +21,7 @@ const PrayerInputModal = ({
   onClickBottomButton,
   bottomButtonText,
   close,
+  placeholder,
 
   // component 사용 단계에서 주입되는 props
   maxRow = 75,
@@ -60,7 +61,7 @@ const PrayerInputModal = ({
                   ref={inputRef}
                   value={textInputValue}
                   onChange={onChangeTextInputValue}
-                  placeholder={"기도제목을 입력해주세요"}
+                  placeholder={placeholder}
                   disabled={isShared}
                 />
                 <SelectDateNew
