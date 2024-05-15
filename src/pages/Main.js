@@ -34,6 +34,7 @@ const useReceive = () => {
   const isMountedRef = useRef(false);
 
   const setTab = useSetAtom(mainTabAtom);
+  const setMainMode = useSetAtom(mainModeAtom);
 
   const { mutate: receivePrays } = useShare();
 
@@ -48,11 +49,12 @@ const useReceive = () => {
       receivePrays({ prayIds: decodedPrayIds });
 
       setTab("shared");
+      setMainMode("LOCKER");
       setSearchParams({ share: "" });
     }
 
     isMountedRef.current = true;
-  }, [receivePrays, searchParams, setTab, setSearchParams]);
+  }, [receivePrays, searchParams, setTab, setSearchParams, setMainMode]);
 };
 
 const Main = () => {
