@@ -1,3 +1,5 @@
+// Deprecated(24/4/26 기준). PrayerInputModal로 대체하여 주세요.
+
 import React, { useEffect } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import SelectDate from "../SelectDate/SelectDate";
@@ -63,8 +65,7 @@ const PrayDateCategoryInput = ({
         ref={outside}
         onClick={(e) => {
           if (e.target === outside.current) setShowSubModal(false);
-        }}
-      >
+        }}>
         <div style={{ display: "flex", gap: "16px", flexDirection: "column" }}>
           <SubModalTop>
             {lockerCount === 0 ? (
@@ -117,8 +118,7 @@ const PrayDateCategoryInput = ({
           <ButtonV2
             buttonTheme={ButtonTheme.FILLED}
             disabled={inputCount === 0 && lockerCount === 0}
-            handler={onClickFunc}
-          >
+            handler={onClickFunc}>
             {buttonText}
           </ButtonV2>
         </FixedButtonContainer>

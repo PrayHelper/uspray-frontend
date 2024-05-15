@@ -1,8 +1,26 @@
 import styled from "styled-components";
 
 const S = {
+  WrapperNew: styled.div`
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 139px);
+    width: 100%;
+
+    background-color: var(--color-white);
+    border-radius: 32px 32px 0px 0px;
+    box-sizing: border-box;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    position: relative;
+    z-index: ${({ zIndex }) => zIndex};
+  `,
   // 전체 흰색 박스(카테고리 목록 ~ 기도제목 목록)
-  MainContentWrapper: styled.div`
+  Wrapper: styled.div`
     display: flex;
     flex-direction: column;
     height: calc(100vh - 139px);
@@ -12,13 +30,14 @@ const S = {
     background-color: var(--color-white);
     border-radius: 32px 32px 0px 0px;
     box-sizing: border-box;
-    overflow-y: auto;
     z-index: ${(props) => (props.shareMode ? 200 : "auto")};
     &::-webkit-scrollbar {
       display: none;
     }
     scrollbar-width: none;
     -ms-overflow-style: none;
+
+    z-index: 150;
   `,
   // 카테고리 덮개
   TopWrapper: styled.div`

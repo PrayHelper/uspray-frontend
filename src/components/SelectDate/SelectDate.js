@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import Calender from "../Calender/Calender";
+import { getCalculatedDate, getCalculatedDiff } from "../../utils/date";
 
 /*
   props 넘겨받을 목록 (History.js 파일 참고하기)
@@ -8,6 +9,62 @@ import Calender from "../Calender/Calender";
   2. showSubModal 변수 (현재 컴포넌트 창 켜져있는지)
   3. date 변수 (기존 선택되어야 하는 날짜)
 */
+
+const DATE_OPTIONS = [3, 7, 30, 100];
+
+const getDeadlineView = (date) => {
+  date = new Date(date);
+
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+  const formattedDayOfWeek = new Intl.DateTimeFormat("ko-KR", {
+    weekday: "short",
+  }).format(date);
+
+  return `~${yyyy}.${mm}.${dd} ${formattedDayOfWeek}`;
+};
+
+export const SelectDateNew = ({ selectDate, selectedDate }) => {
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  return (
+    <S.Wrapper>
+      {DATE_OPTIONS.map((option) => (
+        <S.DiffOptionButton
+          key={option}
+          isSelected={getCalculatedDiff(selectedDate) === option}
+          onClick={() => selectDate(getCalculatedDate(option))}>
+          {`${option}일`}
+        </S.DiffOptionButton>
+      ))}
+      <CalenderIcon
+        src={
+          showDatePicker
+            ? "../images/icon_calender_filled.svg"
+            : "../images/icon_calender.svg"
+        }
+        alt="icon_calender"
+        onClick={() => setShowDatePicker((prev) => !prev)}
+      />
+      {showDatePicker && (
+        <S.CalendarWrapper>
+          <Calender
+            selectedDate={selectedDate}
+            onChangeDate={(date) => {
+              selectDate(date);
+              setShowDatePicker(false);
+            }}
+            setShowDatePicker={setShowDatePicker}
+          />
+        </S.CalendarWrapper>
+      )}
+      {selectedDate && (
+        <SubModalDate>{getDeadlineView(selectedDate)}</SubModalDate>
+      )}
+    </S.Wrapper>
+  );
+};
 
 const SelectDate = (props) => {
   const dateOptions = [3, 7, 30, 100];
@@ -85,8 +142,7 @@ const SelectDate = (props) => {
         <SubModalBtn
           key={option}
           isSelected={selectedBtn === option}
-          onClick={() => onChangeDate(option)}
-        >
+          onClick={() => onChangeDate(option)}>
           {`${option}일`}
         </SubModalBtn>
       ))}
@@ -123,6 +179,8 @@ const SelectDateWrapper = styled.div`
   flex-direction: row;
   gap: 8px;
   align-items: center;
+
+  position: relative;
 `;
 
 const SubModalBtn = styled.div`
@@ -174,3 +232,47 @@ const CalenderIcon = styled.img`
     transition: all 0.1s ease-in-out;
   }
 `;
+
+const S = {
+  Wrapper: styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+  `,
+  DiffOptionButton: styled.div`
+    border: 1px solid var(--color-green);
+    border-radius: 8px;
+    padding: 4px 0px;
+    width: 48px;
+    word-break: keep-all;
+    text-align: center;
+    font-size: 12px;
+    color: var(--color-green);
+    transition: all 0.2s ease-in-out;
+
+    cursor: pointer;
+    ${(props) =>
+      props.isSelected &&
+      css`
+        background-color: var(--color-green);
+        color: var(--color-white);
+      `}
+    &:active {
+      filter: ${(props) =>
+        props.disabled ? "brightness(1)" : "brightness(0.9)"};
+      scale: ${(props) => (props.disabled ? "1" : "0.90")};
+      transition: all 0.1s ease-in-out;
+    }
+  `,
+  DatePickerContainer: styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  `,
+  CalendarWrapper: styled.div`
+    position: absolute;
+    top: 136px;
+    right: 16px;
+  `,
+};
