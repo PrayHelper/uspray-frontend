@@ -1,4 +1,4 @@
-name: Deploy Frontend on Integration Server
+name: Run CI
 
 on:
   push:
