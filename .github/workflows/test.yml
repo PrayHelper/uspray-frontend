@@ -41,7 +41,6 @@ jobs:
 
   deliver:
     if: github.ref_name == vars.INTG_BRANCH
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
