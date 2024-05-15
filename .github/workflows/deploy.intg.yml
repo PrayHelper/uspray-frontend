@@ -1,10 +1,11 @@
 name: Deploy Frontend on Integration Environment
 
 on:
-  workflow_dispatch:
   push:
     branches:
-      ${{ vars.INTG_BRANCH }}
+      - feature/**
+      - feat/**
+      - fix/**
 
 env:
   HOST: ${{ secrets.HOST }}
@@ -17,6 +18,7 @@ env:
 
 jobs:
   deliver:
+    if: github.ref_name == vars.INTG_BRANCH
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -39,6 +41,7 @@ jobs:
           platforms: linux/amd64
 
   deploy:
+    if: github.ref_name == vars.INTG_BRANCH
     needs: deliver
     runs-on: self-hosted
     steps:
