@@ -7,6 +7,7 @@ const prayerIdAtom = atom(null);
 const inputValueAtom = atom("");
 const selectedCategoryIdAtom = atom(null);
 const selectedDateValueAtom = atom(null);
+const isSharedAtom = atom(false);
 
 const usePrayerModifyModal = () => {
   const [prayerId, setPrayerId] = useAtom(prayerIdAtom);
@@ -17,6 +18,7 @@ const usePrayerModifyModal = () => {
   const [selectedDateValue, setSelectedDateValue] = useAtom(
     selectedDateValueAtom
   );
+  const [isShared, setIsShared] = useAtom(isSharedAtom);
 
   const tab = useAtomValue(mainTabAtom);
 
@@ -24,11 +26,12 @@ const usePrayerModifyModal = () => {
 
   const { modifyPray } = usePray(tab);
 
-  const open = ({ prayId, content, categoryId, deadline }) => {
+  const open = ({ prayId, content, categoryId, deadline, isShared }) => {
     setPrayerId(prayId);
     setTextInputValue(content);
     setSelectedCategoryId(categoryId);
     setSelectedDateValue(new Date(deadline));
+    setIsShared(isShared);
   };
 
   const close = () => setPrayerId(null);
@@ -50,8 +53,11 @@ const usePrayerModifyModal = () => {
       isShared: tab === "shared",
       isShow: !!prayerId,
       mode: "MODIFY",
-      placeholder: "공유받은 기도제목은 내용 수정이 안 돼요",
-      placeholderColor: "#6060604D",
+      placeholder: isShared
+        ? "공유받은 기도제목은 내용 수정이 안 돼요"
+        : "기도제목을 입력해주세요",
+      placeholderColor: isShared ? "#6060604D" : null,
+      textInputValue: isShared ? "" : textInputValue,
       setSelectedDateValue,
       onChangeTextInputValue: (e) => setTextInputValue(e.target.value),
       bottomButtonText: "수정 완료",
@@ -60,7 +66,6 @@ const usePrayerModifyModal = () => {
       categoryList,
       selectedCategoryId,
       selectedDateValue,
-      textInputValue: "",
       open,
       close,
     },

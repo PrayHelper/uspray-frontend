@@ -91,7 +91,6 @@ const PrayerInputModal = ({
               )}
               <ButtonV2
                 buttonTheme={ButtonTheme.FILLED}
-                disabled={!textInputValue.length || !selectedCategoryId}
                 handler={onClickBottomButton}>
                 {bottomButtonText}
               </ButtonV2>

@@ -47,7 +47,7 @@ const Item = ({ item }) => {
 
   const onClick = () => {
     if (isSharingMode) toggleById(prayId);
-    else selectPrayerInfo(item);
+    else selectPrayerInfo({ ...item, isShared: isSharedPrayer });
   };
 
   return (
