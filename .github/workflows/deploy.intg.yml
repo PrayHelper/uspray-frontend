@@ -1,11 +1,7 @@
 name: Deploy Frontend on Integration Environment
 
 on:
-  push:
-    branches:
-      - feature/**
-      - feat/**
-      - fix/**
+  push:     
 
 env:
   HOST: ${{ secrets.HOST }}
