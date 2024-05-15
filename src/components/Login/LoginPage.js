@@ -23,8 +23,9 @@ const useSendDeviceToken = () => {
   const { postFetcher } = useApi();
   return useMutation(
     async (data) => {
-      return await postFetcher("/user/device/token", data);
+      return await postFetcher("/member/fcm-token", data);
     },
+
     {
       onError: (e) => {
         console.log(e);
@@ -75,10 +76,10 @@ const LoginPage = () => {
       if (res.status === 200) {
         if (isMobile()) {
           const deviceToken = await getDeviceToken();
-
+          alert("hi");
           sendDeviceToken(
             {
-              device_token: deviceToken,
+              fcmToken: deviceToken,
             },
             {
               onSuccess: (res) => console.log(res.status),

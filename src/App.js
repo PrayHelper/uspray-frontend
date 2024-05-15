@@ -122,7 +122,6 @@ function App() {
                   path="/changeInfoSocial"
                   element={<ChangeInfoSocial />}
                 />
-                <Route path="/deleteUser" element={<DeleteUser />} />
               </Route>
               <Route element={<Outlet />}>
                 <Route path="/" element={<Login />} />

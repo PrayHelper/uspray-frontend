@@ -46,16 +46,17 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
   const onInvite = async () => {
     const groupId = group.id;
     var encodeGroupId = window.btoa(groupId.toString());
-    if (isMobile()) {
-      if (/android/i.test(navigator.userAgent)) {
-        shareLink({
-          title: "Web_invite",
-          url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
-        });
-      } else if (
-        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-        navigator.share
-      ) {
+    // if (isMobile()) {
+      // if (/android/i.test(navigator.userAgent)) {
+      //   shareLink({
+      //     title: "Web_invite",
+      //     url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
+      //   });
+      // } else if (
+      //   /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      //   navigator.share
+      // ) {
+      if (navigator.share) { 
         navigator.share({
           title: "Web_invite",
           url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
@@ -66,7 +67,7 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
           theme: ToastTheme.ERROR,
         });
       }
-    }
+    // }
     console.log(`${WEB_ORIGIN}/group?id=` + encodeGroupId);
   };
 
