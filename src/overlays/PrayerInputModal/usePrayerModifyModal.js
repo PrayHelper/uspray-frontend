@@ -53,9 +53,11 @@ const usePrayerModifyModal = () => {
       isShared: tab === "shared",
       isShow: !!prayerId,
       mode: "MODIFY",
-      placeholder: "기도제목을 입력해주세요",
+      placeholder: isShared
+        ? "공유받은 기도제목은 내용 수정이 안 돼요"
+        : "기도제목을 입력해주세요",
       placeholderColor: isShared ? "#6060604D" : null,
-      textInputValue: textInputValue,
+      textInputValue: isShared ? "" : textInputValue,
       setSelectedDateValue,
       onChangeTextInputValue: (e) => setTextInputValue(e.target.value),
       bottomButtonText: "수정 완료",
