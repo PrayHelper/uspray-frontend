@@ -35,7 +35,7 @@ const S = {
     );
     box-shadow: 0px 2px 8px var(--color-locker-content-shadow);
     border-radius: 16px;
-    margin: 12px 24px;
+    margin: 12px 24px 0px 24px;
     outline: ${({ isChecked }) =>
       isChecked ? `2px solid var(--color-dark-green)` : `var(--color-white)`};
     transition: all 0.3s ease-in-out;
