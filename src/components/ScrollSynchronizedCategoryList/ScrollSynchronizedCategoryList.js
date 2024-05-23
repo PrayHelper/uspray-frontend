@@ -1,22 +1,22 @@
-import completeImage from "../../images/check_img.svg";
-import deleteImage from "../../images/delete_img.svg";
-import modifyImage from "../../images/modify_img.svg";
-import { createContext, useEffect, useRef, useState } from "react";
-import { usePray } from "../../hooks/usePray";
-import useToast from "../../hooks/useToast";
-import useBottomNav from "../../hooks/useBottomNav";
-import CategoryTag from "../CategoryTag/CategoryTag";
-import PrayDateCategoryInput from "../PrayDateCategoryInput/PrayDateCategoryInput";
-import BlackScreen from "../BlackScreen";
-import { Modal } from "@mui/material";
-import { ToastTheme } from "../Toast/Toast";
-import S from "./ScrollSynchronizedCategoryList.style";
-import { useCallback } from "react";
-import TopCategoryList from "./TopCategoryList/TopCategoryList";
-import BottomCategoryBoxList from "./BottomBoxList/BottomBoxList";
+import completeImage from '../../images/check_img.svg';
+import deleteImage from '../../images/delete_img.svg';
+import modifyImage from '../../images/modify_img.svg';
+import {createContext, useEffect, useRef, useState} from 'react';
+import {usePray} from '../../hooks/usePray';
+import useToast from '../../hooks/useToast';
+import useBottomNav from '../../hooks/useBottomNav';
+import CategoryTag from '../CategoryTag/CategoryTag';
+import PrayDateCategoryInput from '../PrayDateCategoryInput/PrayDateCategoryInput';
+import BlackScreen from '../BlackScreen';
+import {Modal} from '@mui/material';
+import {ToastTheme} from '../Toast/Toast';
+import S from './ScrollSynchronizedCategoryList.style';
+import {useCallback} from 'react';
+import TopCategoryList from './TopCategoryList/TopCategoryList';
+import BottomCategoryBoxList from './BottomBoxList/BottomBoxList';
 import ShareSelectionModal, {
   useShareSelection,
-} from "../../overlays/ShareSelectionModal/ShareSelectionModal";
+} from '../../overlays/ShareSelectionModal/ShareSelectionModal';
 
 export const PrayerListDataContext = createContext({
   isSharedPrayers: false,
@@ -27,20 +27,20 @@ export const PrayerListDataContext = createContext({
 export const PrayerListScrollingContext = createContext({
   registerTopItemRef: (id, node) => {},
   registerBottomItemRef: (id, node) => {},
-  onClickTopItem: (id) => {},
-  registerTopListRef: (node) => {},
-  registerBottomListRef: (node) => {},
+  onClickTopItem: id => {},
+  registerTopListRef: node => {},
+  registerBottomListRef: node => {},
   selectedId: null,
 });
 
-const PrayerListScrollingProvider = ({ children }) => {
+const PrayerListScrollingProvider = ({children}) => {
   const topItemsRef = useRef({});
   const bottomItemsRef = useRef({});
   const topListRef = useRef(null);
   const bottomListRef = useRef(null);
   const [selectedId, setSelectedId] = useState(null);
 
-  const syncTopScroll = useCallback((id) => {
+  const syncTopScroll = useCallback(id => {
     const item = topItemsRef.current[id];
 
     const offset = -16;
@@ -48,12 +48,12 @@ const PrayerListScrollingProvider = ({ children }) => {
     if (item && topListRef.current) {
       topListRef.current.scrollTo({
         left: item.offsetLeft + offset,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     }
   }, []);
 
-  const syncBottomScroll = useCallback((id) => {
+  const syncBottomScroll = useCallback(id => {
     const item = bottomItemsRef.current[id];
 
     const offset = -98;
@@ -61,20 +61,20 @@ const PrayerListScrollingProvider = ({ children }) => {
     if (item && bottomListRef) {
       bottomListRef.current.scrollTo({
         top: item.offsetTop + offset,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     }
   }, []);
 
   const onClickTopItem = useCallback(
-    (id) => {
+    id => {
       syncBottomScroll(id);
     },
-    [syncBottomScroll]
+    [syncBottomScroll],
   );
 
   const handleBottomScroll = useCallback(
-    (event) => {
+    event => {
       // 상단 리스트에서 발생한 scroll은 무시
       if (event && event.target.contains(topListRef.current)) {
         console.log(1);
@@ -84,11 +84,11 @@ const PrayerListScrollingProvider = ({ children }) => {
       if (!bottomItemsRef?.current) return;
       if (!bottomListRef?.current) return;
 
-      const { id } = Object.keys(bottomItemsRef.current).reduce(
+      const {id} = Object.keys(bottomItemsRef.current).reduce(
         (acc, id) => {
           const nowSection = bottomItemsRef.current[id];
           if (!nowSection) {
-            return { id, diffrenceFromTop: 0 };
+            return {id, diffrenceFromTop: 0};
           }
 
           const checkRef = nowSection.getBoundingClientRect();
@@ -104,9 +104,9 @@ const PrayerListScrollingProvider = ({ children }) => {
           };
         },
         {
-          id: "",
+          id: '',
           diffrenceFromTop: 9999,
-        }
+        },
       );
 
       if (selectedId !== id) {
@@ -114,17 +114,17 @@ const PrayerListScrollingProvider = ({ children }) => {
         setSelectedId(id);
       }
     },
-    [selectedId, syncTopScroll]
+    [selectedId, syncTopScroll],
   );
 
   const debounceScroll = debounce(handleBottomScroll, 50);
 
   useEffect(() => {
-    document.addEventListener("scroll", debounceScroll, true);
+    document.addEventListener('scroll', debounceScroll, true);
 
     handleBottomScroll();
 
-    return () => document.removeEventListener("scroll", debounceScroll, true);
+    return () => document.removeEventListener('scroll', debounceScroll, true);
   }, [handleBottomScroll, debounceScroll]);
 
   const registerTopItemRef = useCallback((id, node) => {
@@ -137,12 +137,12 @@ const PrayerListScrollingProvider = ({ children }) => {
     else bottomItemsRef.current[id] = node;
   }, []);
 
-  const registerTopListRef = useCallback((node) => {
+  const registerTopListRef = useCallback(node => {
     if (!node) delete topListRef.current;
     else topListRef.current = node;
   }, []);
 
-  const registerBottomListRef = useCallback((node) => {
+  const registerBottomListRef = useCallback(node => {
     if (!node) delete bottomListRef.current;
     else bottomListRef.current = node;
   }, []);
@@ -166,16 +166,16 @@ export const ScrollSynchronizedPrayerList = ({
   categoriesWithPrayers,
   isSharedPrayers,
 }) => {
-  const { isOpened: isSharingMode } = useShareSelection();
+  const {isOpened: isSharingMode} = useShareSelection();
 
-  const { controlledModalProps } = useShareSelection();
+  const {controlledModalProps} = useShareSelection();
 
   // 더 세련된 방법으로 z-index를 제어하는 방법을 찾았다면 고쳐주세요ㅜㅜ
-  const zIndex = isSharingMode ? 131 : "auto";
+  const zIndex = isSharingMode ? 131 : 'auto';
 
   return (
     <PrayerListDataContext.Provider
-      value={{ categoriesWithPrayers, isSharedPrayers, isSharingMode }}>
+      value={{categoriesWithPrayers, isSharedPrayers, isSharingMode}}>
       <PrayerListScrollingProvider>
         <S.WrapperNew zIndex={zIndex}>
           <TopCategoryList />
@@ -204,13 +204,13 @@ const ScrollSynchronizedCategoryList = ({
   const [showSubModal, setShowSubModal] = useState(false);
   // 기도제목 수정할 때 아래 기도 정보 사용
   const [modifyPrayInfo, setModifyPrayInfo] = useState(null);
-  const [prayInputValue, setPrayInputValue] = useState("");
+  const [prayInputValue, setPrayInputValue] = useState('');
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
   const [checkedList, setCheckedList] = useState([]);
-  const { prayList, deletePray, completePray, modifyPray } = usePray(tabType);
-  const { showToast } = useToast({});
-  const { setIsVisible } = useBottomNav();
+  const {prayList, deletePray, completePray, modifyPray} = usePray(tabType);
+  const {showToast} = useToast({});
+  const {setIsVisible} = useBottomNav();
   const contentRef = useRef(null);
 
   const prayModify = () => {
@@ -238,16 +238,6 @@ const ScrollSynchronizedCategoryList = ({
   }, [showSubModal, showModal, setIsPraySelected, setIsVisible]);
 
   useEffect(() => {
-    if (showModal) {
-      setIsPraySelected(true);
-      setIsVisible(false);
-    } else {
-      setIsPraySelected(false);
-      setIsVisible(true);
-    }
-  }, [showModal]);
-
-  useEffect(() => {
     if (!shareMode) setCheckedList([]);
   }, [shareMode]);
 
@@ -263,11 +253,11 @@ const ScrollSynchronizedCategoryList = ({
       {
         onSuccess: () => {
           setShowSubModal(false);
-          setPrayInputValue("");
+          setPrayInputValue('');
           setDateInputValue(null);
           setSelectedCategoryIndex(categoryId);
         },
-      }
+      },
     );
   };
 
@@ -303,12 +293,12 @@ const ScrollSynchronizedCategoryList = ({
         {showModal && (
           <Modal
             isModalOn={showModal}
-            iconSrc={"images/ic_group_pray_delete.svg"}
-            iconAlt={"group_pray_delete"}
-            mainContent={"정말 삭제하시겠습니까?"}
-            subContent={"선택한 기도제목이 삭제됩니다."}
-            btnContent={"삭제"}
-            btnContent2={"취소"}
+            iconSrc={'images/ic_group_pray_delete.svg'}
+            iconAlt={'group_pray_delete'}
+            mainContent={'정말 삭제하시겠습니까?'}
+            subContent={'선택한 기도제목이 삭제됩니다.'}
+            btnContent={'삭제'}
+            btnContent2={'취소'}
             onClickBtn={() => {
               deletePray(selectedPrayInfo.prayId, {
                 onSuccess: () => {
@@ -378,11 +368,11 @@ const ScrollSynchronizedCategoryList = ({
         <S.BottomButtonWrapper>
           <img src={completeImage} alt="" />
           <S.BottomButtonText
-            color={"green"}
+            color={'green'}
             onClick={() => {
               completePray(selectedPrayInfo.prayId);
               showToast({
-                message: "기도제목을 완료했어요.",
+                message: '기도제목을 완료했어요.',
                 theme: ToastTheme.SUCCESS,
               });
               setSelectedPrayInfo(null);
@@ -393,31 +383,31 @@ const ScrollSynchronizedCategoryList = ({
         <S.BottomButtonWrapper>
           <img src={modifyImage} alt="" />
           <S.BottomButtonText
-            color={"blue"}
+            color={'blue'}
             onClick={() => prayModify(selectedPrayInfo)}>
             수정하기
           </S.BottomButtonText>
         </S.BottomButtonWrapper>
         <S.BottomButtonWrapper>
           <img src={deleteImage} alt="" />
-          <S.BottomButtonText color={"red"} onClick={() => onDelete()}>
+          <S.BottomButtonText color={'red'} onClick={() => onDelete()}>
             삭제하기
           </S.BottomButtonText>
         </S.BottomButtonWrapper>
       </S.BottomSetWrapper>
       <S.BottomShareWrapper shareMode={shareMode}>
-        <S.ShareNumberText>{checkedList.length + "개 선택"}</S.ShareNumberText>
+        <S.ShareNumberText>{checkedList.length + '개 선택'}</S.ShareNumberText>
         <S.ShareButtonContainer>
           <S.ShareButtonWrapper
             disabled={true}
-            color={"white"}
+            color={'white'}
             onClick={onCancel}>
             취소하기
             <S.ShareButtonImage src="images/ic_share_cancel.svg" />
           </S.ShareButtonWrapper>
           <S.ShareButtonWrapper
             disabled={checkedList.length === 0}
-            color={"green"}
+            color={'green'}
             onClick={clickShareButton}>
             공유하기
             <S.ShareButtonImage src="images/ic_share_move.svg" />
