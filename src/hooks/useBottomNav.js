@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { useRecoilState } from "recoil";
-import { visibleState } from "../recoil/bottomNav";
+import {useEffect} from 'react';
+import {atom, useAtomValue, useSetAtom} from 'jotai';
 
 const useBottomNav = () => {
-  const [isVisible, setIsVisible] = useRecoilState(visibleState);
-
+  const visibleAtom = atom(true);
+  const isVisible = useAtomValue(visibleAtom);
+  const setIsVisible = useSetAtom(visibleAtom);
   // 초기화: true
   useEffect(() => {
     setIsVisible(true);
