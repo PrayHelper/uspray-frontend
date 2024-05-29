@@ -31,7 +31,7 @@ export const ModalMainContent = styled.div`
   color: ${(props) =>
     props.modalTheme === ModalTheme.NORMAL ? "#7bab6e" : "#FF6B6B"};
   font-weight: 700;
-  padding-bottom: 2px;
+  letter-spacing: -0.02em;
 `;
 
 export const ModalSubContent = styled.div`
@@ -41,6 +41,7 @@ export const ModalSubContent = styled.div`
   font-weight: 400;
   color: ${(props) =>
     props.modalTheme === ModalTheme.NORMAL ? "#7bab6e" : "#FF6B6B"};
+  letter-spacing: -0.02em;
 `;
 
 export const ModalBtnWrapper = styled.div`

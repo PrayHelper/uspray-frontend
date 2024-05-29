@@ -25,8 +25,5 @@ export const getCalculatedDiff = (date) => {
 
 export const getDDayLabel = (date) => {
   const diff = getCalculatedDiff(date);
-
-  if (diff === 0) return "D-Day";
-  if (diff > 0) return `D-${diff}`;
   return `D+${Math.abs(diff)}`;
 };
