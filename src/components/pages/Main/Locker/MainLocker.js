@@ -117,6 +117,7 @@ const useLockerStates = () => {
     deleteHandler,
     saveHandler: () => {
       open(getSelectedSharedPrayIds());
+      clearAllItems();
     },
     toggleAllItem,
   };
