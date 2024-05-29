@@ -1,5 +1,5 @@
-import "./App.css";
-import { Reset } from "styled-reset";
+import './App.css';
+import {Reset} from 'styled-reset';
 import {
   BrowserRouter,
   Routes,
@@ -9,45 +9,44 @@ import {
   useLocation,
   useParams,
   Navigate,
-} from "react-router-dom";
-import styled from "styled-components";
-import NotFound from "./pages/NotFound";
-import Signup from "./pages/Signup";
-import Login from "./pages/Login";
-import Main from "./pages/Main";
-import Group from "./pages/Group";
-import LoginPage from "./components/Login/LoginPage";
-import Settings from "./pages/Settings";
-import History from "./pages/History";
-import BottomNav from "./components/BottomNav/BottomNav";
-import CheckInfo from "./pages/CheckInfo";
-import ToS from "./pages/ToS";
-import PrivacyProcessAgreement from "./pages/PrivacyProcessAgreement";
-import Find from "./pages/Find";
-import FindId from "./components/Find/FindId";
-import FindIdResult from "./components/Find/IdResult";
-import FindPassword from "./components/Find/FindPassword";
-import FindPasswordResult from "./components/Find/PwResult";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import SocialLogin from "./pages/SocialLogin";
-import useAuthToken from "./hooks/useAuthToken";
-import useRefresh from "./hooks/useRefresh";
-import { useEffect } from "react";
-import SplashScreen from "./pages/SplashScreen";
-import { useRecoilState, useRecoilValue } from "recoil";
-import useAuthorized from "./hooks/useAuthorized";
-import GlobalStyle from "./styles/GlobalStyle";
-import useToast from "./hooks/useToast";
-import HistorySearch from "./pages/HistorySearch";
-import GroupDetail from "./components/Group/GroupDetail/GroupDetail";
-import CreateGroup from "./pages/CreateGroup";
-import LeaveGroup from "./pages/LeaveGroup";
-import SocialLoginNameInput from "./pages/SocialLoginNameInput";
-import SocialRedirecting from "./pages/SocialRedirecting";
-import DeleteUser from "./pages/DeleteUser";
-import ChangeInfoSocial from "./components/ChangeInfo/ChangeInfoSocial";
-import AppleRedirecting from "./pages/AppleRedirecting";
-import TagManager from "react-gtm-module";
+} from 'react-router-dom';
+import styled from 'styled-components';
+import NotFound from './pages/NotFound';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
+import Main from './pages/Main';
+import Group from './pages/Group';
+import LoginPage from './components/Login/LoginPage';
+import Settings from './pages/Settings';
+import History from './pages/History';
+import BottomNav from './components/BottomNav/BottomNav';
+import CheckInfo from './pages/CheckInfo';
+import ToS from './pages/ToS';
+import PrivacyProcessAgreement from './pages/PrivacyProcessAgreement';
+import Find from './pages/Find';
+import FindId from './components/Find/FindId';
+import FindIdResult from './components/Find/IdResult';
+import FindPassword from './components/Find/FindPassword';
+import FindPasswordResult from './components/Find/PwResult';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import SocialLogin from './pages/SocialLogin';
+import useAuthToken from './hooks/useAuthToken';
+import useRefresh from './hooks/useRefresh';
+import {useEffect} from 'react';
+import SplashScreen from './pages/SplashScreen';
+import useAuthorized from './hooks/useAuthorized';
+import GlobalStyle from './styles/GlobalStyle';
+import useToast from './hooks/useToast';
+import HistorySearch from './pages/HistorySearch';
+import GroupDetail from './components/Group/GroupDetail/GroupDetail';
+import CreateGroup from './pages/CreateGroup';
+import LeaveGroup from './pages/LeaveGroup';
+import SocialLoginNameInput from './pages/SocialLoginNameInput';
+import SocialRedirecting from './pages/SocialRedirecting';
+import DeleteUser from './pages/DeleteUser';
+import ChangeInfoSocial from './components/ChangeInfo/ChangeInfoSocial';
+import AppleRedirecting from './pages/AppleRedirecting';
+import TagManager from 'react-gtm-module';
 
 const ContainerWrapper = styled.div`
   /* max-width: 430px; */
@@ -64,7 +63,7 @@ const Container = styled.div`
 `;
 
 const PrivateRoute = () => {
-  const { isUnauthorized } = useAuthorized();
+  const {isUnauthorized} = useAuthorized();
 
   if (isUnauthorized()) {
     return <Navigate to="/" replace />;
@@ -73,7 +72,7 @@ const PrivateRoute = () => {
 };
 
 const CommonRoute = () => {
-  const { isUndefined } = useAuthorized();
+  const {isUndefined} = useAuthorized();
 
   const location = useLocation();
   const fullPath = location.pathname + location.search + location.hash;
@@ -90,7 +89,7 @@ const CommonRoute = () => {
 };
 
 function App() {
-  const { renderToast } = useToast({});
+  const {renderToast} = useToast({});
 
   useEffect(() => {
     TagManager.initialize({
