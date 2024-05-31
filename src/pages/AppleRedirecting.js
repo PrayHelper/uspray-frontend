@@ -10,28 +10,7 @@ import useToast from "../hooks/useToast";
 import { ToastTheme } from "../components/Toast/Toast";
 import useAuthorized from "../hooks/useAuthorized";
 import useAuthToken from "../hooks/useAuthToken";
-
-const useSendDeviceToken = () => {
-  const { postFetcher } = useApi();
-  return useMutation(
-    async (data) => {
-      return await postFetcher("/member/fcm-token", data);
-    },
-    {
-      onError: (e) => {
-        console.log(e);
-      },
-      onSuccess: (res) => {
-        console.log(res);
-      },
-      retry: (cnt) => {
-        return cnt < 3;
-      },
-      retryDelay: 300,
-      refetchOnWindowFocus: false,
-    }
-  );
-};
+import useSendDeviceToken from "../hooks/useSendDeviceToken";
 
 const AppleRedirecting = () => {
   const [searchParams] = useSearchParams();
