@@ -1,13 +1,13 @@
 import {useEffect} from 'react';
 import Toast, {ToastTheme} from '../components/Toast/Toast';
 import {atom, useAtom} from 'jotai';
+const toastMessageState = atom('Plaese Initialize toastMessage!!!');
+const toastThemeState = atom(ToastTheme.SUCCESS);
+const toastVisibleState = atom(false);
 
 // hook을 불러올 때 초기값 지정(optional): message, theme
 // 반환: setToastMessage, setToastTheme, showToast
 const useToast = ({initialMessage, initialTheme}) => {
-  const toastMessageState = atom('Plaese Initialize toastMessage!!!');
-  const toastThemeState = atom(ToastTheme.SUCCESS);
-  const toastVisibleState = atom(false);
   const [toastMessage, setToastMessage] = useAtom(toastMessageState);
   const [toastTheme, setToastTheme] = useAtom(toastThemeState);
   const [toastVisible, setToastVisible] = useAtom(toastVisibleState);

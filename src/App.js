@@ -29,7 +29,7 @@ import FindIdResult from './components/Find/IdResult';
 import FindPassword from './components/Find/FindPassword';
 import FindPasswordResult from './components/Find/PwResult';
 import PrivacyPolicy from './pages/PrivacyPolicy';
-import SocialLogin from './pages/SocialLogin';
+// import SocialLogin from './pages/SocialLogin';
 import useAuthToken from './hooks/useAuthToken';
 import useRefresh from './hooks/useRefresh';
 import {useEffect} from 'react';
@@ -116,7 +116,7 @@ function App() {
                 <Route path="/createGroup" element={<CreateGroup />} />
                 <Route path="/checkInfo" element={<CheckInfo />} />
                 <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
-                <Route path="/social" element={<SocialLogin />} />
+                {/* <Route path="/social" element={<SocialLogin />} /> */}
                 <Route
                   path="/changeInfoSocial"
                   element={<ChangeInfoSocial />}
