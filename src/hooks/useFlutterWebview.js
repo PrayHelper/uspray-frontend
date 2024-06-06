@@ -128,7 +128,7 @@ const useFlutterWebview = () => {
     if (isDeviceTokenAvail) {
       return true;
     } else {
-      return typeof window.Bridge !== 'undefined';
+      return false;
     }
     
 /*
