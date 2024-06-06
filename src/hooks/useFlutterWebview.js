@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useEffect } from "react";
 import useSleep from "./useSleep";
 
 const nil = { isnil: true };
@@ -114,9 +114,7 @@ const useShareLink = () => {
   };
 };
 
-const useFlutterWebview = () => {
-   const [bridgeAvailable, setBridgeAvailable] = useState(typeof window.Bridge !== 'undefined');
-  
+const useFlutterWebview = () => {  
   const isMobile = () => {
     
     //eslint-disable-next-line
@@ -128,8 +126,14 @@ const useFlutterWebview = () => {
 
     if (isDeviceTokenAvail) {
       return true;
+    } else if (
+      navigator.userAgent.match(
+        /Android|Mobile|iP(hone|od|ad)|BlackBerry|IEMobile|Kindle|NetFront|Silk-Accelerated|(hpw|web)OS|Fennec|Minimo|Opera M(obi|ini)|Blazer|Dolfin|Dolphin|Skyfire|Zune/
+      )
+    ) {
+      return true;
     } else {
-      return bridgeAvailable;
+      return false;
     }
     
 /*
