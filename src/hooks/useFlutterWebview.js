@@ -115,7 +115,7 @@ const useShareLink = () => {
 };
 
 const useFlutterWebview = () => {
-  const [bridgeAvailable, setBridgeAvailable] = useState(false);
+   const [bridgeAvailable, setBridgeAvailable] = useState(typeof window.Bridge !== 'undefined');
   
   const isMobile = () => {
     
@@ -125,26 +125,6 @@ const useFlutterWebview = () => {
     const isGetAuthTokenAvail = typeof FlutterStoreAuthToken !== "undefined" && typeof FlutterStoreAuthToken.postMessage === "function"
     //eslint-disable-next-line
     const isStoreAuthTokenAvail = typeof FlutterStoreAuthToken !== "undefined" && typeof FlutterStoreAuthToken.postMessage === "function"
-
-    const isMobile = () => {
-    return bridgeAvailable;
-  };
-
-  useEffect(() => {
-    const checkBridge = () => {
-      if (typeof window.Bridge !== 'undefined') {
-        setBridgeAvailable(true);
-      }
-    };
-
-    // 페이지가 로드되었을 때 `checkBridge`를 실행합니다.
-    window.addEventListener('load', checkBridge);
-
-    // 컴포넌트가 언마운트될 때 이벤트 리스너를 정리합니다.
-    return () => {
-      window.removeEventListener('load', checkBridge);
-    };
-  }, []);
 
     if (isDeviceTokenAvail) {
       return true;
