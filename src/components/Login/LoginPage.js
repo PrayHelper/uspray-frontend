@@ -75,8 +75,9 @@ const LoginPage = () => {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
         if (isMobile()) {
+          console.log("hi1");
           const deviceToken = await getDeviceToken();
-          alert("hi");
+          console.log("hi2");
           sendDeviceToken(
             {
               fcmToken: deviceToken,
