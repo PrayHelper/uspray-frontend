@@ -124,17 +124,25 @@ const useFlutterWebview = () => {
     //eslint-disable-next-line
     const isStoreAuthTokenAvail = typeof FlutterStoreAuthToken !== "undefined" && typeof FlutterStoreAuthToken.postMessage === "function"
 
+    console.log('1');
     if (isDeviceTokenAvail) {
+      console.log('2');
       return true;
+      console.log('3');
     } else if (
       navigator.userAgent.match(
         /Android|Mobile|iP(hone|od|ad)|BlackBerry|IEMobile|Kindle|NetFront|Silk-Accelerated|(hpw|web)OS|Fennec|Minimo|Opera M(obi|ini)|Blazer|Dolfin|Dolphin|Skyfire|Zune/
       )
     ) {
+      console.log('4');
       return true;
+      console.log('5');
     } else {
+      console.log('6');
       return false;
+      console.log('7');
     }
+    console.log('8');
     
 /*
     if (
