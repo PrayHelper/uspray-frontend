@@ -136,7 +136,7 @@ const checkUserAgent = () => {
       console.log("2");
       return true;
       console.log("3");
-    } else if (checkUserAgent) {
+    } else if (checkUserAgent() {
       console.log("4");
       return true;
       console.log("5");
