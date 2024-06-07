@@ -29,10 +29,10 @@ const useDeviceToken = () => {
     
     try {
       //eslint-disable-next-line
-      FlutterGetDeviceToken.postMessage(nil);
-
-      //eslint-disable-next-line
       window.Bridge.FlutterGetDeviceToken(nil);
+      
+      //eslint-disable-next-line
+      FlutterGetDeviceToken.postMessage(nil);
     } catch (error) {
       console.log("Error in sending message to Flutter:", error);
     }
@@ -74,10 +74,10 @@ const useAuthToken = () => {
     
     try {
       //eslint-disable-next-line
-      FlutterGetDeviceToken.postMessage(nil);
-
-      //eslint-disable-next-line
       window.Bridge.FlutterGetDeviceToken(nil);
+      
+      //eslint-disable-next-line
+      FlutterGetDeviceToken.postMessage(nil);
     } catch (error) {
       console.log("Error in sending message to Flutter:", error);
     }
