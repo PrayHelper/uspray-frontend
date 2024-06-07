@@ -30,18 +30,22 @@ const useDeviceToken = () => {
     try {
       //eslint-disable-next-line
       window.Bridge.FlutterGetDeviceToken(nil);
-      
+    } catch (error) {
+      console.log("window.Bridge.FlutterGetDeviceToken(nil);", error);
+    }
+
+    try {
       //eslint-disable-next-line
       FlutterGetDeviceToken.postMessage(nil);
     } catch (error) {
-      console.log("Error in sending message to Flutter:", error);
+      console.log("FlutterGetDeviceToken.postMessage(nil);", error);
     }
-    
+
     deviceLock.current = true;
     try {
       await sleepWithCondition(() => deviceLock.current === false);
     } catch (error) {
-      console.error("Error waiting for device token:", error);
+      console.error("sleepWithCondition", error);
     }
     
     console.log(`getDeviceToken() returned ${deviceToken.current}`);
@@ -75,18 +79,22 @@ const useAuthToken = () => {
     try {
       //eslint-disable-next-line
       window.Bridge.FlutterGetDeviceToken(nil);
-      
-      //eslint-disable-next-line
-      FlutterGetDeviceToken.postMessage(nil);
     } catch (error) {
-      console.log("Error in sending message to Flutter:", error);
+      console.log("window.Bridge.FlutterGetDeviceToken(nil);", error);
+    }
+
+    try {
+      //eslint-disable-next-line
+      FlutterGetAuthToken.postMessage(nil);
+    } catch (error) {
+      console.log("FlutterGetAuthToken.postMessage(nil);", error);
     }
 
     authLock.current = true;
     try {
-      await sleepWithCondition(() => deviceLock.current === false);
+      await sleepWithCondition(() => authLock.current === false);
     } catch (error) {
-      console.error("Error waiting for device token:", error);
+      console.error("sleepWithCondition", error);
     }
 
     console.log(`getAuthToken() returned ${authToken.current}`);
