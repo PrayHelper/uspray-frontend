@@ -27,11 +27,15 @@ const useDeviceToken = () => {
       return deviceToken.current;
     }
     
-    //eslint-disable-next-line
-    FlutterGetDeviceToken.postMessage(nil);
-    
-    //eslint-disable-next-line
-    window.Bridge.FlutterGetDeviceToken(nil);
+    try {
+      //eslint-disable-next-line
+      FlutterGetDeviceToken.postMessage(nil);
+
+      //eslint-disable-next-line
+      window.Bridge.FlutterGetDeviceToken(nil);
+    } catch (error) {
+      console.log("Error in sending message to Flutter:", error);
+    }
     
     deviceLock.current = true;
     await sleepWithCondition(() => deviceLock.current === false);
@@ -63,11 +67,16 @@ const useAuthToken = () => {
     if (authToken.current != null) {
       return authToken.current;
     }
-    //eslint-disable-next-line
-    FlutterGetDeviceToken.postMessage(nil);
     
-    //eslint-disable-next-line
-    window.Bridge.FlutterGetDeviceToken(nil);
+    try {
+      //eslint-disable-next-line
+      FlutterGetDeviceToken.postMessage(nil);
+
+      //eslint-disable-next-line
+      window.Bridge.FlutterGetDeviceToken(nil);
+    } catch (error) {
+      console.log("Error in sending message to Flutter:", error);
+    }
 
     authLock.current = true;
     await sleepWithCondition(() => authLock.current === false);
