@@ -18,28 +18,7 @@ import { useMutation } from "react-query";
 import Button, { ButtonSize, ButtonTheme } from "../components/Button/Button";
 import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
-
-const useSendDeviceToken = () => {
-  const { postFetcher } = useApi();
-  return useMutation(
-    async (data) => {
-      return await postFetcher("/member/fcm-token", data);
-    },
-    {
-      onError: (e) => {
-        console.log(e);
-      },
-      onSuccess: (res) => {
-        console.log(res);
-      },
-      retry: (cnt) => {
-        return cnt < 3;
-      },
-      retryDelay: 300,
-      refetchOnWindowFocus: false,
-    }
-  );
-};
+import useSendDeviceToken from "../hooks/useSendDeviceToken";
 
 const SocialLoginNameInput = () => {
   const { isAgreed, toggleAll, toggleHandler, isAgreedAll } = useSignupTos();

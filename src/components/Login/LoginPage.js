@@ -18,29 +18,7 @@ import useApi from "../../hooks/useApi";
 import SocialLoginCircleButton from "../SocialLogin/SocialLoginCircleButton";
 import Modal from "../Modal/Modal";
 import BlackScreen from "../BlackScreen";
-
-const useSendDeviceToken = () => {
-  const { postFetcher } = useApi();
-  return useMutation(
-    async (data) => {
-      return await postFetcher("/member/fcm-token", data);
-    },
-
-    {
-      onError: (e) => {
-        console.log(e);
-      },
-      onSuccess: (res) => {
-        console.log(res);
-      },
-      retry: (cnt) => {
-        return cnt < 3;
-      },
-      retryDelay: 300,
-      refetchOnWindowFocus: false,
-    }
-  );
-};
+import useSendDeviceToken from "../../hooks/useSendDeviceToken";
 
 const LoginPage = () => {
   const [idValue, setIdValue] = useState("");
