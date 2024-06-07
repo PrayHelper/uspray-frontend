@@ -38,7 +38,11 @@ const useDeviceToken = () => {
     }
     
     deviceLock.current = true;
-    await sleepWithCondition(() => deviceLock.current === false);
+    try {
+      await sleepWithCondition(() => deviceLock.current === false);
+    } catch (error) {
+      console.error("Error waiting for device token:", error);
+    }
     
     console.log(`getDeviceToken() returned ${deviceToken.current}`);
     return deviceToken.current;
@@ -79,7 +83,11 @@ const useAuthToken = () => {
     }
 
     authLock.current = true;
-    await sleepWithCondition(() => authLock.current === false);
+    try {
+      await sleepWithCondition(() => deviceLock.current === false);
+    } catch (error) {
+      console.error("Error waiting for device token:", error);
+    }
 
     console.log(`getAuthToken() returned ${authToken.current}`);
     return authToken.current;
