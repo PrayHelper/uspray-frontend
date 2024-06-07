@@ -64,7 +64,10 @@ const useAuthToken = () => {
       return authToken.current;
     }
     //eslint-disable-next-line
-    FlutterGetAuthToken.postMessage(nil);
+    FlutterGetDeviceToken.postMessage(nil);
+    
+    //eslint-disable-next-line
+    window.Bridge.FlutterGetDeviceToken(nil);
 
     authLock.current = true;
     await sleepWithCondition(() => authLock.current === false);
