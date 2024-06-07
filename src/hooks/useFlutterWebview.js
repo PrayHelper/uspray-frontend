@@ -40,7 +40,7 @@ const useDeviceToken = () => {
     } catch (error) {
       console.log("FlutterGetDeviceToken.postMessage(nil);", error);
     }
-    
+
     deviceLock.current = true;
     try {
       await sleepWithCondition(() => deviceLock.current === false);
@@ -85,9 +85,9 @@ const useAuthToken = () => {
 
     try {
       //eslint-disable-next-line
-      FlutterGetDeviceToken.postMessage(nil);
+      FlutterGetAuthToken.postMessage(nil);
     } catch (error) {
-      console.log("FlutterGetDeviceToken.postMessage(nil);", error);
+      console.log("FlutterGetAuthToken.postMessage(nil);", error);
     }
 
     authLock.current = true;
