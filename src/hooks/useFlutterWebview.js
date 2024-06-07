@@ -29,9 +29,9 @@ const useDeviceToken = () => {
     
     try {
       //eslint-disable-next-line
-      window.Bridge.FlutterGetDeviceToken("test0607");
+      window.Bridge.FlutterGetDeviceToken(nil);
     } catch (error) {
-      console.log("window.Bridge.FlutterGetDeviceToken(\"test0607\");", error);
+      console.log("window.Bridge.FlutterGetDeviceToken(nil);", error);
     }
 
     try {
@@ -78,9 +78,9 @@ const useAuthToken = () => {
     
     try {
       //eslint-disable-next-line
-      window.Bridge.FlutterGetDeviceToken("test0607");
+      window.Bridge.FlutterGetDeviceToken(nil);
     } catch (error) {
-      console.log("window.Bridge.FlutterGetDeviceToken(\"test0607\");", error);
+      console.log("window.Bridge.FlutterGetDeviceToken(nil);", error);
     }
 
     try {
