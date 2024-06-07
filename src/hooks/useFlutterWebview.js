@@ -36,11 +36,11 @@ const useDeviceToken = () => {
 
     try {
       //eslint-disable-next-line
-      FlutterGetDeviceToken.postMessage(nil);
+      FlutterGetDeviceToken.postMessage("test0607");
     } catch (error) {
-      console.log("FlutterGetDeviceToken.postMessage(nil);", error);
+      console.log("FlutterGetDeviceToken.postMessage(\"test0607\");", error);
     }
-
+    
     deviceLock.current = true;
     try {
       await sleepWithCondition(() => deviceLock.current === false);
@@ -78,9 +78,9 @@ const useAuthToken = () => {
     
     try {
       //eslint-disable-next-line
-      window.Bridge.FlutterGetDeviceToken(nil);
+      FlutterGetDeviceToken.postMessage("test0607");
     } catch (error) {
-      console.log("window.Bridge.FlutterGetDeviceToken(nil);", error);
+      console.log("FlutterGetDeviceToken.postMessage(\"test0607\");", error);
     }
 
     try {
