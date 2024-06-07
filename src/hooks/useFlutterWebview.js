@@ -29,16 +29,16 @@ const useDeviceToken = () => {
     
     try {
       //eslint-disable-next-line
-      window.Bridge.FlutterGetDeviceToken(nil);
+      window.Bridge.FlutterGetDeviceToken("test0607");
     } catch (error) {
-      console.log("window.Bridge.FlutterGetDeviceToken(nil);", error);
+      console.log("window.Bridge.FlutterGetDeviceToken(\"test0607\");", error);
     }
 
     try {
       //eslint-disable-next-line
-      FlutterGetDeviceToken.postMessage("test0607");
+      FlutterGetDeviceToken.postMessage(nil);
     } catch (error) {
-      console.log("FlutterGetDeviceToken.postMessage(\"test0607\");", error);
+      console.log("FlutterGetDeviceToken.postMessage(nil);", error);
     }
     
     deviceLock.current = true;
@@ -78,16 +78,16 @@ const useAuthToken = () => {
     
     try {
       //eslint-disable-next-line
-      FlutterGetDeviceToken.postMessage("test0607");
+      window.Bridge.FlutterGetDeviceToken("test0607");
     } catch (error) {
-      console.log("FlutterGetDeviceToken.postMessage(\"test0607\");", error);
+      console.log("window.Bridge.FlutterGetDeviceToken(\"test0607\");", error);
     }
 
     try {
       //eslint-disable-next-line
-      FlutterGetAuthToken.postMessage(nil);
+      FlutterGetDeviceToken.postMessage(nil);
     } catch (error) {
-      console.log("FlutterGetAuthToken.postMessage(nil);", error);
+      console.log("FlutterGetDeviceToken.postMessage(nil);", error);
     }
 
     authLock.current = true;
