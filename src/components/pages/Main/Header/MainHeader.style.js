@@ -15,6 +15,8 @@ const S = {
   `,
   TabItem: styled.div`
     font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.08em;
     color: ${({ active }) => (active ? "#FFFFFF" : "#FFFFFF80")};
     cursor: pointer;
     border-bottom: ${({ active }) => (active ? "2px solid #FFFFFF" : "none")};
