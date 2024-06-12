@@ -98,7 +98,12 @@ export const useCategory = (categoryType) => {
     },
     {
       onError: async (e) => {
-        console.log(e);
+        if (e.response.status === 400) {
+          showToast({
+            message: "카테고리 이름이 중복되었어요.",
+            theme: ToastTheme.ERROR,
+          });
+        }
       },
       onSuccess: (res) => {
         console.log(res);
