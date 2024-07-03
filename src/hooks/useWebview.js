@@ -120,7 +120,9 @@ const useWebview = () => {
     try {
       await sleepWithCondition(() => deviceLock.current === false);
     } catch (error) {
-      console.error("sleepWithCondition", error);
+      console.error("Error in getDeviceToken: ", error);
+    } finally {
+      deviceLock.current = false;
     }
 
     console.log(`getDeviceToken() returned ${deviceToken.current}`);
@@ -128,11 +130,11 @@ const useWebview = () => {
   };
 
   // name should be modified to onReceiveDeviceToken
-  window.onReceiveDeviceToken1 = (token) => {
+  window.onReceiveDeviceToken = (token) => {
     deviceToken.current = token;
     deviceLock.current = false;
 
-    console.log(`onReceiveDeviceToken1(${token}) called`);
+    console.log(`onReceiveDeviceToken(${token}) called`);
   };
 
   const { getAuthToken, storeAuthToken } = useAuthToken();
