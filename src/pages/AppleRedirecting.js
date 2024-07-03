@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import publicapi from "../api/publicapi";
-import useFlutterWebview from "../hooks/useFlutterWebview";
 import useApi from "../hooks/useApi";
 import { useMutation } from "react-query";
 import useToast from "../hooks/useToast";
@@ -11,13 +10,14 @@ import { ToastTheme } from "../components/Toast/Toast";
 import useAuthorized from "../hooks/useAuthorized";
 import useAuthToken from "../hooks/useAuthToken";
 import useSendDeviceToken from "../hooks/useSendDeviceToken";
+import useWebview from "../hooks/useWebview";
 
 const AppleRedirecting = () => {
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code");
 
   // TODO: 로그인 후 토큰 처리 로직 custom hook으로 추상화
-  const { isMobile, getDeviceToken, storeAuthToken } = useFlutterWebview();
+  const { isMobile, getDeviceToken, storeAuthToken } = useWebview();
   const { mutate: sendDeviceToken } = useSendDeviceToken();
   const { showToast } = useToast({});
   const { setAutorized } = useAuthorized();

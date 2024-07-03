@@ -12,19 +12,19 @@ import useToast from "../hooks/useToast";
 import { useNavigate } from "react-router-dom";
 import useAuthorized from "../hooks/useAuthorized";
 import useAuthToken from "../hooks/useAuthToken";
-import useFlutterWebview from "../hooks/useFlutterWebview";
 import useApi from "../hooks/useApi";
 import { useMutation } from "react-query";
 import Button, { ButtonSize, ButtonTheme } from "../components/Button/Button";
 import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
 import useSendDeviceToken from "../hooks/useSendDeviceToken";
+import useWebview from "../hooks/useWebview";
 
 const SocialLoginNameInput = () => {
   const { isAgreed, toggleAll, toggleHandler, isAgreedAll } = useSignupTos();
   const { setAccessToken, setRefreshToken, getAccessToken, getRefreshToken } =
     useAuthToken();
-  const { isMobile, getDeviceToken } = useFlutterWebview();
+  const { isMobile, getDeviceToken } = useWebview();
   const { showToast } = useToast({});
   const { mutate: sendDeviceToken } = useSendDeviceToken();
   const { setAutorized } = useAuthorized();

@@ -135,7 +135,7 @@ const useShareLink = () => {
   };
 };
 
-const useFlutterWebview = () => {
+const useWebview = () => {
   const isMobile = () => {
     const checkUserAgent = () => {
       console.log("9");
@@ -167,4 +167,4 @@ const useFlutterWebview = () => {
   };
 };
 
-export default useFlutterWebview;
+export default useWebview;

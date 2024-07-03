@@ -10,10 +10,10 @@ import DeleteBar from "./DeleteBar";
 import { usePrayList } from "../../hooks/usePrayList";
 import Lottie from "react-lottie";
 import LottieData from "./json/uspray.json";
-import useFlutterWebview from "../../hooks/useFlutterWebview";
 import Toast, { ToastTheme } from "../../components/Toast/Toast";
 import PrayerSortToggle from "./PrayerSortToggle";
 import useToast from "../../hooks/useToast";
+import useWebview from "../../../hooks/useWebview";
 
 const Background = styled.div`
   width: 100%;
@@ -153,7 +153,7 @@ function PrayerList({
   const { data: prayList, refetch: refetchPrayList } = usePrayList("date");
   const { data: pray_cnt_List, refetch: refetch_cnt_PrayList } =
     usePrayList("cnt");
-  const { shareLink, isMobile } = useFlutterWebview();
+  const { shareLink, isMobile } = useWebview();
   const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
   const { showToast } = useToast({});
 

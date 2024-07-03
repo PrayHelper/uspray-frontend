@@ -7,11 +7,11 @@ import RightIcons from "./RightIcons";
 import { useState } from "react";
 import GroupSetting from "../GroupSetting/GroupSetting";
 import { useGroupPray } from "../../../hooks/useGroupPray";
-import useFlutterWebview from "../../../hooks/useFlutterWebview";
 import { useCategory } from "../../../hooks/useCategory";
 import ScrollSynchronizedCategoryList from "../../ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
 import useToast from "../../../hooks/useToast";
 import { ToastTheme } from "../../Toast/Toast";
+import useWebview from "../../../hooks/useWebview";
 
 const GroupDetail = ({ group, setShowGroupDetail }) => {
   const [showGroupSetting, setShowGroupSetting] = useState(false);
@@ -19,7 +19,7 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
     group.id
   );
   const isGroupPrayListData = Object.keys(groupPrayList).length !== 0;
-  const { shareLink, isMobile } = useFlutterWebview();
+  const { shareLink, isMobile } = useWebview();
   const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
 
   const [shareMode, setShareMode] = useState(false);
@@ -47,26 +47,26 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
     const groupId = group.id;
     var encodeGroupId = window.btoa(groupId.toString());
     // if (isMobile()) {
-      // if (/android/i.test(navigator.userAgent)) {
-      //   shareLink({
-      //     title: "Web_invite",
-      //     url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
-      //   });
-      // } else if (
-      //   /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-      //   navigator.share
-      // ) {
-      if (navigator.share) { 
-        navigator.share({
-          title: "Web_invite",
-          url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
-        });
-      } else {
-        showToast({
-          message: "초대하기가 지원되지 않는 환경 입니다.",
-          theme: ToastTheme.ERROR,
-        });
-      }
+    // if (/android/i.test(navigator.userAgent)) {
+    //   shareLink({
+    //     title: "Web_invite",
+    //     url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
+    //   });
+    // } else if (
+    //   /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    //   navigator.share
+    // ) {
+    if (navigator.share) {
+      navigator.share({
+        title: "Web_invite",
+        url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
+      });
+    } else {
+      showToast({
+        message: "초대하기가 지원되지 않는 환경 입니다.",
+        theme: ToastTheme.ERROR,
+      });
+    }
     // }
     console.log(`${WEB_ORIGIN}/group?id=` + encodeGroupId);
   };
@@ -100,7 +100,8 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
             />
           );
         }}
-        back={() => setShowGroupDetail((prev) => !prev)}>
+        back={() => setShowGroupDetail((prev) => !prev)}
+      >
         {group.name}
       </UserHeader>
       <GroupWrapper>

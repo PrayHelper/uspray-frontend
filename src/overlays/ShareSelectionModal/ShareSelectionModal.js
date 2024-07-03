@@ -2,8 +2,8 @@ import { atom, useAtom } from "jotai";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
 import useToast from "../../hooks/useToast";
-import useFlutterWebview from "../../hooks/useFlutterWebview";
 import { ToastTheme } from "../../components/Toast/Toast";
+import useWebview from "../../hooks/useWebview";
 
 const isOpenedAtom = atom(false);
 const isSelectedMapAtom = atom({});
@@ -14,7 +14,7 @@ export const useShareSelection = () => {
   const [isOpened, setIsOpened] = useAtom(isOpenedAtom);
   const [isSelectedMap, setIsSelectedMap] = useAtom(isSelectedMapAtom);
 
-  const { shareLink, isMobile } = useFlutterWebview();
+  const { shareLink, isMobile } = useWebview();
 
   const selectedLength = Object.values(isSelectedMap).filter(Boolean).length;
 
@@ -99,14 +99,16 @@ const ShareSelectionModal = ({
           <S.ShareButtonWrapper
             disabled={true}
             color={"white"}
-            onClick={cancelHandler}>
+            onClick={cancelHandler}
+          >
             취소하기
             <S.ShareButtonImage src="images/ic_share_cancel.svg" />
           </S.ShareButtonWrapper>
           <S.ShareButtonWrapper
             disabled={selectedLength === 0}
             color={"green"}
-            onClick={shareHandler}>
+            onClick={shareHandler}
+          >
             공유하기
             <S.ShareButtonImage src="images/ic_share_move.svg" />
           </S.ShareButtonWrapper>

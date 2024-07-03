@@ -1,44 +1,40 @@
 import { useRef } from "react";
-import useFlutterWebview from "./useFlutterWebview"
 import { useEffect } from "react";
 import useSleep from "./useSleep";
-
+import useWebview from "./useWebview";
 
 const accessToken = {
-    current: "",
-}
+  current: "",
+};
 
 const useAuthToken = () => {
-
   const getAccessToken = () => {
     //console.log(`getAccessToken: ${accessToken.current}`)
     return accessToken.current;
-  }
+  };
 
   const setAccessToken = (token) => {
     //console.log(`setAccessToken: ${token}`)
     accessToken.current = token;
-  }
-
+  };
 
   const muLock = useRef(false);
   const { sleepWithCondition } = useSleep();
 
-
   const getAuthTokenFromLocalStorage = async () => {
-    await sleepWithCondition(() => muLock.current === false)
-    return localStorage.getItem('refreshToken');
-  }
+    await sleepWithCondition(() => muLock.current === false);
+    return localStorage.getItem("refreshToken");
+  };
 
   const storeAuthTokenToLocalStorage = (token) => {
-    localStorage.setItem('refreshToken', token);
-  }
+    localStorage.setItem("refreshToken", token);
+  };
 
   const {
     isMobile,
     getAuthToken: getAuthTokenFromMobile,
-    storeAuthToken: storeAuthTokenFromMobile
-  } = useFlutterWebview();
+    storeAuthToken: storeAuthTokenFromMobile,
+  } = useWebview();
 
   const getRefreshToken = async () => {
     if (isMobile()) {
@@ -46,7 +42,7 @@ const useAuthToken = () => {
     } else {
       return await getAuthTokenFromLocalStorage();
     }
-  }
+  };
 
   const setRefreshToken = async (token) => {
     if (isMobile()) {
@@ -55,12 +51,12 @@ const useAuthToken = () => {
     } else {
       storeAuthTokenToLocalStorage(token);
     }
-  }
+  };
 
   useEffect(() => {
     window.alertStoringTokenFinished = () => {
       muLock.current = false;
-    }
+    };
   }, []);
 
   return {
@@ -68,8 +64,7 @@ const useAuthToken = () => {
     setAccessToken,
     getRefreshToken,
     setRefreshToken,
-  }
-
-}
+  };
+};
 
 export default useAuthToken;

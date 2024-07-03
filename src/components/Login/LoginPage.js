@@ -5,7 +5,6 @@ import publicapi from "../../api/publicapi";
 import Input from "../Input/Input";
 import Button, { ButtonSize, ButtonTheme } from "../Button/Button";
 import Toast, { ToastTheme } from "../Toast/Toast";
-import useFlutterWebview from "../../hooks/useFlutterWebview";
 import useAuthToken from "../../hooks/useAuthToken";
 import { useMutation } from "react-query";
 import useAuthorized from "../../hooks/useAuthorized";
@@ -14,11 +13,11 @@ import LogoSVG from "../../images/logo_image.svg";
 import useToast from "../../hooks/useToast";
 import { ReactComponent as NextArrowGray } from "../../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../../images/ic_next_arrow_white.svg";
-import useApi from "../../hooks/useApi";
 import SocialLoginCircleButton from "../SocialLogin/SocialLoginCircleButton";
 import Modal from "../Modal/Modal";
 import BlackScreen from "../BlackScreen";
 import useSendDeviceToken from "../../hooks/useSendDeviceToken";
+import useWebview from "../../hooks/useWebview";
 
 const LoginPage = () => {
   const [idValue, setIdValue] = useState("");
@@ -29,7 +28,7 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  const { isMobile, getDeviceToken, storeAuthToken } = useFlutterWebview();
+  const { isMobile, getDeviceToken, storeAuthToken } = useWebview();
 
   const { showToast } = useToast({});
 
