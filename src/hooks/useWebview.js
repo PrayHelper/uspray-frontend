@@ -1,8 +1,6 @@
 import { useEffect } from "react";
 import useSleep from "./useSleep";
 
-const nil = { isnil: true };
-
 let deviceToken = {
   current: null,
 };
