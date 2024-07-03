@@ -26,19 +26,12 @@ const useDeviceToken = () => {
     if (deviceToken.current != null) {
       return deviceToken.current;
     }
-    
-    try {
-      //eslint-disable-next-line
-      window.Bridge.FlutterGetDeviceToken(nil);
-    } catch (error) {
-      console.log("window.Bridge.FlutterGetDeviceToken(nil);", error);
-    }
 
     try {
       //eslint-disable-next-line
-      FlutterGetDeviceToken.postMessage(nil);
+      AndroidGetDeviceToken.postMessage(nil);
     } catch (error) {
-      console.log("FlutterGetDeviceToken.postMessage(nil);", error);
+      console.log("AndroidGetDeviceToken.postMessage(nil);", error);
     }
 
     deviceLock.current = true;
@@ -47,7 +40,7 @@ const useDeviceToken = () => {
     } catch (error) {
       console.error("sleepWithCondition", error);
     }
-    
+
     console.log(`getDeviceToken() returned ${deviceToken.current}`);
     return deviceToken.current;
   };
@@ -75,7 +68,7 @@ const useAuthToken = () => {
     if (authToken.current != null) {
       return authToken.current;
     }
-    
+
     try {
       //eslint-disable-next-line
       window.Bridge.FlutterGetDeviceToken(nil);
@@ -142,49 +135,23 @@ const useShareLink = () => {
   };
 };
 
-const useFlutterWebview = () => {  
+const useFlutterWebview = () => {
   const isMobile = () => {
-    
-    //eslint-disable-next-line
-    const isDeviceTokenAvail = typeof FlutterGetDeviceToken !== "undefined" && typeof FlutterGetDeviceToken.postMessage === "function"
-    //eslint-disable-next-line
-    const isGetAuthTokenAvail = typeof FlutterStoreAuthToken !== "undefined" && typeof FlutterStoreAuthToken.postMessage === "function"
-    //eslint-disable-next-line
-    const isStoreAuthTokenAvail = typeof FlutterStoreAuthToken !== "undefined" && typeof FlutterStoreAuthToken.postMessage === "function"
-
-const checkUserAgent = () => {
+    const checkUserAgent = () => {
       console.log("9");
       return navigator.userAgent.match(
         /Android|Mobile|iP(hone|od|ad)|BlackBerry|IEMobile|Kindle|NetFront|Silk-Accelerated|(hpw|web)OS|Fennec|Minimo|Opera M(obi|ini)|Blazer|Dolfin|Dolphin|Skyfire|Zune/
       );
     };
-    
+
     console.log("1");
-    if (isDeviceTokenAvail) {
-      console.log("2");
-      return true;
-      console.log("3");
-    } else if (checkUserAgent()) {
+    if (checkUserAgent()) {
       console.log("4");
       return true;
-      console.log("5");
     } else {
       console.log("6");
       return false;
-      console.log("7");
     }
-    console.log("8");
-    
-/*
-    if (
-      /android/i.test(navigator.userAgent) ||
-      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-      navigator.share
-    ) {
-      return true;
-    } else {
-      return false;
-    }*/
   };
 
   const { getDeviceToken } = useDeviceToken();
