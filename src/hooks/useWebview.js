@@ -29,9 +29,9 @@ const useDeviceToken = () => {
 
     try {
       //eslint-disable-next-line
-      AndroidGetDeviceToken.postMessage(nil);
+      Bridge.AndroidGetDeviceToken("");
     } catch (error) {
-      console.log("AndroidGetDeviceToken.postMessage(nil);", error);
+      console.log('Bridge.AndroidGetDeviceToken("");', error);
     }
 
     deviceLock.current = true;
@@ -69,19 +69,14 @@ const useAuthToken = () => {
       return authToken.current;
     }
 
-    try {
-      //eslint-disable-next-line
-      window.Bridge.FlutterGetDeviceToken(nil);
-    } catch (error) {
-      console.log("window.Bridge.FlutterGetDeviceToken(nil);", error);
-    }
-
+    /* android, ios 버전으로 새롭게 개발 필요
     try {
       //eslint-disable-next-line
       FlutterGetAuthToken.postMessage(nil);
     } catch (error) {
       console.log("FlutterGetAuthToken.postMessage(nil);", error);
     }
+    */
 
     authLock.current = true;
     try {

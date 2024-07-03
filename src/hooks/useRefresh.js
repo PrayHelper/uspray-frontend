@@ -11,7 +11,6 @@ const useRefresh = () => {
 
   // accessToken 재발급을 위한 axios 호출
   const refresh = async () => {
-    console.log("Refresh는 실행이 되나?");
     try {
       const refreshToken = await getRefreshToken();
       const res = await publicapi.post("/auth/reissue", null, {
