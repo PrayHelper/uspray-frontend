@@ -45,6 +45,23 @@ const useDeviceToken = () => {
     return deviceToken.current;
   };
 
+  // name should be modified to onReceiveDeviceToken
+  window.onReceiveDeviceToken3 = (token) => {
+    deviceToken.current = token;
+    deviceLock.current = false;
+
+    console.log(`onReceiveDeviceToken3(${token}) called`);
+  };
+
+  useEffect(() => {
+    window.onReceiveDeviceToken4 = (token) => {
+      deviceToken.current = token;
+      deviceLock.current = false;
+
+      console.log(`onReceiveDeviceToken4(${token}) called`);
+    };
+  }, []);
+
   return {
     getDeviceToken,
   };
@@ -60,13 +77,13 @@ const useAuthToken = () => {
     }
 
     /* android, ios 버전으로 새롭게 개발 필요
-    try {
-      //eslint-disable-next-line
-      FlutterGetAuthToken.postMessage(nil);
-    } catch (error) {
-      console.log("FlutterGetAuthToken.postMessage(nil);", error);
-    }
-    */
+      try {
+        //eslint-disable-next-line
+        FlutterGetAuthToken.postMessage(nil);
+      } catch (error) {
+        console.log("FlutterGetAuthToken.postMessage(nil);", error);
+      }
+      */
 
     authLock.current = true;
     try {
@@ -140,12 +157,21 @@ const useWebview = () => {
   };
 
   // name should be modified to onReceiveDeviceToken
-  window.onReceiveDeviceToken = (token) => {
+  window.onReceiveDeviceToken1 = (token) => {
     deviceToken.current = token;
     deviceLock.current = false;
 
-    console.log(`onReceiveDeviceToken(${token}) called`);
+    console.log(`onReceiveDeviceToken1(${token}) called`);
   };
+
+  useEffect(() => {
+    window.onReceiveDeviceToken2 = (token) => {
+      deviceToken.current = token;
+      deviceLock.current = false;
+
+      console.log(`onReceiveDeviceToken2(${token}) called`);
+    };
+  }, []);
 
   const { getDeviceToken } = useDeviceToken();
   const { getAuthToken, storeAuthToken } = useAuthToken();

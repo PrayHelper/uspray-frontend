@@ -55,6 +55,10 @@ const LoginPage = () => {
           console.log("hi1");
           const deviceToken = await getDeviceToken();
           console.log("hi2");
+          console.log(window.onReceiveDeviceToken1);
+          console.log(window.onReceiveDeviceToken2);
+          console.log(window.onReceiveDeviceToken3);
+          console.log(window.onReceiveDeviceToken4);
           sendDeviceToken(
             {
               fcmToken: deviceToken,
