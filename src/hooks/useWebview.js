@@ -29,9 +29,9 @@ const useDeviceToken = () => {
 
     try {
       //eslint-disable-next-line
-      Bridge.AndroidGetDeviceToken(null);
+      Bridge.AndroidGetDeviceToken();
     } catch (error) {
-      console.log("Bridge.AndroidGetDeviceToken(null);", error);
+      console.log("Bridge.AndroidGetDeviceToken();", error);
     }
 
     deviceLock.current = true;
