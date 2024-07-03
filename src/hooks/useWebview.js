@@ -17,54 +17,6 @@ let authLock = {
   current: null,
 };
 
-const useDeviceToken = () => {
-  const { sleepWithCondition } = useSleep();
-
-  const getDeviceToken = async () => {
-    if (deviceToken.current != null) {
-      return deviceToken.current;
-    }
-
-    try {
-      //eslint-disable-next-line
-      Bridge.AndroidGetDeviceToken();
-    } catch (error) {
-      console.log("Bridge.AndroidGetDeviceToken();", error);
-    }
-
-    deviceLock.current = true;
-    try {
-      await sleepWithCondition(() => deviceLock.current === false);
-    } catch (error) {
-      console.error("sleepWithCondition", error);
-    }
-
-    console.log(`getDeviceToken() returned ${deviceToken.current}`);
-    return deviceToken.current;
-  };
-
-  // name should be modified to onReceiveDeviceToken
-  window.onReceiveDeviceToken3 = (token) => {
-    deviceToken.current = token;
-    deviceLock.current = false;
-
-    console.log(`onReceiveDeviceToken3(${token}) called`);
-  };
-
-  useEffect(() => {
-    window.onReceiveDeviceToken4 = (token) => {
-      deviceToken.current = token;
-      deviceLock.current = false;
-
-      console.log(`onReceiveDeviceToken4(${token}) called`);
-    };
-  }, []);
-
-  return {
-    getDeviceToken,
-  };
-};
-
 const useAuthToken = () => {
   const { sleepWithCondition } = useSleep();
 
@@ -136,6 +88,8 @@ const useShareLink = () => {
 };
 
 const useWebview = () => {
+  const { sleepWithCondition } = useSleep();
+
   const isMobile = () => {
     const checkUserAgent = () => {
       return navigator.userAgent.match(
@@ -150,6 +104,29 @@ const useWebview = () => {
     }
   };
 
+  const getDeviceToken = async () => {
+    if (deviceToken.current != null) {
+      return deviceToken.current;
+    }
+
+    try {
+      //eslint-disable-next-line
+      Bridge.AndroidGetDeviceToken();
+    } catch (error) {
+      console.log("Bridge.AndroidGetDeviceToken();", error);
+    }
+
+    deviceLock.current = true;
+    try {
+      await sleepWithCondition(() => deviceLock.current === false);
+    } catch (error) {
+      console.error("sleepWithCondition", error);
+    }
+
+    console.log(`getDeviceToken() returned ${deviceToken.current}`);
+    return deviceToken.current;
+  };
+
   // name should be modified to onReceiveDeviceToken
   window.onReceiveDeviceToken1 = (token) => {
     deviceToken.current = token;
@@ -158,16 +135,6 @@ const useWebview = () => {
     console.log(`onReceiveDeviceToken1(${token}) called`);
   };
 
-  useEffect(() => {
-    window.onReceiveDeviceToken2 = (token) => {
-      deviceToken.current = token;
-      deviceLock.current = false;
-
-      console.log(`onReceiveDeviceToken2(${token}) called`);
-    };
-  }, []);
-
-  const { getDeviceToken } = useDeviceToken();
   const { getAuthToken, storeAuthToken } = useAuthToken();
   const { shareLink } = useShareLink();
 
