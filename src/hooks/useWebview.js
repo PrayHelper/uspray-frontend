@@ -140,18 +140,14 @@ const useShareLink = () => {
 const useWebview = () => {
   const isMobile = () => {
     const checkUserAgent = () => {
-      console.log("[TEST CONCOLE] checkUserAgent");
       return navigator.userAgent.match(
         /Android|Mobile|iP(hone|od|ad)|BlackBerry|IEMobile|Kindle|NetFront|Silk-Accelerated|(hpw|web)OS|Fennec|Minimo|Opera M(obi|ini)|Blazer|Dolfin|Dolphin|Skyfire|Zune/
       );
     };
 
-    console.log("1");
     if (checkUserAgent()) {
-      console.log("4");
       return true;
     } else {
-      console.log("6");
       return false;
     }
   };

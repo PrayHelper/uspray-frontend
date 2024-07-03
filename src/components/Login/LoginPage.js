@@ -52,9 +52,7 @@ const LoginPage = () => {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
         if (isMobile()) {
-          console.log("hi1");
           const deviceToken = await getDeviceToken();
-          console.log("hi2");
           console.log(window.onReceiveDeviceToken1);
           console.log(window.onReceiveDeviceToken2);
           console.log(window.onReceiveDeviceToken3);
@@ -68,7 +66,6 @@ const LoginPage = () => {
               onError: (e) => console.log("실실패패", deviceToken),
             }
           );
-          console.log("hi3");
         } else {
           showToast({
             message: "푸쉬 알림은 모바일에서만 받을 수 있습니다.",
