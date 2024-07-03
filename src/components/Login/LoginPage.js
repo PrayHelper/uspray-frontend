@@ -61,8 +61,8 @@ const LoginPage = () => {
               fcmToken: deviceToken,
             },
             {
-              onSuccess: (res) => console.log(res.status),
-              onError: (e) => console.log(e.response.status),
+              onSuccess: (res) => console.log("성성공공", deviceToken),
+              onError: (e) => console.log("실실패패", deviceToken),
             }
           );
         } else {
