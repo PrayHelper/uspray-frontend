@@ -149,6 +149,13 @@ const useWebview = () => {
     }
   };
 
+  function onReceiveDeviceToken(token) {
+    deviceToken.current = token;
+    deviceLock.current = false;
+
+    console.log(`onReceiveDeviceToken(${token}) called`);
+  }
+
   const { getDeviceToken } = useDeviceToken();
   const { getAuthToken, storeAuthToken } = useAuthToken();
   const { shareLink } = useShareLink();
