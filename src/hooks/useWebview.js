@@ -45,16 +45,6 @@ const useDeviceToken = () => {
     return deviceToken.current;
   };
 
-  useEffect(() => {
-    // name should be modified to onReceiveDeviceToken
-    window.onReceiveDeviceToken = (token) => {
-      deviceToken.current = token;
-      deviceLock.current = false;
-
-      console.log(`onReceiveDeviceToken(${token}) called`);
-    };
-  }, []);
-
   return {
     getDeviceToken,
   };
@@ -149,12 +139,13 @@ const useWebview = () => {
     }
   };
 
-  function onReceiveDeviceToken(token) {
+  // name should be modified to onReceiveDeviceToken
+  window.onReceiveDeviceToken = (token) => {
     deviceToken.current = token;
     deviceLock.current = false;
 
     console.log(`onReceiveDeviceToken(${token}) called`);
-  }
+  };
 
   const { getDeviceToken } = useDeviceToken();
   const { getAuthToken, storeAuthToken } = useAuthToken();
