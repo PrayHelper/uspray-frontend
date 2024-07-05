@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import publicapi from "../../api/publicapi";
 import Input from "../Input/Input";
 import Button, { ButtonSize, ButtonTheme } from "../Button/Button";
-import Toast, { ToastTheme } from "../Toast/Toast";
+import { ToastTheme } from "../Toast/Toast";
 import useAuthToken from "../../hooks/useAuthToken";
-import { useMutation } from "react-query";
 import useAuthorized from "../../hooks/useAuthorized";
 
 import LogoSVG from "../../images/logo_image.svg";
@@ -17,7 +16,8 @@ import SocialLoginCircleButton from "../SocialLogin/SocialLoginCircleButton";
 import Modal from "../Modal/Modal";
 import BlackScreen from "../BlackScreen";
 import useSendDeviceToken from "../../hooks/useSendDeviceToken";
-import useWebview from "../../hooks/useWebview";
+import useCheckMobile from "../../hooks/useCheckMobile";
+import useMobileToken from "../../hooks/useMobileToken";
 
 const LoginPage = () => {
   const [idValue, setIdValue] = useState("");
@@ -28,7 +28,8 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  const { isMobile, getDeviceToken, storeAuthToken } = useWebview();
+  const { isMobile } = useCheckMobile();
+  const { getDeviceToken } = useMobileToken();
 
   const { showToast } = useToast({});
 

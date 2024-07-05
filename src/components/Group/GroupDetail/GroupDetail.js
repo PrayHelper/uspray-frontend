@@ -11,7 +11,8 @@ import { useCategory } from "../../../hooks/useCategory";
 import ScrollSynchronizedCategoryList from "../../ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
 import useToast from "../../../hooks/useToast";
 import { ToastTheme } from "../../Toast/Toast";
-import useWebview from "../../../hooks/useWebview";
+import useMobileShareMode from "../../../hooks/useMobileShareMode";
+import useCheckMobile from "../../../hooks/useCheckMobile";
 
 const GroupDetail = ({ group, setShowGroupDetail }) => {
   const [showGroupSetting, setShowGroupSetting] = useState(false);
@@ -19,7 +20,8 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
     group.id
   );
   const isGroupPrayListData = Object.keys(groupPrayList).length !== 0;
-  const { shareLink, isMobile } = useWebview();
+  const { shareLink } = useMobileShareMode();
+  const { isMobile } = useCheckMobile();
   const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
 
   const [shareMode, setShareMode] = useState(false);
@@ -28,9 +30,9 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
     useCategory(tab);
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
-  const [isPraySelected, setIsPraySelected] = useState(false);
+  const [setIsPraySelected] = useState(false);
 
-  const [categoryRefIndex, setCategoryRefIndex] = useState(0);
+  const [setCategoryRefIndex] = useState(0);
   const categoryRef = useRef([]);
 
   const { showToast } = useToast({});
@@ -46,18 +48,8 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
   const onInvite = async () => {
     const groupId = group.id;
     var encodeGroupId = window.btoa(groupId.toString());
-    // if (isMobile()) {
-    // if (/android/i.test(navigator.userAgent)) {
-    //   shareLink({
-    //     title: "Web_invite",
-    //     url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
-    //   });
-    // } else if (
-    //   /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-    //   navigator.share
-    // ) {
-    if (navigator.share) {
-      navigator.share({
+    if (isMobile()) {
+      shareLink({
         title: "Web_invite",
         url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
       });

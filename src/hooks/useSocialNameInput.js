@@ -1,6 +1,5 @@
 import { useMutation } from "react-query";
 import useApi from "./useApi";
-import publicapi from "../api/publicapi";
 
 const useSocialNameInput = ({ name, token }) => {
   const { putFetcher } = useApi();

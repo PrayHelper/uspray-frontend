@@ -13,7 +13,8 @@ import LottieData from "./json/uspray.json";
 import Toast, { ToastTheme } from "../../components/Toast/Toast";
 import PrayerSortToggle from "./PrayerSortToggle";
 import useToast from "../../hooks/useToast";
-import useWebview from "../../../hooks/useWebview";
+import useMobileShareMode from "../../../hooks/useMobileShareMode";
+import useCheckMobile from "../../../hooks/useCheckMobile";
 
 const Background = styled.div`
   width: 100%;
@@ -153,7 +154,8 @@ function PrayerList({
   const { data: prayList, refetch: refetchPrayList } = usePrayList("date");
   const { data: pray_cnt_List, refetch: refetch_cnt_PrayList } =
     usePrayList("cnt");
-  const { shareLink, isMobile } = useWebview();
+  const { shareLink } = useMobileShareMode();
+  const { isMobile } = useCheckMobile();
   const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
   const { showToast } = useToast({});
 

@@ -3,27 +3,26 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import publicapi from "../api/publicapi";
-import useApi from "../hooks/useApi";
-import { useMutation } from "react-query";
 import useToast from "../hooks/useToast";
 import { ToastTheme } from "../components/Toast/Toast";
 import useAuthorized from "../hooks/useAuthorized";
 import useAuthToken from "../hooks/useAuthToken";
 import useSendDeviceToken from "../hooks/useSendDeviceToken";
-import useWebview from "../hooks/useWebview";
+import useCheckMobile from "../hooks/useCheckMobile";
+import useMobileToken from "../hooks/useMobileToken";
 
 const AppleRedirecting = () => {
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code");
 
   // TODO: 로그인 후 토큰 처리 로직 custom hook으로 추상화
-  const { isMobile, getDeviceToken, storeAuthToken } = useWebview();
+  const { isMobile } = useCheckMobile();
+  const { getDeviceToken } = useMobileToken();
   const { mutate: sendDeviceToken } = useSendDeviceToken();
   const { showToast } = useToast({});
   const { setAutorized } = useAuthorized();
   const navigate = useNavigate();
-  const { setAccessToken, setRefreshToken, getAccessToken, getRefreshToken } =
-    useAuthToken();
+  const { setAccessToken, setRefreshToken } = useAuthToken();
 
   useEffect(() => {
     const login = async () => {

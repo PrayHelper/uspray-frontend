@@ -1,55 +1,52 @@
 import { useRef } from "react";
 import { useEffect } from "react";
 import useSleep from "./useSleep";
-import useWebview from "./useWebview";
+import useCheckMobile from "./useCheckMobile";
+import useMobileToken from "./useMobileToken";
 
 const accessToken = {
   current: "",
 };
 
 const useAuthToken = () => {
+  const { sleepWithCondition } = useSleep();
+  const { isMobile } = useCheckMobile();
+  const { getMobileRefreshToken, storeMobileRefreshToken } = useMobileToken();
+  const muLock = useRef(false);
+
   const getAccessToken = () => {
-    //console.log(`getAccessToken: ${accessToken.current}`)
+    console.log(`getAccessToken: ${accessToken.current}`);
     return accessToken.current;
   };
 
   const setAccessToken = (token) => {
-    //console.log(`setAccessToken: ${token}`)
+    console.log(`setAccessToken: ${token}`);
     accessToken.current = token;
   };
 
-  const muLock = useRef(false);
-  const { sleepWithCondition } = useSleep();
-
-  const getAuthTokenFromLocalStorage = async () => {
+  const getWebRefreshToken = async () => {
     await sleepWithCondition(() => muLock.current === false);
     return localStorage.getItem("refreshToken");
   };
 
-  const storeAuthTokenToLocalStorage = (token) => {
+  const storeWebRefreshToken = (token) => {
     localStorage.setItem("refreshToken", token);
   };
 
-  const {
-    isMobile,
-    getAuthToken: getAuthTokenFromMobile,
-    storeAuthToken: storeAuthTokenFromMobile,
-  } = useWebview();
-
   const getRefreshToken = async () => {
     if (isMobile()) {
-      return await getAuthTokenFromMobile();
+      return await getMobileRefreshToken();
     } else {
-      return await getAuthTokenFromLocalStorage();
+      return await getWebRefreshToken();
     }
   };
 
   const setRefreshToken = async (token) => {
     if (isMobile()) {
       muLock.current = true;
-      storeAuthTokenFromMobile(token);
+      storeMobileRefreshToken(token);
     } else {
-      storeAuthTokenToLocalStorage(token);
+      storeWebRefreshToken(token);
     }
   };
 

@@ -1,9 +1,9 @@
 import { atom, useAtom } from "jotai";
-import { createPortal } from "react-dom";
 import styled from "styled-components";
 import useToast from "../../hooks/useToast";
 import { ToastTheme } from "../../components/Toast/Toast";
-import useWebview from "../../hooks/useWebview";
+import useMobileShareMode from "../../hooks/useMobileShareMode";
+import useCheckMobile from "../../hooks/useCheckMobile";
 
 const isOpenedAtom = atom(false);
 const isSelectedMapAtom = atom({});
@@ -14,7 +14,8 @@ export const useShareSelection = () => {
   const [isOpened, setIsOpened] = useAtom(isOpenedAtom);
   const [isSelectedMap, setIsSelectedMap] = useAtom(isSelectedMapAtom);
 
-  const { shareLink, isMobile } = useWebview();
+  const { shareLink } = useMobileShareMode();
+  const { isMobile } = useCheckMobile();
 
   const selectedLength = Object.values(isSelectedMap).filter(Boolean).length;
 
