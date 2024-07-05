@@ -2,10 +2,10 @@ import { useMutation } from "react-query";
 import useApi from "./useApi";
 
 const useSendDeviceToken = () => {
-  const { postFetcher } = useApi();
+  const { putFetcher } = useApi();
   return useMutation(
     async (data) => {
-      return await postFetcher("/member/fcm-token", data);
+      return await putFetcher("/member/fcm-token", data);
     },
 
     {
