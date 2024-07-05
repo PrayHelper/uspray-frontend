@@ -44,25 +44,15 @@ export const useShareSelection = () => {
     const encodedIdListString = window.btoa(checkedIdListString);
 
     if (isMobile()) {
-      if (/android/i.test(navigator.userAgent)) {
-        shareLink({
-          title: "Web_invite",
-          url: `${WEB_ORIGIN}/main?share=` + encodedIdListString,
-        });
-      } else if (
-        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-        navigator.share
-      ) {
-        navigator.share({
-          title: "Web_invite",
-          url: `${WEB_ORIGIN}/main?share=` + encodedIdListString,
-        });
-      } else {
-        showToast({
-          message: "공유하기가 지원되지 않는 환경 입니다.",
-          theme: ToastTheme.ERROR,
-        });
-      }
+      shareLink({
+        title: "Web_invite",
+        url: `${WEB_ORIGIN}/main?share=` + encodedIdListString,
+      });
+    } else {
+      showToast({
+        message: "공유하기가 지원되지 않는 환경 입니다.",
+        theme: ToastTheme.ERROR,
+      });
     }
 
     close();

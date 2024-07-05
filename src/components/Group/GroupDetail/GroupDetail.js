@@ -59,7 +59,6 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
         theme: ToastTheme.ERROR,
       });
     }
-    // }
     console.log(`${WEB_ORIGIN}/group?id=` + encodeGroupId);
   };
 

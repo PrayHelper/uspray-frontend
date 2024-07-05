@@ -225,25 +225,15 @@ function PrayerList({
       setIsShare(!isShare);
       const listJoin = Sharelist.join("&share=");
       if (isMobile()) {
-        if (/android/i.test(navigator.userAgent)) {
-          shareLink({
-            title: "Web_share",
-            url: `${WEB_ORIGIN}/main?share=` + listJoin,
-          });
-        } else if (
-          /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-          navigator.share
-        ) {
-          navigator.share({
-            title: "Web_share",
-            url: `${WEB_ORIGIN}/main?share=` + listJoin,
-          });
-        } else {
-          showToast({
-            message: "공유하기가 지원되지 않는 환경 입니다.",
-            theme: ToastTheme.ERROR,
-          });
-        }
+        shareLink({
+          title: "Web_share",
+          url: `${WEB_ORIGIN}/main?share=` + listJoin,
+        });
+      } else {
+        showToast({
+          message: "공유하기가 지원되지 않는 환경 입니다.",
+          theme: ToastTheme.ERROR,
+        });
       }
 
       console.log(`${WEB_ORIGIN}/main?share=` + listJoin);
