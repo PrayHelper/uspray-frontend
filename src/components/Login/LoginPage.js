@@ -94,6 +94,10 @@ const LoginPage = () => {
           theme: ToastTheme.ERROR,
         });
       }
+    } finally {
+      if (document.activeElement) {
+        document.activeElement.blur();
+      }
     }
   };
 

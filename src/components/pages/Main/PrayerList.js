@@ -226,7 +226,7 @@ function PrayerList({
       const listJoin = Sharelist.join("&share=");
       if (isMobile()) {
         shareLink({
-          title: "Web_share",
+          title: "제 기도제목을 함께 기도해주세요!",
           url: `${WEB_ORIGIN}/main?share=` + listJoin,
         });
       } else {
