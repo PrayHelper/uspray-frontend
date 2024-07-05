@@ -3,16 +3,19 @@ import axios from "axios";
 // ErrorInterceptor
 const onErrorResponse = async (error) => {
   if (axios.isAxiosError(error)) {
-    if (error.response.data) {
-      console.log(
-        `ErrorInterceptor: ${error.config.url} - ${error.response.data.message}`
-      );
-    } else {
-      console.log(
-        `ErrorInterceptor: ${error.config.url} - 알 수 없는 오류가 발생했습니다.`
-      );
-    }
+    const { config, response } = error;
+    const errorMessage =
+      response?.data?.message || "알 수 없는 오류가 발생했습니다.";
+    const errorCode = response?.status;
+
+    console.log(
+      `ErrorInterceptor: ${config.url} - Status: ${errorCode}, Message: ${errorMessage}`
+    );
   } else {
+    console.log(
+      "ErrorInterceptor: 알 수 없는 오류가 발생했습니다. Error:",
+      error
+    );
   }
   return Promise.reject(error);
 };
