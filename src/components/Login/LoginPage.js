@@ -53,15 +53,17 @@ const LoginPage = () => {
       if (res.status === 200) {
         if (isMobile()) {
           const deviceToken = await getDeviceToken();
-          sendDeviceToken(
-            {
-              fcmToken: deviceToken,
-            },
-            {
-              onSuccess: (res) => console.log("성성공공", deviceToken),
-              onError: (e) => console.log("실실패패", deviceToken),
-            }
-          );
+          if (deviceToken) {
+            sendDeviceToken(
+              {
+                fcmToken: deviceToken,
+              },
+              {
+                onSuccess: (res) => console.log("성성공공", deviceToken),
+                onError: (e) => console.log("실실패패", deviceToken),
+              }
+            );
+          }
         } else {
           showToast({
             message: "푸쉬 알림은 모바일에서만 받을 수 있습니다.",
