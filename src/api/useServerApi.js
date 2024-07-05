@@ -14,11 +14,13 @@ const useServerApi = () => {
 
   const onErrorResponse = async (error) => {
     if (axios.isAxiosError(error)) {
-      const { status, data } = error.response || {};
-      const requestConfig = error.config;
-      const { url, method, headers, data: requestData } = requestConfig;
+      const { response, config } = error;
+      const errorCode = response?.status;
+      const errorMessage =
+        response?.data?.message || "알 수 없는 오류가 발생했습니다.";
+      const { url, data: requestData } = config;
 
-      switch (status) {
+      switch (errorCode) {
         case 401: {
           console.log("access token is expired");
           await refresh();
@@ -37,15 +39,12 @@ const useServerApi = () => {
           break;
         }
         default: {
+          console.log(`ErrorInterceptor: ${url}`);
+          console.log(`-> Status: ${errorCode}`);
+          console.log(`-> Message: ${errorMessage}`);
           console.log(
-            `ErrorInterceptor: ${url} - Status: ${status}, Message: ${
-              data?.message || "알 수 없는 오류가 발생했습니다."
-            }`
+            `-> Request data: ${JSON.stringify(requestData, null, 2)}`
           );
-          console.log("Request details:");
-          console.log("Method:", method);
-          console.log("Headers:", headers);
-          console.log("Data:", requestData);
           break;
         }
       }
