@@ -63,6 +63,11 @@ const LoginPage = () => {
                 onError: (e) => console.log("실실패패", deviceToken),
               }
             );
+          } else {
+            showToast({
+              message: "디바이스 토큰을 받아오지 못했습니다.",
+              theme: ToastTheme.ERROR,
+            });
           }
         } else {
           showToast({
