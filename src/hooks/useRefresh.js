@@ -23,8 +23,7 @@ const useRefresh = () => {
       setAccessToken(res.data.data.accessToken);
       setRefreshToken(res.data.data.refreshToken);
     } catch (e) {
-      console.log("catch에서 실행");
-      console.log(e);
+      console.log("Error catch in /auth/reissue", e);
       // 401 : refresh token 만료
       if (e.response.status === 401) {
         await setRefreshToken("");

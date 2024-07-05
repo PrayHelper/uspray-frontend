@@ -7,10 +7,15 @@ const onErrorResponse = async (error) => {
     const errorMessage =
       response?.data?.message || "알 수 없는 오류가 발생했습니다.";
     const errorCode = response?.status;
+    const { url, method, headers, data: requestData } = config;
 
     console.log(
-      `ErrorInterceptor: ${config.url} - Status: ${errorCode}, Message: ${errorMessage}`
+      `ErrorInterceptor: ${url} - Status: ${errorCode}, Message: ${errorMessage}`
     );
+    console.log("Request details:");
+    console.log("Method:", method);
+    console.log("Headers:", headers);
+    console.log("Data:", requestData);
   } else {
     console.log(
       "ErrorInterceptor: 알 수 없는 오류가 발생했습니다. Error:",
