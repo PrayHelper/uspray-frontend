@@ -14,7 +14,7 @@ const useServerApi = () => {
 
   const onErrorResponse = async (error) => {
     if (axios.isAxiosError(error)) {
-      const { status } = error.response;
+      const { status, data } = error.response || {};
       switch (status) {
         case 401: {
           console.log("access token is expired");
@@ -34,14 +34,21 @@ const useServerApi = () => {
           break;
         }
         default: {
-          // console.log(status);
           console.log(
-            `ErrorInterceptor: ${error.config.url} - 알 수 없는 오류가 발생했습니다.`
+            `ErrorInterceptor: ${
+              error.config.url
+            } - Status: ${status}, Message: ${
+              data?.message || "알 수 없는 오류가 발생했습니다."
+            }`
           );
           break;
         }
       }
     } else {
+      console.log(
+        "ErrorInterceptor: 알 수 없는 오류가 발생했습니다. Error:",
+        error
+      );
     }
     return Promise.reject(error);
   };

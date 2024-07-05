@@ -53,7 +53,6 @@ const LoginPage = () => {
       if (res.status === 200) {
         if (isMobile()) {
           const deviceToken = await getDeviceToken();
-          console.log("deviceToken", deviceToken);
           if (deviceToken) {
             sendDeviceToken(
               {
