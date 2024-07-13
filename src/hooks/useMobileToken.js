@@ -28,10 +28,19 @@ const useMobileToken = () => {
 
     if (isMobile()) {
       try {
+        // Android
         //eslint-disable-next-line
         Bridge.AndroidGetDeviceToken();
       } catch (error) {
         console.log("Error Bridge.AndroidGetDeviceToken", error);
+      }
+
+      try {
+        // Flutter
+        //eslint-disable-next-line
+        FlutterGetDeviceToken.postMessage(nil);
+      } catch (error) {
+        console.log("Error FlutterGetDeviceToken.postMessage(nil);", error);
       }
 
       deviceLock.current = true;
@@ -66,10 +75,19 @@ const useMobileToken = () => {
 
     if (isMobile()) {
       try {
+        // Android
         //eslint-disable-next-line
         Bridge.AndroidGetRefreshToken();
       } catch (error) {
         console.log("Error Bridge.AndroidGetRefreshToken", error);
+      }
+
+      try {
+        // Flutter
+        //eslint-disable-next-line
+        FlutterGetAuthToken.postMessage(nil);
+      } catch (error) {
+        console.log("Error FlutterGetDeviceToken.postMessage(nil);", error);
       }
 
       refreshLock.current = true;
@@ -95,6 +113,14 @@ const useMobileToken = () => {
     refreshLock.current = false;
 
     console.log(`onReceiveRefreshToken(${token}) called`);
+  };
+
+  // name should be modified to onReceiveAuthToken
+  window.onReceiveAuthToken = (token) => {
+    refreshToken.current = token;
+    refreshLock.current = false;
+
+    console.log(`onReceiveAuthToken(${token}) called`);
   };
 
   const storeMobileRefreshToken = async (token) => {
