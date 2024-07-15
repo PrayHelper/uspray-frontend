@@ -60,6 +60,7 @@ const useReceive = () => {
 const Main = () => {
   const tab = useAtomValue(mainTabAtom);
   const { prayList } = usePray(tab);
+  const mainRef = useRef(null);
 
   const { controlledProps: bottomControlledProps } = usePrayerBottomModal();
   const { controlledProps: modifyControlledProps } = usePrayerModifyModal();
@@ -68,6 +69,12 @@ const Main = () => {
   const { controlledProps: categoryControlledProps } = useCategoryCreateModal();
   const { controlledProps: categoryEditControlledProps } =
     useCategoryEditModal();
+
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.focus();
+    }
+  }, []);
 
   useReceive();
 
