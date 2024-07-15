@@ -1,5 +1,8 @@
+import { useEffect } from "react";
 import useSleep from "./useSleep";
 import useCheckMobile from "./useCheckMobile";
+
+const nil = { isnil: true };
 
 let deviceToken = {
   current: null,
@@ -60,6 +63,16 @@ const useMobileToken = () => {
     return deviceToken.current;
   };
 
+  useEffect(() => {
+    // name should be modified to onReceiveDeviceToken
+    window.onReceiveDeviceToken = (token) => {
+      deviceToken.current = token;
+      deviceLock.current = false;
+
+      console.log(`onReceiveDeviceToken(${token}) called`);
+    };
+  }, []);
+
   // name should be modified to onReceiveDeviceToken
   window.onReceiveDeviceToken = (token) => {
     deviceToken.current = token;
@@ -115,21 +128,35 @@ const useMobileToken = () => {
     console.log(`onReceiveRefreshToken(${token}) called`);
   };
 
-  // name should be modified to onReceiveAuthToken
-  window.onReceiveAuthToken = (token) => {
-    refreshToken.current = token;
-    refreshLock.current = false;
+  useEffect(() => {
+    window.onReceiveAuthToken = (token) => {
+      refreshToken.current = token;
+      refreshLock.current = false;
 
-    console.log(`onReceiveAuthToken(${token}) called`);
-  };
+      console.log(`onReceiveAuthToken(${token}) called`);
+    };
+
+    window.onReceiveTokenStoredAck = () => {
+      console.log(`onReceiveTokenStoredAck() called`);
+    };
+  }, []);
 
   const storeMobileRefreshToken = async (token) => {
     if (isMobile()) {
       try {
+        // Android
         //eslint-disable-next-line
         Bridge.AndroidStoreRefreshToken(token);
       } catch (error) {
         console.log("Error Bridge.AndroidStoreRefreshToken", error);
+      }
+
+      try {
+        // Flutter
+        //eslint-disable-next-line
+        FlutterStoreAuthToken.postMessage(token);
+      } catch (error) {
+        console.log("Error FlutterStoreAuthToken.postMessage(token);", error);
       }
     } else {
       console.log(
