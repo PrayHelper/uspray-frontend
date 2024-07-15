@@ -60,7 +60,6 @@ const useReceive = () => {
 const Main = () => {
   const tab = useAtomValue(mainTabAtom);
   const { prayList } = usePray(tab);
-  const mainRef = useRef(null);
 
   const { controlledProps: bottomControlledProps } = usePrayerBottomModal();
   const { controlledProps: modifyControlledProps } = usePrayerModifyModal();
@@ -71,9 +70,16 @@ const Main = () => {
     useCategoryEditModal();
 
   useEffect(() => {
-    if (mainRef.current) {
-      mainRef.current.focus();
+    const focusedElement = document.activeElement;
+    console.log("Before blur:", focusedElement ? focusedElement : null);
+    if (
+      focusedElement &&
+      (focusedElement.tagName === "INPUT" ||
+        focusedElement.tagName === "TEXTAREA")
+    ) {
+      focusedElement.blur();
     }
+    console.log("After blur:", document.activeElement);
   }, []);
 
   useReceive();
