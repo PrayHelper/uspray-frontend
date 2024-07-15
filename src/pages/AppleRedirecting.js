@@ -8,7 +8,6 @@ import { ToastTheme } from "../components/Toast/Toast";
 import useAuthorized from "../hooks/useAuthorized";
 import useAuthToken from "../hooks/useAuthToken";
 import useSendDeviceToken from "../hooks/useSendDeviceToken";
-import useCheckMobile from "../hooks/useCheckMobile";
 import useMobileToken from "../hooks/useMobileToken";
 
 const AppleRedirecting = () => {
@@ -16,7 +15,6 @@ const AppleRedirecting = () => {
   const code = searchParams.get("code");
 
   // TODO: 로그인 후 토큰 처리 로직 custom hook으로 추상화
-  const { isMobile } = useCheckMobile();
   const { getDeviceToken } = useMobileToken();
   const { mutate: sendDeviceToken } = useSendDeviceToken();
   const { showToast } = useToast({});
@@ -32,23 +30,13 @@ const AppleRedirecting = () => {
       try {
         const res = await publicapi.post(api, data);
         if (res.status === 200) {
-          if (isMobile()) {
+          try {
             const deviceToken = await getDeviceToken();
-
-            sendDeviceToken(
-              {
-                fcmToken: deviceToken,
-              },
-              {
-                onSuccess: (res) => console.log(res.status),
-                onError: (e) => console.log(e.response.status),
-              }
-            );
-          } else {
-            showToast({
-              message: "푸쉬 알림은 모바일에서만 받을 수 있습니다.",
-              theme: ToastTheme.ERROR,
+            sendDeviceToken({
+              fcmToken: deviceToken,
             });
+          } catch (e) {
+            console.log(e);
           }
 
           navigate("/main");

@@ -1,20 +1,20 @@
-import Header from '../components/Header/Header';
-import styled from 'styled-components';
-import {useState} from 'react';
-import SettingToggle from '../components/SettingToggle/SettingToggle';
-import BlackScreen from '../components/BlackScreen/BlackScreen';
-import {useNavigate} from 'react-router-dom';
-import useAuthToken from '../hooks/useAuthToken';
-import {setRef} from '@mui/material';
-import useAuthorized from '../hooks/useAuthorized';
-import useSleep from '../hooks/useSleep';
-import Modal from '../components/Modal/Modal';
-import Overlay from '../components/Overlay/Overlay';
-import ToS from './ToS';
-import PrivacyPolicy from './PrivacyPolicy';
-import {useNotification} from '../hooks/useNotification';
-import {useCheckLogin} from '../hooks/useCheckLogin';
-import ChangeInfoSocial from '../components/ChangeInfo/ChangeInfoSocial';
+import Header from "../components/Header/Header";
+import styled from "styled-components";
+import { useState } from "react";
+import SettingToggle from "../components/SettingToggle/SettingToggle";
+import BlackScreen from "../components/BlackScreen/BlackScreen";
+import { useNavigate } from "react-router-dom";
+import useAuthToken from "../hooks/useAuthToken";
+import { setRef } from "@mui/material";
+import useAuthorized from "../hooks/useAuthorized";
+import useSleep from "../hooks/useSleep";
+import Modal from "../components/Modal/Modal";
+import Overlay from "../components/Overlay/Overlay";
+import ToS from "./ToS";
+import PrivacyPolicy from "./PrivacyPolicy";
+import { useNotification } from "../hooks/useNotification";
+import { useCheckLogin } from "../hooks/useCheckLogin";
+import ChangeInfoSocial from "../components/ChangeInfo/ChangeInfoSocial";
 
 const Container = styled.div`
   width: 100%;
@@ -22,7 +22,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  overflow-y: ${props => (props.isModalOn ? 'hidden' : 'auto')};
+  overflow-y: ${(props) => (props.isModalOn ? "hidden" : "auto")};
 `;
 
 const Wrapper = styled.div`
@@ -63,7 +63,7 @@ const StyledItem = styled.div`
 
   &:active {
     transition: all 0.2s;
-    ${props =>
+    ${(props) =>
       props.noActive
         ? `filter: brightness(1);
         transform: scale(1);`
@@ -117,10 +117,10 @@ const Settings = () => {
   const [showModal, setShowModal] = useState(false);
   const [isOverlayOn, setIsOverlayOn] = useState(false);
   const [information, setInformation] = useState(null);
-  const {setRefreshToken} = useAuthToken();
-  const {isNotifiedData} = useNotification();
+  const { setRefreshToken } = useAuthToken();
+  const { isNotifiedData } = useNotification();
   const navigate = useNavigate();
-  const {isSocialLogin} = useCheckLogin();
+  const { isSocialLogin } = useCheckLogin();
 
   const openModalHandler = () => {
     setShowModal(true);
@@ -131,21 +131,21 @@ const Settings = () => {
   };
 
   const movePageHandler = () => {
-    if (isSocialLogin.social) navigate('/changeInfoSocial');
-    else navigate('/checkInfo');
+    if (isSocialLogin.social) navigate("/changeInfoSocial");
+    else navigate("/checkInfo");
   };
 
   const logout = async () => {
-    setRefreshToken('');
+    setRefreshToken("");
     window.location.reload();
   };
 
   const moveToKakao = () => {
-    window.open('https://pf.kakao.com/_UgxhYxj');
+    window.open("https://pf.kakao.com/_UgxhYxj");
   };
 
   const moveToInsta = () => {
-    window.open('https://www.instagram.com/_uspray/');
+    window.open("https://www.instagram.com/_uspray/");
   };
 
   function showInformation(page) {
@@ -168,12 +168,12 @@ const Settings = () => {
           <BlackScreen isModalOn={showModal} onClick={handleCloseModal} />
           <Modal
             isModalOn={showModal}
-            iconSrc={'images/ic_logout.svg'}
-            iconAlt={'icon_logout'}
-            mainContent={'로그아웃 하시겠습니까?'}
-            subContent={'보다 안전하게 로그아웃을 진행해 드릴게요.'}
-            btnContent={'로그아웃'}
-            btnContent2={'취소'}
+            iconSrc={"images/ic_logout.svg"}
+            iconAlt={"icon_logout"}
+            mainContent={"로그아웃 하시겠습니까?"}
+            subContent={"보다 안전하게 로그아웃을 진행해 드릴게요."}
+            btnContent={"로그아웃"}
+            btnContent2={"취소"}
             onClickBtn={logout}
             onClickBtn2={handleCloseModal}
             modalTheme={0}
@@ -182,7 +182,7 @@ const Settings = () => {
       )}
       <Header>설정</Header>
       <Wrapper>
-        <WhiteBox style={{paddingTop: '-10px'}}>
+        <WhiteBox style={{ paddingTop: "-10px" }}>
           <SubTitle>계정</SubTitle>
           <StyledItem onClick={movePageHandler}>
             <div>회원정보 변경</div>
@@ -199,19 +199,22 @@ const Settings = () => {
             <div>기도 시간 - 오전 8시</div>
             <SettingToggle
               isAbledData={isNotifiedData.firstNotiAgree}
-              id={0}></SettingToggle>
+              id={0}
+            ></SettingToggle>
           </StyledItem>
           <StyledItem noActive={true}>
             <div>다른 사람이 내 기도제목을 기도 했을 때</div>
             <SettingToggle
               isAbledData={isNotifiedData.secondNotiAgree}
-              id={1}></SettingToggle>
+              id={1}
+            ></SettingToggle>
           </StyledItem>
           <StyledItem noActive={true}>
             <div>다른 사람이 내 기도제목을 공유 받았을 때</div>
             <SettingToggle
               isAbledData={isNotifiedData.thirdNotiAgree}
-              id={2}></SettingToggle>
+              id={2}
+            ></SettingToggle>
           </StyledItem>
         </WhiteBox>
         <WhiteBox>
@@ -238,7 +241,8 @@ const Settings = () => {
           <StyledItem noActive={true}>
             <div>현재 서비스 버전 확인</div>
             <div
-              style={{color: '#7BAB6E', fontWeight: '700', fontSize: '15px'}}>
+              style={{ color: "#7BAB6E", fontWeight: "700", fontSize: "15px" }}
+            >
               2.3.0
             </div>
           </StyledItem>

@@ -16,7 +16,6 @@ import SocialLoginCircleButton from "../SocialLogin/SocialLoginCircleButton";
 import Modal from "../Modal/Modal";
 import BlackScreen from "../BlackScreen";
 import useSendDeviceToken from "../../hooks/useSendDeviceToken";
-import useCheckMobile from "../../hooks/useCheckMobile";
 import useMobileToken from "../../hooks/useMobileToken";
 
 const LoginPage = () => {
@@ -28,7 +27,6 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  const { isMobile } = useCheckMobile();
   const { getDeviceToken } = useMobileToken();
 
   const { showToast } = useToast({});
@@ -52,29 +50,13 @@ const LoginPage = () => {
     try {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
-        if (isMobile()) {
+        try {
           const deviceToken = await getDeviceToken();
-          if (deviceToken) {
-            sendDeviceToken(
-              {
-                fcmToken: deviceToken,
-              },
-              {
-                onSuccess: (res) => console.log("성성공공", deviceToken),
-                onError: (e) => console.log("실실패패", deviceToken),
-              }
-            );
-          } else {
-            showToast({
-              message: "디바이스 토큰을 받아오지 못했습니다.",
-              theme: ToastTheme.ERROR,
-            });
-          }
-        } else {
-          showToast({
-            message: "푸쉬 알림은 모바일에서만 받을 수 있습니다.",
-            theme: ToastTheme.ERROR,
+          sendDeviceToken({
+            fcmToken: deviceToken,
           });
+        } catch (e) {
+          console.log(e);
         }
 
         navigate("/main");
@@ -93,10 +75,6 @@ const LoginPage = () => {
           message: e.response.data.message,
           theme: ToastTheme.ERROR,
         });
-      }
-    } finally {
-      if (document.activeElement) {
-        document.activeElement.blur();
       }
     }
   };

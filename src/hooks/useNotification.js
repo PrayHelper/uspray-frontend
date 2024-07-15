@@ -1,13 +1,17 @@
-import { useQuery, useMutation } from 'react-query';
-import useApi from './useApi';
+import { useQuery, useMutation } from "react-query";
+import useApi from "./useApi";
+import useMobileToken from "./useMobileToken";
+import useSendDeviceToken from "./useSendDeviceToken";
 
 export const useNotification = () => {
   const { getFetcher, postFetcher } = useApi();
+  const { getDeviceToken } = useMobileToken();
+  const { mutate: sendDeviceToken } = useSendDeviceToken();
 
   const { data, refetch: refetchIsNotifiedData } = useQuery(
-    ['FetchNotifications'],
+    ["FetchNotifications"],
     async () => {
-      return await getFetcher(`/member/notification-setting`)
+      return await getFetcher(`/member/notification-setting`);
     },
     {
       onError: async (e) => {
@@ -24,17 +28,28 @@ export const useNotification = () => {
     }
   );
 
-  const { mutate: setNotification }  = useMutation(
+  const { mutate: setNotification } = useMutation(
     async (data) => {
-      return await postFetcher('/member/notification-setting', data)
+      return await postFetcher("/member/notification-setting", data);
     },
     {
       onError: async (e) => {
         console.log(e);
       },
-      onSuccess: (res) => {
+      onSuccess: async (res, variables) => {
         console.log(res);
         refetchIsNotifiedData();
+
+        if (variables.agree) {
+          try {
+            const deviceToken = await getDeviceToken();
+            sendDeviceToken({
+              fcmToken: deviceToken,
+            });
+          } catch (e) {
+            console.log(e);
+          }
+        }
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -49,6 +64,6 @@ export const useNotification = () => {
   return {
     isNotifiedData,
     refetchIsNotifiedData,
-    setNotification
+    setNotification,
   };
-}
+};

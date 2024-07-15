@@ -16,13 +16,11 @@ import Button, { ButtonSize, ButtonTheme } from "../components/Button/Button";
 import { ReactComponent as NextArrowGray } from "../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../images/ic_next_arrow_white.svg";
 import useSendDeviceToken from "../hooks/useSendDeviceToken";
-import useCheckMobile from "../hooks/useCheckMobile";
 import useMobileToken from "../hooks/useMobileToken";
 
 const SocialLoginNameInput = () => {
   const { isAgreed, toggleAll, toggleHandler, isAgreedAll } = useSignupTos();
   const { setAccessToken, setRefreshToken } = useAuthToken();
-  const { isMobile } = useCheckMobile();
   const { getDeviceToken } = useMobileToken();
   const { showToast } = useToast({});
   const { mutate: sendDeviceToken } = useSendDeviceToken();
@@ -51,23 +49,13 @@ const SocialLoginNameInput = () => {
         }
       );
       if (res.status === 200) {
-        if (isMobile()) {
+        try {
           const deviceToken = await getDeviceToken();
-
-          sendDeviceToken(
-            {
-              fcmToken: deviceToken,
-            },
-            {
-              onSuccess: (res) => console.log(res.status),
-              onError: (e) => console.log(e.response.status),
-            }
-          );
-        } else {
-          showToast({
-            message: "푸쉬 알림은 모바일에서만 받을 수 있습니다.",
-            theme: ToastTheme.ERROR,
+          sendDeviceToken({
+            fcmToken: deviceToken,
           });
+        } catch (e) {
+          console.log(e);
         }
 
         navigate("/main");
