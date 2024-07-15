@@ -33,7 +33,7 @@ const CategoryInputModal = ({
   const inputRef = useRef(null);
 
   useEffect(() => {
-    if (inputRef?.current) inputRef.current.focus();
+    if (inputRef?.current && isShow) inputRef.current.focus();
   }, [isShow]);
 
   return createPortal(
@@ -68,20 +68,23 @@ const CategoryInputModal = ({
               <ButtonV2
                 buttonTheme={ButtonTheme.FILLED}
                 disabled={!textInputValue || !selectedColor}
-                handler={onClickBottomButton}>
+                handler={onClickBottomButton}
+              >
                 {LABEL_MAP["CREATE"]}
               </ButtonV2>
             ) : (
               <>
                 <ButtonV2
                   buttonTheme={ButtonTheme.OUTLINED}
-                  handler={onClickSecondaryButton}>
+                  handler={onClickSecondaryButton}
+                >
                   {LABEL_MAP["DELETE"]}
                 </ButtonV2>
                 <ButtonV2
                   buttonTheme={ButtonTheme.FILLED}
                   disabled={!textInputValue || !selectedColor}
-                  handler={onClickBottomButton}>
+                  handler={onClickBottomButton}
+                >
                   {LABEL_MAP["MODIFY"]}
                 </ButtonV2>
               </>
