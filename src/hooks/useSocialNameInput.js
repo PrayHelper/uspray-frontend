@@ -16,7 +16,7 @@ const useSocialNameInput = ({ name, token }) => {
           console.log(e);
         },
         onSuccess: (res) => {
-          console.log(res);
+          //console.log(res);
         },
         retry: (cnt) => {
           return cnt < 1;

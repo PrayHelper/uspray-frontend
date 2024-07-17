@@ -33,7 +33,7 @@ const CategoryInputModal = ({
   const inputRef = useRef(null);
 
   useEffect(() => {
-    if (inputRef?.current && isShow) inputRef.current.focus();
+    if (inputRef?.current) inputRef.current.focus();
   }, [isShow]);
 
   return createPortal(

@@ -30,9 +30,9 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
     useCategory(tab);
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
-  const [setIsPraySelected] = useState(false);
+  const [isPraySelected, setIsPraySelected] = useState(false);
 
-  const [setCategoryRefIndex] = useState(0);
+  const [categryRefIndex, setCategoryRefIndex] = useState(0);
   const categoryRef = useRef([]);
 
   const { showToast } = useToast({});

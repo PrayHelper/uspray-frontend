@@ -1,20 +1,20 @@
-import { useQuery } from 'react-query';
-import useApi from './useApi';
+import { useQuery } from "react-query";
+import useApi from "./useApi";
 
 export const useCheckLogin = () => {
   const { getFetcher } = useApi();
 
   const { data } = useQuery(
-    ['CheckLogin'],
+    ["CheckLogin"],
     async () => {
-      return await getFetcher(`/auth/login-check`)
+      return await getFetcher(`/auth/login-check`);
     },
     {
       onError: async (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -27,6 +27,6 @@ export const useCheckLogin = () => {
   const isSocialLogin = data?.data.data || {};
 
   return {
-    isSocialLogin
+    isSocialLogin,
   };
-}
+};

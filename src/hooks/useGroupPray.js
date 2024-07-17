@@ -17,7 +17,7 @@ export const useGroupPray = (groupId) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -36,7 +36,7 @@ export const useGroupPray = (groupId) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         refetchGroupPrayList();
         showToast({
           message: "기도제목이 모임원들에게 공유되었어요.",
@@ -60,7 +60,7 @@ export const useGroupPray = (groupId) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         refetchGroupPrayList();
       },
       retry: (cnt) => {
@@ -80,7 +80,7 @@ export const useGroupPray = (groupId) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         refetchGroupPrayList();
       },
       retry: (cnt) => {
@@ -100,7 +100,7 @@ export const useGroupPray = (groupId) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         refetchGroupPrayList();
       },
       retry: (cnt) => {
@@ -120,7 +120,7 @@ export const useGroupPray = (groupId) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         refetchGroupPrayList();
         showToast({
           message: "기도제목이 모임원들에게 공유되었어요.",

@@ -106,7 +106,7 @@ export const useCategory = (categoryType) => {
         }
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         refetchCategoryList();
         refetchPrayList();
         showToast({
@@ -135,7 +135,7 @@ export const useCategory = (categoryType) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         refetchCategoryList();
         refetchPrayList();
         showToast({
@@ -160,7 +160,7 @@ export const useCategory = (categoryType) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         refetchPrayList();
         refetchCategoryList();
         showToast({

@@ -16,7 +16,7 @@ export const useHistory = () => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -43,7 +43,7 @@ export const useHistory = () => {
         });
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
       },
       retry: (cnt) => {
         return cnt < 3;

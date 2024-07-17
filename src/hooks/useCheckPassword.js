@@ -1,20 +1,24 @@
 import { useMutation } from "react-query";
-import useApi from './useApi';
+import useApi from "./useApi";
 
 export const useCheckPassword = (data) => {
   const { postFetcher } = useApi();
 
-  return useMutation(async () => {
-    return await postFetcher('/member/check-pw', data)}, {
+  return useMutation(
+    async () => {
+      return await postFetcher("/member/check-pw", data);
+    },
+    {
       onError: (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
       },
       retry: (cnt) => {
         return cnt < 1;
       },
       retryDelay: 300,
-    });
+    }
+  );
 };

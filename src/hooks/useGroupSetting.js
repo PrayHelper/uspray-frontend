@@ -1,19 +1,21 @@
-import { useMutation } from 'react-query';
-import useApi from './useApi';
+import { useMutation } from "react-query";
+import useApi from "./useApi";
 
 export const useGroupSetting = () => {
   const { putFetcher, deleteFetcher, deleteDataFetcher } = useApi();
 
-  const { mutate: changeGroupName }  = useMutation(
+  const { mutate: changeGroupName } = useMutation(
     async (data) => {
-      return await putFetcher(`/group/${data.groupId}/change-name`, {name: data.groupName})
+      return await putFetcher(`/group/${data.groupId}/change-name`, {
+        name: data.groupName,
+      });
     },
     {
       onError: async (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -23,16 +25,18 @@ export const useGroupSetting = () => {
     }
   );
 
-  const { mutate: changeGroupLeader }  = useMutation(
+  const { mutate: changeGroupLeader } = useMutation(
     async (data) => {
-      return await putFetcher(`/group/${data.groupId}/change-leader`, {memberId: data.leaderId})
+      return await putFetcher(`/group/${data.groupId}/change-leader`, {
+        memberId: data.leaderId,
+      });
     },
     {
       onError: async (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -42,16 +46,18 @@ export const useGroupSetting = () => {
     }
   );
 
-  const { mutate: kickGroupMember }  = useMutation(
+  const { mutate: kickGroupMember } = useMutation(
     async (data) => {
-      return await deleteDataFetcher(`/group/${data.groupId}/kick`, {memberId: data.memberId})
+      return await deleteDataFetcher(`/group/${data.groupId}/kick`, {
+        memberId: data.memberId,
+      });
     },
     {
       onError: async (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -61,16 +67,16 @@ export const useGroupSetting = () => {
     }
   );
 
-  const { mutate: deleteGroup }  = useMutation(
+  const { mutate: deleteGroup } = useMutation(
     async (groupId) => {
-      return await deleteFetcher(`/group/${groupId}`)
+      return await deleteFetcher(`/group/${groupId}`);
     },
     {
       onError: async (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -84,6 +90,6 @@ export const useGroupSetting = () => {
     changeGroupName,
     changeGroupLeader,
     kickGroupMember,
-    deleteGroup
+    deleteGroup,
   };
-}
+};

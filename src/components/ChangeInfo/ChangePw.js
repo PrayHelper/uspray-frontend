@@ -9,7 +9,6 @@ import Modal from "../Modal/Modal";
 import { ReactComponent as NextArrowGray } from "../../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../../images/ic_next_arrow_white.svg";
 
-
 const ModalContent = styled.div`
   position: fixed;
   top: 50%;
@@ -40,7 +39,7 @@ const ModalButton1 = styled.button`
   font-size: 18px;
 `;
 
-const ChangePw = ({setShowChangePw}) => {
+const ChangePw = ({ setShowChangePw }) => {
   const [pw, setPw] = useState("");
   const [matchingPw, setMatchingPw] = useState("");
   const [invalidPwInfo, setInvalidPwInfo] = useState("");
@@ -94,7 +93,7 @@ const ChangePw = ({setShowChangePw}) => {
     mutate(null, {
       onSuccess: (res) => {
         setShowModal(true);
-        console.log(res);
+        //console.log(res);
       },
       onError: (e) => {
         console.log(e);
@@ -168,7 +167,7 @@ const ChangePw = ({setShowChangePw}) => {
               }}
             >
               재설정하기
-              {isAllValid ? <NextArrowWhite/> : <NextArrowGray/>}
+              {isAllValid ? <NextArrowWhite /> : <NextArrowGray />}
             </Button>
           </div>
         </div>
@@ -190,6 +189,6 @@ const Wrapper = styled.div`
   align-items: center;
   background-color: #ffffff;
   z-index: 101;
-`
+`;
 
 export default ChangePw;

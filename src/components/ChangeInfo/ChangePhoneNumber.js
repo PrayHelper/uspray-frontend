@@ -3,15 +3,13 @@ import publicapi from "../../api/publicapi";
 import Button, { ButtonSize, ButtonTheme } from "../Button/Button";
 import Input from "../Input/Input";
 import UserHeader from "../UserHeader";
-import styled from 'styled-components';
+import styled from "styled-components";
 import BlackScreen from "../BlackScreen/BlackScreen";
 import { useResetPhoneNumber } from "../../hooks/useResetPhoneNumber";
 import useToast from "../../hooks/useToast";
 import { ToastTheme } from "../Toast/Toast";
 import { ReactComponent as NextArrowGray } from "../../images/ic_next_arrow_gray.svg";
 import { ReactComponent as NextArrowWhite } from "../../images/ic_next_arrow_white.svg";
-
-
 
 const ModalContent = styled.div`
   position: fixed;
@@ -43,7 +41,7 @@ const ModalButton1 = styled.button`
   font-size: 18px;
 `;
 
-const ChangePhoneNumber = ({setShowChangePhoneNumber}) => {
+const ChangePhoneNumber = ({ setShowChangePhoneNumber }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [certificateNumber, setCertificateNumber] = useState("");
   const [isCetrificated, setIsCertificated] = useState(false);
@@ -149,7 +147,10 @@ const ChangePhoneNumber = ({setShowChangePhoneNumber}) => {
     try {
       const res = await publicapi.post(api, data);
       if (res.status === 200) {
-        showToast({ message: "인증번호가 전송되었습니다.", theme: ToastTheme.SUCCESS });
+        showToast({
+          message: "인증번호가 전송되었습니다.",
+          theme: ToastTheme.SUCCESS,
+        });
         setRequestId(res.data.data.requestId);
         setTime("180");
       }
@@ -164,7 +165,7 @@ const ChangePhoneNumber = ({setShowChangePhoneNumber}) => {
     mutate(phoneNumber.replace(/-/g, ""), {
       onSuccess: (res) => {
         setShowModal(true);
-        console.log(res);
+        //console.log(res);
       },
       onError: (e) => {
         console.log(e);
@@ -189,14 +190,16 @@ const ChangePhoneNumber = ({setShowChangePhoneNumber}) => {
                 color: "#7BAB6E",
                 fontWeight: "700",
                 paddingBottom: "2px",
-              }}>
+              }}
+            >
               전화번호가 재설정 되었습니다.
             </div>
             <div
               style={{
                 marginTop: "2px",
                 marginBottom: "28px",
-              }}>
+              }}
+            >
               바뀐 전화번호를 기억해둘게요!
             </div>
             <div
@@ -205,26 +208,31 @@ const ChangePhoneNumber = ({setShowChangePhoneNumber}) => {
                 flexDirection: "row",
                 width: "100%",
                 gap: "8px",
-              }}>
+              }}
+            >
               <ModalButton1 onClick={handleCloseModal}>확인</ModalButton1>
             </div>
           </ModalContent>
         </>
       )}
-      <UserHeader back={() => setShowChangePhoneNumber(false)}>전화번호 변경</UserHeader>
+      <UserHeader back={() => setShowChangePhoneNumber(false)}>
+        전화번호 변경
+      </UserHeader>
       <div
         style={{
           width: "100%",
           gap: "24px",
           marginTop: "64px",
-        }}>
+        }}
+      >
         <div
           style={{
             padding: "0 16px",
             display: "flex",
             flexDirection: "column",
             gap: "24px",
-          }}>
+          }}
+        >
           <Input
             label="전화번호"
             value={phoneNumber}
@@ -243,7 +251,8 @@ const ChangePhoneNumber = ({setShowChangePhoneNumber}) => {
                   setIsCertificated(false);
                   setIsCertificateButtonClicked(false);
                   setCertificateNumber("");
-                }}>
+                }}
+              >
                 {time ? "진행 중" : "전송"}
               </Button>
             }
@@ -263,7 +272,8 @@ const ChangePhoneNumber = ({setShowChangePhoneNumber}) => {
             }
             description={
               <div
-                style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+              >
                 {time !== "" && <span>{changeTimeFormat(time)}</span>}
                 <Button
                   buttonSize={ButtonSize.NORMAL}
@@ -294,7 +304,8 @@ const ChangePhoneNumber = ({setShowChangePhoneNumber}) => {
                         theme: ToastTheme.ERROR,
                       });
                     }
-                  }}>
+                  }}
+                >
                   {isCetrificated || isCertificateButtonClicked
                     ? "완료"
                     : "확인"}
@@ -309,16 +320,18 @@ const ChangePhoneNumber = ({setShowChangePhoneNumber}) => {
               width: "calc(100% - 32px)",
               display: "flex",
               flexDirection: "column",
-            }}>
+            }}
+          >
             <Button
               disabled={!isAllValid}
               buttonSize={ButtonSize.LARGE}
               buttonTheme={isAllValid ? ButtonTheme.GREEN : ButtonTheme.GRAY}
               handler={() => {
                 resetPhoneNumber();
-              }}>
+              }}
+            >
               재설정하기
-              {isAllValid ? <NextArrowWhite/> : <NextArrowGray/>}
+              {isAllValid ? <NextArrowWhite /> : <NextArrowGray />}
             </Button>
           </div>
         </div>
@@ -340,6 +353,6 @@ const Wrapper = styled.div`
   align-items: center;
   background-color: #ffffff;
   z-index: 101;
-`
+`;
 
 export default ChangePhoneNumber;

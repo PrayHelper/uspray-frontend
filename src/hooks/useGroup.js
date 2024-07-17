@@ -1,8 +1,8 @@
-import { useQuery, useMutation } from 'react-query';
-import useApi from './useApi';
-import { useNavigate } from 'react-router-dom';
-import useToast from '../hooks/useToast';
-import { ToastTheme } from '../components/Toast/Toast';
+import { useQuery, useMutation } from "react-query";
+import useApi from "./useApi";
+import { useNavigate } from "react-router-dom";
+import useToast from "../hooks/useToast";
+import { ToastTheme } from "../components/Toast/Toast";
 
 export const useGroup = () => {
   const { getFetcher, postFetcher, putFetcher, deleteFetcher } = useApi();
@@ -10,16 +10,16 @@ export const useGroup = () => {
   const { showToast } = useToast({});
 
   const { data, refetch: refetchGroupList } = useQuery(
-    ['groupList'],
+    ["groupList"],
     async () => {
-      return await getFetcher(`/group`)
+      return await getFetcher(`/group`);
     },
     {
       onError: async (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -29,22 +29,22 @@ export const useGroup = () => {
     }
   );
 
-  const { mutate: createGroup }  = useMutation(
+  const { mutate: createGroup } = useMutation(
     async (data) => {
-      return await postFetcher('/group', data)
+      return await postFetcher("/group", data);
     },
     {
       onError: async (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         refetchGroupList();
         showToast({
           message: "모임을 생성했어요.",
           theme: ToastTheme.SUCCESS,
         });
-        navigate('/group');
+        navigate("/group");
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -54,22 +54,22 @@ export const useGroup = () => {
     }
   );
 
-  const { mutate: leaveGroup }  = useMutation(
+  const { mutate: leaveGroup } = useMutation(
     async (groupId) => {
-      return await deleteFetcher(`/group/${groupId}/leave`)
+      return await deleteFetcher(`/group/${groupId}/leave`);
     },
     {
       onError: async (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         refetchGroupList();
         showToast({
           message: "모임에서 나갔어요.",
           theme: ToastTheme.SUCCESS,
         });
-        navigate('/group');
+        navigate("/group");
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -79,9 +79,9 @@ export const useGroup = () => {
     }
   );
 
-  const { mutate: joinGroup }  = useMutation(
+  const { mutate: joinGroup } = useMutation(
     async (groupId) => {
-      return await postFetcher(`/group/${groupId}/join`)
+      return await postFetcher(`/group/${groupId}/join`);
     },
     {
       onError: async (e) => {
@@ -92,7 +92,7 @@ export const useGroup = () => {
           });
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         refetchGroupList();
         showToast({
           message: "모임에 가입했어요.",
@@ -107,16 +107,16 @@ export const useGroup = () => {
     }
   );
 
-  const { mutate: setGroupNotification }  = useMutation(
+  const { mutate: setGroupNotification } = useMutation(
     async (groupId) => {
-      return await putFetcher(`/group/${groupId}/notification`)
+      return await putFetcher(`/group/${groupId}/notification`);
     },
     {
       onError: async (e) => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -136,4 +136,4 @@ export const useGroup = () => {
     leaveGroup,
     setGroupNotification,
   };
-}
+};

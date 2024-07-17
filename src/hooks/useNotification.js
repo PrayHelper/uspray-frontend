@@ -18,7 +18,7 @@ export const useNotification = () => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
       },
       retry: (cnt) => {
         return cnt < 3;
@@ -37,7 +37,7 @@ export const useNotification = () => {
         console.log(e);
       },
       onSuccess: async (res, variables) => {
-        console.log(res);
+        //console.log(res);
         refetchIsNotifiedData();
 
         if (variables.agree) {

@@ -40,7 +40,7 @@ export const usePray = (tab) => {
         });
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         showToast({
           message: "기도제목이 저장되었어요.",
           theme: ToastTheme.SUCCESS,
@@ -68,7 +68,7 @@ export const usePray = (tab) => {
         });
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         showToast({
           message: "기도제목을 삭제했어요.",
           theme: ToastTheme.SUCCESS,
@@ -96,7 +96,7 @@ export const usePray = (tab) => {
         });
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         refetchPrayList();
       },
       retry: (cnt) => {
@@ -124,7 +124,7 @@ export const usePray = (tab) => {
         });
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         showToast({
           message: "기도제목이 수정되었어요.",
           theme: ToastTheme.SUCCESS,
@@ -152,7 +152,7 @@ export const usePray = (tab) => {
         });
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         refetchPrayList();
       },
       retry: (cnt) => {
@@ -176,7 +176,7 @@ export const usePray = (tab) => {
         });
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
         refetchPrayList();
       },
       retry: (cnt) => {

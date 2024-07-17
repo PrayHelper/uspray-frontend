@@ -53,7 +53,7 @@ const useMobileToken = () => {
       try {
         await sleepWithCondition(() => deviceLock.current === false);
       } catch (error) {
-        console.error("Error in getDeviceToken: ", error);
+        console.log("Error getDeviceToken: ", error);
       } finally {
         deviceLock.current = false;
       }
@@ -120,7 +120,7 @@ const useMobileToken = () => {
       try {
         await sleepWithCondition(() => refreshLock.current === false);
       } catch (error) {
-        console.error("Error in getRefreshToken: ", error);
+        console.log("Error getRefreshToken: ", error);
       } finally {
         refreshLock.current = false;
       }

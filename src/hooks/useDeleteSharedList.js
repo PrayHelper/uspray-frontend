@@ -1,8 +1,8 @@
 import { useMutation } from "react-query";
-import useApi from './useApi';
+import useApi from "./useApi";
 
 export const useDeleteSharedList = () => {
-  const {deleteDataFetcher} = useApi();
+  const { deleteDataFetcher } = useApi();
   return useMutation(
     async (data) => {
       return await deleteDataFetcher("/share", data);
@@ -12,7 +12,7 @@ export const useDeleteSharedList = () => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
       },
       retry: (cnt) => {
         return cnt < 3;

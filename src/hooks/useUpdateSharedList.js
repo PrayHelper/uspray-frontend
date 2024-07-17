@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import useApi from './useApi';
+import useApi from "./useApi";
 
 export const useUpdateSharedList = () => {
   const { postFetcher } = useApi();
@@ -12,7 +12,7 @@ export const useUpdateSharedList = () => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
       },
       retry: (cnt) => {
         return cnt < 3;

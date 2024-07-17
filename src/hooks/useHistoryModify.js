@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import useApi from './useApi';
+import useApi from "./useApi";
 
 export const useHistoryModify = () => {
   const { putFetcher } = useApi();
@@ -12,7 +12,7 @@ export const useHistoryModify = () => {
         console.log(e);
       },
       onSuccess: (res) => {
-        console.log(res);
+        //console.log(res);
       },
       retry: (cnt) => {
         return cnt < 3;

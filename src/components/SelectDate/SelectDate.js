@@ -34,7 +34,8 @@ export const SelectDateNew = ({ selectDate, selectedDate }) => {
         <S.DiffOptionButton
           key={option}
           isSelected={getCalculatedDiff(selectedDate) === option}
-          onClick={() => selectDate(getCalculatedDate(option))}>
+          onClick={() => selectDate(getCalculatedDate(option))}
+        >
           {`${option}일`}
         </S.DiffOptionButton>
       ))}
@@ -99,7 +100,7 @@ const SelectDate = (props) => {
   };
 
   const onChangeDate = (date) => {
-    console.log("date", date);
+    //console.log("date", date);
     if (typeof date == "number" || date === "") {
       const today = new Date();
       const targetDate = new Date(today.getTime() + date * 24 * 60 * 60 * 1000);
@@ -142,7 +143,8 @@ const SelectDate = (props) => {
         <SubModalBtn
           key={option}
           isSelected={selectedBtn === option}
-          onClick={() => onChangeDate(option)}>
+          onClick={() => onChangeDate(option)}
+        >
           {`${option}일`}
         </SubModalBtn>
       ))}

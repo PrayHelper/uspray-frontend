@@ -193,9 +193,9 @@ const History = () => {
     }
   }, [selectedHistoryId]);
 
-  useEffect(() => {
-    console.log("deletedItemIds", deletedItemIds);
-  }, [deletedItemIds]);
+  // useEffect(() => {
+  //   console.log("deletedItemIds", deletedItemIds);
+  // }, [deletedItemIds]);
 
   useEffect(() => {
     if (historyDetail) {
@@ -231,7 +231,7 @@ const History = () => {
     // blackscreen 클릭 시 모달 창 꺼지도록
     function handleFocus(e) {
       if (outside.current && !outside.current.contains(e.target)) {
-        console.log(e);
+        // console.log(e);
         setShowModal(false);
         setShowSubModal(false);
         setSelectedHistoryId(null);
