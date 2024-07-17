@@ -14,13 +14,13 @@ import S from "./ScrollSynchronizedCategoryList.style";
 import { useCallback } from "react";
 import TopCategoryList from "./TopCategoryList/TopCategoryList";
 import BottomCategoryBoxList from "./BottomBoxList/BottomBoxList";
-import ShareSelectionModal, {
-  useShareSelection,
-} from "../../overlays/ShareSelectionModal/ShareSelectionModal";
+import SelectionModal from "../../overlays/SelectionModal/SelectionModal";
+import useBringSelectionModal from "../../overlays/SelectionModal/useBringSelectionModal";
+import useShareSelectionModal from "../../overlays/SelectionModal/useShareSelectionModal";
 
 export const PrayerListDataContext = createContext({
   isSharedPrayers: false,
-  isSharingMode: false,
+  isSelectable: false,
   categoriesWithPrayers: [],
 });
 
@@ -166,24 +166,39 @@ const PrayerListScrollingProvider = ({ children }) => {
 export const ScrollSynchronizedPrayerList = ({
   categoriesWithPrayers,
   isSharedPrayers,
+  groupId,
 }) => {
-  const { isOpened: isSharingMode } = useShareSelection();
+  const { isOpened: isSharingMode, bringControlledProps } =
+    useBringSelectionModal(groupId);
+  const { isOpened: isBringingMode, shareControlledProps } =
+    useShareSelectionModal();
+  const [isSelectable, setIsSelectable] = useState(false);
+  const [zIndex, setZIndex] = useState("auto");
 
-  const { controlledModalProps } = useShareSelection();
+  useEffect(() => {
+    setIsSelectable(isSharingMode || isBringingMode);
+  }, [isSharingMode, isBringingMode]);
 
   // 더 세련된 방법으로 z-index를 제어하는 방법을 찾았다면 고쳐주세요ㅜㅜ
-  const zIndex = isSharingMode ? 131 : "auto";
+  useEffect(() => {
+    setZIndex(isSelectable ? 131 : "auto");
+    console.log("isSharingMode", isSharingMode);
+    console.log("isBringingMode", isBringingMode);
+    console.log("isSelectable", isSelectable);
+    console.log("zIndex", zIndex);
+  }, [isSelectable]);
 
   return (
     <PrayerListDataContext.Provider
-      value={{ categoriesWithPrayers, isSharedPrayers, isSharingMode }}
+      value={{ categoriesWithPrayers, isSharedPrayers, isSelectable }}
     >
       <PrayerListScrollingProvider>
         <S.WrapperNew zIndex={zIndex}>
           <TopCategoryList />
           <BottomCategoryBoxList />
         </S.WrapperNew>
-        <ShareSelectionModal {...controlledModalProps} />
+        <SelectionModal {...shareControlledProps} />
+        <SelectionModal {...bringControlledProps} />
       </PrayerListScrollingProvider>
     </PrayerListDataContext.Provider>
   );

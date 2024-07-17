@@ -4,7 +4,7 @@ import usePrayerBottomModal from "../../../overlays/PrayerBottomModal/usePrayerB
 import { useContext } from "react";
 import { PrayerListDataContext } from "../ScrollSynchronizedCategoryList";
 import { usePray } from "../../../hooks/usePray";
-import { useShareSelection } from "../../../overlays/ShareSelectionModal/ShareSelectionModal";
+import useShareSelectionModal from "../../../overlays/SelectionModal/useShareSelectionModal";
 
 const Toggle = ({
   type, // "CHECKBOX" | "HEART"
@@ -28,7 +28,7 @@ const Item = ({ item }) => {
     PrayerListDataContext
   );
 
-  const { isSelectedMap, toggleById } = useShareSelection();
+  const { isSelectedMap, toggleById } = useShareSelectionModal();
 
   const tab = isSharedPrayer ? "shared" : "personal";
 

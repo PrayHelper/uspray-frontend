@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
+import { atom, useAtom } from "jotai";
 import UserHeader from "../../UserHeader";
 import styled from "styled-components";
 import GroupInfo from "./GroupInfo";
@@ -8,32 +9,31 @@ import { useState } from "react";
 import GroupSetting from "../GroupSetting/GroupSetting";
 import { useGroupPray } from "../../../hooks/useGroupPray";
 import { useCategory } from "../../../hooks/useCategory";
-import ScrollSynchronizedCategoryList from "../../ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
+import { ScrollSynchronizedPrayerList } from "../../ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
 import useToast from "../../../hooks/useToast";
 import { ToastTheme } from "../../Toast/Toast";
 import useMobileShareMode from "../../../hooks/useMobileShareMode";
 import useCheckMobile from "../../../hooks/useCheckMobile";
+import { usePray } from "../../../hooks/usePray";
+import useBringSelectionModal from "../../../overlays/SelectionModal/useBringSelectionModal";
 
 const GroupDetail = ({ group, setShowGroupDetail }) => {
   const [showGroupSetting, setShowGroupSetting] = useState(false);
-  const { groupPrayList, groupNotification, takePersonalPray } = useGroupPray(
-    group.id
-  );
+  const { groupPrayList, groupNotification } = useGroupPray(group.id);
   const isGroupPrayListData = Object.keys(groupPrayList).length !== 0;
   const { shareLink } = useMobileShareMode();
   const { isMobile } = useCheckMobile();
   const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
+  const isOpenedAtom = atom(false);
+  const [isOpened, setIsOpened] = useAtom(isOpenedAtom);
 
-  const [shareMode, setShareMode] = useState(false);
   const [tab, setTab] = useState("personal");
   const { categoryList, firstCategoryIndex, refetchCategoryList } =
     useCategory(tab);
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
-  const [isPraySelected, setIsPraySelected] = useState(false);
-
-  const [categryRefIndex, setCategoryRefIndex] = useState(0);
-  const categoryRef = useRef([]);
+  const { prayList } = usePray("personal");
+  const { open: openBringSelectionModal } = useBringSelectionModal();
 
   const { showToast } = useToast({});
 
@@ -62,20 +62,6 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
     console.log(`${WEB_ORIGIN}/group?id=` + encodeGroupId);
   };
 
-  const onGroupPray = async (checkedPrayIds) => {
-    takePersonalPray(
-      {
-        groupId: group.id,
-        prayId: checkedPrayIds,
-      },
-      {
-        onSuccess: () => {
-          setShareMode(false);
-        },
-      }
-    );
-  };
-
   return (
     <Wrapper>
       {showGroupSetting && (
@@ -101,8 +87,6 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
           isData={isGroupPrayListData}
           categoryList={categoryList}
           firstCategoryIndex={firstCategoryIndex}
-          shareMode={shareMode}
-          setShareMode={setShareMode}
           setTab={setTab}
         />
         <GroupPrayList
@@ -120,19 +104,15 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
         alt="group_invite_icon"
         onClick={onInvite}
       />
-      {shareMode && (
-        <ScrollSynchronizedCategoryList
-          categoryList={categoryList}
-          selectedCategoryIndex={selectedCategoryIndex}
-          setSelectedCategoryIndex={setSelectedCategoryIndex}
-          tabType={tab}
-          categoryRef={categoryRef}
-          setCategoryRefIndex={setCategoryRefIndex}
-          shareMode={shareMode}
-          setShareMode={setShareMode}
-          listHandler={onGroupPray}
-          setIsPraySelected={setIsPraySelected}
-        />
+
+      {isOpened && (
+        <PrayerListWrapper>
+          <ScrollSynchronizedPrayerList
+            isSharedPrayers={false}
+            categoriesWithPrayers={prayList}
+            groupId={group.id}
+          />
+        </PrayerListWrapper>
       )}
     </Wrapper>
   );
@@ -159,6 +139,15 @@ const InviteBtn = styled.img`
   position: fixed;
   bottom: 80px;
   right: 20px;
+`;
+
+const PrayerListWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 32px 32px 0px 0px;
 `;
 
 export default GroupDetail;

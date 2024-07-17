@@ -10,8 +10,7 @@ const GroupInfo = ({
   isData,
   categoryList,
   firstCategoryIndex,
-  shareMode,
-  setShareMode,
+  setBringMode,
 }) => {
   const { addGroupPray, groupHeartCount } = useGroupPray(group.id);
   const [showSubModal, setShowSubModal] = useState(false);
@@ -121,7 +120,7 @@ const GroupInfo = ({
         </>
         <LoadButton
           onClick={() => {
-            setShareMode(true);
+            setBringMode(true);
           }}
         >
           <img src="images/ic_group_load.svg" alt="group_load_icon" />
