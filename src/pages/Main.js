@@ -71,7 +71,6 @@ const Main = () => {
 
   useEffect(() => {
     const focusedElement = document.activeElement;
-    console.log("Before blur:", focusedElement ? focusedElement : null);
     if (
       focusedElement &&
       (focusedElement.tagName === "INPUT" ||
@@ -79,7 +78,6 @@ const Main = () => {
     ) {
       focusedElement.blur();
     }
-    console.log("After blur:", document.activeElement);
   }, []);
 
   useReceive();
