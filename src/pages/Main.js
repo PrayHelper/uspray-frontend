@@ -4,7 +4,7 @@ import { usePray } from "../hooks/usePray";
 import { useSearchParams } from "react-router-dom";
 import { useShare } from "../hooks/useShare";
 import MainHeader from "../components/pages/Main/Header/MainHeader";
-import { ScrollSynchronizedPrayerList } from "../components/ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
+import { ScrollSynchronizedPrayerList } from "../components/ScrollSynchronizedCategoryList/ScrollSynchronizedPrayerList";
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import usePrayerBottomModal from "../overlays/PrayerBottomModal/usePrayerBottomModal";
 import usePrayerModifyModal from "../overlays/PrayerInputModal/usePrayerModifyModal";

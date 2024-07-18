@@ -2,7 +2,7 @@ import { useContext } from "react";
 import {
   PrayerListDataContext,
   PrayerListScrollingContext,
-} from "../ScrollSynchronizedCategoryList";
+} from "../ScrollSynchronizedPrayerList";
 import styled from "styled-components";
 import InnerPrayerList from "./InnerPrayerList";
 import useCategoryEditModal from "../../../overlays/PrayerInputModal/useCategoryEditModal";

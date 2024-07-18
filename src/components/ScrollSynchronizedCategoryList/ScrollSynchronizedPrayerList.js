@@ -1,15 +1,4 @@
-import completeImage from "../../images/check_img.svg";
-import deleteImage from "../../images/delete_img.svg";
-import modifyImage from "../../images/modify_img.svg";
 import { createContext, useEffect, useRef, useState } from "react";
-import { usePray } from "../../hooks/usePray";
-import useToast from "../../hooks/useToast";
-import useBottomNav from "../../hooks/useBottomNav";
-import CategoryTag from "../CategoryTag/CategoryTag";
-import PrayDateCategoryInput from "../PrayDateCategoryInput/PrayDateCategoryInput";
-import BlackScreen from "../BlackScreen";
-import { Modal } from "@mui/material";
-import { ToastTheme } from "../Toast/Toast";
 import S from "./ScrollSynchronizedCategoryList.style";
 import { useCallback } from "react";
 import TopCategoryList from "./TopCategoryList/TopCategoryList";
@@ -162,6 +151,20 @@ const PrayerListScrollingProvider = ({ children }) => {
   );
 };
 
+const debounce = (func, waitFor) => {
+  let timeout = null;
+
+  const debounced = (...args) => {
+    if (timeout !== null) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+    timeout = setTimeout(() => func(...args), waitFor);
+  };
+
+  return debounced;
+};
+
 export const ScrollSynchronizedPrayerList = ({
   categoriesWithPrayers,
   isSharedPrayers,
@@ -187,17 +190,3 @@ export const ScrollSynchronizedPrayerList = ({
 };
 
 export default ScrollSynchronizedPrayerList;
-
-const debounce = (func, waitFor) => {
-  let timeout = null;
-
-  const debounced = (...args) => {
-    if (timeout !== null) {
-      clearTimeout(timeout);
-      timeout = null;
-    }
-    timeout = setTimeout(() => func(...args), waitFor);
-  };
-
-  return debounced;
-};

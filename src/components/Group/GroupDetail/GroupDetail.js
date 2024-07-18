@@ -8,7 +8,7 @@ import { useState } from "react";
 import GroupSetting from "../GroupSetting/GroupSetting";
 import { useGroupPray } from "../../../hooks/useGroupPray";
 import { useCategory } from "../../../hooks/useCategory";
-import { ScrollSynchronizedPrayerList } from "../../ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
+import { ScrollSynchronizedPrayerList } from "../../ScrollSynchronizedCategoryList/ScrollSynchronizedPrayerList";
 import useToast from "../../../hooks/useToast";
 import { ToastTheme } from "../../Toast/Toast";
 import useMobileShareMode from "../../../hooks/useMobileShareMode";

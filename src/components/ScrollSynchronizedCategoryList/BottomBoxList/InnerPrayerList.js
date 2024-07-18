@@ -2,7 +2,7 @@ import styled from "styled-components";
 import GreenCheckbox from "../../GreenCheckbox/GreenCheckbox";
 import usePrayerBottomModal from "../../../overlays/PrayerBottomModal/usePrayerBottomModal";
 import { useContext } from "react";
-import { PrayerListDataContext } from "../ScrollSynchronizedCategoryList";
+import { PrayerListDataContext } from "../ScrollSynchronizedPrayerList";
 import { usePray } from "../../../hooks/usePray";
 import { useSelectionModal } from "../../../overlays/SelectionModal/useSelectionModal";
 
