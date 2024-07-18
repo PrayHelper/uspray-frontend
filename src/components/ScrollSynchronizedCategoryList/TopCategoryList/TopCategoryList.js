@@ -2,7 +2,7 @@ import { useContext } from "react";
 import {
   PrayerListDataContext,
   PrayerListScrollingContext,
-} from "../ScrollSynchronizedCategoryList";
+} from "../ScrollSynchronizedPrayerList";
 import styled from "styled-components";
 import useCategoryCreateModal from "../../../overlays/PrayerInputModal/useCategoryCreateModal";
 
@@ -17,7 +17,8 @@ const Item = ({ id, name, color }) => {
       ref={(node) => registerTopItemRef(id, node)}
       onClick={() => onClickTopItem(id)}
       selected={id === selectedId}
-      color={color}>
+      color={color}
+    >
       {name}
     </S.ItemContainer>
   );

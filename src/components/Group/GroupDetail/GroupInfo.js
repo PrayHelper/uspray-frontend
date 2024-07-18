@@ -4,21 +4,22 @@ import PrayDateCategoryInput from "../../PrayDateCategoryInput/PrayDateCategoryI
 import BlackScreen from "../../BlackScreen/BlackScreen";
 import Modal from "../../../components/Modal/Modal";
 import { useGroupPray } from "../../../hooks/useGroupPray";
+import {
+  selectionModeAtom,
+  useSelectionModal,
+} from "../../../overlays/SelectionModal/useSelectionModal";
+import { useSetAtom } from "jotai";
 
-const GroupInfo = ({
-  group,
-  isData,
-  categoryList,
-  firstCategoryIndex,
-  shareMode,
-  setShareMode,
-}) => {
+const GroupInfo = ({ group, isData, categoryList, firstCategoryIndex }) => {
   const { addGroupPray, groupHeartCount } = useGroupPray(group.id);
   const [showSubModal, setShowSubModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
+  const setSelectionMode = useSetAtom(selectionModeAtom);
+
+  const { open: openSelectionModal } = useSelectionModal();
 
   const onClickPrayInput = () => {
     if (categoryList.length === 0) {
@@ -30,6 +31,11 @@ const GroupInfo = ({
 
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const onClickBring = () => {
+    setSelectionMode("BRING");
+    openSelectionModal();
   };
 
   // 기도를 추가하는 함수
@@ -119,11 +125,7 @@ const GroupInfo = ({
             readOnly
           />
         </>
-        <LoadButton
-          onClick={() => {
-            setShareMode(true);
-          }}
-        >
+        <LoadButton onClick={onClickBring}>
           <img src="images/ic_group_load.svg" alt="group_load_icon" />
           <div>불러오기</div>
         </LoadButton>

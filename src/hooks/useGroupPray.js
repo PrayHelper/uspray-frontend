@@ -10,6 +10,9 @@ export const useGroupPray = (groupId) => {
   const { data, refetch: refetchGroupPrayList } = useQuery(
     ["groupPrayList", groupId],
     async () => {
+      if (!groupId) {
+        return null; // groupId가 0 또는 null이면 요청을 하지 않음
+      }
       return await getFetcher(`/grouppray/${groupId}`);
     },
     {
@@ -111,7 +114,7 @@ export const useGroupPray = (groupId) => {
     }
   );
 
-  const { mutate: takePersonalPray } = useMutation(
+  const { mutate: bringPrayToGroup } = useMutation(
     async (data) => {
       return await postFetcher("/grouppray/pray-to-grouppray", data);
     },
@@ -150,6 +153,6 @@ export const useGroupPray = (groupId) => {
     deleteGroupPray,
     likeGroupPray,
     scrapGroupPray,
-    takePersonalPray,
+    bringPrayToGroup,
   };
 };

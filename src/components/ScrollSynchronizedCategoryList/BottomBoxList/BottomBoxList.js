@@ -2,7 +2,7 @@ import { useContext } from "react";
 import {
   PrayerListDataContext,
   PrayerListScrollingContext,
-} from "../ScrollSynchronizedCategoryList";
+} from "../ScrollSynchronizedPrayerList";
 import styled from "styled-components";
 import InnerPrayerList from "./InnerPrayerList";
 import useCategoryEditModal from "../../../overlays/PrayerInputModal/useCategoryEditModal";
@@ -10,17 +10,17 @@ import useCategoryEditModal from "../../../overlays/PrayerInputModal/useCategory
 const BottomCategoryBoxItem = ({ id, name, color, innerPrayers }) => {
   const { registerBottomItemRef } = useContext(PrayerListScrollingContext);
   const { open } = useCategoryEditModal();
-  const { isSharingMode } = useContext(PrayerListDataContext);
+  const { isSelectable } = useContext(PrayerListDataContext);
 
   const onClick = () => {
-    if (!isSharingMode) open({ id, name, color });
+    if (!isSelectable) open({ id, name, color });
   };
 
   return (
     <S.CategoryContainer ref={(node) => registerBottomItemRef(id, node)}>
       <S.Title color={color} onClick={onClick}>
         {name}
-        {!isSharingMode && <img src="/images/ic_dot.svg" alt="dot_icon" />}
+        {!isSelectable && <img src="/images/ic_dot.svg" alt="dot_icon" />}
       </S.Title>
 
       {innerPrayers.length > 0 ? (
