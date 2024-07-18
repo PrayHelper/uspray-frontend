@@ -1,14 +1,18 @@
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useState } from "react";
 import styled from "styled-components";
 import { mainModeAtom, mainTabAtom } from "../../../../pages/Main";
-import { useShareSelection } from "../../../../overlays/ShareSelectionModal/ShareSelectionModal";
+import {
+  selectionModeAtom,
+  useSelectionModal,
+} from "../../../../overlays/SelectionModal/useSelectionModal";
 
 const MainDotOptions = () => {
   const [isOpened, setIsOpened] = useState(false);
   const [mainMode, setMainMode] = useAtom(mainModeAtom);
+  const setSelectionMode = useSetAtom(selectionModeAtom);
 
-  const { open: openShareSelectionModal } = useShareSelection();
+  const { open: openSelectionModal } = useSelectionModal();
 
   const open = () => setIsOpened(true);
   const close = () => setIsOpened(false);
@@ -19,7 +23,8 @@ const MainDotOptions = () => {
   };
 
   const onClickShare = () => {
-    openShareSelectionModal();
+    setSelectionMode("SHARE");
+    openSelectionModal();
     close();
   };
 

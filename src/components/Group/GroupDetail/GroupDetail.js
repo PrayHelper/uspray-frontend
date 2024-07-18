@@ -8,34 +8,41 @@ import { useState } from "react";
 import GroupSetting from "../GroupSetting/GroupSetting";
 import { useGroupPray } from "../../../hooks/useGroupPray";
 import { useCategory } from "../../../hooks/useCategory";
-import ScrollSynchronizedCategoryList from "../../ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
+import { ScrollSynchronizedPrayerList } from "../../ScrollSynchronizedCategoryList/ScrollSynchronizedCategoryList";
 import useToast from "../../../hooks/useToast";
 import { ToastTheme } from "../../Toast/Toast";
 import useMobileShareMode from "../../../hooks/useMobileShareMode";
 import useCheckMobile from "../../../hooks/useCheckMobile";
+import { usePray } from "../../../hooks/usePray";
+import {
+  groupIdAtom,
+  useSelectionModal,
+} from "../../../overlays/SelectionModal/useSelectionModal";
+import { useSetAtom } from "jotai";
 
 const GroupDetail = ({ group, setShowGroupDetail }) => {
   const [showGroupSetting, setShowGroupSetting] = useState(false);
-  const { groupPrayList, groupNotification, takePersonalPray } = useGroupPray(
-    group.id
-  );
+  const { groupPrayList, groupNotification } = useGroupPray(group.id);
   const isGroupPrayListData = Object.keys(groupPrayList).length !== 0;
   const { shareLink } = useMobileShareMode();
   const { isMobile } = useCheckMobile();
   const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
 
-  const [shareMode, setShareMode] = useState(false);
+  const [bringMode, setBringMode] = useState(false);
   const [tab, setTab] = useState("personal");
   const { categoryList, firstCategoryIndex, refetchCategoryList } =
     useCategory(tab);
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
-  const [isPraySelected, setIsPraySelected] = useState(false);
-
-  const [categryRefIndex, setCategoryRefIndex] = useState(0);
-  const categoryRef = useRef([]);
+  const { isOpened } = useSelectionModal();
+  const setGroupId = useSetAtom(groupIdAtom);
 
   const { showToast } = useToast({});
+  const { prayList } = usePray("personal");
+
+  useEffect(() => {
+    setGroupId(group.id);
+  }, []);
 
   useEffect(() => {
     refetchCategoryList();
@@ -60,20 +67,6 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
       });
     }
     console.log(`${WEB_ORIGIN}/group?id=` + encodeGroupId);
-  };
-
-  const onGroupPray = async (checkedPrayIds) => {
-    takePersonalPray(
-      {
-        groupId: group.id,
-        prayId: checkedPrayIds,
-      },
-      {
-        onSuccess: () => {
-          setShareMode(false);
-        },
-      }
-    );
   };
 
   return (
@@ -101,8 +94,8 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
           isData={isGroupPrayListData}
           categoryList={categoryList}
           firstCategoryIndex={firstCategoryIndex}
-          shareMode={shareMode}
-          setShareMode={setShareMode}
+          bringMode={bringMode}
+          setBringMode={setBringMode}
           setTab={setTab}
         />
         <GroupPrayList
@@ -120,19 +113,13 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
         alt="group_invite_icon"
         onClick={onInvite}
       />
-      {shareMode && (
-        <ScrollSynchronizedCategoryList
-          categoryList={categoryList}
-          selectedCategoryIndex={selectedCategoryIndex}
-          setSelectedCategoryIndex={setSelectedCategoryIndex}
-          tabType={tab}
-          categoryRef={categoryRef}
-          setCategoryRefIndex={setCategoryRefIndex}
-          shareMode={shareMode}
-          setShareMode={setShareMode}
-          listHandler={onGroupPray}
-          setIsPraySelected={setIsPraySelected}
-        />
+      {isOpened && (
+        <PrayerListWrapper>
+          <ScrollSynchronizedPrayerList
+            isSharedPrayers={false}
+            categoriesWithPrayers={prayList}
+          />
+        </PrayerListWrapper>
       )}
     </Wrapper>
   );
@@ -146,6 +133,15 @@ const Wrapper = styled.div`
   background-color: #ffffff;
   position: fixed;
   z-index: 100;
+`;
+
+const PrayerListWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 32px 32px 0px 0px;
 `;
 
 const GroupWrapper = styled.div`

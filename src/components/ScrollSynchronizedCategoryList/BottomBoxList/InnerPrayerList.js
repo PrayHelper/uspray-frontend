@@ -4,7 +4,7 @@ import usePrayerBottomModal from "../../../overlays/PrayerBottomModal/usePrayerB
 import { useContext } from "react";
 import { PrayerListDataContext } from "../ScrollSynchronizedCategoryList";
 import { usePray } from "../../../hooks/usePray";
-import { useShareSelection } from "../../../overlays/ShareSelectionModal/ShareSelectionModal";
+import { useSelectionModal } from "../../../overlays/SelectionModal/useSelectionModal";
 
 const Toggle = ({
   type, // "CHECKBOX" | "HEART"
@@ -24,11 +24,11 @@ const Toggle = ({
 
 const Item = ({ item }) => {
   const { name, isPrayedToday, content, prayId } = item;
-  const { isSharedPrayers: isSharedPrayer, isSharingMode } = useContext(
+  const { isSharedPrayers: isSharedPrayer, isSelectable } = useContext(
     PrayerListDataContext
   );
 
-  const { isSelectedMap, toggleById } = useShareSelection();
+  const { isSelectedMap, toggleById } = useSelectionModal();
 
   const tab = isSharedPrayer ? "shared" : "personal";
 
@@ -37,7 +37,7 @@ const Item = ({ item }) => {
   const { selectPrayerInfo } = usePrayerBottomModal();
 
   const toggleHandler = async () => {
-    if (isSharingMode) {
+    if (isSelectable) {
       toggleById(prayId);
     } else {
       if (!isPrayedToday) todayPray(prayId);
@@ -46,7 +46,7 @@ const Item = ({ item }) => {
   };
 
   const onClick = () => {
-    if (isSharingMode) toggleById(prayId);
+    if (isSelectable) toggleById(prayId);
     else selectPrayerInfo({ ...item, isShared: isSharedPrayer });
   };
 
@@ -57,9 +57,9 @@ const Item = ({ item }) => {
       )}
       <S.ItemContent selected={isPrayedToday}>{content}</S.ItemContent>
       <Toggle
-        isOn={isSharingMode ? isSelectedMap[prayId] : isPrayedToday}
+        isOn={isSelectable ? isSelectedMap[prayId] : isPrayedToday}
         isShared={isSharedPrayer}
-        type={isSharingMode ? "CHECKBOX" : "HEART"}
+        type={isSelectable ? "CHECKBOX" : "HEART"}
         toggleHandler={toggleHandler}
       />
     </S.Item>
