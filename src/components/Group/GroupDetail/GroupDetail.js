@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import { atom, useAtom } from "jotai";
 import UserHeader from "../../UserHeader";
 import styled from "styled-components";
 import GroupInfo from "./GroupInfo";
 import GroupPrayList from "./GroupPrayList";
 import RightIcons from "./RightIcons";
 import { useState } from "react";
+import { useSetAtom } from "jotai";
+import { groupIdAtom } from "../../../pages/Group";
 import GroupSetting from "../GroupSetting/GroupSetting";
 import { useGroupPray } from "../../../hooks/useGroupPray";
 import { useCategory } from "../../../hooks/useCategory";
@@ -24,8 +25,6 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
   const { shareLink } = useMobileShareMode();
   const { isMobile } = useCheckMobile();
   const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
-  const isOpenedAtom = atom(false);
-  const [isOpened, setIsOpened] = useAtom(isOpenedAtom);
 
   const [tab, setTab] = useState("personal");
   const { categoryList, firstCategoryIndex, refetchCategoryList } =
@@ -33,9 +32,15 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
   const [selectedCategoryIndex, setSelectedCategoryIndex] =
     useState(firstCategoryIndex);
   const { prayList } = usePray("personal");
-  const { open: openBringSelectionModal } = useBringSelectionModal();
+
+  const { isOpened: isBringingMode } = useBringSelectionModal(group.id);
 
   const { showToast } = useToast({});
+  const setGroupId = useSetAtom(groupIdAtom);
+
+  useEffect(() => {
+    setGroupId(group.id);
+  }, [tab]);
 
   useEffect(() => {
     refetchCategoryList();
@@ -105,12 +110,11 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
         onClick={onInvite}
       />
 
-      {isOpened && (
+      {isBringingMode && (
         <PrayerListWrapper>
           <ScrollSynchronizedPrayerList
             isSharedPrayers={false}
             categoriesWithPrayers={prayList}
-            groupId={group.id}
           />
         </PrayerListWrapper>
       )}

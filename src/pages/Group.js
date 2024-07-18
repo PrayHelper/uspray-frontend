@@ -7,6 +7,9 @@ import { useState } from "react";
 import GroupDetail from "../components/Group/GroupDetail/GroupDetail";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { atom } from "jotai";
+
+export const groupIdAtom = atom(0);
 
 const Group = () => {
   const { groupList } = useGroup();

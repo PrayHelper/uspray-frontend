@@ -4,20 +4,17 @@ import PrayDateCategoryInput from "../../PrayDateCategoryInput/PrayDateCategoryI
 import BlackScreen from "../../BlackScreen/BlackScreen";
 import Modal from "../../../components/Modal/Modal";
 import { useGroupPray } from "../../../hooks/useGroupPray";
+import useBringSelectionModal from "../../../overlays/SelectionModal/useBringSelectionModal";
 
-const GroupInfo = ({
-  group,
-  isData,
-  categoryList,
-  firstCategoryIndex,
-  setBringMode,
-}) => {
+const GroupInfo = ({ group, isData, categoryList, firstCategoryIndex }) => {
   const { addGroupPray, groupHeartCount } = useGroupPray(group.id);
   const [showSubModal, setShowSubModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [prayInputValue, setPrayInputValue] = useState("");
   const [dateInputValue, setDateInputValue] = useState(null);
   const [categoryInputValue, setCategoryInputValue] = useState(0);
+
+  const { open: openBringSelectionModal } = useBringSelectionModal(group.id);
 
   const onClickPrayInput = () => {
     if (categoryList.length === 0) {
@@ -120,7 +117,7 @@ const GroupInfo = ({
         </>
         <LoadButton
           onClick={() => {
-            setBringMode(true);
+            openBringSelectionModal();
           }}
         >
           <img src="images/ic_group_load.svg" alt="group_load_icon" />

@@ -34,7 +34,7 @@ const useShareSelectionModal = () => {
 
   const { showToast } = useToast({});
 
-  const shareHandler = () => {
+  const share = () => {
     if (selectedLength === 0) return;
 
     const checkedIdListString = Object.keys(isSelectedMap)
@@ -62,8 +62,9 @@ const useShareSelectionModal = () => {
     isOpened,
     shareControlledProps: {
       isOpened,
-      cancelHandler: close,
-      shareHandler,
+      onClickCancelButton: close,
+      onClickActionButton: share,
+      mode: "SHARE",
       selectedLength,
     },
     toggleById,
