@@ -2,15 +2,26 @@ import { useQuery, useMutation } from "react-query";
 import useApi from "./useApi";
 import useToast from "./useToast";
 import { ToastTheme } from "../components/Toast/Toast";
+import { useAtom } from "jotai";
+import {
+  groupIdAtom,
+  selectionModeAtom,
+} from "../overlays/SelectionModal/useSelectionModal";
 
 export const usePray = (tab) => {
   const { getFetcher, postFetcher, putFetcher, deleteFetcher } = useApi();
   const { showToast } = useToast({});
+  const [mode] = useAtom(selectionModeAtom);
+  const [groupId] = useAtom(groupIdAtom);
 
   const { data, refetch: refetchPrayList } = useQuery(
     ["prayList", tab],
     async () => {
-      return await getFetcher(`/pray?prayType=${tab}`);
+      const endpoint =
+        mode === "BRING"
+          ? `/grouppray?prayType=${tab}&groupId=${groupId}`
+          : `/pray?prayType=${tab}`;
+      return await getFetcher(endpoint);
     },
     {
       onError: async (e) => {
