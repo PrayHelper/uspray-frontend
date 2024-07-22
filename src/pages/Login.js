@@ -147,7 +147,7 @@ const SocialLogin = () => {
       </S.LogoWrapper>
       <S.BottomWrapper>
         <S.BtnWrapper>
-          <SocialLoginLongButton theme={"kakao"} onClick={tempModal} />
+          <SocialLoginLongButton theme={"kakao"} onClick={continueWithKakao} />
           <SocialLoginLongButton theme={"naver"} onClick={tempModal} />
           <SocialLoginLongButton theme={"apple"} onClick={tempModal} />
         </S.BtnWrapper>

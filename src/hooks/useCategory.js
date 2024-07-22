@@ -14,7 +14,7 @@ export const useCategory = (categoryType) => {
   const { data, refetch: refetchCategoryList } = useQuery(
     ["categoryList", categoryType],
     async () => {
-      return await getFetcher(`/category/?categoryType=${categoryType}`);
+      return await getFetcher(`/category?categoryType=${categoryType}`);
     },
     {
       onError: (e) => {

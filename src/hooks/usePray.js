@@ -10,7 +10,7 @@ export const usePray = (tab) => {
   const { data, refetch: refetchPrayList } = useQuery(
     ["prayList", tab],
     async () => {
-      return await getFetcher(`/pray/?prayType=${tab}`);
+      return await getFetcher(`/pray?prayType=${tab}`);
     },
     {
       onError: async (e) => {
