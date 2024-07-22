@@ -42,6 +42,17 @@ const useMobileToken = () => {
       }
 
       try {
+        // iOS
+        //eslint-disable-next-line
+        webkit.messageHanlers.Bridge.callBack("iosGetDeviceToken");
+      } catch (error) {
+        console.log(
+          'Error webkit.messageHanlers.Bridge.callBack("iosGetDeviceToken")',
+          error
+        );
+      }
+
+      try {
         // Flutter
         //eslint-disable-next-line
         FlutterGetDeviceToken.postMessage(nil);
