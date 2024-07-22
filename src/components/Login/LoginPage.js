@@ -59,14 +59,13 @@ const LoginPage = () => {
           console.log(e);
         }
 
-        navigate("/main");
         setAutorized();
-
         setAccessToken(res.data.data.accessToken);
         await setRefreshToken(res.data.data.refreshToken);
-
         console.log("access: ", getAccessToken());
         console.log("refresh: ", await getRefreshToken());
+
+        navigate("/main");
       }
     } catch (e) {
       console.log(e);

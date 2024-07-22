@@ -97,7 +97,7 @@ const SocialLogin = () => {
   };
 
   const continueWithKakao = () => {
-    window.location.href = `${process.env.REACT_APP_API_ORIGIN}/oauth2/authorization/kakao`;
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_KAKAO_REDIRECT_URI}&response_type=code`;
   };
   const continueWithNaver = () => {
     window.location.href = `${process.env.REACT_APP_API_ORIGIN}/oauth2/authorization/naver`;
@@ -147,7 +147,7 @@ const SocialLogin = () => {
       </S.LogoWrapper>
       <S.BottomWrapper>
         <S.BtnWrapper>
-          <SocialLoginLongButton theme={"kakao"} onClick={tempModal} />
+          <SocialLoginLongButton theme={"kakao"} onClick={continueWithKakao} />
           <SocialLoginLongButton theme={"naver"} onClick={tempModal} />
           <SocialLoginLongButton theme={"apple"} onClick={tempModal} />
         </S.BtnWrapper>
