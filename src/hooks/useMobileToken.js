@@ -44,7 +44,7 @@ const useMobileToken = () => {
       try {
         // iOS
         //eslint-disable-next-line
-        webkit.messageHanlers.Bridge.callBack("iosGetDeviceToken");
+        window.webkit.messageHandlers.Bridge.postMessage("iosGetDeviceToken");
       } catch (error) {
         console.log(
           'Error webkit.messageHanlers.Bridge.callBack("iosGetDeviceToken")',
