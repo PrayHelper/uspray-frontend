@@ -110,7 +110,7 @@ const ChangePw = ({ setShowChangePw }) => {
             // isModalOn={showModal}
             iconSrc={"images/lock.svg"}
             iconAlt={"lock"}
-            mainContent={"비밀번호가 재설정되었습니다."}
+            mainContent={"비밀번호가 변경되었습니다."}
             subContent={"바뀐 비밀번호로 로그인하세요."}
             btnContent={"확인"}
             onClickBtn={handleCloseModal}

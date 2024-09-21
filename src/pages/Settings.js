@@ -171,7 +171,7 @@ const Settings = () => {
             iconSrc={"images/ic_logout.svg"}
             iconAlt={"icon_logout"}
             mainContent={"로그아웃 하시겠습니까?"}
-            subContent={"보다 안전하게 로그아웃을 진행해 드릴게요."}
+            subContent={"안전하게 로그아웃을 진행해 드릴게요."}
             btnContent={"로그아웃"}
             btnContent2={"취소"}
             onClickBtn={logout}
