@@ -20,7 +20,7 @@ export const useSelectionModal = () => {
   const [groupId] = useAtom(groupIdAtom);
 
   const { shareLink } = useMobileShareMode();
-  const { isMobile } = useCheckMobile();
+  const { isMobile, userAgent } = useCheckMobile();
   const { bringPrayToGroup } = useGroupPray(groupId);
 
   const selectedLength = Object.values(isSelectedMap).filter(Boolean).length;
@@ -56,7 +56,7 @@ export const useSelectionModal = () => {
       });
     } else {
       showToast({
-        message: "공유하기가 지원되지 않는 환경 입니다.",
+        message: `공유하기가 지원되지 않는 환경 입니다. (${userAgent})`,
         theme: ToastTheme.ERROR,
       });
     }

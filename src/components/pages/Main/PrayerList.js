@@ -155,7 +155,7 @@ function PrayerList({
   const { data: pray_cnt_List, refetch: refetch_cnt_PrayList } =
     usePrayList("cnt");
   const { shareLink } = useMobileShareMode();
-  const { isMobile } = useCheckMobile();
+  const { isMobile, userAgent } = useCheckMobile();
   const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
   const { showToast } = useToast({});
 
@@ -231,7 +231,7 @@ function PrayerList({
         });
       } else {
         showToast({
-          message: "공유하기가 지원되지 않는 환경 입니다.",
+          message: `공유하기가 지원되지 않는 환경 입니다. (${userAgent})`,
           theme: ToastTheme.ERROR,
         });
       }
