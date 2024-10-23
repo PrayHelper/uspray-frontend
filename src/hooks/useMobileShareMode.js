@@ -21,6 +21,7 @@ const useMobileShareMode = () => {
         FlutterShareLink.postMessage(data);
       } catch (error) {
         console.log("FlutterShareLink.postMessage(data);", error);
+        if (navigator.share) navigator.share(data);
       }
     } else {
       console.log("Not a mobile device, skipping Bridge.AndroidShareLink call");
