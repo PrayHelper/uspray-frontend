@@ -243,7 +243,7 @@ const Settings = () => {
             <div
               style={{ color: "#7BAB6E", fontWeight: "700", fontSize: "15px" }}
             >
-              2.14.0
+              2.15.0
             </div>
           </StyledItem>
         </WhiteBox>
