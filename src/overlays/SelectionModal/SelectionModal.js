@@ -4,8 +4,8 @@ const LABEL_MAP = {
   CANCEL: "취소하기",
   SHARE: "공유하기",
   BRING: "불러오기",
-  KAKAO_SHARE: "카카오톡으로 공유",
-  LINK_SHARE: "링크로 공유",
+  KAKAO_SHARE: "카카오톡으로 공유하기",
+  LINK_SHARE: "링크로 공유하기",
 };
 
 const SelectionModal = ({
