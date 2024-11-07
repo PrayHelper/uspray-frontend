@@ -57,8 +57,11 @@ const GroupDetail = ({ group, setShowGroupDetail }) => {
     var encodeGroupId = window.btoa(groupId.toString());
     if (isMobile()) {
       shareLink({
-        title: "유스프레이 그룹에 참여해 함께 기도제목을 나눠요!",
-        url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
+        type: "LINK",
+        data: {
+          title: "유스프레이 그룹에 참여해 함께 기도제목을 나눠요!",
+          url: `${WEB_ORIGIN}/group?id=` + encodeGroupId,
+        },
       });
     } else {
       showToast({

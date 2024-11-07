@@ -5,7 +5,7 @@ import useMobileShareMode from "../../hooks/useMobileShareMode";
 import useCheckMobile from "../../hooks/useCheckMobile";
 import { useGroupPray } from "../../hooks/useGroupPray";
 
-export const selectionModeAtom = atom("SHARE"); // "SHARE" | "BRING"
+export const selectionModeAtom = atom("SHARE"); // "SHARE" | "BRING" | "KAKAO_SHARE"
 export const groupIdAtom = atom(0);
 
 const isOpenedAtom = atom(false);
@@ -16,7 +16,7 @@ const WEB_ORIGIN = process.env.REACT_APP_WEB_ORIGIN;
 export const useSelectionModal = () => {
   const [isOpened, setIsOpened] = useAtom(isOpenedAtom);
   const [isSelectedMap, setIsSelectedMap] = useAtom(isSelectedMapAtom);
-  const [mode] = useAtom(selectionModeAtom);
+  const [mode, setMode] = useAtom(selectionModeAtom);
   const [groupId] = useAtom(groupIdAtom);
 
   const { shareLink } = useMobileShareMode();
@@ -41,18 +41,25 @@ export const useSelectionModal = () => {
 
   const { showToast } = useToast({});
 
-  const share = () => {
-    if (selectedLength === 0) return;
-
+  const encodeSelectedIds = (isSelectedMap) => {
     const checkedIdListString = Object.keys(isSelectedMap)
       .filter((id) => isSelectedMap[id])
       .join(",");
-    const encodedIdListString = window.btoa(checkedIdListString);
+    return window.btoa(checkedIdListString); // 인코딩된 문자열 반환
+  };
+
+  const linkShare = () => {
+    if (selectedLength === 0) return;
+
+    const encodedIdListString = encodeSelectedIds(isSelectedMap);
 
     if (isMobile()) {
       shareLink({
-        title: "제 기도제목을 함께 기도해주세요!",
-        url: `${WEB_ORIGIN}/main?share=` + encodedIdListString,
+        type: "LINK",
+        data: {
+          title: "제 기도제목을 함께 기도해주세요!",
+          url: `${WEB_ORIGIN}/main?share=` + encodedIdListString,
+        },
       });
     } else {
       showToast({
@@ -92,13 +99,51 @@ export const useSelectionModal = () => {
     close();
   };
 
-  const onClickActionButton = mode === "SHARE" ? share : bring;
+  const kakaoShare = () => {
+    if (selectedLength === 0) return;
+
+    const encodedIdListString = encodeSelectedIds(isSelectedMap);
+
+    const selectedInfoList = Object.entries(isSelectedMap)
+      .filter(([id, data]) => data.isSelected)
+      .map(([id, data]) => ({
+        createdAt: data.createdAt,
+        content: data.content,
+      }))
+      .slice(0, 3);
+
+    if (isMobile()) {
+      shareLink({
+        type: "KAKAO",
+        data: {
+          examplePrayList: selectedInfoList,
+          url: `${WEB_ORIGIN}/main?share=` + encodedIdListString,
+        },
+      });
+    } else {
+      showToast({
+        message: `공유하기가 지원되지 않는 환경 입니다. (${userAgent})`,
+        theme: ToastTheme.ERROR,
+      });
+    }
+
+    close();
+    console.log({ encodedIdListString });
+  };
+
+  const share = () => {
+    setMode("KAKAO_SHARE");
+  };
+
+  const onClickActionButton =
+    mode === "KAKAO_SHARE" ? kakaoShare : mode === "BRING" ? bring : share;
+  const onClickCancelButton = mode === "KAKAO_SHARE" ? linkShare : close;
 
   return {
     isOpened,
     controlledModalProps: {
       isOpened,
-      onClickCancelButton: close,
+      onClickCancelButton,
       onClickActionButton,
       selectedLength,
       mode,
