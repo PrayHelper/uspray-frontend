@@ -4,6 +4,8 @@ const LABEL_MAP = {
   CANCEL: "취소하기",
   SHARE: "공유하기",
   BRING: "불러오기",
+  KAKAO_SHARE: "카카오톡으로 공유하기",
+  LINK_SHARE: "링크로 공유하기",
 };
 
 const SelectionModal = ({
@@ -12,7 +14,7 @@ const SelectionModal = ({
   onClickCancelButton,
   onClickActionButton,
   selectedLength,
-  mode, // "SHARE" | "BRING"
+  mode, // "SHARE" | "BRING" | "KAKAO_SHARE"
 }) => {
   return (
     <>
@@ -25,16 +27,34 @@ const SelectionModal = ({
             color={"white"}
             onClick={onClickCancelButton}
           >
-            {LABEL_MAP["CANCEL"]}
-            <S.ShareButtonImage src="images/ic_share_cancel.svg" />
+            {mode === "KAKAO_SHARE"
+              ? LABEL_MAP["LINK_SHARE"]
+              : LABEL_MAP["CANCEL"]}
+            <S.ShareButtonImage
+              src={
+                mode === "KAKAO_SHARE"
+                  ? "images/ic_share_link.svg"
+                  : "images/ic_share_cancel.svg"
+              }
+            />
           </S.ShareButtonWrapper>
           <S.ShareButtonWrapper
             disabled={selectedLength === 0}
             color={"green"}
             onClick={onClickActionButton}
           >
-            {mode === "SHARE" ? LABEL_MAP["SHARE"] : LABEL_MAP["BRING"]}
-            <S.ShareButtonImage src="images/ic_share_move.svg" />
+            {mode === "KAKAO_SHARE"
+              ? LABEL_MAP["KAKAO_SHARE"]
+              : mode === "SHARE"
+              ? LABEL_MAP["SHARE"]
+              : LABEL_MAP["BRING"]}
+            <S.ShareButtonImage
+              src={
+                mode === "KAKAO_SHARE"
+                  ? "images/ic_share_kakao.svg"
+                  : "images/ic_share_move.svg"
+              }
+            />
           </S.ShareButtonWrapper>
         </S.ShareButtonContainer>
       </S.BottomShareWrapper>
